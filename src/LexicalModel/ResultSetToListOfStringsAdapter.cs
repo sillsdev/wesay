@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using WeSay.Data;
+using Palaso.Data;
+using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalModel
 {
@@ -33,7 +33,7 @@ namespace WeSay.LexicalModel
 		{
 			foreach (RecordToken<LexEntry> token in Items)
 			{
-				string stringToDisplay = null;
+				string stringToDisplay;
 				if(token[FieldLabel] == null)
 				{
 					stringToDisplay = "";

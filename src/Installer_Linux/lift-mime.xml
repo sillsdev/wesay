@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+ <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+   <mime-type type="application/x-lift">
+	 <sub-class-of type="text/xml"/>
+	 <comment>Lexical interchange format</comment>
+	 <glob pattern="*.lift"/>
+  </mime-type>
+ </mime-info>

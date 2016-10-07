@@ -15,13 +15,19 @@ namespace WeSay.UI
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && (components != null))
+			if (disposing)
 			{
-				components.Dispose();
+				// Added because memory leaks were detected resulting
+				// from the event handler still being registered.
+				LabelsChanged -= OnLabelsChanged;
+				if (components != null)
+				{
+					components.Dispose();
+				}
 			}
+			Application.RemoveMessageFilter(this);
 			base.Dispose(disposing);
 			this._disposed = true;
-			--_instanceCountForDebugging;
 		}
 
 		#region Component Designer generated code
@@ -37,15 +43,10 @@ namespace WeSay.UI
 			//
 			// DetailList
 			//
-			AutoScroll = true; //but we need to make sure children are never wider than we are
+			AutoScroll = false; //but we need to make sure children are never wider than we are
 			this.Name = "DetailList";
-			//AutoSize = true;
-			//AutoSizeMode = AutoSizeMode.GrowAndShrink;
-			HScroll = false;
-			//VerticalScroll.Visible = true;
-			ColumnCount = 2;
+			ColumnCount = 3;
 			DoubleBuffered = true;
-			Padding = new Padding(0,0,20,0);
 
 			this.ResumeLayout(false);
 

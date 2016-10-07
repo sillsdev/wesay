@@ -1,7 +1,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using WeSay.Data;
+using Palaso.Data;
+using Palaso.DictionaryServices;
+using Palaso.DictionaryServices.Lift;
+using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -12,7 +16,7 @@ namespace Addin.Transform
 		//private string MakePLiftTempFile(IEnumerable<LexEntry> entries, ViewTemplate template, IFindEntries finder)
 		//{
 		//    string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-		//    LiftExporter exporter = new LiftExporter(path);
+		//    WeSayLiftWriter exporter = new WeSayLiftWriter(path);
 		//    exporter.SetUpForPresentationLiftExport(template, finder);
 		//    foreach (LexEntry entry in entries)
 		//    {
@@ -22,58 +26,29 @@ namespace Addin.Transform
 		//    return path;
 		//}
 
-		public string MakePLiftTempFile(LexEntryRepository lexEntryRepository, ViewTemplate template)
+		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template, LiftWriter.ByteOrderStyle style)
 		{
-			string path = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-			PLiftExporter exporter = new PLiftExporter(path, lexEntryRepository, template);
-			ResultSet<LexEntry> recordTokens =
-					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
-			foreach (RecordToken<LexEntry> token in recordTokens)
+			using (var exporter = new PLiftExporter(outputPath, lexEntryRepository, template))
 			{
-				int homographNumber = 0;
-				if ((bool) token["HasHomograph"])
-				{
-					homographNumber = (int) token["HomographNumber"];
-				}
-				exporter.Add(token.RealObject, homographNumber);
-			}
+				exporter.ExportOptions = Options;
 
-			exporter.End();
-			return path;
+				ResultSet<LexEntry> recordTokens =
+					lexEntryRepository.GetAllEntriesSortedByHeadword(template.HeadwordWritingSystem);
+				foreach (RecordToken<LexEntry> token in recordTokens)
+				{
+					int homographNumber = 0;
+					if ((bool) token["HasHomograph"])
+					{
+						homographNumber = (int) token["HomographNumber"];
+					}
+					exporter.Add(token.RealObject, homographNumber);
+				}
+
+				exporter.End();
+			}
 		}
 
-		//
-		//        public void MakeXHtmlFile(string outputPath, LexEntryRepository lexEntryRepository, WeSayWordsProject project)
-		//        {
-		//            IHomographCalculator homographCalculator = new HomographCalculator(lexEntryRepository, project.DefaultPrintingTemplate.HeadwordWritingSystem);
-		//
-		//            IEnumerable<LexEntry> entries = Lexicon.GetAllEntriesSortedByHeadword(project.DefaultPrintingTemplate.HeadwordWritingSystem);
-		//            Db4oLexEntryFinder finder = new Db4oLexEntryFinder(lexEntryRepository.DataSource);
-		//
-		//            string pliftPath = MakePLiftTempFile(entries, project.DefaultPrintingTemplate, homographCalculator, finder);
-		//            try
-		//            {
-		//                using (Stream xsltStream = GetXsltStream("plift2html.xsl"))
-		//                {
-		//                    TransformWithProgressDialog dlg = new TransformWithProgressDialog(pliftPath,
-		//                                                                                      outputPath,
-		//                                                                                      xsltStream,
-		//                                                                                      "lift/entry");
-		//                    dlg.TaskMessage =
-		//                        StringCatalog.Get("Preparing dictionary for printing...",
-		//                                          "This is shown when WeSay is creating the pdf document for printing.");
-		//                    dlg.AddArgument("writing-system-info-file", project.PathToWritingSystemPrefs);
-		//                    dlg.Transform();
-		//                }
-		//            }
-		//            finally
-		//            {
-		//                if(File.Exists(pliftPath))
-		//                {
-		//                    File.Delete(pliftPath);
-		//                }
-		//            }
-		//        }
+		public PLiftExporter.Options Options = PLiftExporter.DefaultOptions;
 
 		public static Stream GetXsltStream(string xsltName)
 		{

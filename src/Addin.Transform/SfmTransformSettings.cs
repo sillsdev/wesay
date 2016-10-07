@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using Palaso.DictionaryServices.Model;
 using Palaso.Reporting;
 using WeSay.AddinLib;
 
@@ -28,17 +29,17 @@ namespace Addin.Transform
 		{
 			if (String.IsNullOrEmpty(VernacularLanguageWritingSystemId))
 			{
-				if (projectInfo.WritingSystems.ContainsKey("v"))
+				if (projectInfo.WritingSystems.Contains("v"))
 				{
 					VernacularLanguageWritingSystemId = "v";
 				}
 				else //guess
 				{
-					foreach (string id in projectInfo.WritingSystems.Keys)
+					foreach (var writingSystem in projectInfo.WritingSystems.AllWritingSystems)
 					{
-						if (!"en fr chn th tpi".Contains(id))
+						if (!"en fr chn th tpi".Contains(writingSystem.Id))
 						{
-							VernacularLanguageWritingSystemId = id;
+							VernacularLanguageWritingSystemId = writingSystem.Id;
 							break;
 						}
 					}
@@ -47,19 +48,19 @@ namespace Addin.Transform
 
 			if (String.IsNullOrEmpty(NationalLanguageWritingSystemId))
 			{
-				if (projectInfo.WritingSystems.ContainsKey("tpi")) //melanesian pidgin
+				if (projectInfo.WritingSystems.Contains("tpi")) //melanesian pidgin
 				{
 					NationalLanguageWritingSystemId = "tpi";
 				}
-				if (projectInfo.WritingSystems.ContainsKey("TPI")) //melanesian pidgin
+				if (projectInfo.WritingSystems.Contains("TPI")) //melanesian pidgin
 				{
 					NationalLanguageWritingSystemId = "TPI";
 				}
-				if (projectInfo.WritingSystems.ContainsKey("th")) //thai
+				if (projectInfo.WritingSystems.Contains("th")) //thai
 				{
 					NationalLanguageWritingSystemId = "th";
 				}
-				if (projectInfo.WritingSystems.ContainsKey("fr")) //french
+				if (projectInfo.WritingSystems.Contains("fr")) //french
 				{
 					NationalLanguageWritingSystemId = "fr";
 				}
@@ -79,34 +80,36 @@ namespace Addin.Transform
 		public class ChangePair
 		{
 			private readonly string _from;
-			public string to;
-			public Regex regex;
+			public string _toPattern;
+			private Regex regex;
 
-			/*            public ChangePair( string sfrom, string sto)
+			private enum Method
 			{
-//                _from = @"(\W)*" + sfrom+ @"(\W)";
- //                to = "$1" + sto + " "; //put the spaces back in
-			   _from = @"\\" + sfrom + @"\s+";
-				to =  @"\\" + sto + " "; //put the spaces back in
-				regex = new Regex(_from, RegexOptions.Compiled);
-			}
- * */
+				Replace,
+				Regex
+			};
+			private Method _method ;
 
-			private ChangePair(string sfrom, string sto)
+			private ChangePair(Method method, string sfrom, string sto)
 			{
+				_method = method;
 				_from = sfrom;
-				to = sto;
+				_toPattern = sto;
 
-				//can throw exception
-				regex = new Regex(_from, RegexOptions.Compiled);
+				if (method == Method.Regex)
+				{
+					//can throw exception
+					regex = new Regex(_from, RegexOptions.Compiled);
+				 }
 			}
 
 			public static ChangePair CreateFullMarkerReplacement(string fromMarkerNoSlash,
 																 string toMarkerNoSlash)
 			{
-				string from = @"\\" + fromMarkerNoSlash + @"\s+";
+				string from = @"\" + fromMarkerNoSlash + " ";
 				string to = @"\" + toMarkerNoSlash + " ";
-				ChangePair p = new ChangePair(from, to);
+				ChangePair p = new ChangePair(Method.Replace,  from, to);
+
 				return p;
 			}
 
@@ -116,8 +119,21 @@ namespace Addin.Transform
 			/// <exception cref="ArgumentException">if the regex doesn't parse</exception>
 			public static ChangePair CreateReplacementFromTweak(string from, string to)
 			{
-				ChangePair p = new ChangePair(from, to);
+				ChangePair p = new ChangePair(Method.Regex, from, to);
 				return p;
+			}
+
+			public string DoChange(string record)
+			{
+				if (_method == Method.Regex)
+				{
+					//this is super slow
+					return regex.Replace(record, _toPattern);
+				}
+				else
+				{
+					return record.Replace(_from, _toPattern);
+				}
 			}
 		}
 
@@ -128,9 +144,12 @@ namespace Addin.Transform
 			{
 				List<ChangePair> pairs = new List<ChangePair>();
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("BaseForm", "base"));
-				pairs.Add(ChangePair.CreateFullMarkerReplacement("SemanticDomainDdp4", "sd"));
+				pairs.Add(ChangePair.CreateFullMarkerReplacement(LexSense.WellKnownProperties.SemanticDomainDdp4, "sd"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("citation", "lc"));
 				pairs.Add(ChangePair.CreateFullMarkerReplacement("definition", "d"));
+
+				//for Comparative African WordList
+				pairs.Add(ChangePair.CreateFullMarkerReplacement("CAWL_en", "nb"));
 
 				if (!String.IsNullOrEmpty(_vernacularLanguageWritingSystemId))
 				{
@@ -222,7 +241,7 @@ namespace Addin.Transform
 								}
 								catch (ArgumentException err)
 								{
-									ErrorReport.ReportNonFatalMessage(
+									ErrorReport.NotifyUserOfProblem(
 											"Sorry, there is a problem in one of the tweaks for SFM export.  They must each be valid 'regular expressions'.  The error was: {0}",
 											err.Message);
 								}

@@ -12,7 +12,11 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 			get;
 		}
-		string WordListWritingSystemId
+
+		/// <summary>
+		/// not used by lift-based lists
+		/// </summary>
+		string WordListWritingSystemIdOfOldFlatWordList
 		{
 			get;
 		}
@@ -21,7 +25,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 	public class GatherWordListConfig : TaskConfigurationBase, IGatherWordListConfig, ITaskConfiguration , ICareThatWritingSystemIdChanged
 	{
-		private readonly IDictionary<string, WordListDescription> _catalog;
+		private readonly WordListCatalog _catalog;
 
 		public GatherWordListConfig(string xml, WordListCatalog catalog)
 			:base(xml)
@@ -34,8 +38,18 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get
 			{
 				yield return new KeyValuePair<string, string>("wordListFileName", WordListFileName);
-				yield return new KeyValuePair<string, string>("wordListWritingSystemId", WordListWritingSystemId);
+				yield return new KeyValuePair<string, string>("wordListWritingSystemId", WordListWritingSystemIdOfOldFlatWordList);
 			}
+		}
+
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is GatherWordListConfig && WordListFileName == ((GatherWordListConfig)taskConfiguration).WordListFileName;
+		}
+
+		protected WordListCatalog Catalog
+		{
+			get { return _catalog; }
 		}
 
 		public string WordListFileName
@@ -45,7 +59,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				return GetStringFromConfigNode("wordListFileName");
 			}
 		}
-		public string WordListWritingSystemId
+		public string WordListWritingSystemIdOfOldFlatWordList
 		{
 			get
 			{
@@ -61,7 +75,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		private WordListDescription WordList
 		{
-			get { return _catalog[WordListFileName]; }
+			get { return _catalog.GetOrAddWordList(WordListFileName); }
 		}
 
 		public string Label
@@ -101,7 +115,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get { return true; }
 		}
 
-		public static IGatherWordListConfig CreateForTests(string wordListFileName, string wordListWritingSystemId)
+		public static IGatherWordListConfig CreateForTests(string wordListFileName, string wordListWritingSystemId, WordListCatalog catalog)
 		{
 			string xml = String.Format(@"   <task taskName='AddMissingInfo' visible='true'>
 					  <wordListFileName>{0}</wordListFileName>
@@ -109,17 +123,22 @@ namespace WeSay.LexicalTools.GatherByWordList
 					</task>
 				", wordListFileName, wordListWritingSystemId);
 
-			var catalog = new WordListCatalog();
-			catalog.Add(wordListFileName, new WordListDescription(wordListWritingSystemId, "test", "test long", "pretend description"));
 			return new GatherWordListConfig(xml, catalog);
-
 		}
 
 
 
-		public void WritingSystemIdChanged(string from, string to)
+		public void OnWritingSystemIdChanged(string from, string to)
 		{
-			  //TODO, when we become writeable
+			  //TODO, (maybe?) when we become writeable
+			// if(WordListWritingSystemIdOfOldFlatWordList==from)
+			//      WordListWritingSystemIdOfOldFlatWordList=to;
+			// mark dirty if necessary
+		}
+
+		public void OnWritingSystemIdDeleted(string id)
+		{
+			//do nothing until the comment above is resolved
 		}
 	}
 }

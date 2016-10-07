@@ -1,13 +1,15 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
 using WeSay.Project;
+using WeSay.UI;
 
 
 /* todo
@@ -24,31 +26,32 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
-	public class DictionaryTask: TaskBase
+	public class DictionaryTask: TaskBase, ITaskForExternalNavigateToEntry
 	{
 		private DictionaryControl _dictionaryControl;
-		private readonly ViewTemplate _viewTemplate;
-		private UserSettingsForTask _userSettings;
+		//private readonly ViewTemplate _viewTemplate;
+		//private readonly ILogger _logger;
+		private TaskMemory _taskMemory;
+		//private string _pendingNavigationUrl;
+		DictionaryControl.Factory _dictionaryControlFactory;
 
-		public DictionaryTask(DictionaryBrowseAndEditConfiguration config,
-								LexEntryRepository lexEntryRepository, ViewTemplate viewTemplate)
-			: base(config, lexEntryRepository)
-		{
-			if (viewTemplate == null)
-			{
-				throw new ArgumentNullException("viewTemplate");
-			}
-			_viewTemplate = viewTemplate;
-			//  _userSettings = userSettings;
-		}
+		public const string LastUrlKey = "lastUrl";
 
-		//this wants to be in the constructor, but it's waiting until we get rid of this bizarre picocontainer usage that makes it impossible to add arbitrary stuff without modifying everyone's config file
-		public UserSettingsForTask UserSettings
+		public DictionaryTask(DictionaryControl.Factory dictionaryControlFactory,
+								DictionaryBrowseAndEditConfiguration config,
+								LexEntryRepository lexEntryRepository,
+								TaskMemoryRepository taskMemoryRepository)
+			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
-			set
-			{
-				_userSettings = value;
-			}
+			_dictionaryControlFactory = dictionaryControlFactory;
+//            if (viewTemplate == null)
+//            {
+//                throw new ArgumentNullException("viewTemplate");
+//            }
+//            _viewTemplate = viewTemplate;
+//            _logger = logger;
+			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
+
 		}
 
 		public override void Activate()
@@ -56,16 +59,51 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			try
 			{
 				base.Activate();
-				_dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate);
+			   // _dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"), _logger);
+				var temp = _taskMemory.CreateNewSection("view");
+				_dictionaryControl = _dictionaryControlFactory(temp);
+
+				 _dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
 //   Debug.Assert(_userSettings.Get("one", "0") == "1");
 
-				if(_userSettings !=null && _userSettings.Get("lastUrl", null)!=null)
-					_dictionaryControl.GoToEntry(_userSettings.Get("lastUrl", null));
+				var url = _taskMemory.Get(LastUrlKey, null);
+				if (_taskMemory != null && url != null)
+				{
+					try
+					{
+						  _dictionaryControl.GoToUrl(url);
+					}
+					catch (Exception error)
+					{
+						//there's no scenario where it is worth crashing or even notifying
+						Logger.WriteEvent("Error: " + error.Message);
+#if DEBUG
+						ErrorReport.NotifyUserOfProblem(error,"Could not find the entry at '{0}'\r\n{1}", url,error.Message);
+#endif
+					}
+				}
+				else
+				{
+					_dictionaryControl.GotoFirstEntry();
+				}
 			}
 			catch (ConfigurationException)
 			{
 				IsActive = false;
 				throw;
+			}
+
+#if DEBUG
+			//Thread.Sleep(5000);
+#endif
+		}
+
+		void OnSelectedEntryOfDictionaryControlChanged(object sender, EventArgs e)
+		{
+			LexEntry entry = _dictionaryControl.CurrentEntry;
+			if(entry !=null)
+			{
+				_taskMemory.Set(LastUrlKey, _dictionaryControl.CurrentUrl);
 			}
 		}
 
@@ -76,15 +114,40 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			_dictionaryControl = null;
 		}
 
-		public override void GoToUrl(string url)
+		public string CurrentUrl
 		{
-			_dictionaryControl.GoToEntry(GetEntryFromUrl(url));
+			get
+			{
+				if (IsActive)
+				{
+					return _dictionaryControl.CurrentUrl;
+				}
+				return "NOTACTIVE";// string.Empty;
+			}
 		}
 
-		private static string GetEntryFromUrl(string url)
+		public override void GoToUrl(string url)
 		{
-			return url;
+			try
+			{
+				if (IsActive) //activation may be delayed via a timer, if so, just file this away until we are ready for it
+				{
+					_dictionaryControl.GoToUrl(url);
+				}
+				else
+				{
+					if (_taskMemory != null)
+					{
+						_taskMemory.Set(LastUrlKey, url);
+					}
+				}
+			}
+			catch (Exception error)
+			{
+				Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Could not navigate to {0}. {1}", url, error.Message);
+			}
 		}
+
 
 		/// <summary>
 		/// The entry detail control associated with this task
@@ -100,18 +163,18 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get
 			{
 				return
-					String.Format(
-						StringCatalog.Get("~See all {0} {1} words.",
-										  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project."),
-						ComputeCount(true),
-						BasilProject.Project.Name);
+
+						StringCatalog.GetFormatted("~See all {0} {1} words.",
+										  "The description of the 'Dictionary' task.  In place of the {0} will be the number of words in the dictionary.  In place of the {1} will be the name of the project.",
+							ComputeCount(true),
+							BasilProject.Project.Name);
 			}
 		}
-
-		public ViewTemplate ViewTemplate
-		{
-			get { return _viewTemplate; }
-		}
+//
+//        public ViewTemplate ViewTemplate
+//        {
+//            get { return _viewTemplate; }
+//        }
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{
@@ -121,6 +184,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		protected override int ComputeReferenceCount()
 		{
 			return CountNotRelevant;
+		}
+
+		public override void FocusDesiredControl()
+		{
+			// This is the place to implement how the task selects its desired child control
+			return;
 		}
 
 		public override ButtonStyle DashboardButtonStyle

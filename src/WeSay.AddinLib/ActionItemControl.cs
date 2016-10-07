@@ -5,8 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
 
 namespace WeSay.AddinLib
 {
@@ -44,7 +44,7 @@ namespace WeSay.AddinLib
 			_inAdminMode = inAdminMode;
 			_projectInfo = projectInfo;
 			InitializeComponent();
-			_description.Font = StringCatalog.ModifyFontForLocalization(_description.Font);
+			_description.Font = (Font)StringCatalog.LabelFont.Clone();
 
 			_toggleShowInWeSay.Visible = inAdminMode;
 			_setupButton.Visible = inAdminMode;
@@ -66,6 +66,9 @@ namespace WeSay.AddinLib
 
 			_setupButton.Visible = inAdminMode && _addin is IWeSayAddinHasSettings &&
 								   ((IWeSayAddinHasSettings) _addin).Settings != null;
+
+
+			_moreInfoButton.Visible = inAdminMode && _addin is IWeSayAddinHasMoreInfo;
 		}
 
 		public void Draw(Graphics graphics, Rectangle bounds)
@@ -139,7 +142,9 @@ namespace WeSay.AddinLib
 					using (XmlTextWriter writer = new FragmentXmlTextWriter(stringWriter))
 					{
 						writer.Formatting = Formatting.Indented;
-						serializer.Serialize(writer, settings);
+						XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+						ns.Add("", ""); //prevent writing namespaces
+						serializer.Serialize(writer, settings, ns);
 						writer.Close();
 					}
 					string settingsXml = builder.ToString();
@@ -149,22 +154,45 @@ namespace WeSay.AddinLib
 			}
 			catch (Exception error)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, WeSay had a problem storing those settings. {0}", error.Message);
 			}
 
 			UpdateVisualThings();
 		}
 
+		private void _description_TextChanged(object sender, EventArgs e)
+		{
+			Size size = new Size(_description.ClientSize.Width, int.MaxValue);
+			TextFormatFlags flags = TextFormatFlags.WordBreak;
+			size = TextRenderer.MeasureText(_description.Text, _description.Font, size, flags);
+			// TextRenderer.MeasureText does not make room for initial line, so we add font height. We also need enough
+			// room for border and padding on both top and bottom, instead we add another font height as a hack.
+			_description.Height = size.Height + (2 * _description.Font.Height);
+			flowLayoutPanel1.Height = _description.Top + _description.Height;
+			this.OnResize(e);
+		}
+
+		protected override void OnResize(EventArgs e)
+		{
+			if(flowLayoutPanel1.Height > flowLayoutPanel1.ClientSize.Height)
+				flowLayoutPanel1.Size = new Size(flowLayoutPanel1.ClientSize.Width, flowLayoutPanel1.Height);
+			if(flowLayoutPanel1.Height > this.ClientSize.Height)
+				this.Size = new Size(this.ClientSize.Width, flowLayoutPanel1.Height);
+			base.OnResize (e);
+		}
+
 		protected void UpdateVisualThings()
 		{
 			UpdateEnabledStates();
 			_actionName.Text = _addin.LocalizedName;
+			_actionName.Font = (Font)StringCatalog.LabelFont.Clone();
 			_description.Text = _addin.Description;
+			_description.Font = (Font)StringCatalog.LabelFont.Clone();
 
 			if (_inAdminMode && !DoShowInWeSay)
 			{
-				_toggleShowInWeSay.Text = "Not In WeSay";
+				_toggleShowInWeSay.Text = "Make visible in WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action available within WeSay.");
 				//                e.Graphics.DrawLine(Pens.Red, new Point(0,0), new Point(_toggleShowInWeSay.Width,_toggleShowInWeSay.Height));
@@ -172,7 +200,7 @@ namespace WeSay.AddinLib
 			}
 			else
 			{
-				_toggleShowInWeSay.Text = "Visible In WeSay";
+				_toggleShowInWeSay.Text = "Make invisible in WeSay";
 				_toolTip.SetToolTip(_toggleShowInWeSay,
 									"Click to make this action unavailable within WeSay.");
 			}
@@ -201,6 +229,11 @@ namespace WeSay.AddinLib
 			DoShowInWeSay = !DoShowInWeSay;
 			UpdateVisualThings();
 			//_toggleShowInWeSay.Invalidate();
+		}
+
+		private void OnMoreInfo(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			((IWeSayAddinHasMoreInfo)_addin).ShowMoreInfoDialog(ParentForm);
 		}
 	}
 

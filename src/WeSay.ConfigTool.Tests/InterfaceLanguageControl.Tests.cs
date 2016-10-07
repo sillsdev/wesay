@@ -1,14 +1,16 @@
+using System;
 using System.IO;
 using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
+using Palaso.IO;
 using Palaso.Reporting;
-using WeSay.Foundation.Tests;
-using WeSay.Foundation.Tests.TestHelpers;
+using Palaso.TestUtilities;
+using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	public class InterfaceLanguageControl
 	{
 		private ConfigurationWindow _window;
@@ -23,7 +25,7 @@ namespace WeSay.ConfigTool.Tests
 
 		private void GoToUILanguageTab()
 		{
-			ToolStrip toolstrip = (ToolStrip) _window.Controls.Find("_areasToolStrip", true)[0];
+			var toolstrip = (ToolStrip) _window.Controls.Find("_areasToolStrip", true)[0];
 			foreach (ToolStripButton button in toolstrip.Items)
 			{
 				if (button.Text.Contains("Language"))
@@ -50,7 +52,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -74,7 +76,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -102,7 +104,7 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
 
@@ -131,9 +133,64 @@ namespace WeSay.ConfigTool.Tests
 			finally
 			{
 				CloseApp();
-				TestUtilities.DeleteFolderThatMayBeInUse(path);
+				Palaso.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(path);
 			}
 		}
+
+		[Test]
+		public void SetToLanguage_FileHas2LetterLanguageCode()
+		{
+			using (var folder = new TemporaryFolder("InterfaceLanguageControlTests"))
+			{
+				var t = CreateNewAndGetLanguageCombo(folder.Path);
+				t.Select("Thai"); // Select a known tranlsation; language = th
+				CloseApp();
+				var files = Directory.GetFiles(folder.Path, "*.WeSayUserConfig");
+				Assert.That(files.Length, Is.EqualTo(1));
+				AssertThatXmlIn.File(files[0]).HasAtLeastOneMatchForXpath("configuration/uiOptions[language='th']");
+			}
+		}
+
+		[Test]
+		public void PoProxy_LegacyStyleTranslationLinePresent_FindsValidLanguageString()
+		{
+			string contents = @"
+# Spanish translation for wesay
+# An additional comment
+".Replace("'", "\"");
+			using (var tempFile = new TempFile(contents))
+			{
+				var poProxy = new ConfigTool.InterfaceLanguageControl.PoProxy(tempFile.Path);
+				Assert.IsNotEmpty(poProxy.ToString());
+			}
+		}
+
+		[Test]
+		public void PoProxy_TransifexStyleLanguageTeamLinePresent_FindsValidLanguageString()
+		{
+			string contents = @"
+# An additional comment
+'Language-Team: Spanish <es@li.org>\n'
+".Replace("'", "\"");
+			using (var tempFile = new TempFile(contents))
+			{
+				var poProxy = new ConfigTool.InterfaceLanguageControl.PoProxy(tempFile.Path);
+				Assert.AreEqual("Spanish", poProxy.ToString());
+			}
+		}
+
+		[Test]
+		public void PoProxy_PoFilesInCommonFolder_EachPoFileHasLanguageName()
+		{
+			foreach (string file in Directory.GetFiles(BasilProject.ApplicationCommonDirectory, "*.po"))
+			{
+				var poProxy = new ConfigTool.InterfaceLanguageControl.PoProxy(file);
+				Assert.IsNotEmpty(poProxy.ToString(), String.Format("Could not extract language name from po file: {0}", file));
+			}
+
+
+		}
+
 
 		private static object FindDefaultEnglishItem(ComboBox combo)
 		{
@@ -160,8 +217,9 @@ namespace WeSay.ConfigTool.Tests
 		private ComboBoxTester CreateNewAndGetLanguageCombo(string path)
 		{
 			_window = new ConfigurationWindow(new string[] {});
+			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
-			_window.CreateAndOpenProject(path);
+			_window.CreateAndOpenProject(path, "th", "Thai");
 			GoToUILanguageTab();
 			return new ComboBoxTester("_languageCombo", _window);
 		}
@@ -169,15 +227,14 @@ namespace WeSay.ConfigTool.Tests
 		private ComboBoxTester GoToTabAndGetLanguageCombo()
 		{
 			GoToUILanguageTab();
-			ComboBoxTester t = new ComboBoxTester("_languageCombo", _window);
+			var t = new ComboBoxTester("_languageCombo", _window);
 			return t;
 		}
 
 		private void OpenExisting(string path)
 		{
 			_window = new ConfigurationWindow(new string[] {});
-			_window.Show();
-			_window = new ConfigurationWindow(new string[] {});
+			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_window.OpenProject(path);
 		}

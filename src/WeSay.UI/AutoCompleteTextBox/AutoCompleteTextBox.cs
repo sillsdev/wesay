@@ -7,37 +7,73 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.Code;
+using Palaso.Lift;
+using Palaso.UiBindings;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
+	public delegate object FormToObjectFinderDelegate(string form);
+	public delegate IEnumerable ItemFilterDelegate(
+			string text, IEnumerable items, IDisplayStringAdaptor adaptor);
+
+	public enum EntryMode
+	{
+		Text,
+		List
+	}
+
+	public interface IWeSayAutoCompleteTextBox : IWeSayTextBox
+	{
+		event KeyEventHandler KeyDown;
+		event EventHandler AutoCompleteChoiceSelected;
+		event EventHandler SelectedItemChanged;
+		event EventHandler SizeChanged;
+		event EventHandler TextChanged;
+		IEnumerable Items { get; set; }
+		EntryMode Mode { get; set; }
+		ItemFilterDelegate ItemFilterer { get; set; }
+		bool Focused { get; }
+		string Name { get; set; }
+		BorderStyle PopupBorderStyle { get; set; }
+		BorderStyle BorderStyle { get; set; }
+		Point Location { get; set; }
+		Point PopupOffset { get; set; }
+		Color BackColor { get; set; }
+		Color PopupSelectionBackColor { get; set; }
+		Color PopupSelectionForeColor { get; set; }
+		object SelectedItem { get; set; }
+		Size Size { get; set; }
+		int PopupWidth { get; set; }
+		int TabIndex { get; set; }
+		int Width { get; set; }
+		int Left { get; set; }
+		int Height { get; set; }
+		IDisplayStringAdaptor ItemDisplayStringAdaptor { get; set; }
+		FormToObjectFinderDelegate FormToObjectFinder { get; set; }
+		bool ListBoxFocused { get; }
+		Size MinimumSize { get; set; }
+		IWeSayListBox FilteredChoicesListBox { get; }
+		void HideList();
+	}
+
 	/// <summary>
 	/// Summary description for AutoCompleteTextBox.
 	/// </summary>
 	[Serializable]
-	public class WeSayAutoCompleteTextBox: WeSayTextBox
+	public class WeSayAutoCompleteTextBox : WeSayTextBox, IWeSayAutoCompleteTextBox
 	{
-		public delegate object FormToObectFinderDelegate(string form);
 
-		private FormToObectFinderDelegate _formToObectFinderDelegate;
+		private FormToObjectFinderDelegate _formToObjectFinderDelegate;
 
 		public event EventHandler SelectedItemChanged;
 		private bool _inMidstOfSettingSelectedItem;
 
-		#region EntryMode
-
-		public enum EntryMode
-		{
-			Text,
-			List
-		}
-
-		#endregion
-
 		#region Members
 
 		private IDisplayStringAdaptor _itemDisplayAdaptor = new ToStringAutoCompleteAdaptor();
-		private readonly ListBox _listBox;
+		private readonly WeSayListBox _listBox;
 		private Control _popupParent;
 
 		#endregion
@@ -46,10 +82,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		[Browsable(false)]
-		public FormToObectFinderDelegate FormToObectFinder
+		public FormToObjectFinderDelegate FormToObjectFinder
 		{
-			get { return _formToObectFinderDelegate; }
-			set { _formToObectFinderDelegate = value; }
+			get { return _formToObjectFinderDelegate; }
+			set { _formToObjectFinderDelegate = value; }
 		}
 
 		private EntryMode mode = EntryMode.Text;
@@ -162,9 +198,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 		//nb: if we used an interface (e.g. IFilter) rather than a delegate, then the adaptor part wouldn't have to be
 		// part of the interface, where it doesn't really fit. It would instead be added to the constructor of the filterer,
 		// if appropriate.
-		public delegate IEnumerable ItemFilterDelegate(
-				string text, IEnumerable items, IDisplayStringAdaptor adaptor);
-
 		private ItemFilterDelegate _itemFilterDelegate;
 		private object _selectedItem;
 		private readonly ToolTip _toolTip;
@@ -216,9 +249,17 @@ namespace WeSay.UI.AutoCompleteTextBox
 				{
 					return;
 				}
-
 				if (_selectedItem == value)
 				{
+					//handle WS-1171, where a) a baseform was set b) the target was deleted c) the user deletes the now-displayed red id of the missing item
+					//in this case, the target was null before and after the edit, but we need to notify that the edit happened, else it is lost
+					if (string.IsNullOrEmpty(Text))
+					{
+						if (SelectedItemChanged != null)
+						{
+							SelectedItemChanged.Invoke(this, null);
+						}
+					}
 					return;
 				}
 				_inMidstOfSettingSelectedItem = true;
@@ -248,7 +289,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		internal ListBox FilteredChoicesListBox
+		public IWeSayListBox FilteredChoicesListBox
 		{
 			get { return _listBox; }
 		}
@@ -262,7 +303,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				return;
 			}
 
-			_formToObectFinderDelegate = DefaultFormToObjectFinder;
+			_formToObjectFinderDelegate = DefaultFormToObjectFinder;
 			_itemFilterDelegate = FilterList;
 
 			Leave += Popup_Deactivate;
@@ -271,13 +312,16 @@ namespace WeSay.UI.AutoCompleteTextBox
 			MouseHover += OnMouseHover;
 
 			// Create the list box that will hold matching items
-			_listBox = new ListBox();
+			_listBox = new WeSayListBox();
 			_listBox.MaximumSize = new Size(800, 100);
 			_listBox.Cursor = Cursors.Hand;
 			_listBox.BorderStyle = BorderStyle.FixedSingle;
 			//_listBox.SelectedIndexChanged += List_SelectedIndexChanged;
 			_listBox.Click += List_Click;
 			_listBox.MouseMove += List_MouseMove;
+			_listBox.LostFocus += OnListLostFocus;
+			_listBox.Enter += List_Enter;
+			_listBox.Leave += List_Leave;
 			_listBox.ItemHeight = _listBox.Font.Height;
 			_listBox.Visible = false;
 			_listBox.Sorted = false;
@@ -288,6 +332,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 			triggers.Add(new ShortCutTrigger(Keys.Tab, TriggerState.Select));
 			triggers.Add(new ShortCutTrigger(Keys.Control | Keys.Space, TriggerState.ShowAndConsume));
 			triggers.Add(new ShortCutTrigger(Keys.Escape, TriggerState.HideAndConsume));
+		}
+
+		private void OnListLostFocus(object sender, EventArgs e)
+		{
+			OnLostFocus(e);
 		}
 
 		private void OnMouseHover(object sender, EventArgs e)
@@ -331,18 +380,30 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
-			base.OnSizeChanged(e);
-			if (_listBox != null)
+			using (var detect = Detect.Reentry(this,"OnSizeChanged"))
 			{
-				//NB: this height can be multiple lines, so we don't just want the Height
-				//this._listBox.ItemHeight = Height;
-				_listBox.ItemHeight = _listBox.Font.Height;
-			}
-			if (_listBox != null && _autoSizePopup)
-			{
-				if (_listBox.Width < Width)
+				if (detect.DidReenter)
 				{
-					_listBox.Width = Width;
+					return;
+				}
+
+				var height = this.Height;
+				base.OnSizeChanged(e);
+				if (height > this.Height)   //this is for the search box, where the ws label could be much taller that the list text
+					this.Height = height;
+
+				if (_listBox != null)
+				{
+					//NB: this height can be multiple lines, so we don't just want the Height
+					//this._listBox.ItemHeight = Height;
+					_listBox.ItemHeight = _listBox.Font.Height;
+				}
+				if (_listBox != null && _autoSizePopup)
+				{
+					if (_listBox.Width < Width)
+					{
+						_listBox.Width = Width;
+					}
 				}
 			}
 		}
@@ -438,7 +499,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				case Keys.Up:
 				{
+					TriggersEnabled = false;
 					Mode = EntryMode.List;
+					TriggersEnabled = true;
 					if (_listBox.Visible == false)
 					{
 						ShowList();
@@ -451,7 +514,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 				case Keys.Down:
 				{
+					TriggersEnabled = false;
 					Mode = EntryMode.List;
+					TriggersEnabled = true;
 					if (_listBox.Visible == false)
 					{
 						ShowList();
@@ -500,11 +565,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 
-			SelectedItem = _formToObectFinderDelegate(Text);
+			SelectedItem = _formToObjectFinderDelegate(Text);
 		}
 
 		/// <summary>
-		/// can be replaced by something smarter, using the FormToObectFinderDelegate
+		/// can be replaced by something smarter, using the FormToObjectFinderDelegate
 		/// </summary>
 		/// <param name="form"></param>
 		private object DefaultFormToObjectFinder(string form)
@@ -522,12 +587,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnLostFocus(EventArgs e)
 		{
 			base.OnLostFocus(e);
-
-			if (!(Focused || _listBox.Focused))
+			if (!(Focused || ListBoxFocused))
 			{
 				HideList();
 			}
-
 		}
 
 		protected override void OnGotFocus(EventArgs e)
@@ -612,7 +675,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		protected virtual void HideList()
+		public virtual void HideList()
 		{
 			Mode = EntryMode.Text;
 			_listBox.Visible = false;
@@ -646,21 +709,16 @@ namespace WeSay.UI.AutoCompleteTextBox
 			int selectedIndex = _listBox.SelectedIndex;
 			_listBox.BeginUpdate();
 			_listBox.Items.Clear();
-
-			//hatton experimental:
-			if (string.IsNullOrEmpty(Text))
-			{
-				return;
-			}
-			//end hatton experimental
-
 			_listBox.Font = Font;
 			_listBox.ItemHeight = _listBox.Font.Height;
 
 			int maxWidth = Width;
 			using (Graphics g = (_autoSizePopup) ? CreateGraphics() : null)
 			{
-				foreach (object item in ItemFilterer.Invoke(Text, Items, ItemDisplayStringAdaptor))
+				// Text.Trim() allows "1 " to trigger updating the list and matching "1 Universe", where
+				// the match involves "1" and "Universe" separately.  (Note that "1 " does not match either
+				// "1" or "Universe".)
+				foreach (object item in ItemFilterer.Invoke(Text.Trim(), Items, ItemDisplayStringAdaptor))
 				{
 					string label = ItemDisplayStringAdaptor.GetDisplayLabel(item);
 					_listBox.Items.Add(new ItemWrapper(item, label));
@@ -714,7 +772,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private Size MeasureItem(IDeviceContext dc, string s)
 		{
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.NoClipping;
-			if (WritingSystem != null && WritingSystem.RightToLeft)
+			if (WritingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
@@ -753,10 +811,39 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void Popup_Deactivate(object sender, EventArgs e)
 		{
-			if (!(Focused || _listBox.Focused))
+			if (!(Focused || ListBoxFocused))
 			{
 				HideList();
 			}
+		}
+
+		public bool ListBoxFocused
+		{
+			// The order of WM_SETFOCUS and WM_KILLFOCUS is different between Windows and Mono.
+			// So this.Focused is set false before _listBox.Focused is set true in Mono.  But
+			// WM_ENTER is sent before WM_KILLFOCUS in Mono, so our internal flag may be true
+			// even when neither Focused flag is true.  This internal flag isn't needed for
+			// Windows, but it also doesn't hurt.
+			get
+			{
+				return _listBox.Focused || _listBoxEntered;
+			}
+		}
+
+		private bool _listBoxEntered;
+		/// <summary>
+		/// Record when the child ListBox has been entered, but not yet left.  In Mono, this
+		/// starts before _listBox obtains focus, and also before "this" loses focus.  (In
+		/// Windows, this isn't needed but it doesn't hurt either.)
+		/// </summary>
+		private void List_Enter(object sender, System.EventArgs e)
+		{
+			_listBoxEntered = true;
+		}
+
+		private void List_Leave(object sender, System.EventArgs e)
+		{
+			_listBoxEntered = false;
 		}
 	}
 }

@@ -9,14 +9,12 @@ namespace WeSay.LexicalTools.Tests
 		protected ITask _task;
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void Deactivate_CalledBeforeActivate_Throws()
 		{
-			_task.Deactivate();
+			Assert.Throws<InvalidOperationException>(() => _task.Deactivate());
 		}
 
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void Deactivate_CalledTwice_Throws()
 		{
 			try
@@ -26,7 +24,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 			finally
 			{
-				_task.Deactivate();
+				Assert.Throws<InvalidOperationException>(() => _task.Deactivate());
 			}
 			//    _task = null;
 			//            GC.Collect();
@@ -41,20 +39,21 @@ namespace WeSay.LexicalTools.Tests
 			_task.Deactivate();
 		}
 
-		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
-		public void Activate_CalledTwice_Throws()
-		{
-			_task.Activate();
-			try
-			{
-				_task.Activate();
-			}
-			finally
-			{
-				_task.Deactivate();
-			}
-		}
+// not anymore (see not on task base where it used to throw
+//        [Test]
+//        [NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (InvalidOperationException))]
+//        public void Activate_CalledTwice_Throws()
+//        {
+//            _task.Activate();
+//            try
+//            {
+//                _task.Activate();
+//            }
+//            finally
+//            {
+//                _task.Deactivate();
+//            }
+//        }
 
 		[Test]
 		public void IsActive_BeforeActivate_False()

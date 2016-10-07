@@ -1,0 +1,86 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# http://stackoverflow.com/a/17729961/35577
+pref_interface = ['eth0', 'eth1', 'eth2', 'en0' ]
+vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name).gsub(/Name:\s+/,'')
+pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
+$network_interface=pref_interface[0]
+
+# On Windows, vagrant-cachier is not handling the apt_lists caching correctly.
+# So do not make it required for now.
+required_plugins = ["vagrant-vbguest"]
+unless (missing_plugins = required_plugins.select { |p| !Vagrant.has_plugin?(p) }).empty?
+  raise "\nBefore you can 'vagrant up' this box, please install these plugins\n  " +
+        missing_plugins.join("\n  ") +
+        "\nTypically this is done by running\n" +
+        "  'vagrant plugin install <plugin>'\nfor each plugin"
+end
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  def bootstrap_wesay(config, name, options = {})
+    options = {:gui => true, :bridge => true}.merge(options)
+    config.vm.provision :shell, :path => 'bootstrap.sh'
+
+    { '..' => '/wesay',
+      "#{Dir.home}/pbuilder" => '/pbuilder'
+    }
+    .select { |host_dir,_| File.directory?(host_dir) }
+    .each { |host_dir, vm_dir| config.vm.synced_folder host_dir, vm_dir }
+
+    config.vm.provider :virtualbox do |vb|
+      vb.gui=options[:gui]
+      vb.name=name
+      vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+
+    # add public network adapter
+    config.vm.network :public_network, :bridge=> $network_interface if options[:bridge]
+
+    if Vagrant.has_plugin?("vagrant-cachier")
+      # vagrant-cachier setting
+      config.cache.scope = :box
+    end
+  end
+
+  # Vagrant doesn't recogize Wasta (based on Linux Mint) so bridge network doesn't work.
+  # https://github.com/mitchellh/vagrant/issues/3648 (version 1.5.4)
+  config.vm.define :wasta64 do |wasta64|
+    wasta64.vm.box='wasta64-2014-01-23'
+    wasta64.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/wasta64-2014-01-23.box'
+    bootstrap_wesay wasta64, 'vagrant-wasta64', :bridge=>false
+  end
+
+  config.vm.define :wasta32 do |wasta32|
+    wasta32.vm.box='wasta32-2014-01-23'
+    wasta32.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/wasta32-2014-01-23.box'
+    bootstrap_wesay wasta32, 'vagrant-wasta32', :bridge=>false
+  end
+
+  config.vm.define :precise64 do |precise64|
+    precise64.vm.box='precise64-unity'
+    precise64.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/precise64-unity.box'
+    bootstrap_wesay precise64, 'vagrant-precise64'
+  end
+
+  config.vm.define :precise32 do |precise32|
+    precise32.vm.box='precise32-unity'
+    precise32.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/precise32-unity.box'
+    bootstrap_wesay precise32, 'vagrant-precise32'
+  end
+
+  config.vm.define :saucy64 do |saucy64|
+    saucy64.vm.box='saucy64-unity'
+    saucy64.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/saucy64-unity.box'
+    bootstrap_wesay saucy64, 'vagrant-saucy64'
+  end
+
+  config.vm.define :trusty64 do |trusty64|
+    trusty64.vm.box='trusty64-unity'
+    trusty64.vm.box_url='https://googledrive.com/host/0ByDMfZ-FJZsQYjM2SUhZbU1fbTQ/trusty64-unity.box'
+    bootstrap_wesay trusty64, 'vagrant-trusty64'
+  end
+end

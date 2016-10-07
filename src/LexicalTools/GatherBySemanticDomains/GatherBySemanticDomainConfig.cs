@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.XPath;
+using Palaso.i18n;
 using WeSay.Project;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
-	public interface IGatherBySemanticDomainsConfig : ITaskConfiguration
-	{
-		string semanticDomainsQuestionFileName
-		{
-			get;
-		}
-	}
 
-	public class GatherBySemanticDomainConfig : TaskConfigurationBase, IGatherBySemanticDomainsConfig
+
+	public class GatherBySemanticDomainConfig : TaskConfigurationBase, ITaskConfiguration
 	{
+
+		/// <summary>
+		/// Allow user to enter a meaning for each word as it is gathered (this is a little controversial)
+		/// </summary>
+		public bool ShowMeaningField{get;set;}
+
 		public GatherBySemanticDomainConfig(string xml)
 			: base(xml)
 		{
+			ShowMeaningField = bool.Parse(GetStringFromConfigNode("showMeaningField", "false"));
 		}
 
 
@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 		{
 			string x =
 				String.Format(
-					@"   <task taskName='AddMissingInfo' visible='true'>
+					@"   <task taskName='GatherWordsBySemanticDomains' visible='true'>
 	  <semanticDomainsQuestionFileName>{0}</semanticDomainsQuestionFileName>
 	</task>",
 					semanticDomainsQuestionFileName);
@@ -41,6 +41,12 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
+		{
+			return taskConfiguration is GatherBySemanticDomainConfig;
+		}
+
+
 
 		public override string ToString()
 		{
@@ -49,27 +55,27 @@ namespace WeSay.LexicalTools
 
 		public string Label
 		{
-			get { return "Semantic Domains"; }
+			get { return StringCatalog.Get("Semantic Domains"); }
 		}
 
 		public string LongLabel
 		{
-			get { return "Gather Words By Semantic Domain"; }
+			get { return StringCatalog.Get("Gather Words By Semantic Domain"); }
 		}
 
 		public string Description
 		{
-			get { return "Collect new words organized by semantic domains and questions about those domains."; }
+			get { return StringCatalog.Get("Collect new words organized by semantic domains and questions about those domains."); }
 		}
 
 		public string RemainingCountText
 		{
-			get { return "Domains without words"; }
+			get { return StringCatalog.Get("Domains without words"); }
 		}
 
 		public string ReferenceCountText
 		{
-			get { return "Total domains:"; }
+			get { return StringCatalog.Get("Total domains:"); }
 		}
 
 		public bool IsPinned
@@ -83,6 +89,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				yield return new KeyValuePair<string, string>("semanticDomainsQuestionFileName", semanticDomainsQuestionFileName);
+				yield return new KeyValuePair<string, string>("showMeaningField", ShowMeaningField.ToString());
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Palaso.DictionaryServices.Model;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
@@ -14,7 +15,7 @@ namespace WeSay.LexicalTools.Tests
 			Field field = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 									"LexEntry",
 									new string[] {"vernacular"});
-			_missingLexicalFormFilter = new MissingFieldQuery(field);
+			_missingLexicalFormFilter = new MissingFieldQuery(field, null, null);
 		}
 
 		[Test]

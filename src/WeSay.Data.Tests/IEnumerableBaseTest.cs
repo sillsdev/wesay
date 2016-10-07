@@ -92,11 +92,11 @@ namespace WeSay.Data.Tests
 		/// collection before reading the value of the Current property.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsBeforeMoveNext()
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
-			T current = (T) enumerator.Current;
+			T current;
+			Assert.Throws<InvalidOperationException>(() =>  current = (T) enumerator.Current);
 		}
 
 		/// <summary>
@@ -105,13 +105,13 @@ namespace WeSay.Data.Tests
 		/// collection before reading the value of the Current property.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsAfterResetBeforeMoveNext()
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
 			enumerator.MoveNext();
 			enumerator.Reset();
-			T current = (T) enumerator.Current;
+			T current;
+			Assert.Throws<InvalidOperationException>(() =>  current= (T) enumerator.Current);
 		}
 
 		/// <summary>
@@ -119,12 +119,12 @@ namespace WeSay.Data.Tests
 		/// MoveNext returned false, which indicates the end of the collection.
 		/// </summary>
 		[Test]
-		[ExpectedException(typeof (InvalidOperationException))]
 		public void CurrentThrowsAtEndOfCollection()
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
 			while (enumerator.MoveNext()) {}
-			T current = (T) enumerator.Current;
+			T current;
+			Assert.Throws<InvalidOperationException>(() =>  current = (T) enumerator.Current);
 		}
 	}
 

@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Enchant;
-using WeSay.Foundation;
+using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
@@ -14,16 +16,16 @@ namespace WeSay.ConfigTool
 
 		private class WritingSystemListBoxAdaptor
 		{
-			private readonly WritingSystem _ws;
+			private readonly IWritingSystemDefinition _ws;
 			private readonly bool _hasSpellCheckerInstalled;
 
-			public WritingSystemListBoxAdaptor(WritingSystem ws, bool hasSpellCheckerInstalled)
+			public WritingSystemListBoxAdaptor(IWritingSystemDefinition ws, bool hasSpellCheckerInstalled)
 			{
 				_ws = ws;
 				_hasSpellCheckerInstalled = hasSpellCheckerInstalled;
 			}
 
-			public WritingSystem WritingSystem
+			public IWritingSystemDefinition WritingSystem
 			{
 				get { return _ws; }
 			}
@@ -35,7 +37,7 @@ namespace WeSay.ConfigTool
 
 			public override string ToString()
 			{
-				string displayString = WritingSystem.ToString();
+				string displayString = WritingSystem.ListLabel;
 				if (HasSpellCheckerInstalled)
 				{
 					displayString += " (Has spell checker)";
@@ -56,11 +58,22 @@ namespace WeSay.ConfigTool
 			{
 				using (Broker broker = new Broker())
 				{
-					foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
+					foreach (IWritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
 					{
-						if (broker.DictionaryExists(ws.Id))
+						try
 						{
-							writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
+							// Not all writing systems even pretend to have spell checking.
+							// (Consider the ersatz "voice" writing systems for example.)
+							if (ws.SpellCheckingId != null && broker.DictionaryExists(ws.SpellCheckingId))
+							{
+								writingSystemIdsWithSpellCheckingInstalled.Add(ws.Id);
+							}
+						}
+						catch (Exception)  //WS-1296 where (sometimes) a bogus looking id killed Enchant
+						{
+							//ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "There was a problem asking the Enchant Spelling system about '{0}'.", ws.Id);
+
+							//These enchant errors are just too common & useless.  Let's not even report on them.
 						}
 					}
 				}
@@ -68,6 +81,11 @@ namespace WeSay.ConfigTool
 			catch (DllNotFoundException)
 			{
 				//If Enchant is not installed we expect an exception.
+			}
+			catch (Exception e)//there are other errors we can get from the enchange binding
+			{
+				ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),
+												"The Enchant Spelling engine encountered an error: " + e.Message);
 			}
 			return writingSystemIdsWithSpellCheckingInstalled;
 		}
@@ -110,14 +128,15 @@ namespace WeSay.ConfigTool
 			SaveWritingSystemIdsForField(-1);
 		}
 
-		private void SaveWritingSystemIdsForField(int aboutToBeCheckedItemIndex)
+
+		private void SaveWritingSystemIdsForField(int indexOfItemWhichShouldBeConsideredChecked)
 		{
 			CurrentField.WritingSystemIds.Clear();
 			for (int i = 0;i < _writingSystemListBox.Items.Count;i++)
 			{
-				if (_writingSystemListBox.GetItemChecked(i) || i == aboutToBeCheckedItemIndex)
+				if (_writingSystemListBox.GetItemChecked(i) || i == indexOfItemWhichShouldBeConsideredChecked)
 				{
-					WritingSystem ws =
+					IWritingSystemDefinition ws =
 							((WritingSystemListBoxAdaptor) _writingSystemListBox.Items[i]).
 									WritingSystem;
 					CurrentField.WritingSystemIds.Add(ws.Id);
@@ -153,7 +172,7 @@ namespace WeSay.ConfigTool
 			_writingSystemListBox.Items.RemoveAt(index);
 			--index;
 			_writingSystemListBox.Items.Insert(index, item);
-			_writingSystemListBox.SetItemChecked(index, isChecked);
+			_writingSystemListBox.SetItemCheckedReally(index, isChecked);
 			_writingSystemListBox.SelectedIndex = index;
 			if (isChecked)
 			{
@@ -175,7 +194,7 @@ namespace WeSay.ConfigTool
 			_writingSystemListBox.Items.RemoveAt(index);
 			++index;
 			_writingSystemListBox.Items.Insert(index, item);
-			_writingSystemListBox.SetItemChecked(index, isChecked);
+			_writingSystemListBox.SetItemCheckedReally(index, isChecked);
 			_writingSystemListBox.SelectedIndex = index;
 			if (isChecked)
 			{
@@ -202,22 +221,25 @@ namespace WeSay.ConfigTool
 			{
 				return;
 			}
+			// Weed out any writing systems that have been deleted from under us.
+			CurrentField.WritingSystemIds =
+				BasilProject.Project.FilterOutBadWritingSystems(CurrentField.WritingSystemIds);
 			List<string> writingSystemIdsWithSpellCheckingInstalled =
 					GetWritingSystemIdsWithSpellCheckingInstalled();
 
 			_writingSystemListBox.Items.Clear();
-			IList<WritingSystem> writingSystems =
+			IList<IWritingSystemDefinition> writingSystems =
 					BasilProject.Project.WritingSystemsFromIds(CurrentField.WritingSystemIds);
-			foreach (WritingSystem ws in writingSystems)
+			foreach (IWritingSystemDefinition ws in writingSystems)
 			{
 				bool hasSpellCheckerInstalled =
 						writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
 				int i =
-						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
+						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor( ws,
 																						hasSpellCheckerInstalled));
-				_writingSystemListBox.SetItemChecked(i, true);
+				_writingSystemListBox.SetItemCheckedReally(i, true);
 			}
-			foreach (WritingSystem ws in BasilProject.Project.WritingSystems.Values)
+			foreach (IWritingSystemDefinition ws in BasilProject.Project.WritingSystems.AllWritingSystems)
 			{
 				if (!CurrentField.WritingSystemIds.Contains(ws.Id))
 				{
@@ -226,7 +248,7 @@ namespace WeSay.ConfigTool
 					int i =
 							_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
 																							hasSpellCheckerInstalled));
-					_writingSystemListBox.SetItemChecked(i, false);
+					_writingSystemListBox.SetItemCheckedReally(i, false);
 				}
 			}
 		}

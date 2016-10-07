@@ -2,8 +2,10 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Enchant;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using WeSay.Project;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -60,6 +62,8 @@ namespace WeSay.ConfigTool
 			{
 				if (value == _field)
 				{
+					// refresh these since they might have changed on another tab
+					_writingSystemsControl.CurrentField = value;
 					return;
 				}
 
@@ -72,6 +76,7 @@ namespace WeSay.ConfigTool
 				_enableSpelling.Checked = _field.IsSpellCheckingEnabled;
 				_normallyHidden.Checked = _field.Visibility ==
 										  CommonEnumerations.VisibilitySetting.NormallyHidden;
+				_multiParagraph.Checked = _field.IsMultiParagraph;
 
 				FillClassNameCombo();
 				FillDataTypeCombo();
@@ -146,7 +151,7 @@ namespace WeSay.ConfigTool
 			AddComboItem(_dataTypeCombo,
 						 _field.DataTypeName,
 						 Field.BuiltInDataType.MultiText,
-						 "Text in one or more writing systems");
+						 "Text in one or more input systems");
 			AddComboItem(_dataTypeCombo,
 						 _field.DataTypeName,
 						 Field.BuiltInDataType.Option,
@@ -167,7 +172,14 @@ namespace WeSay.ConfigTool
 
 		private void UpdateDisplay()
 		{
-			_optionListFileLabel.Visible = _optionsFileName.Visible = _field.ShowOptionListStuff;
+			if (_field.FieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+			{
+				_optionListFileLabel.Visible = false;
+			}
+			else
+			{
+				_optionListFileLabel.Visible = _optionsFileName.Visible = _field.ShowOptionListStuff;
+			}
 			bool isFieldMultiText = _field.DataTypeName ==
 									Field.BuiltInDataType.MultiText.ToString();
 			_enableSpellingLabel.Visible = _enableSpelling.Visible = isFieldMultiText;
@@ -182,6 +194,13 @@ namespace WeSay.ConfigTool
 			_dataTypeCombo.Enabled = _field.UserCanDeleteOrModify;
 			_description.Enabled = _field.UserCanDeleteOrModify;
 			_normallyHidden.Enabled = _field.CanOmitFromMainViewTemplate;
+			_multiParagraphLabel.Visible =
+			_multiParagraph.Visible = _field.DataTypeName == Field.BuiltInDataType.MultiText.ToString();
+			_multiParagraph.Enabled = _field.UserCanDeleteOrModify;
+			_writingSystemsControlLabel.Visible =
+			_writingSystemsControl.Visible = _field.UserCanModifyWritingSystems;
+			_enableSpelling.Visible = _field.UserCanModifySpellCheckFeature;
+
 		}
 
 		private void OnLeaveDisplayName(object sender, EventArgs e)
@@ -198,7 +217,7 @@ namespace WeSay.ConfigTool
 		{
 			_field.DisplayName = _displayName.Text.Trim();
 
-			if (DisplayNameOfFieldChanged != null)
+			if (DisplayNameOfFieldChanged != null && !_loading)
 			{
 				DisplayNameOfFieldChanged.Invoke(this, null);
 			}
@@ -227,8 +246,12 @@ namespace WeSay.ConfigTool
 
 		private void _description_TextChanged(object sender, EventArgs e)
 		{
-			_field.Description = _description.Text.Trim();
-			DescriptionOfFieldChanged.Invoke(this, e);
+			if (!_loading)
+			{
+
+				_field.Description = _description.Text.Trim();
+				DescriptionOfFieldChanged.Invoke(this, e);
+			}
 		}
 
 		private void _normallyHidden_CheckedChanged(object sender, EventArgs e)
@@ -242,6 +265,8 @@ namespace WeSay.ConfigTool
 				_field.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			}
 		}
+
+
 
 		private void _enableSpelling_CheckedChanged(object sender, EventArgs e)
 		{
@@ -279,17 +304,45 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			ComboItemProxy proxy = _classNameCombo.SelectedItem as ComboItemProxy;
-			if (proxy == null)
+			if (CheckClassNameChange())
 			{
-				return;
+				ComboItemProxy proxy = _classNameCombo.SelectedItem as ComboItemProxy;
+				if (proxy == null)
+				{
+					return;
+				}
+				_field.ClassName = proxy.UnderlyingValue.ToString();
+				UpdateDisplay();
+				if (ClassOfFieldChanged != null && !_loading)
+				{
+					ClassOfFieldChanged.Invoke(this, null);
+				}
 			}
-			_field.ClassName = proxy.UnderlyingValue.ToString();
-			UpdateDisplay();
-			if (ClassOfFieldChanged != null)
+			else //revert
 			{
-				ClassOfFieldChanged.Invoke(this, null);
+				_loading = true; //don't check this
+				SelectComboItem(_classNameCombo, _field.ClassName);
+				_loading = false;
 			}
+		}
+
+		/// <summary>
+		///
+		/// </summary>
+		/// <returns>false if the change was rejected</returns>
+		private bool CheckClassNameChange()
+		{
+			bool validChange = true;
+			string newClassName =
+				((ComboItemProxy) _classNameCombo.SelectedItem).UnderlyingValue.ToString();
+			if (_field.DataTypeName == Field.BuiltInDataType.Picture.ToString()
+				&& (newClassName != "LexSense"))
+				{
+					ErrorReport.NotifyUserOfProblem("Sorry, WeSay cannot set the type of this field to '{0}'. Pictures are only supported on Sense",
+						newClassName);
+					validChange = false;
+				}
+			return validChange;
 		}
 
 		private void OnDataTypeCombo_SelectedIndexChanged(object sender, EventArgs e)
@@ -364,15 +417,35 @@ namespace WeSay.ConfigTool
 																				 "type",
 																				 _field.FieldName);
 			}
+			else if (newDataTypeName == Field.BuiltInDataType.Picture.ToString()
+				&& (_field.ClassName != "LexSense"))
+			{
+				ErrorReport.NotifyUserOfProblem("Sorry, WeSay cannot set the type of this field to '{0}'. Pictures are only supported on Sense",
+					newDataTypeName);
+				return false;
+			}
 
 			if (conflictFound)
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"Sorry, WeSay cannot change the type of this field to '{0}', because there is existing data in the LIFT file of the old type, '{1}'",
 						newDataTypeName,
 						oldDataTypeName);
 			}
 			return !conflictFound;
+		}
+
+
+		private void _multiParagraph_CheckedChanged(object sender, EventArgs e)
+		{
+			if (_multiParagraph.Checked)
+			{
+				_field.IsMultiParagraph = true;
+			}
+			else
+			{
+				_field.IsMultiParagraph = false;
+			}
 		}
 	}
 }

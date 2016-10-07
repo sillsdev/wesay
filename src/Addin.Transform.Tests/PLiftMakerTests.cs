@@ -1,8 +1,8 @@
-using System;
 using System.IO;
 using NUnit.Framework;
+using Palaso.DictionaryServices.Lift;
 using Palaso.Reporting;
-using WeSay.LexicalModel;
+using Palaso.TestUtilities;
 using WeSay.Project;
 
 namespace Addin.Transform.Tests
@@ -19,35 +19,48 @@ namespace Addin.Transform.Tests
 			ErrorReport.IsOkToInteractWithUser = false;
 		}
 
-		//        [Test]
-		//        public void EntryMakeItToXHtml()
-		//        {
-		//            string xmlForEntries = @"<entry id='foo1'><lexical-unit><form lang='v'><text>fooOne</text></form></lexical-unit></entry>";
-		//
-		//            using (Db4oProjectSetupForTesting projectSetup = new Db4oProjectSetupForTesting(xmlForEntries))
-		//            {
-		//                PLiftMaker maker = new PLiftMaker();
-		//                string outputPath = Path.Combine(projectSetup._project.PathToExportDirectory, projectSetup._project.Name + ".xhtml");
-		//                maker.MakeXHtmlFile(outputPath, projectSetup._lexEntryRepository, projectSetup._project);
-		//                Assert.IsTrue(File.ReadAllText(outputPath).Contains("<span class=\"v\">fooOne"));
-		//            }
-		//        }
-
 		[Test]
-		[Ignore("not a real test")]
-		public void MakePLiftForBiatah2()
+		public void EntryMakeItToPLift()
 		{
-			using (WeSayWordsProject p = new WeSayWordsProject())
+			var xmlOfEntries = @" <entry id='foo1'>
+										<lexical-unit><form lang='qaa-x-qaa'><text>hello</text></form></lexical-unit>
+								 </entry>";
+			using (var p = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries))
 			{
-				p.LoadFromProjectDirectoryPath(@"E:\Users\John\Documents\WeSay\biatah");
-
-				using (
-						LexEntryRepository lexEntryRepository =
-								new LexEntryRepository(p.PathToRepository))
+				PLiftMaker maker = new PLiftMaker();
+				using (var project = p.CreateLoadedProject())
 				{
-					PLiftMaker maker = new PLiftMaker();
-					string path = maker.MakePLiftTempFile(lexEntryRepository, p.DefaultPrintingTemplate);
-					Console.WriteLine(path);
+					using (var repository = project.GetLexEntryRepository())
+					{
+						string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".xhtml");
+						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate, LiftWriter.ByteOrderStyle.BOM);
+						AssertThatXmlIn.File(outputPath).
+							HasAtLeastOneMatchForXpath("//field[@type='headword']/form[@lang='qaa-x-qaa']/text[text()='hello']");
+					}
+				}
+			}
+		}
+
+
+		//Regression... there was a switch in how Lexique pro handled grammatical-info, such that it needs the raw-lift-style (previously we gave it what looked like a custom field)
+		[Test]
+		public void MakePLiftTempFile_ExportPartOfSpeechAsGrammaticalInfoElementSpecified_GrammaticalInfoOutputAsElement()
+		{
+			var xmlOfEntries = @" <entry id='foo1'>
+										<sense><grammatical-info value='noun'></grammatical-info></sense>
+								 </entry>";
+			using (var p = new WeSay.Project.Tests.ProjectDirectorySetupForTesting(xmlOfEntries))
+			{
+				PLiftMaker maker = new PLiftMaker() { Options = PLiftExporter.DefaultOptions | PLiftExporter.Options.ExportPartOfSpeechAsGrammaticalInfoElement }; ;
+				using (var project = p.CreateLoadedProject())
+				{
+					using (var repository = project.GetLexEntryRepository())
+					{
+						string outputPath = Path.Combine(project.PathToExportDirectory, project.Name + ".plift");
+						maker.MakePLiftTempFile(outputPath, repository, project.DefaultPrintingTemplate, LiftWriter.ByteOrderStyle.BOM);
+						AssertThatXmlIn.File(outputPath).
+							HasAtLeastOneMatchForXpath("//sense/grammatical-info[@value='noun']");
+					}
 				}
 			}
 		}

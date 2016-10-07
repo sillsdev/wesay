@@ -1,19 +1,23 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Palaso.i18n;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using Palaso.UiBindings;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
 {
 	public partial class SingleOptionControl: UserControl, IBindableControl<string>
 	{
 		private readonly OptionsList _list;
-		private readonly ComboBox _control = new ComboBox();
-		private readonly string _idOfPreferredWritingSystem;
+		private readonly IWeSayComboBox _control = null;
 		private readonly string _nameForLogging;
+		private readonly IWritingSystemDefinition _preferredWritingSystem;
 
 		public event EventHandler ValueChanged;
 
@@ -23,12 +27,6 @@ namespace WeSay.UI
 
 		#endregion
 
-		public SingleOptionControl(string nameForLogging)
-		{
-			InitializeComponent();
-			_idOfPreferredWritingSystem = "es";
-			_nameForLogging = nameForLogging;
-		}
 
 		protected override void OnHandleDestroyed(EventArgs e)
 		{
@@ -40,20 +38,29 @@ namespace WeSay.UI
 			base.OnHandleDestroyed(e);
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef,
-								   OptionsList list,
-								   string idOfPreferredWritingSystem,
-								   string nameForLogging)
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging,
+			IWritingSystemDefinition preferredWritingSystem)
+			: this(optionRef, list, nameForLogging, preferredWritingSystem, null)
 		{
+
+		}
+
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, IWritingSystemDefinition preferredWritingSystem, IServiceProvider serviceProvider )
+		{
+			AutoSize = true;
+			AutoSizeMode = AutoSizeMode.GrowAndShrink;
 			_list = list;
 			_nameForLogging = nameForLogging;
-			_idOfPreferredWritingSystem = idOfPreferredWritingSystem;
+			_preferredWritingSystem = preferredWritingSystem;
+			_control = serviceProvider.GetService(typeof(IWeSayComboBox)) as IWeSayComboBox;
 			InitializeComponent();
-			//doesn't allow old, non-valid values to be shown (can't set the text):  ComboBoxStyle.DropDownList;
 			_control.AutoCompleteMode = AutoCompleteMode.Append;
 			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
 			_control.Sorted = false;
 			_control.MaxDropDownItems = 100;
+			_control.WritingSystem = _preferredWritingSystem;
+			_control.Font = WritingSystemInfo.CreateFont(_preferredWritingSystem);
+			_control.Height = WritingSystemInfo.CreateFont(_preferredWritingSystem).Height + 10;
 			BuildBoxes(optionRef);
 		}
 
@@ -61,66 +68,80 @@ namespace WeSay.UI
 		{
 			get
 			{
-				//review
 				if (_control.SelectedItem != null)
 				{
-					string key = ((Option.OptionDisplayProxy) _control.SelectedItem).Key;
+					string key = "";
+					if (ConfiguredListItem(_control.SelectedItem))
+					{
+						key = ((Option.OptionDisplayProxy) _control.SelectedItem).Key;
+					}
+					else
+					{
+						key = (String) _control.SelectedItem;
+					}
 					// todo: something like this                   if (String.IsNullOrEmpty(key))
 					//                    {
 					//                        return null;// make "unknown" option be the same as if not set (at least as far as we can do that from here)
 					//                    }
 					return key;
 				}
-				else
-				{
-					return _control.Text;
-					// situation where the value isn't currently a member of the approved list
-				}
+				return _control.Text;
 			}
 			set
 			{
-				//if (value != null && value.Length == 0)
-				//{
-				//    _control.SelectedIndex = -1; //enhance: have a default value
-				//    SetStatusColor();
-				//    return;
-				//}
-
-				foreach (Option.OptionDisplayProxy proxy in _control.Items)
+				for (int i = 0; i < _control.Length; i++)
 				{
-					if (proxy.Key.Equals(value))
+					String selectedItemText = "";
+					if (ConfiguredListItem(_control.GetItem(i)))
 					{
-						_control.SelectedItem = proxy;
-						SetStatusColor();
+						selectedItemText = ((Option.OptionDisplayProxy)_control.GetItem(i)).Key;
+					}
+					else
+					{
+						selectedItemText = (String)_control.GetItem(i);
+					}
+					if (selectedItemText.Equals(value, StringComparison.OrdinalIgnoreCase))
+					{
+						_control.SelectedIndex = i;
+						SetStatusColor(ConfiguredListItem(_control.GetItem(i)));
 						return;
 					}
 				}
 
 				//Didn't find it
+				if (value.Length > 0)
+				{
+					_control.AddItem(value);
+					_control.SelectedIndex = _control.Length - 1;
+					SetStatusColor(false); //must do this before trying to change to a non-list value
+				}
+				else
+				{
+					_control.DropDownStyle = ComboBoxStyle.DropDown;
+					_control.AutoCompleteMode = AutoCompleteMode.None;
+					_control.Text = value;
+					SetStatusColor(true);
+				}
 
-				_control.DropDownStyle = ComboBoxStyle.DropDown;
-				//allow abberant old value NB: don't remove just because SetStatusCOlor looks like it will set this
-				//this was needed to fix ws-115, which appear to be related to changing the
-				//DropDownStyle + having autocomplete on.  Sadly, it means a bad (red) key can't be fixed just by typing. Must
-				//select a good value.
-				_control.AutoCompleteMode = AutoCompleteMode.None;
-
-				_control.Text = value;
-				SetStatusColor(); //must do this before trying to change to a non-list value
 			}
 		}
 
-		private void SetStatusColor()
+		private bool ConfiguredListItem(Object item)
 		{
-			if (Value != null && Value.Length > 0 && _control.SelectedIndex == -1)
+			return (item is Option.OptionDisplayProxy);
+		}
+
+		private void SetStatusColor(bool configuredItem)
+		{
+			if (!configuredItem)
 			{
 				_control.BackColor = Color.Red;
-				_control.DropDownStyle = ComboBoxStyle.DropDown; //allow abberant old value
+				_control.DropDownStyle = ComboBoxStyle.DropDown;
 			}
 			else
 			{
 				_control.BackColor = Color.White;
-				_control.DropDownStyle = ComboBoxStyle.DropDownList; // can't type
+				_control.DropDownStyle = ComboBoxStyle.DropDownList;
 			}
 		}
 
@@ -132,54 +153,47 @@ namespace WeSay.UI
 			const int initialPanelWidth = 200;
 			SetupComboControl(optionRef);
 
-			components.Add(_control); //so it will get disposed of when we are
+			components.Add((Control)_control); //so it will get disposed of when we are
 
-			Panel p = new Panel();
-			p.Controls.Add(_control);
-			p.Size = new Size(initialPanelWidth, _control.Height + 0);
-
-			//            FlagButton flagButton = MakeFlagButton(p.Size);
-			//            p.Controls.Add(flagButton);
-			//            this.components.Add(flagButton);//so it will get disposed of when we are
-
-			//            //TODO: THIS IS TRANSITIONAL CODE... AnnotationWidget should probably become a full control (or go away)
-			//            AnnotationWidget aw = new AnnotationWidget(multiText, writingSystem.Id);
-			//            Control annotationControl = aw.MakeControl(p.Size);
-			//            p.Controls.Add(annotationControl);
-			//            this.components.Add(annotationControl);//so it will get disposed of when we are
-
-			Controls.Add(p);
-			Height += p.Height;
+			Controls.Add((Control)_control);
+			//Height += p.Height;
 			ResumeLayout(false);
 		}
 
 		private void SetupComboControl(IValueHolder<string> selectedOptionRef)
 		{
-			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty); }))
+
+			_control.Font = (Font)StringCatalog.LabelFont.Clone();
+			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty || o.Key == "unknown"); }))
 			{
 				MultiText unspecifiedMultiText = new MultiText();
-				unspecifiedMultiText.SetAlternative(_idOfPreferredWritingSystem,
+				unspecifiedMultiText.SetAlternative(_preferredWritingSystem.Id,
 													StringCatalog.Get("~unknown",
 																	  "This is shown in a combo-box (list of options, like Part Of Speech) when no option has been chosen, or the user just doesn't know what to put in this field."));
-				Option unspecifiedOption = new Option(string.Empty, unspecifiedMultiText);
-				_control.Items.Add(new Option.OptionDisplayProxy(unspecifiedOption,
-																 _idOfPreferredWritingSystem));
+				Option unspecifiedOption = new Option("unknown", unspecifiedMultiText);
+				_control.AddItem(new Option.OptionDisplayProxy(unspecifiedOption,
+																 _preferredWritingSystem.Id));
 			}
 			_list.Options.Sort(CompareItems);
 			foreach (Option o in _list.Options)
 			{
-				/* this won't work.  It doesn't give us a way to select which ws to display, as it will always
-					draw from ToString().  We can change which property (e.g. DisplayName(), but that doesn't
-					give us a way to choose the ws either.
-					_control.Items.Add(o);
-				*/
-				_control.Items.Add(o.GetDisplayProxy(_idOfPreferredWritingSystem));
+				_control.AddItem(o.GetDisplayProxy(_preferredWritingSystem.Id));
 			}
+			_control.BackColor = Color.White;
 
 			Value = selectedOptionRef.Value;
+			_control.ListCompleted();
 
 			_control.SelectedValueChanged += OnSelectedValueChanged;
-			//            _control.Validating += new System.ComponentModel.CancelEventHandler(_control_Validating);
+
+			//don't let the mousewheel do the scrolling, as it's likely an accident (http://jira.palaso.org/issues/browse/WS-34670)
+			((Control)_control).MouseWheel += (sender, e) => {
+				HandledMouseEventArgs he = e as HandledMouseEventArgs;
+				if (he != null)
+				{
+					he.Handled = true;
+				}
+			};
 		}
 
 		private int CompareItems(Option a, Option b)
@@ -188,26 +202,20 @@ namespace WeSay.UI
 			{
 				return 1;
 			}
-			else if (string.IsNullOrEmpty(b.Key))
+			if (string.IsNullOrEmpty(b.Key))
 			{
 				return -1;
 			}
-			string x = a.Name.GetBestAlternative(_idOfPreferredWritingSystem);
-			string y = b.Name.GetBestAlternative(_idOfPreferredWritingSystem);
+			string x = a.Name.GetBestAlternative(_preferredWritingSystem.Id);
+			string y = b.Name.GetBestAlternative(_preferredWritingSystem.Id);
 
 			return String.Compare(x, y);
 		}
 
-		//void _control_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		//{
-		//    //don't allow entering things that aren't options
-		//      e.Cancel = !(_control.SelectedIndex > -1 || _control.Text=="");
-		//}
-
 		private void OnSelectedValueChanged(object sender, EventArgs e)
 		{
 			Logger.WriteMinorEvent("SingleOptionControl_SelectionChanged ({0})", _nameForLogging);
-			SetStatusColor();
+			SetStatusColor(ConfiguredListItem(_control.SelectedItem));
 			if (ValueChanged != null)
 			{
 				ValueChanged.Invoke(this, null);

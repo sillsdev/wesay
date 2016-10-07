@@ -1,52 +1,68 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using Autofac;
 using CommandLine;
+using Palaso.Code;
+using Palaso.i18n;
+using Palaso.IO;
+using Palaso.Lift;
 using Palaso.Reporting;
-using Palaso.Services;
-using Palaso.Services.Dictionary;
-using Palaso.Services.ForServers;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.UiBindings;
 using WeSay.App.Properties;
-using WeSay.App.Services;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
-using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
 using WeSay.UI;
+using Gecko;
 
 namespace WeSay.App
 {
 	public class WeSayApp
 	{
-		//private static Mutex _oneInstancePerProjectMutex;
+		private static Mutex _oneInstancePerProjectMutex;
 		private WeSayWordsProject _project;
-		private DictionaryServiceProvider _dictionary;
+
 		private readonly CommandLineArguments _commandLineArguments = new CommandLineArguments();
-		private ServiceAppSingletonHelper _serviceAppSingletonHelper;
 		private TabbedForm _tabbedForm;
-		private IDisposable _serviceLifeTimeHelper;
+
+		[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		static extern bool SetDllDirectory(string lpPathName);
 
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			WeSayApp app = new WeSayApp(args);
-			app.Run();
+			using (new Palaso.PalasoSetup())
+			{
+				try
+				{
+					// initialize Palaso keyboarding
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+					var app = new WeSayApp(args);
+					app.Run();
+				}
+				finally
+				{
+					Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+					ReleaseMutexForThisProject();
+				}
+			}
 		}
 
 		public WeSayApp(string[] args)
 		{
-			// Palaso.Services.ForClients.IpcSystem.IsWcfAvailable = false;
 			Application.EnableVisualStyles();
 			//leave this at the top:
 			try
 			{
 				Application.SetCompatibleTextRenderingDefault(false);
 			}
-			catch (Exception) //swallow
+			catch (Exception)
 			{
 				//this fails in some test scenarios; perhaps the unit testing framework is leaving us in
 				//the same appdomain, and that remembers that we called this once before?
@@ -54,6 +70,8 @@ namespace WeSay.App
 			OsCheck();
 			Logger.Init();
 			SetupErrorHandling();
+
+			SetUpXulRunner();
 			//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 
 			//bring in settings from any previous version
@@ -62,40 +80,157 @@ namespace WeSay.App
 				Settings.Default.Upgrade();
 				Settings.Default.NeedUpgrade = false;
 			}
-			UsageReporter.AppNameToUseInDialogs = "WeSay";
-			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+			 SetUpReporting();
 
 			if (!Parser.ParseArguments(args, _commandLineArguments, ShowCommandLineError))
 			{
 				Application.Exit();
 			}
+
+			if (_commandLineArguments.launchedByUnitTest)
+			{
+				WeSayWordsProject.PreventBackupForTests = true;  //hopefully will help the cross-process dictionary services tests to be more reliable
+			}
 		}
 
-		public bool ServerModeStartRequested
+		public static void SetUpXulRunner()
 		{
-			get { return _commandLineArguments.startInServerMode; }
+			try
+			{
+				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
+				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty  || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
+#if __MonoCS__
+				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+				if (String.IsNullOrEmpty(xulRunnerLocation))
+					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+				if (!librarySearchPath.Contains(xulRunnerLocation))
+					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+
+				Xpcom.Initialize(xulRunnerLocation);
+				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+#else
+				// For windows, only initialize xulrunner if we are using the gecko browser control option
+				if (WeSayWordsProject.GeckoOption)
+				{
+					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfApplicationOrSolution, "xulrunner");
+					if (!Directory.Exists(xulRunnerLocation))
+					{
+						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
+					}
+					if (!SetDllDirectory(xulRunnerLocation))
+					{
+						throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
+					}
+					Xpcom.Initialize(xulRunnerLocation);
+					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+				}
+#endif
+			}
+			catch (ApplicationException e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message);
+			}
+			catch (Exception e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message);
+			}
+		}
+
+		private static void SetUpReporting()
+		{
+			if (Settings.Default.Reporting == null)
+			{
+				Settings.Default.Reporting = new ReportingSettings();
+				Settings.Default.Save();
+			}
+
+			// If this is a release build, then allow the environment variable to be set to true
+			// so that testers are not generating user stats
+			string developerSetting = System.Environment.GetEnvironmentVariable("WESAY_TRACK_AS_DEVELOPER");
+			bool developerTracking = !string.IsNullOrEmpty(developerSetting) && (developerSetting.ToLower() == "yes" || developerSetting.ToLower() == "true" || developerSetting == "1");
+			bool reportAsDeveloper =
+#if DEBUG
+ true
+#else
+ developerTracking
+#endif
+;
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6", reportAsDeveloper);
+			UsageReporter.AppNameToUseInDialogs = "WeSay";
+			UsageReporter.AppNameToUseInReporting = "WeSayApp";
+		}
+
+		public static void ReleaseMutexForThisProject()
+		{
+			if (_oneInstancePerProjectMutex != null)
+			{
+				_oneInstancePerProjectMutex.ReleaseMutex();
+				_oneInstancePerProjectMutex = null;
+			}
+		}
+
+		private static bool GrabTokenForThisProject(string pathToLiftFile)
+		{
+			//ok, here's how this complex method works...
+			//First, we try to get the mutex quickly and quitely.
+			//If that fails, we put up a dialog and wait a number of seconds,
+			//while we wait for the mutex to come free.
+
+			Guard.AgainstNull(pathToLiftFile, "pathToLiftFile");
+			string mutexId = pathToLiftFile;
+			mutexId = mutexId.Replace(Path.DirectorySeparatorChar, '-');
+			mutexId = mutexId.Replace(Path.VolumeSeparatorChar, '-');
+			bool mutexAcquired = false;
+			try
+			{
+				_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
+				mutexAcquired = _oneInstancePerProjectMutex.WaitOne(TimeSpan.FromMilliseconds(1 * 1000), false);
+			}
+			catch (WaitHandleCannotBeOpenedException e)//doesn't exist, we're the first.
+			{
+				_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexAcquired);
+				mutexAcquired = true;
+			}
+			catch (AbandonedMutexException e)
+			{
+				//that's ok, we'll get it below
+			}
+
+			using (var dlg = new SimpleProgressDialog("Waiting for other WeSay to finish..."))
+			{
+				dlg.Show();
+				try
+				{
+					_oneInstancePerProjectMutex = Mutex.OpenExisting(mutexId);
+					mutexAcquired = _oneInstancePerProjectMutex.WaitOne(TimeSpan.FromMilliseconds(10 * 1000), false);
+				}
+				catch (AbandonedMutexException e)
+				{
+					_oneInstancePerProjectMutex = new Mutex(true, mutexId, out mutexAcquired);
+					mutexAcquired = true;
+				}
+				catch (Exception e)
+				{
+					ErrorReport.NotifyUserOfProblem(e,
+						"There was a problem starting WeSay which might require that you restart your computer.");
+				}
+			}
+
+			if (!mutexAcquired) // cannot acquire?
+			{
+				_oneInstancePerProjectMutex = null;
+				ErrorReport.NotifyUserOfProblem("Another copy of WeSay is already open with " + pathToLiftFile + ". If you cannot find that WeSay, restart your computer.");
+				return false;
+			}
+			return true;
 		}
 
 		public void Run()
 		{
-			string path = DetermineActualLiftPath(_commandLineArguments.liftPath);
-			if (!String.IsNullOrEmpty(path))
-			{
-				path = path.Replace(Path.DirectorySeparatorChar, '-');
-				path = path.Replace(Path.VolumeSeparatorChar, '-');
-
-				_serviceAppSingletonHelper =
-						ServiceAppSingletonHelper.CreateServiceAppSingletonHelperIfNeeded(
-								"WeSay-" + path, _commandLineArguments.startInServerMode);
-				if (_serviceAppSingletonHelper == null)
-				{
-					return; // there's already an instance of this app running
-				}
-			}
-
-			try
-			{
 				DisplaySettings.Default.SkinName = Settings.Default.SkinName;
+
 				using (_project = InitializeProject(_commandLineArguments.liftPath))
 				{
 					if (_project == null)
@@ -104,45 +239,111 @@ namespace WeSay.App
 					}
 
 
-					using (_dictionary =
-						   new DictionaryServiceProvider(GetLexEntryRepository(), this, _project))
+					if (!GrabTokenForThisProject(_project.PathToLiftFile))
 					{
-						if (_project.PathToWeSaySpecificFilesDirectoryInProject.IndexOf("PRETEND") < 0)
-						{
-							RecoverUnsavedDataIfNeeded();
-						}
-
-						StartDictionaryServices();
-						_dictionary.LastClientDeregistered +=
-							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
-						WireUpChorusEvents();
-
-						_serviceAppSingletonHelper.HandleEventsUntilExit(StartUserInterface);
-
-						_dictionary.LastClientDeregistered -=
-							_serviceAppSingletonHelper.OnExitIfInServerMode;
-
-						//do a last backup before exiting
-						Logger.WriteEvent("App Exiting Normally.");
+						return;
 					}
+
+					LexEntryRepository repository;
+					try
+					{
+						repository = GetLexEntryRepository();
+					}
+					catch (LiftFormatException)
+					{
+						return; //couldn't load, and we've already told the user
+					}
+					WireUpChorusEvents();
+					StartUserInterface();
+
+					//do a last backup before exiting
+					Logger.WriteEvent("App Exiting Normally.");
 				}
-			 _project.BackupNow();
-		   }
-			finally
-			{
-				if (_serviceLifeTimeHelper != null)
-				{
-					_serviceLifeTimeHelper.Dispose();
-				}
-				if (_serviceAppSingletonHelper != null)
-				{
-					_serviceAppSingletonHelper.Dispose();
-				}
-			}
-			Logger.ShutDown();
-			Settings.Default.Save();
+				_project.BackupNow();
+
+				Logger.ShutDown();
+				Settings.Default.Save();
+
 		}
+
+	   private void StartUserInterface()
+	   {
+		   try
+		   {
+			   _project.AddToContainer(
+				   b => b.Register<StatusBarController>(
+					   container =>
+					   {
+						   var controller = new StatusBarController(container.Resolve<ICountGiver>());
+						   controller.ShowConfigLauncher = _commandLineArguments.launchedByConfigTool;
+						   return controller;
+					   }));
+			   _project.AddToContainer(b => b.RegisterType<TabbedForm>());
+			   _tabbedForm = _project.Container.Resolve<TabbedForm>();
+			   _tabbedForm.Show(); // so the user sees that we did launch
+			   var versionString = BasilProject.VersionString;
+			   var title = StringCatalog.Get("~WeSay", "It's up to you whether to bother translating this or not.");
+			   if (title != "WeSay")
+					_tabbedForm.Font = (System.Drawing.Font)StringCatalog.LabelFont.Clone();
+			   _tabbedForm.Text = String.Format(
+				   "{0} {1}: {2}",
+				   title,
+				   versionString,
+				   _project.Name
+				   );
+			   Application.DoEvents();
+
+			   //todo: this is what we're supposed to use the autofac "modules" for
+			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
+			   _project.AddToContainer(b => b.RegisterInstance<ICurrentWorkTask>(_tabbedForm));
+			   _project.AddToContainer(b => b.RegisterInstance(_tabbedForm.StatusStrip));
+			   _project.AddToContainer(
+				   b =>
+				   b.RegisterInstance(
+					   TaskMemoryRepository.CreateOrLoadTaskMemoryRepository(
+						   _project.Name, _project.PathToWeSaySpecificFilesDirectoryInProject)));
+
+			   _project.LoadTasksFromConfigFile();
+
+			   Application.DoEvents();
+			   _tabbedForm.ContinueLaunchingAfterInitialDisplay();
+			   _tabbedForm.Activate();
+			   _tabbedForm.BringToFront(); //needed if we were previously in server mode
+#if (!__MonoCS__)
+				if (WeSayWordsProject.GeckoOption)
+				{
+					// Currently with Gecko 29 on Windows systems, the browser objects do
+					// not size properly without this process at startup
+					_tabbedForm.WindowState = FormWindowState.Minimized;
+					_tabbedForm.WindowState = FormWindowState.Maximized;
+				}
+#endif
+
+			   RtfRenderer.HeadWordWritingSystemId =
+				   _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+			   HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.Id;
+
+#if __MonoCS__
+				UglyHackForXkbIndicator();
+#endif
+
+			   //run the ui
+			   Application.Run(_tabbedForm);
+
+			   Settings.Default.SkinName = DisplaySettings.Default.SkinName;
+		   }
+		   catch (IOException e)
+		   {
+			   ErrorReport.NotifyUserOfProblem(e.Message);
+		   }
+	   }
+
+	   //private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
+	   //{
+	   //    LiftUpdateService liftUpdateService;
+	   //    liftUpdateService = new LiftUpdateService(lexEntryRepository);
+	   //    return liftUpdateService;
+	   //}
 
 		private LexEntryRepository GetLexEntryRepository()
 		{
@@ -151,6 +352,9 @@ namespace WeSay.App
 
 		private void WireUpChorusEvents()
 		{
+			if(WeSayWordsProject.PreventBackupForTests)
+				return;
+
 			//this is something of a hack... it seems weird to me that the app has the repository, but the project doesn't.
 			//maybe only the project should posses it.
 			_project.BackupMaker.Repository = GetLexEntryRepository();//needed so it can unlock the lift file as needed
@@ -164,58 +368,8 @@ namespace WeSay.App
 			_project.ConsiderSynchingOrBackingUp("checkpoint");
 		}
 
-		//!!! Move this into LexEntryRepository and maybe lower.
-		private void RecoverUnsavedDataIfNeeded()
-		{
-			if (!File.Exists(_project.PathToRepository))
-			{
-				return;
-			}
 
-			try
-			{
-				GetLexEntryRepository().BackendRecoverUnsavedChangesOutOfCacheIfNeeded();
-			}
-			catch (IOException e)
-			{
-				ErrorNotificationDialog.ReportException(e, null, false);
-				Thread.CurrentThread.Abort();
-			}
-		}
 
-		private void OnBringToFrontRequest(object sender, EventArgs e)
-		{
-			if (_tabbedForm == null)
-			{
-				_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
-			}
-			else
-			{
-				_tabbedForm.synchronizationContext.Send(
-						delegate { _tabbedForm.MakeFrontMostWindow(); }, null);
-			}
-		}
-
-		private void StartDictionaryServices()
-		{
-			////Problem: if there is already a cache miss, this will be slow, and somebody will time out
-			//StartCacheWatchingStuff();
-
-			Logger.WriteMinorEvent("Starting Dictionary Services at {0}",
-								   DictionaryAccessor.GetServiceName(_project.PathToLiftFile));
-			_serviceLifeTimeHelper =
-					IpcSystem.StartServingObject(
-							DictionaryAccessor.GetServiceName(_project.PathToLiftFile), _dictionary);
-		}
-
-		public bool IsInServerMode
-		{
-			get
-			{
-				return _serviceAppSingletonHelper.CurrentState ==
-					   ServiceAppSingletonHelper.State.ServerMode;
-			}
-		}
 
 		///// <summary>
 		///// Only show a dialog if the operation takes more than two seconds
@@ -291,79 +445,21 @@ namespace WeSay.App
 			}
 		}
 
-		public void GoToUrl(string url)
+		private static void RunConfigTool()
 		{
-			_serviceAppSingletonHelper.EnsureUIRunningAndInFront();
-
-			//if it didn't timeout
-			if (_serviceAppSingletonHelper.CurrentState == ServiceAppSingletonHelper.State.UiMode)
-			{
-				Debug.Assert(_tabbedForm != null, "tabbed form should have been started.");
-				_tabbedForm.GoToUrl(url);
-			}
+			string dir = Directory.GetParent(Application.ExecutablePath).FullName;
+			ProcessStartInfo startInfo = new ProcessStartInfo(Path.Combine(dir, "WeSay.ConfigTool.exe"));
+			Process.Start(startInfo);
 		}
 
-		private void StartUserInterface()
+	   private static WeSayWordsProject InitializeProject(string liftPath)
 		{
-			try
-			{
-				_tabbedForm = new TabbedForm();
-				_tabbedForm.Show(); // so the user sees that we did launch
-				_tabbedForm.Text =
-						StringCatalog.Get("~WeSay",
-										  "It's up to you whether to bother translating this or not.") +
-						": " + _project.Name + "        " + ErrorReport.UserFriendlyVersionString;
-				Application.DoEvents();
-
-			   //couldn't get this to work: _project.AddToContainer(typeof(ICurrentWorkTask), _tabbedForm as ICurrentWorkTask);
-				_project.AddToContainer(b => b.Register<ICurrentWorkTask>(_tabbedForm));
-
-				_project.LoadTasksFromConfigFile();
-
-				Application.DoEvents();
-				_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
-				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
-				_tabbedForm.Activate();
-				_tabbedForm.BringToFront(); //needed if we were previously in server mode
-
-				RtfRenderer.HeadWordWritingSystemId =
-						_project.DefaultViewTemplate.HeadwordWritingSystem.Id;
-
-				//run the ui
-				Application.Run(_tabbedForm);
-
-				Settings.Default.SkinName = DisplaySettings.Default.SkinName;
-			}
-			catch (IOException e)
-			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
-			}
-		}
-
-
-
-		private void OnTabbedForm_IntializationComplete(object sender, EventArgs e)
-		{
-			_serviceAppSingletonHelper.BringToFrontRequest += OnBringToFrontRequest;
-			_serviceAppSingletonHelper.UiReadyForEvents();
-			_dictionary.UiSynchronizationContext = _tabbedForm.synchronizationContext;
-		}
-
-		//private static LiftUpdateService SetupUpdateService(LexEntryRepository lexEntryRepository)
-		//{
-		//    LiftUpdateService liftUpdateService;
-		//    liftUpdateService = new LiftUpdateService(lexEntryRepository);
-		//    return liftUpdateService;
-		//}
-
-		private static WeSayWordsProject InitializeProject(string liftPath)
-		{
-			WeSayWordsProject project = new WeSayWordsProject();
+			var project = new WeSayWordsProject();
 			liftPath = DetermineActualLiftPath(liftPath);
 			if (liftPath == null)
 			{
-				ErrorReport.ReportNonFatalMessage(
-						"WeSay was unable to figure out what lexicon to work on. Try opening the LIFT file by double clicking on it. If you don't have one yet, run the WeSay Configuration Tool to make a new WeSay project.");
+				MessageBox.Show(StringCatalog.Get("Welcome to WeSay.\r\nThe Configuration Tool will now open so that you can make a new project or choose an existing one."), StringCatalog.Get("No Default Project","The label on the message box which the user sees if WeSay can't figure out what project to open."), MessageBoxButtons.OK, MessageBoxIcon.Information);
+				RunConfigTool();
 				return null;
 			}
 
@@ -384,7 +480,7 @@ namespace WeSay.App
 			}
 			catch
 			{
-				ErrorReport.ReportNonFatalMessage(
+				ErrorReport.NotifyUserOfProblem(
 						"WeSay was unable to migrate the WeSay configuration file for the new version of WeSay. This may cause WeSay to not function properly. Try opening the project in the WeSay Configuration Tool to fix this.");
 			}
 
@@ -444,33 +540,84 @@ namespace WeSay.App
 		private class CommandLineArguments
 		{
 			[DefaultArgument(ArgumentTypes.AtMostOnce,
-					// DefaultValue = @"..\..\SampleProjects\Thai\WeSay\thai5000.words",
-					HelpText =
-							"Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
-					)]
+								HelpText ="Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\").")]
 			public string liftPath;
 
-			//            [Argument(ArgumentTypes.AtMostOnce,
-			//                HelpText = "Language to show the user interface in.",
-			//                LongName = "ui",
-			//                ShortName = "")]
-			//            public string ui = null;
+			//[Argument(ArgumentTypes.AtMostOnce,  HelpText = "Language to show the user interface in.", LongName = "ui", ShortName = "")]
+			//public string ui = null;
 
 			[Argument(ArgumentTypes.AtMostOnce,
-					HelpText =
-							"Start without a user interface (will have no effect if WeSay is already running with a UI."
-					, LongName = "server", DefaultValue = false, ShortName = "")]
+						HelpText = "Start without a user interface (will have no effect if WeSay is already running with a UI.",
+						LongName = "server",
+						DefaultValue = false, ShortName = "")]
 			public bool startInServerMode;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+						HelpText ="Some things, like backup, just gum up automated tests.  This is used to turn them off.",
+						LongName = "launchedByUnitTest",
+						DefaultValue = false,
+						ShortName = "")]
+			public bool launchedByUnitTest;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+						HelpText = "Make it easy to get back to the configuration tool.",
+						LongName = "launchedByConfigTool", DefaultValue = false, ShortName = "")]
+			public bool launchedByConfigTool;
+
+			[Argument(ArgumentTypes.AtMostOnce,
+						HelpText = "Enable use of the help editor by pressing Ctrl+F1",
+						LongName = "helpbuilder", DefaultValue = false, ShortName = "")]
+			public bool helpbuilder;
 		}
 
 		private static void ShowCommandLineError(string e)
 		{
-			Parser p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
+			var p = new Parser(typeof (CommandLineArguments), ShowCommandLineError);
 			e = e.Replace("Duplicate 'liftPath' argument",
 						  "Please enclose project path in quotes if it contains spaces.");
 			e += "\r\n\r\n" + p.GetUsageString(200);
 			MessageBox.Show(e, "WeSay Command Line Problem");
 		}
+
+		public static void ShowHelpTopic(string topicLink)
+		{
+			string helpFilePath = FileLocator.GetFileDistributedWithApplication("WeSay_Helps.chm");
+			if (File.Exists(helpFilePath))
+			{
+				//var uri = new Uri(helpFilePath);
+				Help.ShowHelp(new Label(), helpFilePath, topicLink);
+			}
+			else
+			{
+				Process.Start("http://wesay.palaso.org/help/");
+			}
+			UsageReporter.SendNavigationNotice("Help: " + topicLink);
+		}
+
+		#if __MonoCS__
+		/// <summary>
+		/// For some reason, setting an Xkb keyboard for the first time doesn't work well inside
+		/// FieldWorks (or WeSay as it turns out).  Setting several Xkb keyboards at this point
+		/// seems to fix the problem for when the first one is set different than the default
+		/// keyboard.  This hack is not guaranteed to work, but it does seem to help in most
+		/// scenarios.
+		/// </summary>
+		/// <remarks>
+		/// If you can think of a better solution, by all means replace this ugly hack!  It took
+		/// me a day of work to come up with even this much.  I (SMc) tried setting the multiple keyboards
+		/// in succession inside Palaso.UI.WindowsForms.Keyboarding.Linux.XkbKeyboardAdaptor.ReinitLocales()
+		/// but it didn't work doing it there for some reason.
+		/// </remarks>
+		private void UglyHackForXkbIndicator()
+		{
+			foreach (var ws in _project.DefaultViewTemplate.WritingSystems.TextWritingSystems)
+			{
+				if (ws.LocalKeyboard != null)
+					ws.LocalKeyboard.Activate();
+			}
+			Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
+		}
+		#endif
 	}
 
 	internal class ThreadExceptionHandler

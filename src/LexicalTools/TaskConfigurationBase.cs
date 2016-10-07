@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using Palaso.Reporting;
+using Palaso.Xml;
 
 namespace WeSay.LexicalTools
 {
@@ -14,11 +15,11 @@ namespace WeSay.LexicalTools
 			_xmlDoc = new XmlDocument();
 			_xmlDoc.LoadXml(xml);
 
-			IsVisible =  WeSay.Foundation.XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
+			IsVisible =  XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
 		}
 		public string TaskName
 		{
-			get { return WeSay.Foundation.XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
+			get { return XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
 		}
 
 		public virtual bool IsOptional
@@ -26,6 +27,13 @@ namespace WeSay.LexicalTools
 			get{ return true;}
 		}
 
+		/// <summary>
+		/// used to head-off failed task loads due to contstructors which can't even be satified by the container
+		/// </summary>
+		public virtual bool IsAvailable
+		{
+			get { return true; }
+		}
 
 
 		protected string GetStringFromConfigNode(string elementName)
@@ -33,7 +41,6 @@ namespace WeSay.LexicalTools
 			var name = _xmlDoc.SelectSingleNode("task/"+elementName);
 			if (name == null || string.IsNullOrEmpty(name.InnerText))
 			{
-
 				throw new ConfigurationException("Missing the element '{0}'", elementName);
 			}
 			return name.InnerText;

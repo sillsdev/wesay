@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Fragment>
+  <Fragment>
 	<DirectoryRef Id='ProgramDir'>
 	  <Directory Id="common" Name="common">
 
@@ -8,57 +8,129 @@
 		<Component Id="PartsOfSpeech.xml" Guid="{6B734BDE-1702-418D-93BC-40A7F310B14F}">
 		  <File Id="PartsOfSpeech.xml" Name="PartsOfSpeech.xml" KeyPath="yes" Source="..\..\common\PartsOfSpeech.xml" />
 		</Component>
-		<Component Id="sampleWordList.txt" Guid="{0F09882D-8D30-49B9-90F6-61D20D17E14F}">
-		  <File Id="sampleWordList.txt" Name="sampleWordList.txt" KeyPath="yes" Source="..\..\common\sampleWordList.txt" />
-		</Component>
-		<Component Id="DuerksenWords.txt" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
-		  <File Id="DuerksenWords.txt" Name="DuerksenWords.txt" KeyPath="yes" Source="..\..\common\DuerksenWords.txt" />
-		</Component>
-		<Component Id="PNGWords.txt" Guid="{EADBA21D-B3ED-4626-A363-301EA5D6A390}">
-		  <File Id="PNGWords.txt" Name="PNGWords.txt" KeyPath="yes" Source="..\..\common\PNGWords.txt" />
-		</Component>
+
+		<Directory Id="wordpacks" Name="wordpacks">
+		  <Directory Id="SILCAWL" Name="SILCAWL">
+			<Component Id="SILCAWL.lift" Guid="{51F4A62A-A216-43bf-820B-3683F64FBA19}">
+			  <File Id="SILCAWL.lift" Name="SILCAWL.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL\SILCAWL.lift" />
+			</Component>
+		  </Directory>
+		  <Directory Id="SILCAWL_MozambiqueAddendum" Name="SILCAWL-MozambiqueAddendum">
+			<Component Id="SILCAWL_MozambiqueAddendum.lift" Guid="{A6664CDF-8E27-487f-84FE-594675B7F112}">
+			  <File Id="SILCAWL_MozambiqueAddendum.lift" Name="SILCAWL-MozambiqueAddendum.lift" KeyPath="yes" Source="..\..\common\wordpacks\SILCAWL-MozambiqueAddendum\SILCAWL-MozambiqueAddendum.lift" />
+			</Component>
+		  </Directory>
+		</Directory>
+
 		<Component Id="SemanticDomains.xml" Guid="{0D314BE5-ABB3-4AB9-A698-F94FFA8B250C}">
 		  <File Id="SemanticDomains.xml" Name="SemanticDomains.xml" KeyPath="yes" Source="..\..\common\SemanticDomains.xml" />
 		</Component>
 		<Component Id="default.WeSayConfig" Guid="{4D0210A0-095D-48DE-9399-4074A97864A4}">
 		  <File Id="default.WeSayConfig" Name="default.WeSayConfig" KeyPath="yes" Source="..\..\common\default.WeSayConfig" />
 		</Component>
-		<Component Id="CommonWritingSystemPrefs.xml" Guid="{2D64A565-57BC-4D0C-BAAF-13AB5A686E9B}">
-		  <File Id="CommonwritingSystemPrefs.xml" Name="writingSystemPrefs.xml" KeyPath="yes" Source="..\..\common\writingSystemPrefs.xml" />
+
+		<Directory Id="WritingSystems" Name="WritingSystems">
+		<Component Id="WritingSystems_en.ldml" Guid="{C3DB77F9-2857-4e88-BE69-D93E25963BDF}">
+		  <File Id="WritingSystems_en.ldml" Name="en.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\en.ldml" />
+		</Component>
+		<Component Id="WritingSystems_qaa_x_qaa.ldml" Guid="{75a4c53d-2aaf-4355-9dec-f2b6c19ee0f9}">
+		  <File Id="WritingSystems_qaa_x_qaa.ldml" Name="qaa-x-qaa.ldml" KeyPath="yes" Source="..\..\common\WritingSystems\qaa-x-qaa.ldml" />
+		</Component>
+		</Directory>
+
+		<Component Id="SemDom.xml" Guid="{86fe7e64-93bc-4cfc-963d-51af04a4286c}">
+		  <File Id="SemDom.xml" Name="SemDom.xml" KeyPath="yes" Source="..\..\common\SemDom.xml" />
+		</Component>
+		<Component Id="LocalizedLists_bn.xml" Guid="{d03b5141-daec-42a9-a679-edc258580c9c}">
+		  <File Id="LocalizedLists_bn.xml" Name="LocalizedLists-bn.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-bn.xml" />
+		</Component>
+		<Component Id="LocalizedLists_es.xml" Guid="{bfbe5008-e181-493d-9125-80c8538b8c6f}">
+		  <File Id="LocalizedLists_es.xml" Name="LocalizedLists-es.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-es.xml" />
+		</Component>
+		<Component Id="LocalizedLists_fa.xml" Guid="{79186c2c-7288-4bf5-84f2-090ce7e1567e}">
+		  <File Id="LocalizedLists_fa.xml" Name="LocalizedLists-fa.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-fa.xml" />
+		</Component>
+		<Component Id="LocalizedLists_fr.xml" Guid="{dbe278b6-abb2-4fb0-9215-981974c68d94}">
+		  <File Id="LocalizedLists_fr.xml" Name="LocalizedLists-fr.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-fr.xml" />
+		</Component>
+		<Component Id="LocalizedLists_hi.xml" Guid="{737d7b56-e191-4360-b958-23b8c51d0d39}">
+		  <File Id="LocalizedLists_hi.xml" Name="LocalizedLists-hi.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-hi.xml" />
+		</Component>
+		<Component Id="LocalizedLists_id.xml" Guid="{5418d4a1-0672-429b-9829-7d1daebb7676}">
+		  <File Id="LocalizedLists_id.xml" Name="LocalizedLists-id.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-id.xml" />
+		</Component>
+		<Component Id="LocalizedLists_km.xml" Guid="{035b68c9-5a90-4915-b2b3-c457020ff3a1}">
+		  <File Id="LocalizedLists_km.xml" Name="LocalizedLists-km.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-km.xml" />
+		</Component>
+		<Component Id="LocalizedLists_ko.xml" Guid="{063c45af-8603-4ca3-a922-abb1ccc5f7d6}">
+		  <File Id="LocalizedLists_ko.xml" Name="LocalizedLists-ko.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ko.xml" />
+		</Component>
+		<Component Id="LocalizedLists_ne.xml" Guid="{f0a2c118-2fc7-4d3f-87e7-bff5c059db78}">
+		  <File Id="LocalizedLists_ne.xml" Name="LocalizedLists-ne.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ne.xml" />
+		</Component>
+		<Component Id="LocalizedLists_pt.xml" Guid="{50ef4b6a-abaf-4152-a16c-63d41cfeba49}">
+		  <File Id="LocalizedLists_pt.xml" Name="LocalizedLists-pt.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-pt.xml" />
+		</Component>
+		<Component Id="LocalizedLists_ru.xml" Guid="{2632cb32-fd2b-4e06-ac78-691ec4d6dca3}">
+		  <File Id="LocalizedLists_ru.xml" Name="LocalizedLists-ru.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ru.xml" />
+		</Component>
+		<Component Id="LocalizedLists_te.xml" Guid="{0d8f7d64-a5bc-41a5-b6a4-e32330dee96b}">
+		  <File Id="LocalizedLists_te.xml" Name="LocalizedLists-te.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-te.xml" />
+		</Component>
+		<Component Id="LocalizedLists_th.xml" Guid="{e6ac1843-d32f-493f-90dc-b8163da2296c}">
+		  <File Id="LocalizedLists_th.xml" Name="LocalizedLists-th.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-th.xml" />
+		</Component>
+		<Component Id="LocalizedLists_ur.xml" Guid="{f39e38ae-f790-4b8f-83d1-97e4cc0446e7}">
+		  <File Id="LocalizedLists_ur.xml" Name="LocalizedLists-ur.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ur.xml" />
+		</Component>
+		<Component Id="LocalizedLists_zh_CN.xml" Guid="{00dbd91c-9f1d-4d1b-954d-dcc9640affe9}">
+		  <File Id="LocalizedLists_zh_CN.xml" Name="LocalizedLists-zh-CN.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-zh-CN.xml" />
 		</Component>
 
-		<Component Id="Ddp4.xml" Guid="{0036EBE1-93B6-463e-A089-8DB1201E61A6}">
-		  <File Id="Ddp4.xml" Name="Ddp4.xml" KeyPath="yes" Source="..\..\common\Ddp4.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_en.xml" Guid="{D89FD082-3189-4ade-8477-A07B60C99790}">
-		  <File Id="Ddp4Questions_en.xml" Name="Ddp4Questions-en.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-en.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_fr.xml" Guid="{48879B52-29CB-4197-B238-5276AFB8CB4B}">
-		  <File Id="Ddp4Questions_fr.xml" Name="Ddp4Questions-fr.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-fr.xml" />
-		</Component>
-		<Component Id="Ddp4Questions_id.xml" Guid="{242A15FA-A451-43e5-B91B-B7977BADA5EE}">
-		  <File Id="Ddp4Questions_id.xml" Name="Ddp4Questions-id.xml" KeyPath="yes" Source="..\..\common\Ddp4Questions-id.xml" />
+		<Component Id="ArtOfReadingIndexV3_en.txt" Guid="{34302393-949D-42e8-BEE8-8C52B03F571A}">
+		  <File Id="ArtOfReadingIndexV3_en.txt" Name="ArtOfReadingIndexV3_en.txt" KeyPath="yes" Source="..\..\common\ArtOfReadingIndexV3_en.txt" />
 		</Component>
 
+		<Component Id="aboutBox.css" Guid="{8454cea2-b443-4941-8674-9f426d19edaa}">
+		  <File Id="aboutBox.css" Name="aboutBox.css" KeyPath="yes" Source="..\..\common\aboutBox.css" />
+		</Component>
+		<Component Id="aboutBox.htm" Guid="{0ea13a2d-6afa-452f-91a7-d5c278cb5a22}">
+		  <File Id="aboutBox.htm" Name="aboutBox.htm" KeyPath="yes" Source="..\..\common\aboutBox.htm" />
+		</Component>
 	  </Directory>
 	</DirectoryRef>
 
 
 	<ComponentGroup Id="defaultFiles">
 	  <ComponentRef Id="PartsOfSpeech.xml" />
-	  <ComponentRef Id="sampleWordList.txt" />
-	  <ComponentRef Id="DuerksenWords.txt" />
-	  <ComponentRef Id="PNGWords.txt" />
+	  <ComponentRef Id="SILCAWL.lift" />
+	  <ComponentRef Id="SILCAWL_MozambiqueAddendum.lift" />
 	  <ComponentRef Id="SemanticDomains.xml" />
 	  <ComponentRef Id="default.WeSayConfig" />
-	  <ComponentRef Id="CommonWritingSystemPrefs.xml" />
+	  <ComponentRef Id="ArtOfReadingIndexV3_en.txt"/>
+	  <ComponentRef Id="WritingSystems_en.ldml" />
+	  <ComponentRef Id="WritingSystems_qaa_x_qaa.ldml" />
+	  <ComponentRef Id="aboutBox.css" />
+	  <ComponentRef Id="aboutBox.htm" />
 	</ComponentGroup>
 
 	<ComponentGroup Id="ddpStuff">
-	  <ComponentRef Id="Ddp4.xml"/>
-	  <ComponentRef Id="Ddp4Questions_en.xml"/>
-	  <ComponentRef Id="Ddp4Questions_fr.xml"/>
-	  <ComponentRef Id="Ddp4Questions_id.xml"/>
+	  <ComponentRef Id="SemDom.xml"/>
+	  <ComponentRef Id="LocalizedLists_bn.xml"/>
+	  <ComponentRef Id="LocalizedLists_es.xml"/>
+	  <ComponentRef Id="LocalizedLists_fa.xml"/>
+	  <ComponentRef Id="LocalizedLists_fr.xml"/>
+	  <ComponentRef Id="LocalizedLists_hi.xml"/>
+	  <ComponentRef Id="LocalizedLists_id.xml"/>
+	  <ComponentRef Id="LocalizedLists_km.xml"/>
+	  <ComponentRef Id="LocalizedLists_ko.xml"/>
+	  <ComponentRef Id="LocalizedLists_ne.xml"/>
+	  <ComponentRef Id="LocalizedLists_pt.xml"/>
+	  <ComponentRef Id="LocalizedLists_ru.xml"/>
+	  <ComponentRef Id="LocalizedLists_te.xml"/>
+	  <ComponentRef Id="LocalizedLists_th.xml"/>
+	  <ComponentRef Id="LocalizedLists_ur.xml"/>
+	  <ComponentRef Id="LocalizedLists_zh_CN.xml"/>
 	</ComponentGroup>
 
   </Fragment>

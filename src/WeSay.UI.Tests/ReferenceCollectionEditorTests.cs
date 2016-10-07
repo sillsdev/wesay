@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
-using WeSay.Foundation;
-using WeSay.Foundation.Options;
+using Palaso.WritingSystems;
+using WeSay.Project;
+using WeSay.Project;
+using Palaso.Lift;
+using Palaso.Lift.Options;
+using WeSay.LexicalModel.Foundation;
+using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI.Tests
@@ -12,7 +17,7 @@ namespace WeSay.UI.Tests
 	[TestFixture]
 	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{
-		private readonly WritingSystem _ws = new WritingSystem("test", new Font("Arial", 30));
+		private readonly IWritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
 		private Form _window;
 		private OptionsList _sourceChoices;
@@ -22,6 +27,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			_ws.DefaultFontName = "Arial";
+			_ws.DefaultFontSize = 30;
 			_sourceChoices = new OptionsList();
 			AddSourceChoice("one", "1");
 			AddSourceChoice("two", "2");
@@ -31,7 +38,7 @@ namespace WeSay.UI.Tests
 
 			_chosenItems = new OptionRefCollection(this);
 
-			List<WritingSystem> writingSystems = new List<WritingSystem>();
+			List<IWritingSystemDefinition> writingSystems = new List<IWritingSystemDefinition>();
 			writingSystems.Add(_ws);
 
 			_control = new ReferenceCollectionEditor<Option, string, OptionRef>(
@@ -39,7 +46,8 @@ namespace WeSay.UI.Tests
 					_sourceChoices.Options,
 					writingSystems,
 					CommonEnumerations.VisibilitySetting.Visible,
-					new OptionDisplayAdaptor(_sourceChoices, _ws.Id));
+					new OptionDisplayAdaptor(_sourceChoices, _ws.Id),
+					null);
 
 			_control.Name = "refcontrol";
 			_control.AlternateEmptinessHelper = _chosenItems;
@@ -202,7 +210,7 @@ namespace WeSay.UI.Tests
 
 		private void SimulateTypingOver(int boxNumber, string s)
 		{
-			WeSayAutoCompleteTextBox box = Boxes[boxNumber].Box;
+			WeSayAutoCompleteTextBox box = (WeSayAutoCompleteTextBox) Boxes[boxNumber].Box;
 			box.Focus();
 			box.SelectionStart = 0;
 			box.SelectionLength = box.TextLength;
@@ -218,7 +226,7 @@ namespace WeSay.UI.Tests
 			ActuallyShowOnScreen();
 			Assert.AreEqual(4, Boxes.Count);
 			SimulateTypingOver(1, "hello");
-			Boxes[1].Box.Paste("hello");
+			((WeSayAutoCompleteTextBox)(Boxes[1].Box)).Paste("hello");
 			Assert.AreEqual(4, Boxes.Count);
 		}
 

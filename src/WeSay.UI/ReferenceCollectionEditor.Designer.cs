@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI
 {
@@ -15,9 +16,21 @@ namespace WeSay.UI
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && (components != null))
+			if (disposing)
 			{
-				components.Dispose();
+				foreach (Control box in Controls)
+				{
+					if (_emptyPicker != null)
+					{
+						_emptyPicker.ValueChanged -= emptyPicker_ValueChanged;
+						_emptyPicker = null;
+
+					}
+				}
+				if (components != null)
+				{
+					components.Dispose();
+				}
 			}
 			base.Dispose(disposing);
 		}

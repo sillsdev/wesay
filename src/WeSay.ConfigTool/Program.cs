@@ -1,7 +1,11 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
+using Palaso.IO;
 using Palaso.Reporting;
 using WeSay.ConfigTool.Properties;
+using Gecko;
 
 namespace WeSay.ConfigTool
 {
@@ -19,6 +23,8 @@ namespace WeSay.ConfigTool
 			SetupErrorHandling();
 			Logger.Init();
 
+			SetUpXulRunner();
+
 			//bring in settings from any previous version
 			if (Settings.Default.NeedUpgrade)
 			{
@@ -26,29 +32,74 @@ namespace WeSay.ConfigTool
 				Settings.Default.NeedUpgrade = false;
 				Settings.Default.Save();
 			}
+			SetUpReporting();
 
-			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";
-			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
-			UsageReporter.RecordLaunch();
-			UsageReporter.DoTrivialUsageReport("usage@wesay.org",
-											   "Thank you for letting us know you are using WeSay.",
-											   new int[] {1, 5, 20, 40, 60, 80, 100});
+			Settings.Default.Save();
 
-			Application.Run(new ConfigurationWindow(args));
+			using (new Palaso.PalasoSetup())
+			{
+				try
+				{
+					// initialize Palaso keyboarding
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+					Application.Run(new ConfigurationWindow(args));
+				}
+				finally
+				{
+					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+				}
+			}
+		}
 
-#if !DEBUG
+		public static void SetUpXulRunner()
+		{
 			try
 			{
+#if __MonoCS__
+				string initXulRunnerOption = Environment.GetEnvironmentVariable("WESAY_INIT_XULRUNNER") ?? String.Empty;
+				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+				if (String.IsNullOrEmpty(xulRunnerLocation))
+					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+				if (!librarySearchPath.Contains(xulRunnerLocation))
+					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+
+				Xpcom.Initialize(xulRunnerLocation);
+				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
 #endif
-			Logger.WriteEvent("App Exiting Normally.");
-			Logger.ShutDown();
-#if !DEBUG
 			}
-			catch (Exception err)
+			catch (ApplicationException e)
 			{
-			 // we don't know what caused ws-596, but it isn't worth crashing over
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
+			catch (Exception e)
+			{
+				ErrorReport.NotifyUserOfProblem(e.Message);
+			}
+		}
+
+		private static void SetUpReporting()
+		{
+			if (Settings.Default.Reporting == null)
+			{
+				Settings.Default.Reporting = new ReportingSettings();
+				Settings.Default.Save();
+			}
+			// If this is a release build, then allow the environment variable to be set to true
+			// so that testers are not generating user stats
+			string developerSetting = System.Environment.GetEnvironmentVariable("WESAY_TRACK_AS_DEVELOPER");
+			bool developerTracking = !string.IsNullOrEmpty(developerSetting) && (developerSetting.ToLower() == "yes" || developerSetting.ToLower() == "true" || developerSetting == "1");
+			bool reportAsDeveloper =
+#if DEBUG
+ true
+#else
+ developerTracking
 #endif
+;
+			UsageReporter.Init(Settings.Default.Reporting, "wesay.palaso.org", "UA-22170471-6", reportAsDeveloper);
+			UsageReporter.AppNameToUseInDialogs = "WeSay Configuration Tool";
+			UsageReporter.AppNameToUseInReporting = "WeSayConfig";
 		}
 
 		private static void SetupErrorHandling()
@@ -57,5 +108,26 @@ namespace WeSay.ConfigTool
 			ErrorReport.AddStandardProperties();
 			ExceptionHandler.Init();
 		}
+
+		public static void ShowHelpTopic(string topicLink)
+		{
+			string helpFilePath = FileLocator.GetFileDistributedWithApplication(true, "WeSay_Helps.chm");
+			if (String.IsNullOrEmpty(helpFilePath))
+			{
+				string commonDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+				helpFilePath = Path.Combine(commonDataFolder, Path.Combine("wesay", "WeSay_Helps.chm"));
+			}
+			if (File.Exists(helpFilePath))
+			{
+				//var uri = new Uri(helpFilePath);
+				Help.ShowHelp(new Label(), helpFilePath, topicLink);
+			}
+			else
+			{
+				Process.Start("http://wesay.palaso.org/help/");
+			}
+			UsageReporter.SendNavigationNotice("Help: " + topicLink);
+		}
+
 	}
 }

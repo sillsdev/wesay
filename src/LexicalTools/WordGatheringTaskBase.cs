@@ -1,20 +1,26 @@
 using System;
+using Palaso.DictionaryServices.Model;
+using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
+using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
+using System.Linq;
 
 namespace WeSay.LexicalTools
 {
 	public abstract class WordGatheringTaskBase: TaskBase
 	{
-		private readonly WritingSystem _lexicalFormWritingSystem;
+		private readonly IWritingSystemDefinition _lexicalFormWritingSystem;
 		private readonly ViewTemplate _viewTemplate;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
 										LexEntryRepository lexEntryRepository,
-										ViewTemplate viewTemplate)
+										ViewTemplate viewTemplate,
+										TaskMemoryRepository taskMemoryRepository)
 				: base( config,
-						lexEntryRepository)
+						lexEntryRepository, taskMemoryRepository)
 		{
 			if (viewTemplate == null)
 			{
@@ -22,17 +28,18 @@ namespace WeSay.LexicalTools
 			}
 
 			_viewTemplate = viewTemplate;
-			Field lexicalFormField =
-					viewTemplate.GetField(Field.FieldNames.EntryLexicalForm.ToString());
-			WritingSystemCollection writingSystems = BasilProject.Project.WritingSystems;
-			if (lexicalFormField == null || lexicalFormField.WritingSystemIds.Count < 1)
+			_lexicalFormWritingSystem =
+				 viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
+		}
+
+		protected IWritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
+		{
+			var ids = BasilProject.Project.WritingSystems.FilterForTextIds(field.WritingSystemIds);
+			if(ids.Count()==0)
 			{
-				_lexicalFormWritingSystem = writingSystems.UnknownVernacularWritingSystem;
+				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio input system.", field.DisplayName));
 			}
-			else
-			{
-				_lexicalFormWritingSystem = writingSystems[lexicalFormField.WritingSystemIds[0]];
-			}
+			return BasilProject.Project.WritingSystems.Get(ids.First());
 		}
 
 		public override DashboardGroup Group
@@ -54,13 +61,22 @@ namespace WeSay.LexicalTools
 			}
 		}
 
-		public WritingSystem WordWritingSystem
+		public IWritingSystemDefinition FormWritingSystem
 		{
 			get
 			{
 				VerifyTaskActivated();
 				return _lexicalFormWritingSystem;
 			}
+		}
+		public IWritingSystemDefinition MeaningWritingSystem
+		{
+			get
+			{
+				VerifyTaskActivated();
+				return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition);
+			}
+
 		}
 
 		protected ViewTemplate ViewTemplate

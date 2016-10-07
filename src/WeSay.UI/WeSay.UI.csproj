@@ -1,248 +1,380 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
-	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-	<ProductVersion>8.0.50727</ProductVersion>
-	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</ProjectGuid>
-	<OutputType>Library</OutputType>
-	<AppDesignerFolder>Properties</AppDesignerFolder>
-	<RootNamespace>WeSay.UI</RootNamespace>
-	<AssemblyName>WeSay.UI</AssemblyName>
-	<FileUpgradeFlags>
-	</FileUpgradeFlags>
-	<UpgradeBackupLocation>
-	</UpgradeBackupLocation>
-	<OldToolsVersion>2.0</OldToolsVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WeSay.UI</RootNamespace>
+    <AssemblyName>WeSay.UI</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<DebugType>full</DebugType>
-	<Optimize>false</Optimize>
-	<OutputPath>..\..\output\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>WeSay.UI</AssemblyName>
+    <RootNamespace>WeSay.UI</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	<DebugType>pdbonly</DebugType>
-	<Optimize>true</Optimize>
-	<OutputPath>..\..\output\release\</OutputPath>
-	<DefineConstants>TRACE</DefineConstants>
-	<ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <AssemblyName>WeSay.UI</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>WeSay.UI</RootNamespace>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Debug|AnyCPU' ">
-	<DebugSymbols>true</DebugSymbols>
-	<OutputPath>..\..\output\Mono Debug\</OutputPath>
-	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
-	<DebugType>full</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono Release|AnyCPU' ">
-	<OutputPath>..\..\output\Mono Release\</OutputPath>
-	<DefineConstants>TRACE;MONO</DefineConstants>
-	<Optimize>true</Optimize>
-	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<ErrorReport>prompt</ErrorReport>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\output\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\NetReflector.dll</HintPath>
-	</Reference>
-	<Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\Palaso.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoReporting, Version=1.0.2774.21115, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PalasoReporting.dll</HintPath>
-	</Reference>
-	<Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\lib\PalasoUIWindowsForms.dll</HintPath>
-	</Reference>
-	<Reference Include="System" />
-	<Reference Include="System.Data" />
-	<Reference Include="System.Design" />
-	<Reference Include="System.Drawing" />
-	<Reference Include="System.Windows.Forms" />
-	<Reference Include="System.Xml" />
+    <Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="Palaso.Media, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\Palaso.Media.dll</HintPath>
+    </Reference>
+    <Reference Include="PalasoUIWindowsForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\$(Configuration)\PalasoUIWindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
+    </Reference>
+    <None Include="..\..\lib\common\Enchant.Net.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
+    <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Core">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Core.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms">
+      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms.dll</HintPath>
+    </Reference>
+    <None Include="..\..\lib\$(Configuration)\Geckofx-Core.dll.config" Condition="'$(OS)'=='Windows_NT'">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-	<Compile Include="Animator.cs" />
-	<Compile Include="AnnotationWidget.cs">
-	</Compile>
-	<Compile Include="AutoCompleteTextBox\AutoCompleteTextBox.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="AutoCompleteTextBox\AutoCompleteTrigger.cs" />
-	<Compile Include="AutoCompleteTextBox\AutoCompleteTriggerCollection.cs" />
-	<Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.Designer.cs">
-	  <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
-	</Compile>
-	<Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
-	<Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
-	<Compile Include="AutoCompleteTextBox\TriggerState.cs" />
-	<Compile Include="Buttons\AddButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\NextButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\PreviousButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\RegionButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\RoundButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="Buttons\TagButton.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="CheckBoxControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="CheckBoxControl.Designer.cs">
-	  <DependentUpon>CheckBoxControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="CollapsibleSplitter.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="WeSayListView.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="WeSayListView.Designer.cs">
-	  <DependentUpon>WeSayListView.cs</DependentUpon>
-	</Compile>
-	<Compile Include="MovingLabel.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="PictureControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="PictureControl.Designer.cs">
-	  <DependentUpon>PictureControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="LocalizationHelper.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="LocalizationHelper.Designer.cs">
-	  <DependentUpon>LocalizationHelper.cs</DependentUpon>
-	</Compile>
-	<Compile Include="ReferenceCollectionEditor.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="ReferenceCollectionEditor.Designer.cs">
-	  <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
-	</Compile>
-	<Compile Include="OptionCollectionControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="OptionCollectionControl.Designer.cs">
-	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="CirclesProgressIndicator.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="CirclesProgressIndicator.Designer.cs">
-	  <DependentUpon>CirclesProgressIndicator.cs</DependentUpon>
-	</Compile>
-	<Compile Include="Properties\Resources.Designer.cs">
-	  <AutoGen>True</AutoGen>
-	  <DesignTime>True</DesignTime>
-	  <DependentUpon>Resources.resx</DependentUpon>
-	</Compile>
-	<Compile Include="SimpleBinding.cs" />
-	<Compile Include="TextBinding.cs" />
-	<Compile Include="CurrentItemEventArgs.cs" />
-	<Compile Include="DetailList.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="DetailList.Designer.cs">
-	  <DependentUpon>DetailList.cs</DependentUpon>
-	</Compile>
-	<Compile Include="DisplaySettings.cs" />
-	<Compile Include="GhostBinding.cs" />
-	<Compile Include="ISkin.cs" />
-	<Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="SingleOptionControl.cs">
-	  <SubType>UserControl</SubType>
-	</Compile>
-	<Compile Include="SingleOptionControl.Designer.cs">
-	  <DependentUpon>SingleOptionControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="MultiTextControl.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="MultiTextControl.designer.cs">
-	  <DependentUpon>MultiTextControl.cs</DependentUpon>
-	</Compile>
-	<Compile Include="WeSayListBox.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="WeSayListBox.Designer.cs">
-	  <DependentUpon>WeSayListBox.cs</DependentUpon>
-	</Compile>
-	<Compile Include="WeSayTextBox.cs">
-	  <SubType>Component</SubType>
-	</Compile>
-	<Compile Include="WeSayTextBox.Designer.cs">
-	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
-	</Compile>
+    <Compile Include="AnnotationWidget.cs">
+    </Compile>
+    <Compile Include="audio\AudioPathProvider.cs" />
+    <Compile Include="AutoCompleteTextBox\AutoCompleteTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AutoCompleteTextBox\AutoCompleteTrigger.cs" />
+    <Compile Include="AutoCompleteTextBox\AutoCompleteTriggerCollection.cs" />
+    <Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.Designer.cs">
+      <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AutoCompleteTextBox\GeckoAutoCompleteTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
+    <Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
+    <Compile Include="AutoCompleteTextBox\TriggerState.cs" />
+    <Compile Include="BetterLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BetterLabel.Designer.cs">
+      <DependentUpon>BetterLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\RectangularImageButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Buttons\RegionButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Buttons\TagButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CheckBoxControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CheckBoxControl.Designer.cs">
+      <DependentUpon>CheckBoxControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CollapsibleSplitter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.Designer.cs">
+      <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\DeleteButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Buttons\DeleteButton.Designer.cs">
+      <DependentUpon>DeleteButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Event.cs" />
+    <Compile Include="NativeReplacements.cs" />
+    <Compile Include="NativeX11Methods.cs" />
+    <Compile Include="Progress\ProgressUtils.cs" />
+    <Compile Include="ScrollableContainer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ScrollableContainer.Designer.cs">
+      <DependentUpon>ScrollableContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoBox.Designer.cs">
+      <DependentUpon>GeckoBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoComboBox.Designer.cs">
+      <DependentUpon>GeckoComboBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListBox.Designer.cs">
+      <DependentUpon>GeckoListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\GeckoListView.Designer.cs">
+      <DependentUpon>GeckoListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
+    <Compile Include="TextBoxes\WeSayComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WeSayListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WeSayListView.Designer.cs">
+      <DependentUpon>WeSayListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PictureControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PictureControl.Designer.cs">
+      <DependentUpon>PictureControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReferenceCollectionEditor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ReferenceCollectionEditor.Designer.cs">
+      <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OptionCollectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OptionCollectionControl.Designer.cs">
+      <DependentUpon>OptionCollectionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CirclesProgressIndicator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CirclesProgressIndicator.Designer.cs">
+      <DependentUpon>CirclesProgressIndicator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SimpleBinding.cs" />
+    <Compile Include="TextBoxes\TextBinding.cs" />
+    <Compile Include="CurrentItemEventArgs.cs" />
+    <Compile Include="DetailList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DetailList.Designer.cs">
+      <DependentUpon>DetailList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplaySettings.cs" />
+    <Compile Include="GhostBinding.cs" />
+    <Compile Include="ISkin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleOptionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SingleOptionControl.Designer.cs">
+      <DependentUpon>SingleOptionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\MultiTextControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\MultiTextControl.designer.cs">
+      <DependentUpon>MultiTextControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WeSayListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WeSayListBox.Designer.cs">
+      <DependentUpon>WeSayListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TextBoxes\WeSayTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TextBoxes\WeSayTextBox.Designer.cs">
+      <DependentUpon>WeSayTextBox.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-	<ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-	  <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-	  <Name>WeSay.Foundation</Name>
-	</ProjectReference>
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
+      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
+      <Name>LexicalModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
+      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
+      <Name>WeSay.Foundation</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<EmbeddedResource Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.resx">
-	  <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="CheckBoxControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>CheckBoxControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="PictureControl.resx">
-	  <DependentUpon>PictureControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="ReferenceCollectionEditor.resx">
-	  <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="DetailList.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>DetailList.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="MultiTextControl.resx">
-	  <DependentUpon>MultiTextControl.cs</DependentUpon>
-	  <SubType>Designer</SubType>
-	</EmbeddedResource>
-	<EmbeddedResource Include="OptionCollectionControl.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>OptionCollectionControl.cs</DependentUpon>
-	</EmbeddedResource>
-	<EmbeddedResource Include="Properties\Resources.resx">
-	  <SubType>Designer</SubType>
-	  <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	</EmbeddedResource>
-	<EmbeddedResource Include="WeSayTextBox.resx">
-	  <SubType>Designer</SubType>
-	  <DependentUpon>WeSayTextBox.cs</DependentUpon>
-	</EmbeddedResource>
+    <EmbeddedResource Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.resx">
+      <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BetterLabel.resx">
+      <DependentUpon>BetterLabel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CheckBoxControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CheckBoxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Buttons\DeleteButton.resx">
+      <DependentUpon>DeleteButton.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PictureControl.resx">
+      <DependentUpon>PictureControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReferenceCollectionEditor.resx">
+      <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailList.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DetailList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoComboBox.resx">
+      <DependentUpon>GeckoComboBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoListBox.resx">
+      <DependentUpon>GeckoListBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoListView.resx">
+      <DependentUpon>GeckoListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\MultiTextControl.resx">
+      <DependentUpon>MultiTextControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionCollectionControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OptionCollectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.resx">
+      <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\WeSayTextBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WeSayTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxes\GeckoBox.resx">
+      <DependentUpon>GeckoBox.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete-word.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete-word-bw.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete-word-grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\right-arrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

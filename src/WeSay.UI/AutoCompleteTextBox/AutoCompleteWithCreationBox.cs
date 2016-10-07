@@ -2,7 +2,9 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.Lift;
+using Palaso.UiBindings;
+using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
@@ -19,8 +21,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private GetValueFromKeyValueDelegate _getValueFromKeyValueDelegate;
 		private GetKeyValueFromValueDelegate _getKeyValueFromValueDelegate;
+		private IWeSayAutoCompleteTextBox _textBox;
 
-		public AutoCompleteWithCreationBox(CommonEnumerations.VisibilitySetting visibility)
+		public AutoCompleteWithCreationBox(CommonEnumerations.VisibilitySetting visibility, IServiceProvider serviceProvider)
 		{
 			_visibility = visibility;
 			InitializeComponent();
@@ -29,6 +32,40 @@ namespace WeSay.UI.AutoCompleteTextBox
 			{
 				return;
 			}
+
+			//
+			// _textBox
+			//
+			this.SuspendLayout();
+			if (serviceProvider != null)
+			{
+				this._textBox = serviceProvider.GetService(typeof(IWeSayAutoCompleteTextBox)) as IWeSayAutoCompleteTextBox;
+			}
+			else
+			{
+				// For test cases
+				this._textBox = new WeSayAutoCompleteTextBox();
+			}
+
+			//this._textBox = new WeSay.UI.AutoCompleteTextBox.WeSayAutoCompleteTextBox();
+			this._textBox.BackColor = System.Drawing.Color.White;
+			this._textBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this._textBox.Location = new System.Drawing.Point(1, 1);
+			this._textBox.Multiline = false;
+			this._textBox.MultiParagraph = false;
+			this._textBox.Name = "_textBox";
+			this._textBox.PopupBorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this._textBox.PopupOffset = new System.Drawing.Point(0, 0);
+			this._textBox.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight;
+			this._textBox.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			this._textBox.SelectedItem = null;
+			this._textBox.Size = new System.Drawing.Size(110, 20);
+			this._textBox.TabIndex = 0;
+			this._textBox.TextChanged += new System.EventHandler(this.box_TextChanged);
+			this._textBox.KeyDown += TextBox_OnKeyDown;
+			this.Controls.Add((Control)this._textBox);
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
 			//todo: what other cases make sense
 			if (visibility == CommonEnumerations.VisibilitySetting.ReadOnly)
@@ -42,9 +79,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 			_textBox.SelectedItemChanged += OnSelectedItemChanged;
 			GotFocus += OnFocusChanged;
-			_textBox.GotFocus += OnFocusChanged;
+			_textBox.UserGotFocus += OnFocusChanged;
 			LostFocus += OnFocusChanged;
-			_textBox.LostFocus += OnFocusChanged;
+			_textBox.UserLostFocus += OnFocusChanged;
 			AddNewButton.LostFocus += OnFocusChanged;
 			BackColorChanged += OnBackColorChanged;
 			UpdateDisplay();
@@ -114,7 +151,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		public WeSayAutoCompleteTextBox Box
+		public IWeSayAutoCompleteTextBox Box
 		{
 			get { return _textBox; }
 		}
@@ -122,7 +159,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			base.OnPaint(e);
-			if (!ContainsFocus && HasProblems)
+			if (!ContainsFocus && HasProblems && !Box.ListBoxFocused)
 			{
 				int y = e.ClipRectangle.Top;
 				e.Graphics.DrawString("!",
@@ -219,7 +256,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private void UpdateElementWidth()
 		{
-			SuspendLayout();
+			if (_textBox.IsDisposed)
+			{
+				return;
+			}
 			if (_textBox.Text.Length == 0)
 			{
 				_textBox.Width = _textBox.MinimumSize.Width;
@@ -227,8 +267,8 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 
 			//NB:... doing CreateGraphics makes a bunch of events fire
-
-			using (Graphics g = _textBox.CreateGraphics())
+			SuspendLayout();
+			using (Graphics g = ((Control)_textBox).CreateGraphics())
 			{
 				TextFormatFlags flags = TextFormatFlags.TextBoxControl | TextFormatFlags.Default |
 										TextFormatFlags.NoClipping |
@@ -272,7 +312,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 			}
 			//this behavior may have to become a parameter
-			if (!ContainsFocus && HasProblems)
+			if (!ContainsFocus && HasProblems && !Box.ListBoxFocused)
 			{
 				Box.BackColor = Color.Red;
 			}
@@ -294,6 +334,39 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private void OnAddNewButton_Click(object sender, EventArgs e)
 		{
 			CreateNewObjectFromText();
+			_textBox.HideList();
+		}
+
+		protected override bool IsInputKey(Keys keyData)
+		{
+			switch (keyData)
+			{
+				case Keys.PageUp:
+				case Keys.PageDown:
+				case Keys.Enter:
+					return false;
+			}
+			return base.IsInputKey(keyData);
+		}
+
+		private void TextBox_OnKeyDown(object sender, KeyEventArgs e)
+		{
+			e.Handled = true;
+			e.SuppressKeyPress = true;
+			switch (e.KeyCode)
+			{
+				case Keys.PageUp:
+					break;
+				case Keys.Enter:
+				case Keys.PageDown:
+					break;
+
+				default:
+					e.Handled = false;
+					e.SuppressKeyPress = false;
+					break;
+			}
+			base.OnKeyDown(e);
 		}
 	}
 

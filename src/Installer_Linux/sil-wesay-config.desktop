@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=WeSay Config
+Comment=Manage and Configure WeSay
+GenericName=Lexicon Editor Configuration Tool
+Exec=wesay-config %f
+Icon=sil-wesay-config
+MimeType=application/x-wesayconfig;
+Terminal=false
+Type=Application
+Categories=GTK;GNOME;Office;
+StartupNotify=true

@@ -97,5 +97,10 @@ namespace WeSay.AddinLib
 		#endregion
 
 		public void Launch(Form parentForm, ProjectInfo projectInfo) {}
+
+		public bool Deprecated
+		{
+			get { return false; }
+		}
 	}
 }

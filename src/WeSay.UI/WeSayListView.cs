@@ -4,24 +4,78 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {
-	public partial class WeSayListView: ListView
+	public interface IWeSayListView
 	{
-		private WritingSystem _writingSystem;
+		[Browsable(false)]
+		string Text { set; get; }
+
+		[Browsable(false)]
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+		IWritingSystemDefinition WritingSystem { get; set; }
+
+		int MinLength { get; set; }
+		int MaxLength { get; set; }
+		int SelectedIndex { get; set; }
+		Rectangle Bounds { get; set; }
+		IList DataSource { get; set; }
+		int Length { get; }
+		DockStyle Dock { get; set; }
+		Point Location { get; set; }
+		string Name { get; set; }
+		Size Size { get; set; }
+		int TabIndex { get; set; }
+		View View { get; set; }
+		BorderStyle BorderStyle { get; set; }
+		Object SelectedItem { get; }
+		AnchorStyles Anchor { get; set; }
+		int VirtualListSize { get; set; }
+		Color BackColor { get; set; }
+		int ListWidth { get; }
+
+		void SetBounds(int x, int y, int width, int height);
+		bool Focus();
+		Size MinimumSize { get; set; }
+		bool Bold { get; set; }
+
+		event ListViewItemSelectionChangedEventHandler ItemSelectionChanged;
+		event RetrieveVirtualItemEventHandler RetrieveVirtualItem;
+		event KeyEventHandler KeyDown;
+	}
+
+	public partial class WeSayListView: ListView, IWeSayListView
+	{
+		private const int WM_HSCROLL = 0x114;
+		private IWritingSystemDefinition _writingSystem;
 		private int _itemToNotDrawYet = -1;
 		private IList _dataSource;
 		private readonly Dictionary<int, ListViewItem> _itemsCache;
 
+		private bool _ensureVisibleCalledBeforeWindowHandleCreated = false;
+		public new event EventHandler<ListViewItemSelectionChangedEventArgs> ItemSelectionChanged;
+		public new event EventHandler<RetrieveVirtualItemEventArgs> RetrieveVirtualItem;
+
 		public WeSayListView()
 		{
 			InitializeComponent();
-			AdjustColumnWidth();
-			SimulateListBox = true;
 			_itemsCache = new Dictionary<int, ListViewItem>();
-			_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+			_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+			SimulateListBox();
+		}
+
+		private void SimulateListBox()
+		{
+			if (!Columns.Contains(header))
+			{
+				Columns.Insert(0, header);
+			}
+			View = View.SmallIcon;
+			AdjustColumnWidth();
 		}
 
 		[DefaultValue(false)]
@@ -111,7 +165,24 @@ namespace WeSay.UI
 			base.OnRetrieveVirtualItem(e);
 			if (e.Item == null)
 			{
-				e.Item = new ListViewItem(_dataSource[e.ItemIndex].ToString());
+				var entry = _dataSource[e.ItemIndex] as LexEntry;
+				if(entry!=null)
+				{
+					var form = entry.GetHeadWordForm(_writingSystem.Id);
+					if(string.IsNullOrEmpty(form))
+					{
+						//this is only going to come up with something in two very unusual cases:
+						//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
+						//2) the SIL CAWL list, where the translator adds glosses, and fails to add
+						//lexical entries.
+						form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.Id);
+					}
+					e.Item = new ListViewItem(form);
+				}
+				else
+				{
+					e.Item = new ListViewItem( _dataSource[e.ItemIndex].ToString());
+				}
 			}
 
 			if (e.ItemIndex == SelectedIndex)
@@ -125,14 +196,16 @@ namespace WeSay.UI
 		[Browsable(false)]
 		[DefaultValue(null)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public WritingSystem WritingSystem
+		public IWritingSystemDefinition WritingSystem
 		{
 			get
 			{
 				if (_writingSystem == null)
 				{
+					if(DesignMode)
+						return new WritingSystemDefinition();
 					throw new InvalidOperationException(
-							"WritingSystem must be initialized prior to use.");
+							"Input system must be initialized prior to use.");
 				}
 				return _writingSystem;
 			}
@@ -143,8 +216,8 @@ namespace WeSay.UI
 					throw new ArgumentNullException();
 				}
 				_writingSystem = value;
-				Font = value.Font;
-				if (value.RightToLeft)
+				Font = WritingSystemInfo.CreateFont(value);
+				if (value.RightToLeftScript)
 				{
 					RightToLeft = RightToLeft.Yes;
 				}
@@ -172,7 +245,6 @@ namespace WeSay.UI
 			set
 			{
 				_itemsCache.Clear();
-				RemoveBindingListNotifiers();
 				_dataSource = value;
 				if (value == null)
 				{
@@ -181,31 +253,27 @@ namespace WeSay.UI
 				else
 				{
 					VirtualListSize = value.Count;
-					if (value.Count > 0)
-					{
-						SelectedIndex = 0;
-					}
 				}
+				Invalidate();
+
 				if (value is IBindingList)
 				{
 					((IBindingList) value).ListChanged += OnListChanged;
 				}
-			}
-		}
+			 }
+		 }
 
-		private void RemoveBindingListNotifiers()
-		{
-			if (_dataSource != null && _dataSource is IBindingList)
-			{
-				((IBindingList) _dataSource).ListChanged -= OnListChanged;
-			}
-		}
+		 private void RemoveBindingListNotifiers()
+		 {
+			 if (_dataSource != null && _dataSource is IBindingList)
+			 {
+				 ((IBindingList) _dataSource).ListChanged -= OnListChanged;
+			 }
+		 }
 
-		private void OnListChanged(object sender, ListChangedEventArgs e)
-		{
+		 private void OnListChanged(object sender, ListChangedEventArgs e)
+		 {
 			_itemsCache.Clear();
-			int originalSelectedIndex = SelectedIndex;
-
 			// this needs to be at the beginning so we don't make an invalid
 			// reference past the end when an item is deleted
 			// n.b. To cooperate with the virtual mode, when a Selection
@@ -213,47 +281,17 @@ namespace WeSay.UI
 			// will get called to update the old selection and the new
 			// unless we lower the size.
 			VirtualListSize = _dataSource.Count;
-
-			//restore our selection
-			int index = _dataSource.IndexOf(_selectedItem);
-			if (index != -1)
-			{
-				// the selected item didn't change but it's index did
-				SelectedIndex = index;
-			}
-			else if (originalSelectedIndex >= VirtualListSize)
-			{
-				SelectedIndex = VirtualListSize - 1;
-			}
-			else
-			{
-				// the previously selected item was deleted
-				// the index didn't change but the item did
-				_selectedItem = SelectedItem;
-
-				// even though technically the index didn't change, the effect is that a new item is selected
-				OnSelectedIndexChanged(new EventArgs());
-			}
-		}
-
-		private object _selectedItem;
+		 }
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
-			if (Environment.OSVersion.Version.Major >= 6 || Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				Invalidate(); //needed to prevent artifacts of previous selections hanging around
-			}
+			if (_mouseDownInfo.MouseIsDown) return;
 
 			base.OnItemSelectionChanged(e);
-			_selectedItem = SelectedItem;
-			OnSelectedIndexChanged(new EventArgs());
 		}
 
 		#region extend hot click area to simulate list box behavior
 
-		// see comment on OnMouseUp
-		private bool _clickSelecting;
 		private Point _currentMouseLocation;
 
 		protected override void WndProc(ref Message m)
@@ -267,19 +305,59 @@ namespace WeSay.UI
 				return;
 			}
 			base.WndProc(ref m);
+#if __MonoCS__
+			if (m.Msg == WM_HSCROLL)
+			{
+				this.OnScroll();
+			}
+#endif
 		}
-
-		protected override void OnClick(EventArgs e)
+#if __MonoCS__
+		protected void OnScroll()
 		{
-			_clickSelecting = false;
-			base.OnClick(e);
+			Invalidate();
+		}
+#endif
+
+		private void SelectFromClickLocation()
+		{
+			ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
+			if (item != null)
+			{
+				_mouseDownInfo.IndexSelected = item.Index;
+				item.Focused = true;
+			}
+			else
+			{
+				_mouseDownInfo.IndexSelected = -1;
+			}
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			_clickSelecting = true;
+			_mouseDownInfo.OldIndex = SelectedIndex;
+			InvalidateItemRect(SelectedIndex);
 			_currentMouseLocation = e.Location;
+			SelectFromClickLocation();
 			base.OnMouseDown(e);
+			InvalidateItemRect(_mouseDownInfo.IndexSelected);
+			_mouseDownInfo.MouseIsDown = true;
+		}
+
+		private readonly MouseDownInfo _mouseDownInfo = new MouseDownInfo();
+
+		private class MouseDownInfo
+		{
+			//We use this to suppress ItemSelectionChanged events
+			//this is necassary because clicking on the item triggers and ItemSelectionChangedEvent
+			//while clicking on the white space next to an item does not.
+			//We try to trigger these events exclusively via the SelectedIndex property
+			public bool MouseIsDown;
+			//We need to set this on mouse down as that is when the listview usually makes it's selection.
+			//But we don't actually make the change until MouseUp.
+			public int IndexSelected;
+			//We need to log what the old index was so that we get proper ItemSelectionChanged events on MouseUp
+			public int OldIndex;
 		}
 
 		protected override void OnMouseMove(MouseEventArgs e)
@@ -290,7 +368,6 @@ namespace WeSay.UI
 			{
 				return;
 			}
-			_clickSelecting = false;
 			_currentMouseLocation = e.Location;
 			if (GetItemAt(e.X, e.Y) == null)
 			{
@@ -310,9 +387,13 @@ namespace WeSay.UI
 		{
 			if (string.IsNullOrEmpty(e.Item.ToolTipText))
 			{
-				if (MeasureItemText(e.Item.Text).Width > Width)
+				string textMinusAccelerators = e.Item.Text.Replace("&", "&&");
+				int textWidth = MeasureItemText(textMinusAccelerators).Width;
+				//This is identical to the width used in OnDrawItem
+				int rectanglesize = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
+				if (textWidth > rectanglesize)
 				{
-					tooltip.Show(e.Item.Text, this, e.Item.Position, int.MaxValue);
+					tooltip.Show(textMinusAccelerators, this, _currentMouseLocation, int.MaxValue);
 				}
 			}
 			else
@@ -331,125 +412,100 @@ namespace WeSay.UI
 		// the coordinates returned now don't reflect the user's intentions
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			if (SimulateListBox && _clickSelecting)
-			{
-				ListViewItem item = GetItemAt(0, _currentMouseLocation.Y);
-				if (item != null)
-				{
-					SelectedIndex = item.Index;
-					item.Focused = true;
-				}
-				else
-				{
-					// restore the selection
-					int index = _dataSource.IndexOf(_selectedItem);
-					if (index != -1)
-					{
-						SelectedIndex = index;
-						if (VirtualMode)
-						{
-							GetVirtualItem(index).Focused = true;
-						}
-						else
-						{
-							Items[index].Focused = true;
-						}
-					}
-				}
-			}
-			_clickSelecting = false;
-			_currentMouseLocation = e.Location;
+			SelectedIndex = _mouseDownInfo.OldIndex;
+			_mouseDownInfo.MouseIsDown = false;
+			SelectedIndex = _mouseDownInfo.IndexSelected;
+			//Console.WriteLine("Up! Selected index: {0}", SelectedIndex);
 			base.OnMouseUp(e);
 		}
 
+		private void InvalidateItemRect(int dirtyIndex)
+		{
+			if (dirtyIndex != -1)
+			{
+				// Needlessly accessing the Handle here causes the Handle to be created if it
+				// is currently null, which appeared to happen after Deactivate/Activate sequence
+				System.IntPtr myHandle = Handle;
+
+				var itemRect = GetItemRect(dirtyIndex);
+				var rectSpanningWholeControl = new Rectangle(itemRect.X, itemRect.Y, ClientRectangle.Width,
+															 itemRect.Height);
+				Invalidate(rectSpanningWholeControl);
+			}
+		}
 		#endregion
 
 		protected override void OnDrawItem(DrawListViewItemEventArgs e)
 		{
-			if (e.ItemIndex == _itemToNotDrawYet)
+			// All this is to make the selection across the whole list box
+			// and not just the extent of the text itself
+			Rectangle bounds = new Rectangle(e.Bounds.X,
+												e.Bounds.Y,
+												ClientRectangle.Width,
+												e.Bounds.Height);
+
+			Brush backgroundBrush;
+			bool backgroundBrushNeedsDisposal = false;
+			Color textColor;
+			if (SelectedIndex == e.ItemIndex && (!HideSelection || Focused))
 			{
-				return;
-			}
-			// As long as we have our special setup to make us look like a list box,
-			// then render us for that special setup otherwise just use the default.
-			if (SimulateListBox)
-			{
-				// All this is to make the selection across the whole list box
-				// and not just the extent of the text itself
-				Rectangle bounds = new Rectangle(e.Bounds.X,
-												 e.Bounds.Y,
-												 header.Width,
-												 e.Bounds.Height);
-
-				Brush backgroundBrush;
-				bool backgroundBrushNeedsDisposal = false;
-				Color textColor;
-				if (SelectedIndex == e.ItemIndex && (!HideSelection || Focused))
-				{
-					backgroundBrush = SystemBrushes.Highlight;
-					textColor = SystemColors.HighlightText;
-				}
-				else
-				{
-					backgroundBrush = new SolidBrush(e.Item.BackColor);
-					backgroundBrushNeedsDisposal = true;
-					textColor = e.Item.ForeColor;
-				}
-
-				e.Graphics.FillRectangle(backgroundBrush, bounds);
-				TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
-										TextFormatFlags.EndEllipsis;
-				if (_writingSystem != null && WritingSystem.RightToLeft)
-				{
-					flags |= TextFormatFlags.RightToLeft;
-				}
-				TextRenderer.DrawText(e.Graphics, e.Item.Text, e.Item.Font, bounds, textColor, flags);
-
-				if (backgroundBrushNeedsDisposal)
-				{
-					backgroundBrush.Dispose();
-				}
+				backgroundBrush = SystemBrushes.Highlight;
+				textColor = SystemColors.HighlightText;
 			}
 			else
 			{
-				e.DrawDefault = true;
+				backgroundBrush = new SolidBrush(e.Item.BackColor);
+				backgroundBrushNeedsDisposal = true;
+				textColor = e.Item.ForeColor;
+			}
+
+			e.Graphics.FillRectangle(backgroundBrush, bounds);
+			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
+									TextFormatFlags.EndEllipsis;
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
+			{
+				flags |= TextFormatFlags.RightToLeft;
+			}
+			if (e.Item.Text.Equals("(No Gloss)") || e.Item.Text.Equals("(Empty)"))
+			{
+				TextRenderer.DrawText(e.Graphics, e.Item.Text, SystemFonts.DefaultFont, bounds, textColor, flags);
+			}
+			else
+			{
+				string textMinusAccelerators = e.Item.Text.Replace("&","&&");
+				TextRenderer.DrawText(e.Graphics, textMinusAccelerators, Font, bounds, textColor, flags);
+			}
+
+			if (backgroundBrushNeedsDisposal)
+			{
+				backgroundBrush.Dispose();
 			}
 
 			base.OnDrawItem(e);
 		}
 
-		private bool _simulateListBoxBehavior;
-
-		[Browsable(true)]
-		[DefaultValue(true)]
-		public bool SimulateListBox
-		{
-			get { return _simulateListBoxBehavior && Columns.Contains(header) && View == View.SmallIcon; }
-			set
-			{
-				_simulateListBoxBehavior = value;
-				if (value)
-				{
-					if (!Columns.Contains(header))
-					{
-						Columns.Insert(0, header);
-					}
-					View = View.SmallIcon;
-				}
-			}
-		}
-
 		protected override void OnResize(EventArgs e)
 		{
+			base.OnResize(e);
 			AdjustColumnWidth();
 		}
 
 		private void AdjustColumnWidth()
 		{
-			header.Width = Width - 20; // to account for scrollbar
+			int newWidth = ClientRectangle.Width - SystemInformation.VerticalScrollBarWidth;
+			// Column width seems to have some maximum, after which it allows multiple columns.
+			// So we constrain it to a 'reasonable' but large enough value.
+			newWidth = Math.Max(newWidth, 300);
+			SuspendLayout();
+			if (Columns.Count > 0)
+			{
+				Columns[0].Width = newWidth;
+			}
+			header.Width = newWidth;
+			ResumeLayout();
 		}
 
-		private int _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
+		private int _selectedIndexForUseBeforeSelectedIndicesAreInitialized;
 
 		[DefaultValue(-1)]
 		[Browsable(true)]
@@ -461,7 +517,7 @@ namespace WeSay.UI
 				{
 					return SelectedIndices[0];
 				}
-				return _SelectedIndexForUseBeforeSelectedIndicesAreInitialized;
+				return _selectedIndexForUseBeforeSelectedIndicesAreInitialized;
 			}
 			set
 			{
@@ -474,35 +530,79 @@ namespace WeSay.UI
 				{
 					throw new ArgumentOutOfRangeException();
 				}
-				if (value == -1)
+				if (SelectedIndex != value)
 				{
-					SelectedIndices.Clear();
-					_selectedItem = null;
-				}
-				else
-				{
-					if (!SelectedIndices.Contains(value))
+					InvalidateItemRect(SelectedIndex);
+					InvalidateItemRect(value);
+					if (value == -1)
 					{
-						SelectedIndices.Add(value);
-					}
-
-					// We can't get a selection to stay until the real handle is created
-					// this gets around that
-					if (SelectedIndices.Count == 0)
-					{
-						_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = value;
-						OnSelectedIndexChanged(new EventArgs());
+						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+						SelectedIndices.Clear();
+						OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(null,value,true));
 					}
 					else
 					{
-						// done with it's usefulness
-						_SelectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
-					}
+						if (!SelectedIndices.Contains(value))
+						{
+							SelectedIndices.Add(value);
+						}
 
-					_selectedItem = SelectedItem;
-					EnsureVisible(value);
+						// We can't get a selection to stay until the real handle is created
+						// this gets around that
+						if (SelectedIndices.Count == 0)
+						{
+							if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != SelectedIndex)
+							{
+								_selectedIndexForUseBeforeSelectedIndicesAreInitialized = SelectedIndex;
+								OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(SelectedIndex),SelectedIndex, true));
+							}
+
+						}
+						else
+						{
+							// done with its usefulness
+							_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
+						}
+						if (!IsHandleCreated) //this is a mono bug workaround.
+						{
+							_ensureVisibleCalledBeforeWindowHandleCreated = true;
+						}
+						else
+						{
+							if (SelectedIndex != -1)
+							{
+								EnsureVisible(SelectedIndex);
+							}
+						}
+					}
 				}
 			}
+		}
+
+		private void SetFocusIndex(int index)
+		{
+			if (index == -1)
+			{
+				FocusedItem = null;
+			}
+			else
+			{
+				FocusedItem = Items[index];
+			}
+		}
+		public void RemoveItem(int index)
+		{
+			Items.RemoveAt(index);
+		}
+		protected override void OnHandleCreated(EventArgs e)
+		{
+			base.OnHandleCreated(e);
+			if (_ensureVisibleCalledBeforeWindowHandleCreated)
+			{
+				EnsureVisible(SelectedIndex);
+				_ensureVisibleCalledBeforeWindowHandleCreated = false;
+			}
+			SimulateListBox();
 		}
 
 		public object SelectedItem
@@ -523,13 +623,13 @@ namespace WeSay.UI
 			e.DrawBorder();
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left |
 									TextFormatFlags.VerticalCenter;
-			if (_writingSystem != null && WritingSystem.RightToLeft)
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
 			TextRenderer.DrawText(e.Graphics,
 								  e.ToolTipText,
-								  _writingSystem.Font,
+								  WritingSystemInfo.CreateFont(_writingSystem),
 								  e.Bounds,
 								  tooltip.ForeColor,
 								  flags);
@@ -543,7 +643,7 @@ namespace WeSay.UI
 		private Size MeasureItemText(string text)
 		{
 			TextFormatFlags flags = TextFormatFlags.Default | TextFormatFlags.Left;
-			if (_writingSystem != null && WritingSystem.RightToLeft)
+			if (_writingSystem != null && WritingSystem.RightToLeftScript)
 			{
 				flags |= TextFormatFlags.RightToLeft;
 			}
@@ -552,10 +652,29 @@ namespace WeSay.UI
 			{
 				return TextRenderer.MeasureText(g,
 												text,
-												_writingSystem.Font,
+											   WritingSystemInfo.CreateFont(_writingSystem),
 												new Size(maxWidth, int.MaxValue),
 												flags);
 			}
 		}
+		public int Length
+		{
+			get
+			{
+				return Items.Count;
+			}
+		}
+
+		public int ListWidth
+		{
+			get
+			{
+				return Width;
+			}
+		 }
+
+		public int MinLength { get; set; }
+		public int MaxLength { get; set; }
+		public bool Bold { get; set; }
 	}
 }

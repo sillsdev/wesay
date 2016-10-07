@@ -16,6 +16,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+using Palaso.UI.WindowsForms.Miscellaneous;
 
 namespace WeSay.UI
 {
@@ -48,7 +49,6 @@ namespace WeSay.UI
 	/// A custom collapsible splitter that can resize, hide and show associated form controls
 	/// </summary>
 	[ToolboxBitmap(typeof (CollapsibleSplitter))]
-	[Designer(typeof (CollapsibleSplitterDesigner))]
 	public class CollapsibleSplitter: Splitter
 	{
 		#region Private Properties
@@ -69,6 +69,7 @@ namespace WeSay.UI
 
 		private int gripLength;
 		private int minSize;
+		private IUserInterfaceMemory _memory;
 		private const int _marginBetweenGripperAndSide = 5;
 
 		#endregion
@@ -141,9 +142,17 @@ namespace WeSay.UI
 			get { return controlToHide; }
 			set
 			{
-				controlToHide = value;
-				hiddenControlHeight = controlToHide.Height;
-				hiddenControlWidth = controlToHide.Width;
+				if (value == null)
+				{
+					hiddenControlHeight = 0;
+					hiddenControlWidth = 0;
+				}
+				else
+				{
+					controlToHide = value;
+					hiddenControlHeight = controlToHide.Height;
+					hiddenControlWidth = controlToHide.Width;
+				}
 			}
 		}
 
@@ -226,13 +235,21 @@ namespace WeSay.UI
 		protected override void OnSplitterMoved(SplitterEventArgs sevent)
 		{
 			base.OnSplitterMoved(sevent);
-			if (SplitPosition < MinSize)
+			// If the split position is not currently valid, don't use it
+			if (SplitPosition != -1)
 			{
-				ToggleSplitter();
-			}
-			else
-			{
-				lastGoodSplitPosition = SplitPosition;
+				if (SplitPosition < MinSize)
+				{
+					ToggleSplitter();
+				}
+				else
+				{
+					lastGoodSplitPosition = SplitPosition;
+					if (_memory != null)
+					{
+						_memory.Set("location", SplitPosition);
+					}
+				}
 			}
 		}
 
@@ -671,7 +688,7 @@ namespace WeSay.UI
 			b.Dispose();
 
 			// dispose the Graphics object
-			g.Dispose();
+			//Removed by JH Dec 2010 (wasn't causing a problem). SHould not be disposing of this graphic that we didn't create. g.Dispose();
 		}
 
 		private int DetermineYCoordForGripperOnVerticalBar(Rectangle r)
@@ -787,22 +804,17 @@ namespace WeSay.UI
 			set { _backgroundColorEnd = value; }
 		}
 
-		#endregion
-
-		#endregion
-	}
-
-	/// <summary>
-	/// A simple designer class for the CollapsibleSplitter control to remove
-	/// unwanted properties at design time.
-	/// </summary>
-	public class CollapsibleSplitterDesigner: ControlDesigner
-	{
-		protected override void PreFilterProperties(IDictionary properties)
+		public void SetMemory(IUserInterfaceMemory memory)
 		{
-			properties.Remove("IsCollapsed");
-			properties.Remove("BorderStyle");
-			properties.Remove("Size");
+			_memory = memory;
+			if (_memory != null)
+			{
+				SplitPosition = _memory.Get("location", SplitPosition);
+			}
 		}
+
+		#endregion
+
+		#endregion
 	}
 }

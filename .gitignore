@@ -1,10 +1,6 @@
 
-bld\WeSay.proj.rtf
-bld\BuildHistory/*.rtf
 *.cache
-bld\BuildHistory/*.log
 *.pdb
-LiftIO.Tests.pdb
 templates\.guidsForInstaller.xml
 common\.guidsForInstaller.xml
 output
@@ -34,3 +30,25 @@ Mercurial
 build/old
 lib/$(Configuration)
 test-results
+Autofac.dll
+Chorus*.exe*
+Geckofx-Winforms-14.dll
+L10NSharp.dll
+LibChorus*.dll*
+NDesk.DBus.dll*
+Palaso*.dll*
+SIL.Archiving.dll*
+geckofix.so
+geckofx-core-14.dll*
+ibusdotnet.dll
+icu*.dll*
+Mercurial*.zip
+vagrant/.vagrant
+externals
+common/WeSay_Helps.chm
+common/Chorus_Help.chm
+Enchant.Net.dll*
+Ionic.Zip.dll
+taglib-sharp.dll
+common/*.po
+package/lucid/rules

@@ -13,26 +13,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 	[Serializable]
 	public class AutoCompleteTriggerCollection: CollectionBase
 	{
-		public class AutoCompleteTriggerCollectionEditor: CollectionEditor
-		{
-			public AutoCompleteTriggerCollectionEditor(Type type): base(type) {}
-
-			protected override bool CanSelectMultipleInstances()
-			{
-				return false;
-			}
-
-			protected override Type[] CreateNewItemTypes()
-			{
-				return new Type[] {typeof (ShortCutTrigger), typeof (TextLengthTrigger)};
-			}
-
-			protected override Type CreateCollectionItemType()
-			{
-				return typeof (ShortCutTrigger);
-			}
-		}
-
 		public AutoCompleteTrigger this[int index]
 		{
 			get { return InnerList[index] as AutoCompleteTrigger; }

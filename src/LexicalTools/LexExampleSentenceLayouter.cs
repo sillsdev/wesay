@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
+using Palaso.DictionaryServices.Model;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -14,12 +17,16 @@ namespace WeSay.LexicalTools
 	/// </summary>
 	public class LexExampleSentenceLayouter: Layouter
 	{
-		public LexExampleSentenceLayouter(DetailList builder, ViewTemplate viewTemplate)
-				: base(builder, viewTemplate, null) {}
+		public LexExampleSentenceLayouter(DetailList parentDetailList, int parentRow, ViewTemplate viewTemplate,
+			IServiceProvider serviceProvider, LexExampleSentence exampleToLayout)
+			: base(parentDetailList, parentRow, viewTemplate, null, serviceProvider, exampleToLayout)
+		{
+		}
 
-		internal override int AddWidgets(WeSayDataObject wsdo, int insertAtRow)
+		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			LexExampleSentence example = (LexExampleSentence) wsdo;
+			FirstRow = insertAtRow;
 
 			DetailList.SuspendLayout();
 			int rowCount = 0;
@@ -59,22 +66,70 @@ namespace WeSay.LexicalTools
 			}
 			catch (ConfigurationException e)
 			{
-				ErrorReport.ReportNonFatalMessage(e.Message);
+				ErrorReport.NotifyUserOfProblem(e.Message);
 			}
 
-			DetailList.ResumeLayout();
+			DetailList.ResumeLayout(false);
+			LastRow = insertAtRow + rowCount - 1;	// want index of last row owned, not a limit value
 			return rowCount;
 		}
 
-		public int AddGhost(IList<LexExampleSentence> list, int insertAtRow)
+		/// <summary>
+		/// Create a new LexExampleSentenceLayouter for a new LexExampleSentence created from a ghost,
+		/// and insert it at the right place in the Layouter tree.
+		/// </summary>
+		protected override Layouter CreateAndInsertNewLayouter(int row, PalasoDataObject wsdo)
 		{
-			return MakeGhostWidget(list,
-								   insertAtRow,
+			var newLayouter = new LexExampleSentenceLayouter(DetailList, row, ActiveViewTemplate, _serviceProvider,
+				wsdo as LexExampleSentence)
+			{
+				ShowNormallyHiddenFields = ShowNormallyHiddenFields,
+				Deletable = false,
+				ParentLayouter = ParentLayouter
+			};
+			var idx = ParentLayouter.ChildLayouts.IndexOf(this);
+			if (idx >= 0)
+				ParentLayouter.ChildLayouts.Insert(idx, newLayouter);
+			else
+				ParentLayouter.ChildLayouts.Add(newLayouter);
+			return newLayouter;
+		}
+
+		protected override void AdjustLayoutRowsAfterGhostTrigger(int rowCount)
+		{
+			// Get the relevant LexSenseLayouter (either "this" or its parent).  Either way,
+			// its rows have already been adjusted but following senses (if any) need to have
+			// their rows adjusted.
+			var senseLayouter = ParentLayouter;
+			Debug.Assert(senseLayouter is LexSenseLayouter);
+			senseLayouter.LastRow = LastRow;
+			Layouter parentEntryLayouter = senseLayouter;
+			while (parentEntryLayouter.ParentLayouter != null)
+				parentEntryLayouter = parentEntryLayouter.ParentLayouter;
+			Debug.Assert(parentEntryLayouter is LexEntryLayouter);
+			int first = parentEntryLayouter.ChildLayouts.IndexOf(senseLayouter);
+			Debug.Assert(first >= 0);
+			for (int i = first+1; i < parentEntryLayouter.ChildLayouts.Count; ++i)
+			{
+				var layouter = parentEntryLayouter.ChildLayouts[i];
+				layouter.FirstRow = layouter.FirstRow + rowCount;
+				layouter.LastRow = layouter.LastRow + rowCount;
+			}
+			// REVIEW: do we need to adjust rows for LexExampleSentenceLayouts?  I don't think they're ever used,
+			// since example sentences cannot be deleted and enabling the delete button is the only use of these
+			// row numbers.
+		}
+
+		public int AddGhost(LexSense sense, IList<LexExampleSentence> list, int insertAtRow)
+		{
+			return MakeGhostWidget(sense, list,
 								   Field.FieldNames.ExampleSentence.ToString(),
 								   StringCatalog.Get("~Example",
 													 "This is the field containing an example sentence of a sense of a word."),
 								   "Sentence",
-								   false);
+								   false,
+								   insertAtRow);
 		}
+
 	}
 }

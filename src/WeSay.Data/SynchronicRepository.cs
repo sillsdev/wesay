@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Palaso.Data;
 using Palaso.Progress;
 
 namespace WeSay.Data
 {
-	public class SynchronicRepository<T>: IRepository<T> where T : class, new()
+	public class SynchronicRepository<T>: IDataMapper<T> where T : class, new()
     {
-		private readonly IRepository<T> _primary;
-		private readonly IRepository<T> _secondary;
+		private readonly IDataMapper<T> _primary;
+		private readonly IDataMapper<T> _secondary;
 
         public delegate void CopyStrategy(T destination, T source);
 
@@ -16,13 +17,13 @@ namespace WeSay.Data
 
         private readonly Dictionary<RepositoryId, RepositoryId> _primarySecondaryMap;
 
-		public SynchronicRepository(IRepository<T> primary,
-									IRepository<T> secondary,
+		public SynchronicRepository(IDataMapper<T> primary,
+									IDataMapper<T> secondary,
 									CopyStrategy copyStrategy)
 			:this(primary, secondary, copyStrategy, null) {}
 
-		public SynchronicRepository(IRepository<T> primary,
-									IRepository<T> secondary,
+		public SynchronicRepository(IDataMapper<T> primary,
+									IDataMapper<T> secondary,
 									CopyStrategy copyStrategy,
 									ProgressState progressState)
         {
@@ -53,7 +54,7 @@ namespace WeSay.Data
             SynchronizeRepositories();
         }
 
-		public SynchronicRepository(IRepository<T> primary, IRepository<T> secondary)
+		public SynchronicRepository(IDataMapper<T> primary, IDataMapper<T> secondary)
 				: this(primary, secondary, DefaultCopyStrategy) {}
 
         private static void DefaultCopyStrategy(T destination, T source)
@@ -72,8 +73,8 @@ namespace WeSay.Data
         {
             // if one persists, but not the other, then the persistable one wins
             // otherwise, go with the repository most recently changed
-			IRepository<T> master = _secondary;
-			IRepository<T> slave = _primary;
+			IDataMapper<T> master = _secondary;
+			IDataMapper<T> slave = _primary;
             if ((_primary.CanPersist && !_secondary.CanPersist) ||
 				(_primary.LastModified > _secondary.LastModified &&
 				 _primary.CanPersist == _secondary.CanPersist))
@@ -99,7 +100,7 @@ namespace WeSay.Data
             }
         }
 
-		#region IRepository<T> Members
+		#region IDataMapper<T> Members
 
         public DateTime LastModified
         {

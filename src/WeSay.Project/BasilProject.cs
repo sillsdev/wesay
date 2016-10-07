@@ -1,29 +1,46 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Xml;
+using System.Windows.Forms;
+using Palaso.i18n;
 using Palaso.Reporting;
-using Palaso.UI.WindowsForms.i8n;
-using WeSay.Foundation;
+using Palaso.WritingSystems;
+using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project
 {
-	public class BasilProject: IProject, IDisposable
+	public class BasilProjectTestHelper
+	{
+		/// <summary>
+		/// Many tests throughout the system will not care at all about project related things,
+		/// but they will break if there is no project initialized, since many things
+		/// will reach the project through a static property.
+		/// Those tests can just call this before doing anything else, so
+		/// that other things don't break.
+		/// </summary>
+		public static void InitializeForTests()
+		{
+			ErrorReport.IsOkToInteractWithUser = false;
+			var project = new BasilProject();
+			project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
+			project.UiOptions.Language = "en";
+		}
+	}
+
+	public class BasilProject: IDisposable
 	{
 		private static BasilProject _singleton;
-		private string _uiFontName;
 
 		protected static BasilProject Singleton
 		{
 			get { return _singleton; }
-			set { _singleton = value; }
 		}
+		public UiConfigurationOptions UiOptions { get; set; }
 
-		private readonly WritingSystemCollection _writingSystems;
-		private string _projectDirectoryPath = string.Empty;
-		private string _stringCatalogSelector = string.Empty;
-		private float _uiFontSize;
+		private IWritingSystemRepository _writingSystems;
+		private static string _projectDirectoryPath = string.Empty;
 
 		public static BasilProject Project
 		{
@@ -54,7 +71,8 @@ namespace WeSay.Project
 		public BasilProject()
 		{
 			Project = this;
-			_writingSystems = new WritingSystemCollection();
+			_writingSystems = null;
+			UiOptions = new UiConfigurationOptions();
 		}
 
 		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath)
@@ -78,6 +96,26 @@ namespace WeSay.Project
 			}
 		}
 
+		protected static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+		{
+			string message = @"There were some problems while loading the writing systems definitions in this project.
+You can continue to work, but do let us know about the problem.
+There are problems in:
+";
+			foreach (var problem in problems)
+			{
+				message += String.Format("  {0}", problem.Exception.Message);
+			}
+
+			ErrorReport.NotifyUserOfProblem(message);
+
+		}
+
+		protected static void OnWritingSystemMigration(IEnumerable<LdmlVersion0MigrationStrategy.MigrationInfo> migrationinfo)
+		{
+			throw new ApplicationException("Input system migration should have been done by now, but it seems it hasn't.");
+		}
+
 //        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
   //      {
 //            _projectDirectoryPath = projectDirectoryPath;
@@ -89,31 +127,7 @@ namespace WeSay.Project
 
 		public virtual void Save()
 		{
-			Save(_projectDirectoryPath);
-		}
-
-		public virtual void Save(string projectDirectoryPath)
-		{
-			XmlWriterSettings settings = new XmlWriterSettings();
-			settings.Indent = true;
-			XmlWriter writer = XmlWriter.Create(PathToWritingSystemPrefs, settings);
-			_writingSystems.Write(writer);
-			writer.Close();
-		}
-
-		/// <summary>
-		/// Many tests throughout the system will not care at all about project related things,
-		/// but they will break if there is no project initialized, since many things
-		/// will reach the project through a static property.
-		/// Those tests can just call this before doing anything else, so
-		/// that other things don't break.
-		/// </summary>
-		public static void InitializeForTests()
-		{
-			ErrorReport.IsOkToInteractWithUser = false;
-			BasilProject project = new BasilProject();
-			project.LoadFromProjectDirectoryPath(GetPretendProjectDirectory());
-			project.StringCatalogSelector = "en";
+			_writingSystems.Save();
 		}
 
 		public static string GetPretendProjectDirectory()
@@ -121,19 +135,31 @@ namespace WeSay.Project
 			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
 		}
 
-		public WritingSystemCollection WritingSystems
+		public IWritingSystemRepository WritingSystems
 		{
 			get { return _writingSystems; }
 		}
 
-		public IList<WritingSystem> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
+		public IList<IWritingSystemDefinition> WritingSystemsFromIds(IEnumerable<string> writingSystemIds)
 		{
-			List<WritingSystem> l = new List<WritingSystem>();
-			foreach (string id in writingSystemIds)
+			return writingSystemIds.Select(id => WritingSystems.Get(id)).ToList();
+		}
+
+		/// <summary>
+		/// When the user is playing around with writing system setup, he may delete a
+		/// writing system that has been assigned to fields.  In that case, to avoid
+		/// crashing (see https://jira.sil.org/browse/WS-233) we need to weed out any
+		/// writing systems that no longer exist.
+		/// </summary>
+		public IList<string> FilterOutBadWritingSystems(IList<string> writingSystemIds)
+		{
+			List<string> validIds = new List<string>();
+			foreach (var id in writingSystemIds)
 			{
-				l.Add(WritingSystems[id]);
+				if (WritingSystems.Contains(id))
+					validIds.Add(id);
 			}
-			return l;
+			return validIds.ToList();
 		}
 
 		public string ProjectDirectoryPath
@@ -142,15 +168,14 @@ namespace WeSay.Project
 			protected set { _projectDirectoryPath = value; }
 		}
 
-		public string PathToWritingSystemPrefs
+		//public static string GetPathToWritingSystemPrefs(string parentDir)
+		//{
+		//        return Path.Combine(parentDir, "WritingSystemPrefs.xml");
+		//}
+
+		public static string GetPathToLdmlWritingSystemsFolder(string parentDir)
 		{
-			get
-			{
-				return
-						GetPathToWritingSystemPrefs(
-								PathToDirectoryContaingWritingSystemFilesInProject
-								/*ProjectCommonDirectory*/);
-			}
+				return Path.Combine(parentDir, "WritingSystems");
 		}
 
 		//        public string PathToOptionsLists
@@ -161,53 +186,64 @@ namespace WeSay.Project
 		//            }
 		//        }
 
-		protected static string GetPathToWritingSystemPrefs(string parentDir)
-		{
-			return Path.Combine(parentDir, "WritingSystemPrefs.xml");
-		}
 
-		public string PathToDirectoryContaingWritingSystemFilesInProject
-		{
-			get { return ProjectDirectoryPath; }
-		}
-
+		// <summary>
+		// Locates the StringCatalog file, matching any file ending in <language>.po first in the Project folder,
+		// then in the Application Common folder.
+		// </summary>
 		public string LocateStringCatalog()
 		{
-			if (File.Exists(PathToStringCatalogInProjectDir))
+			string filePattern = "*" + UiOptions.Language + ".po";
+			var matchingFiles = Directory.GetFiles(ProjectDirectoryPath, filePattern);
+			if (matchingFiles.Length > 0)
 			{
-				return PathToStringCatalogInProjectDir;
+				return matchingFiles[0];
 			}
 
 			//fall back to the program's common directory
-			string path = Path.Combine(ApplicationCommonDirectory, _stringCatalogSelector + ".po");
-			if (File.Exists(path))
+			matchingFiles = Directory.GetFiles(ApplicationCommonDirectory, filePattern);
+			if (matchingFiles.Length > 0)
 			{
-				return path;
+				return matchingFiles[0];
 			}
 
-			else
-			{
-				return null;
-			}
-		}
-
-		public string PathToStringCatalogInProjectDir
-		{
-			get
-			{
-				return Path.Combine(ProjectDirectoryPath /*ProjectCommonDirectory*/,
-									_stringCatalogSelector + ".po");
-			}
+			return null;
 		}
 
 		public static string ApplicationCommonDirectory
 		{
-			get { return Path.Combine(GetTopAppDirectory(), "common"); }
+			get {
+				string returndir = Path.Combine(GetTopAppDirectory(), "common");
+				if (!Directory.Exists(returndir))
+				{
+					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					returndir = Path.Combine(commonpath, "wesay");
+				}
+				return returndir;
+			}
 		}
 
 		public static string ApplicationRootDirectory
 		{
-			get { return DirectoryOfExecutingAssembly; }
+			get { return DirectoryOfTheApplicationExecutable; }
+		}
+
+		public static string ApplicationSharedDirectory
+		{
+			get {
+				string shareddir;
+						bool unitTesting = Assembly.GetEntryAssembly() == null;
+						if (unitTesting)
+						{
+					shareddir = DirectoryOfTheApplicationExecutable;
+				}
+				else
+						{
+					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					shareddir = Path.Combine(commonpath, "wesay");
+				}
+				return shareddir;
+			}
 		}
 
 		public string ApplicationTestDirectory
@@ -217,9 +253,7 @@ namespace WeSay.Project
 
 		protected static string GetTopAppDirectory()
 		{
-			string path;
-
-			path = DirectoryOfExecutingAssembly;
+			string path = DirectoryOfTheApplicationExecutable;
 			char sep = Path.DirectorySeparatorChar;
 			int i = path.ToLower().LastIndexOf(sep + "output" + sep);
 
@@ -230,7 +264,7 @@ namespace WeSay.Project
 			return path;
 		}
 
-		public static string DirectoryOfExecutingAssembly
+		public static string DirectoryOfTheApplicationExecutable
 		{
 			get
 			{
@@ -238,12 +272,16 @@ namespace WeSay.Project
 				bool unitTesting = Assembly.GetEntryAssembly() == null;
 				if (unitTesting)
 				{
-					path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
-					path = Uri.UnescapeDataString(path);
+				   path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+				   path = Uri.UnescapeDataString(path);
 				}
 				else
 				{
-					path = Assembly.GetExecutingAssembly().Location;
+				   //was suspect in WS1156, where it seemed to start looking in the,
+					//outlook express program folder after sending an email from wesay...
+					//so maybe it doesn't always mean *this* executing assembly?
+				  //  path = Assembly.GetExecutingAssembly().Location;
+					path = Application.ExecutablePath;
 				}
 				return Directory.GetParent(path).FullName;
 			}
@@ -267,61 +305,54 @@ namespace WeSay.Project
 			}
 		}
 
+		public static void CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(string projectDirectoryPath)
+		{
+			string pathProjectToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(projectDirectoryPath);
+			string pathCommonToWritingSystemsFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
+			Directory.CreateDirectory(pathProjectToWritingSystemsFolder);
+			foreach (string path in Directory.GetFiles(pathCommonToWritingSystemsFolder, "*.ldml"))
+			{
+				var destPath = Path.Combine(pathProjectToWritingSystemsFolder, Path.GetFileName(path));
+				if (!File.Exists(destPath))
+				{
+					File.Copy(path, destPath);
+				}
+			}
+		}
+
 		protected void InitWritingSystems()
 		{
-			if (File.Exists(PathToWritingSystemPrefs))
+			if (!Directory.Exists(GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath)))
 			{
-				_writingSystems.Load(PathToWritingSystemPrefs);
+				CopyWritingSystemsFromApplicationCommonDirectoryToNewProject(ProjectDirectoryPath);
 			}
-			else
+			if (_writingSystems == null)
 			{
-				//load defaults
-				_writingSystems.Load(GetPathToWritingSystemPrefs(ApplicationCommonDirectory));
+				_writingSystems = LdmlInFolderWritingSystemRepository.Initialize(
+					GetPathToLdmlWritingSystemsFolder(ProjectDirectoryPath),
+					OnWritingSystemMigration,
+					OnWritingSystemLoadProblem,
+					WritingSystemCompatibility.Flex7V0Compatible
+				);
 			}
-		}
-
-		//        /// <summary>
-		//        /// Get the options lists, e.g. PartsOfSpeech, from files
-		//        /// </summary>
-		//        private void InitOptionsLists()
-		//        {
-		//            Directory.
-		//        }
-
-		public string StringCatalogSelector
-		{
-			get { return _stringCatalogSelector; }
-			set { _stringCatalogSelector = value; }
-		}
-
-		protected string UiFontName
-		{
-			get { return _uiFontName; }
-			set { _uiFontName = value; }
-		}
-
-		protected float UiFontSizeInPoints
-		{
-			get { return _uiFontSize; }
-			set { _uiFontSize = value; }
 		}
 
 		protected void InitStringCatalog()
 		{
 			try
 			{
-				if (_stringCatalogSelector == "test")
+				if (UiOptions.Language == "test")
 				{
-					new StringCatalog("test", UiFontName, UiFontSizeInPoints);
+					new StringCatalog("test", UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
 				}
 				string p = LocateStringCatalog();
 				if (p == null)
 				{
-					new StringCatalog(UiFontName, UiFontSizeInPoints);
+					new StringCatalog(UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
 				}
 				else
 				{
-					new StringCatalog(p, UiFontName, UiFontSizeInPoints);
+					new StringCatalog(p, UiOptions.LabelFontName, UiOptions.LabelFontSizeInPoints);
 				}
 			}
 			catch (FileNotFoundException)
@@ -330,5 +361,21 @@ namespace WeSay.Project
 				new StringCatalog();
 			}
 		}
+
+		public static string VersionString
+		{
+			get
+			{
+				string versionString = Application.ProductVersion;
+#if ALPHA
+				versionString += " ALPHA";
+#endif
+#if BETA
+				versionString += " BETA";
+#endif
+				return versionString;
+			}
+		}
+
 	}
 }

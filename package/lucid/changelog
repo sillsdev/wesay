@@ -1,0 +1,453 @@
+wesay (1.5.38) stable; urgency=medium
+
+  * Release build
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 23 Jan 2015 09:54:02 -0500
+
+wesay (1.5.37~rc1) stable; urgency=medium
+
+  * WS-296: Fix crash when using voice writing system with parts of speech and option lists
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 17 Dec 2014 10:20:40 -0500
+
+wesay (1.5.36~beta6) stable; urgency=medium
+
+  * WS-269: Fix USB Enumeration only finding one drive
+    - If you want to exlude a drive, you can put a .chorus-hidden file
+      in the root of the drive.
+  * WS-259: Fix crash in Database Browse and Edit when switching languages for
+    search.  The actual fix is in libgdiplus-sil_2.10.8-7.
+  * WS-275: Fix Help link not visible in wesay-config
+  * WS-279: Fix Control + PageUp/PageDown for Tab Navigation
+    - The actual fix is in mono-sil_3.4.0-8.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 15 Dec 2014 14:06:37 -0500
+
+wesay (1.5.34~beta5) stable; urgency=medium
+
+  * WS-285: Fix crash when switching keyboards in Wasta-Linux
+  * WS-284: Fix crash when attempting to assign keyboard to WS in Wasta-Linux
+  * WS-280: Fix crash when using WheelMouse to scroll combobox in Linux
+    - The original is intended to disable the MouseWheel scrolling but
+      this doesn't work in Mono.  This keeps it from crashing, but it still
+      will scroll.
+      (see https://bugzilla.xamarin.com/show_bug.cgi?id=25201)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 10 Dec 2014 22:41:15 -0500
+
+wesay (1.5.32~beta4) stable; urgency=medium
+
+  * WS-229: Support automatic keyboard switching in Wasta-Linux (Cinnamon)
+  * WS-253: Reset the keyboard to the system default on program exit
+  * WS-126: Fix PageDown/PageUp key for many of the ListControls
+  * WS-245: History detail view is not updating
+  * WS-281: Fix Config Tool when deleting writing systems
+  * Add SVG icons to linux package
+  * Include Gecko-based ThumbnailViewer
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 04 Dec 2014 9:07:40 -0500
+
+wesay (1.5.31~beta3) stable; urgency=medium
+
+  * WS-244: Remove fix; fixed in mono-sil 3.4.0-7
+  * WS-56: Fix redraw of task tabs on Windows
+  * WS-108: Homograph numbers changed to subscript (to match FLEx)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 19 Nov 2014 00:04:06 -0500
+
+wesay (1.5.30~beta3) stable; urgency=medium
+
+  * WS-244: Fix crash after deleting last word
+  * WS-250: Display multiple lines for question in Semantic Domains
+  * WS-248: Fix Semantic Domains localization
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 14 Nov 2014 19:35:00 -0500
+
+wesay (1.5.29~beta2) stable; urgency=medium
+
+  * WS-180: Change semantic domain to directly use FLEx LocalizeList files
+  * WS-208: Fix search textbox in Dictionary Browse & Edit to work with keyboards
+  * WS-213: Listbox from Base Forms tab did not disappear when switching tabs
+  * WS-233: Prevent crashes due to deleting writing system in configuration
+  * WS-230: Fix localization
+  * WS-239: Gecko Mode: scrolls bars appearing when they shouldn't
+  * WS-226: Ignore DBus generated exceptions in USB scanning
+  * Use ReleaseMono for libpalaso and chorus
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 05 Nov 2014 10:57:06 -0500
+
+wesay (1.5.27~beta1) stable; urgency=medium
+
+  * WS-69: Typo in About Make PDF Dictionary screen
+  * WS-100: Semantic domains are hidden if more than 5 (Linux)
+  * Gecko Mode: Fix crash in displaying HTML form of entries
+  * Remove dependency on gnome-control-center (for set up keyboards)
+  * WS-172: Change set up keyboards to detect gnome-control-center,
+    unity-control-center, or ibus-setup (depending on Ubuntu version)
+  * WS-221: Show pictures in OpenOffice Documents
+  * WS-204: Fix text clipping
+  * Fix LIFT parser to handle empty ranges in external file
+  * Make USB drive access more rebust
+  * WS-211: Creating a Note was crashing
+  * WS-201: Fix behavior is removing whitespace from Chorus server settings (Linux)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 20 Oct 2014 13:08:01 -0400
+
+wesay (1.5.26) stable; urgency=medium
+
+  * Gecko Mode: Fix ibus keyboard switching on Trusty
+  * WS-194: Fix error on custom type of picture
+   - WeSay only supports pictures within a sense field.  Now this
+     is enforced in config tool.
+  * WS-117: Fix intermittent resizing of Dictionary Browse & Edit
+  * Conform to new SIL Rules for AboutBox
+  * Fix refresh timer in hostory control to stop excessive calls to
+    Mercurial
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 09 Oct 2014 09:32:22 -0400
+
+wesay (1.5.25) stable; urgency=medium
+
+  * WS-65 Adding an Input System entry does not show up in Fields
+  * Save keyboard settings properly
+  * Copy chorusmerge to output directory
+  * Fix WS-74, field label is not truncated in Linux
+  * Revert "Add ENV variable to control XulRunner Init"
+  * WS-188 WS-189 Synchronize Semantic Domain questions with FW
+  * Require Mono-sil 3.4 or greater
+  * Fix link location for Git for windows d/l
+  * Fix broken hyperlink in dialog (WS-71)
+
+ -- Neil Mayhew <neil_mayhew@sil.org>  Tue, 30 Sep 2014 14:42:23 -0600
+
+wesay (1.5.24) stable; urgency=medium
+
+  * When saving Lift files, save in sorted canonical order to
+    limit amount of changes to files (helps with support)
+  * Update Art of Reading URL to correct location
+  * WS-148: Configuration does not list XKB keyboards
+   - Now correctly displays XKB and iBus keyboards on Precise,
+     Saucy, and Trusty.  Need to research if changes needed for Wasta.
+  * WS-158: viewing history would open separate firefox browser
+    instead of display in built-in browser
+  * WS-130: typo in label
+  * WS-139: Note text is not displayed
+  * WS-161: Gecko Mode: SE Asian scripts are not correct
+  * Add dependency on gnome-control-center (for set up keyboards)
+  * Move MONO_DEBUG=explicit-debug-checks to environ file
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 04 Sep 2014 14:44:00 -0400
+
+wesay (1.5.23) stable; urgency=medium
+
+  * WS-161: Gecko Mode: SE Asian scripts are not correct
+   - add font-face style to Gecko controls for Windows
+  * WS-157: Error when attaching tiff files
+  * WS-112: Crash in WeSay Configuration Tool when importing .ldml
+    file in "Input System" tab
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 27 Aug 2014 14:00:55 -0400
+
+wesay (1.5.22) stable; urgency=low
+
+  * WS-152 Error box when adding pictures with invalid characters
+  * WS-156 Errors when using Gecko mode
+  * Gecko Mode: Tabbing out of fields on Windows not updating the entry properly
+  * Re-enable localizations
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 20 Aug 2014 18:39:09 -0400
+
+wesay (1.5.21) stable; urgency=low
+
+  * WS-105 PageDown in CAWL-MOZ display issue
+  * WS-120 Add dependency on udisks package
+  * Gecko Mode: input focus
+   - Fix: Inputting while mouse hovered over a Gecko control without focus
+     accepted input
+   - Fix: Issues with not being able to input into a GeckoBox that had focus
+     unless the mouse was hovered over it (in some instances)
+   - Fix: Problems with clicking in the middle of a GeckoBox with text
+     already in it always focused to the last character in the string.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 14 Aug 2014 22:59:37 -0400
+
+wesay (1.5.20) stable; urgency=medium
+
+  * WS-116: (Chorus) Fix crash on History tab when clicking on "Review project changes"
+  * WS-34799: Track any hidden span boundaries while editing
+   - This completes the work planned for fixing this issue
+  * Gecko Mode: fix for new word entry
+  * Gecko Mode: Disable context menu for Gecko boxes
+  * Gecko Mode: Implement AutoCompleteWithCreation feature
+  * Correct collapsible splitter error
+  * Include Chorus_Help.chm
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 04 Aug 2014 09:34:30 -0400
+
+wesay (1.5.19~alpha1) stable; urgency=low
+
+  * Use taglib-sharp instead exiftool to read exif data from images
+  * Change package builds to use the correct version of ICU.net.dll
+   - Precise/Saucy will use version for ICU48
+   - Trusty will use version for ICU52
+  * Make packaging work on Trusty
+  * Improve event processing in Gecko mode
+  * WS-34799: Improve handling of <span> elements in LIFT when editing
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Tue, 15 Jul 2014 12:47:47 -0400
+
+wesay (1.5.18) stable; urgency=low
+
+  * WS-96 Restore proper form and guid when recreating deleted word
+  * WS-98 Rewrite dialog to display properly on both Windows and Linux
+   - 'Create new project from a set of plain LIFT files' dialog
+  * When adding a picture, don't change extension of non-png files to png
+  * Force a new writing system id when duplicating
+   - Duplicating an existing writing system in the UI, then deleting the
+     duplicate would result in deleting the original writing system
+     since the duplicate has the same id.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 07 Jul 2014 10:25:53 -0400
+
+wesay (1.5.17) experimental; urgency=low
+
+  * Implement AutoCompleteTextBox for search feature when using GeckoFx
+  * WS-92 Prevent message area from being edited by user
+  * WS-94 Fix crash on "Part of Speech" tab
+  * Include MONO_DEBUG=explicit-null-checks in wesay-config startup script
+    since wesay can be launched from wesay-config
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Tue, 01 Jul 2014 11:51:15 -0400
+
+wesay (1.5.16) experimental; urgency=low
+
+  * WS-59 Fix Word list not repainting correctly
+  * WS-87 Handle pictures imported from Windows on Linux
+  * WS-84 Work-around crash caused by loading XulRunner 29 (again)
+   - setting MONO_DEBUG=explicit-null-checks keeps mono from crashing
+   - this is a temporary work-around until we find the root cause
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 27 Jun 2014 15:44:10 -0400
+
+wesay (1.5.15) experimental; urgency=low
+
+  * There are still crashes caused by initialization of XulRunner.
+    Added a new environment variable for Linux (WESAY_INIT_XULRUNNER)
+    which controls whether XulRunner is initialized on startup.  By
+    default, it is initialized.  Turn off XulRunner initialization by
+    setting the environment variable to 0.  If WESAY_USE_GECKO=1, then
+    XulRunner is still initialized.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 25 Jun 2014 15:17:00 -0400
+
+wesay (1.5.14) experimental; urgency=low
+
+  * Fix packaging to actually include
+    PalasoUIWindowsForms.GeckoBrowserAdapter.dll
+  * WS-84 Fix for crash on exit when using Geckofx-29
+   - Code introduced in WeSay with Geckofx-14 which fixed an issue in
+     FLEx (FWNX-1216) was causing the crash with Geckofx-29.
+   - Re-enable initializing XulRunner on startup (revert change in 1.5.13)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Mon, 23 Jun 2014 17:32:08 -0400
+
+wesay (1.5.13) experimental; urgency=low
+
+  * Only initialize XulRunner if using WESAY_USE_GECKO=1 (temporary
+    work-around for crashes due to GeckoFx29).  This may affect
+    the functionaility of Chorus Notes.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 20 Jun 2014 08:17:06 -0400
+
+wesay (1.5.12) experimental; urgency=low
+
+  * Work-around an exception in chorus syncing which interacts
+    with an exception in GeckoFx29 that eventually causes a crash
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 19 Jun 2014 08:29:09 -0400
+
+wesay (1.5.11) experimental; urgency=low
+
+  * Skipped 1.5.10 to sync version number with Windows build
+  * Fix custom xkb keyboards to be displayed
+  * WS-51 Fix text clipping
+  * WS-58 Fix GatherWords layout (crashed when resized)
+  * Improve Gecko mode
+   - Change list box and combo box background color from default to white
+   - In DB&E, in Gecko mode, changed the splitter window so that it can't
+     stay smaller than width of list box.
+   - GeckoFx 29 in Windows doesn't display properly.  Implemented a workaround
+     which minimizes and maximizes the window as the last part of setup.
+   - Improve list view functionality when the word field is empty and an
+     alternate form is used instead.
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Wed, 18 Jun 2014 08:52:32 -0400
+
+wesay (1.5.9) experimental; urgency=low
+
+  * WS-66 Adding note to a word in DBE fails
+  * WS-61 Fix scrolling on Home tab
+  * WS-67 Fix button alignment
+  * WS-55 Fix line ending issue in Writing System Font Test dialog
+  * WS-52, WS-46 Fix text clipping
+  * Switch from geckofx14 to geckofx29
+  * Fix some issues running on Mono 3 (libpalaso)
+  * Fix Art of Reading searches
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 12 Jun 2014 10:33:16 -0400
+
+wesay (1.5.8) experimental; urgency=low
+
+  * More attempts to fix crash if no ibus keyboard installed (FWNX-1382)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 01 Jun 2014 10:00:00 -0400
+
+wesay (1.5.7) experimental; urgency=low
+
+  * WS-62 Fix text entry area does not render properly
+  * WS-63 Fix CAWL-MOZ entries do not display in list box
+  * set PKG_CONFIG_PATH properly to include /usr/lib/pkgconfig
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 30 May 2014 10:28:29 -0400
+
+wesay (1.5.6) experimental; urgency=low
+
+  * Fix crash in GatherSemanticDomain
+  * Implement WeSayListBox for Gecko
+  * Fix Broken link in About Lexique Pro
+  * Fix Tool Tips truncated in Linux
+  * Fix crash if no ibus keyboards installed
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Thu, 29 May 2014 08:27:14 -0400
+
+wesay (1.5.4) experimental; urgency=low
+  * Updated to include features introduced up to wesay 1.4 for Windows
+   - export to PDF and LibreOffice
+   - audio recording/playback
+   - chorus notes
+   - art of reading image collection
+  * support xkb and ibus keyboards
+  * enable automatic keyboard switching
+  * initialize project from ChorusHub
+  * fix UI components that work in Windows but not in Linux
+  * fix display issues in Dictionary Browse & Edit
+  * fix selection of Semantic Domain items to work reliably
+  * fix a number of minor display issues (missing icons, clipped labels, etc)
+  * simplify language/project creation, enforcing better consistency
+  * experimental support for non-roman script languages
+   - enabled by WESAY_USE_GECKO=1 environment variable when starting wesay
+   - uses Gecko (which uses Graphite) for text rendering
+   - issue: automatic keyboard switching doesn't work (it will remember if set
+     manually)
+   - issue: tabbing between fields doesn't work (it may work sometimes, but
+     has difficulty)
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 16 May 2014 13:57:23 -0400
+
+wesay (1.1.11-1) UNRELEASED; urgency=low
+
+  * WS-34262 mime types to allow lift and wesayconfig files to open from gui
+  * WS-34260 chorus - disable win32text extension warning
+  * WS-34363 stop two versions of wesay running for same lift file
+  * WS-34295 libreoffice 3.5 and pdf creation
+  * WS-34366 pictures not always show in OO export
+  * WS-34359 detect Art Of Reading images in /usr/share/SIL/ArtOfReading/images
+  * WS-34361 CAWL word list added extra input systems to lift file
+  * WS-34379 setting clipboard to null or empty string throws an exception
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 03 May 2012 15:41:12 +0700
+
+wesay (1.1.10-1) UNRELEASED; urgency=low
+
+  * disabled complaint about missing keyboard ime if autoswitching disabled
+  * update palaso, chorus and wesay to windows wesay 1.2
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 27 Apr 2012 13:59:45 +0700
+
+wesay (1.1.9-1) UNRELEASED; urgency=low
+
+  * update palaso lib to get fixes from there
+  * update chorus lib to get fixes from there
+  * fix ProblemNotification dialog
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 16 Feb 2012 09:27:52 +0700
+
+wesay (1.1.8-1) UNRELEASED; urgency=low
+
+  * WS-34306 disable liftreports which has not been used on windows for years
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 13 Feb 2012 14:29:43 +0700
+
+wesay (1.1.7-1) UNRELEASED; urgency=low
+
+  * WS-34305 Use LibreOffice 3.4 or later to create a pdf
+	  See https://wiki.ubuntu.com/LibreOffice for instructions for installing
+	  LibreOffice 3.4 on lucid (which also works for natty)
+	  it comes with oneiric onwards
+  * add Suggests on libreoffice-writer >= 3.4, and pdf-viewer
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 10 Feb 2012 16:04:46 +0700
+
+wesay (1.1.6-1) UNRELEASED; urgency=low
+
+  * WS-34300 fix template location and common dir
+	  this was breaking xhtml and simple pdf export
+  * hatton: Fix WS-34227
+  * WS-1187 PrinceXML export really working now
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Thu, 09 Feb 2012 11:02:48 +0700
+
+wesay (1.1.5-1) UNRELEASED; urgency=low
+
+  * disable progress box on "Loading dictionary"
+  * simple pdf generation with princexml enabled
+	  N.B. use libreoffice for better pdfs
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Mon, 06 Feb 2012 15:54:29 +0700
+
+wesay (1.1.4-1) UNRELEASED; urgency=low
+
+  * fix odf template location finding
+  * merge with default to get more fixes
+
+ -- Daniel Glassey <daniel@glassey>  Mon, 30 Jan 2012 14:00:48 +0700
+
+wesay (1.1.3-1) UNRELEASED; urgency=low
+
+  * default font for new writing systems is now DejaVu Sans, 12
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Tue, 17 Jan 2012 13:56:15 +0700
+
+wesay (1.1.2-1) UNRELEASED; urgency=low
+
+  * 1.1 beta with auto keyboard switching disabled
+  * now building palaso and chorus binaries from source
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Fri, 13 Jan 2012 21:53:49 +0700
+
+wesay (1.1.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 1.1.x
+  * need to find out how to set the version
+
+ -- Daniel Glassey <daniel_glassey@sil.org>  Wed, 02 Nov 2011 09:42:52 +0700
+
+wesay (0.9.0-1palaso1) lucid; urgency=low
+
+  * Updated to upstream wesay 0.9.x
+
+ -- Cambell Prince <cambell_prince@sil.org>  Thu, 13 Jan 2011 13:31:20 +0700
+
+wesay (0.4-1sil1) hardy; urgency=low
+
+  * Updated to upstream wesay stable 0.4.
+  * Status is still experimental in Linux / Ubuntu
+
+ -- Cambell Prince <cambell_prince@sil.org>  Fri, 28 Nov 2008 10:57:47 +0700
+
+wesay (0.1-1sil1) hardy; urgency=low
+
+  * Initial build
+  *
+
+ -- Martin Hosken <martin_hosken@sil.org>  Sat, 18 Oct 2008 15:15:32 +0700

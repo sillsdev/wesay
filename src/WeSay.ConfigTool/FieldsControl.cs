@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Palaso.i18n;
+using Palaso.Reporting;
+using Palaso.WritingSystems;
 using WeSay.ConfigTool.Properties;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -8,7 +13,9 @@ namespace WeSay.ConfigTool
 {
 	public partial class FieldsControl: ConfigurationControlBase
 	{
-		public FieldsControl(): base("set up the fields for the dictionary")
+		private bool _loading = false;
+
+		public FieldsControl(ILogger logger): base("set up the fields for the dictionary", logger,"fields")
 		{
 			InitializeComponent();
 			_btnAddField.Image = Resources.genericLittleNewButton;
@@ -20,6 +27,7 @@ namespace WeSay.ConfigTool
 		private void _fieldSetupControl_DescriptionOfFieldChanged(object sender, EventArgs e)
 		{
 			_fieldsListBox.SelectedItems[0].ToolTipText = CurrentField.Description;
+			ReportEdit(StringCatalog.Get("Set description of field '{0}'", "Checkin description when setting the description of field in WeSay Configuration Tool."), CurrentField.Key);
 		}
 
 		private void FieldsControl_Load(object sender, EventArgs e)
@@ -43,7 +51,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			Field f = (Field) _fieldsListBox.SelectedItems[0].Tag;
+			var f = (Field) _fieldsListBox.SelectedItems[0].Tag;
 			_fieldsListBox.SelectedItems[0].Text = f.DisplayName;
 		}
 
@@ -53,6 +61,11 @@ namespace WeSay.ConfigTool
 			ViewTemplate.MoveToLastInClass(f);
 			LoadInventory(); // show it in its new location
 			MakeFieldTheSelectedOne(f);
+			ReportEdit(
+					StringCatalog.Get("Set class of field '{0}'",
+									  "Checkin description when setting the kind of field in WeSay Configuration Tool."),
+					f.Key);
+
 		}
 
 		/// <summary>
@@ -60,11 +73,12 @@ namespace WeSay.ConfigTool
 		/// </summary>
 		private void LoadInventory()
 		{
+			_loading = true;
 			_fieldsListBox.Items.Clear();
 
 			foreach (Field field in  ViewTemplate)
 			{
-				ListViewItem item = new ListViewItem(field.DisplayName);
+				var item = new ListViewItem(field.DisplayName);
 				item.Tag = field;
 				item.Text = field.DisplayName;
 				item.Checked = field.Enabled;
@@ -83,6 +97,7 @@ namespace WeSay.ConfigTool
 			{
 				_fieldsListBox.Items[0].Selected = true;
 			}
+			_loading = false;
 		}
 
 		private static ViewTemplate ViewTemplate
@@ -98,22 +113,33 @@ namespace WeSay.ConfigTool
 			}
 
 			//nb: this is not necessarily the Current Field!  you can click check boxes without selecting a different item
-			Field touchedField = (Field) _fieldsListBox.Items[e.Index].Tag;
+			var touchedField = (Field) _fieldsListBox.Items[e.Index].Tag;
 			if (e.NewValue == CheckState.Checked)
 			{
 				touchedField.Enabled = true;
 				//((Field) _fieldsListBox.SelectedItem).Enabled = true;
+				ReportEdit(StringCatalog.Get("Enabled field '{0}'",
+									  "Checkin description when enabling a field in WeSay Configuration Tool."), touchedField.Key);
 			}
 			else if (e.NewValue == CheckState.Unchecked)
 			{
 				if (touchedField.CanOmitFromMainViewTemplate)
 				{
 					touchedField.Enabled = false;
+					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Disabled field '{0}'", "Checkin description when disabling a field in WeSay Configuration Tool."), touchedField.Key);
 				}
 				else
 				{
 					e.NewValue = CheckState.Checked; //revert
 				}
+			}
+		}
+
+		private void ReportEdit(string localizedMessageTemplate, params object[] stringArgs)
+		{
+			if (!_loading)
+			{
+				_logger.WriteConciseHistoricalEvent(localizedMessageTemplate, stringArgs);
 			}
 		}
 
@@ -167,13 +193,19 @@ namespace WeSay.ConfigTool
 
 		private void OnAddField_Click(object sender, EventArgs e)
 		{
-			Field f = new Field(MakeUniqueFieldName(),
-								"LexEntry",
-								WeSayWordsProject.Project.WritingSystems.Keys);
+			// TODO inject the IWritingSystemStore in the ctor
+			var writingSystemStore = WeSayWordsProject.Project.WritingSystems;
+			var writingSystemIds = writingSystemStore.AllWritingSystems.Select(ws => ws.Id);
+
+			var f = new Field(
+				MakeUniqueFieldName(),
+				"LexEntry",
+				writingSystemIds);
 			ViewTemplate.Fields.Add(f);
 			LoadInventory();
 			_tabControl.SelectedTab = _setupTab;
 			MakeFieldTheSelectedOne(f);
+			ReportEdit(StringCatalog.Get("Added field", "Checkin description When adding a new field in WeSay Configuration Tool."));
 		}
 
 		private static string MakeUniqueFieldName()
@@ -197,7 +229,7 @@ namespace WeSay.ConfigTool
 
 		private static Field FindFieldWithFieldName(string name)
 		{
-			return ViewTemplate.Fields.Find(delegate(Field f) { return f.FieldName == name; });
+			return ViewTemplate.Fields.Find(f => f.FieldName == name);
 		}
 
 		private void MakeFieldTheSelectedOne(Field f)
@@ -233,6 +265,8 @@ namespace WeSay.ConfigTool
 
 			int index = _fieldsListBox.SelectedIndices[0];
 			ViewTemplate.Fields.Remove(CurrentField);
+			ReportEdit(StringCatalog.Get("Remove field '{0}'", "Checkin description when deleting a field in WeSay Configuration Tool."), CurrentField.Key);
+
 			LoadInventory();
 			if (_fieldsListBox.Items.Count > 0)
 			{
@@ -280,7 +314,7 @@ namespace WeSay.ConfigTool
 
 				if (found)
 				{
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 						"Sorry, WeSay cannot change the type of this field to '{0}', because there is existing data in the LIFT file of the old type, '{1}'",
 						CurrentField.DataTypeName, e.OldValue);
 					CurrentField.DataTypeName = (string)e.OldValue;
@@ -306,7 +340,7 @@ namespace WeSay.ConfigTool
 					{
 						f = fields[1];
 					}
-					ErrorReport.ReportNonFatalMessage(
+					ErrorReport.NotifyUserOfProblem(
 						"The field '{0}' with DisplayName '{1}' on class '{2}' is already using that name. Please choose another one.",
 						f.FieldName, f.DisplayName, f.ClassName);
 					CurrentField.FieldName = (string)e.OldValue;
@@ -317,6 +351,11 @@ namespace WeSay.ConfigTool
 			}
 		}*/
 
+		protected override void OnEnter(EventArgs e)
+		{
+			_fieldSetupControl.CurrentField = CurrentField;
+			base.OnEnter(e);
+		}
 		private void OnSelectedFieldChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
 			btnMoveUp.Enabled = false;
@@ -349,6 +388,7 @@ namespace WeSay.ConfigTool
 			ViewTemplate.MoveUpInClass(CurrentField);
 			LoadInventory();
 			MakeFieldTheSelectedOne(f);
+			ReportEdit(StringCatalog.Get("Adjusted field order", "Checkin description when moving a field in WeSay Configuration Tool."));
 		}
 
 		private void btnMoveDown_Click(object sender, EventArgs e)
@@ -357,6 +397,8 @@ namespace WeSay.ConfigTool
 			ViewTemplate.MoveDownInClass(CurrentField);
 			LoadInventory();
 			MakeFieldTheSelectedOne(f);
+			ReportEdit(StringCatalog.Get("Adjusted field order", "Checkin description when moving a field in WeSay Configuration Tool."));
+
 		}
 	}
 }

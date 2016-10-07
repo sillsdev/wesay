@@ -1,20 +1,22 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
-<!-- will be used later on in this file.                                                                 -->
-<?define Property_ProductVersion = "0.4.-1" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<!-- will be used later on in this file.  The product version value should be BUILD_SCRIPT_MUST_REPLACE_AT_RUNTIME (in quotes). -->
+<?define Property_ProductVersion = "BUILD_SCRIPT_MUST_REPLACE_AT_RUNTIME" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
 <!-- good intro to the component vs. file thing, and why each file here is a separate component:
 http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
 
-	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
 
 		<Product Id="$(var.Property_ProductCode)" Name="WeSay $(var.Property_ProductVersion)" Language="1033"
 				   Version="$(var.Property_ProductVersion)" Manufacturer="SIL"
 				   UpgradeCode="$(var.Property_UpgradeCode)">
-
 		  <Package  Compressed="yes" InstallerVersion="200" />
+
+		  <MajorUpgrade   Schedule="afterInstallInitialize"
+	  DowngradeErrorMessage="A later version of WeSay is already installed. If you really want to downgrade, first uninstall WeSay, then do this install again."/>
 
 		  <Upgrade Id ="$(var.Property_UpgradeCode)" >
 		  <UpgradeVersion Minimum ="$(var.Property_ProductVersion)" OnlyDetect ="yes" Property ="NEWVERSIONDETECTED" />
@@ -27,15 +29,16 @@ users to install just the shortcut for your app, then demand-install the
 rest of the app the first time the icon is run.  If this is not behavior you
 are trying to support, you're better off using non-advertised shortcuts. "-->
 
-		  <PropertyRef Id="NETFRAMEWORK20"/>
-		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET Framework 2.0. A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites">
-			  Installed OR NETFRAMEWORK20
-			</Condition>
+		  <PropertyRef Id="NETFRAMEWORK40CLIENT" />
+		  <Condition Message="Before WeSay can install, you need to install Microsoft's free .NET 4.0 ClientFramework.  A full discussion of WeSay's requirements can be found at wesay.org/wiki/Prerequisites.">
+			Installed OR NETFRAMEWORK40CLIENT OR NETFRAMEWORK40FULL
+		  </Condition>
 
-			<!--because of bug, this needs to be 1 -->
+		  <!--because of bug, this needs to be 1 -->
 			<Property Id ="ALLUSERS">1</Property>
 
 			<Directory Id="TARGETDIR" Name="SourceDir">
+			  <Directory Id="DesktopFolder" Name="Desktop"/>
 			  <Directory Id='ProgramMenuFolder' Name='Programs'>
 				<Directory Id='WeSayShortcutDir' Name='WeSay'>
 				  <Component Id ='removeShortcutDir' Guid ="{6DB2042E-998C-482a-A46A-A1EC83C059E0}">
@@ -51,15 +54,23 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 				<Directory Id="ProgramDir" Name="WeSay">
 
-				<Directory Id="TemplatesDir" Name="Templates">
-					<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
-				</Directory>
+						<Directory Id="TemplatesDir" Name="Templates">
+							<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
+						</Directory>
+						
+						<Directory Id="XulrunnerFiles" Name="xulrunner">
+							<!-- a generated fragment from GeneratedXulrunnerFiles.wxs will fill this in -->
+						</Directory>
+						<Merge  Id="ChorusMergeModule" Language="1033" SourceFile="..\..\lib\ChorusMergeModule.msm" DiskId="1" />
 
 				  <Component Id="DocFiles" Guid="{F533B47C-A6F4-4284-A257-59C3C9B54526}">
 					<File Id="Welcome.htm" Name="Welcome.htm" KeyPath="yes" Source="..\..\doc\Welcome.htm" />
 				  </Component>
 
 
+				  <Component Id="WeSay_Helps.chm" Guid="{8E2B2894-675B-4B8D-85CF-D9938466EC61}">
+					<File Id="WeSay_Helps.chm" Name="WeSay_Helps.chm" KeyPath="yes" Source="..\..\WeSay_Helps.chm" />
+				  </Component>
 
 				  <Component Id="WeSay.App.exe" Guid="{406B533F-C5D5-49AD-9DC9-12375B80949F}">
 					<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSay.App.exe" KeyPath="yes" />
@@ -86,18 +97,21 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<Registry Id='WordsIcon3' Root='HKCR' Key='WeSay.LIFTFile\DefaultIcon' Action='write'
 					  Type='string' Value='[!WeSayLiftIconFile], 0' />
 
-					<!-- another way:                 <Registry Id='LuaReg8' Root='HKCR' Key='VisualStudio.luaproj.8.0\Shell\Open\Command' Action='write'
+					<!-- another way:				 <Registry Id='LuaReg8' Root='HKCR' Key='VisualStudio.luaproj.8.0\Shell\Open\Command' Action='write'
 					 Type='string' Value='"[ENVPATH_2005]" "%1"'/> -->
 
 					<Shortcut Id="startmenuShortcut"  Directory="WeSayShortcutDir" Name="WeSay"
 						 WorkingDirectory="ProgramDir" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
+
+					<Shortcut Id="desktopShortcut"  Directory="DesktopFolder" Name="WeSay"
+						 WorkingDirectory="INSTALLDIR" Target="[!WeSay.App.exe]"  Icon ="WeSay.App.exe" />
 
 				  </Component>
 
 				  <Component Id="WeSayConfigurationTool" Guid="{26CD1460-94D4-44CD-832A-EA750F5AA92A}">
 					<Registry Root="HKCU" Key="SOFTWARE\WeSay\Components\WeSayConfigurationTool" KeyPath="yes" />
 
-					<File Id="WeSayConfigurationTool" Name="WeSay Configuration Tool.exe" Source="..\..\output\release\WeSay Configuration Tool.exe" />
+					<File Id="WeSayConfigurationTool" Name="WeSay.ConfigTool.exe" Source="..\..\output\release\WeSay.ConfigTool.exe" />
 					<File Id="WeSayConfigIconFile" Name="WeSayConfigFile.ico" Source="..\..\artwork\WeSay.Config.File.ico" />
 
 					<!--- connect file types to icons and program to launch -->
@@ -124,39 +138,62 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 				  </Component>
 				  <Component Id="WeSayConfigurationTool.exe.config" Guid="{3FD496AE-6B71-4213-B3FD-39CF62698642}">
-					<File Id="WeSayConfigurationTool.exe.config" Name="WeSay Configuration Tool.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay Configuration Tool.exe.config" />
+					<File Id="WeSayConfigurationTool.exe.config" Name="WeSay.ConfigTool.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.exe.config" />
 				  </Component>
 				  <Component Id="WeSayConfigurationTool.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
-					<File Id="WeSayConfigurationTool.pdb" Name="WeSay Configuration Tool.pdb" KeyPath="yes" Source="..\..\output\release\WeSay Configuration Tool.pdb" />
+					<File Id="WeSayConfigurationTool.pdb" Name="WeSay.ConfigTool.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.pdb" />
 				  </Component>
 				  <Component Id="Castle.DynamicProxy.dll" Guid="{871D566A-F864-4946-AA65-6A7E07D24E1B}">
 					<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="..\..\output\release\Castle.DynamicProxy.dll" />
 				  </Component>
-				  <Component Id="CommonTools.dll" Guid="{C9296169-583C-4302-8504-ED2DEC99558B}">
-					<File Id="CommonTools.dll" Name="CommonTools.dll" KeyPath="yes" Source="..\..\output\release\CommonTools.dll" />
-				  </Component>
-				  <Component Id="CommonTools.pdb" Guid="{3B8D43F0-7A64-4AC7-82A9-2A334E53F5AC}">
-					<File Id="CommonTools.pdb" Name="CommonTools.pdb" KeyPath="yes" Source="..\..\output\release\CommonTools.pdb" />
-				  </Component>
- <!--                   <Component Id="Db4objects.Db4o.dll" Guid="{A519B18E-56D3-45FA-A2C9-BA7A524259B2}">
-					<File Id="Db4objects.Db4o.dll" Name="Db4objects.Db4o.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.dll" />
-				  </Component>
-				<Component Id="Db4objects.Db4o.Tools.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173B92}">
-					<File Id="Db4objects.Db4o.Tools.dll" Name="Db4objects.Db4o.Tools.dll" KeyPath="yes" Source="..\..\output\release\Db4objects.Db4o.Tools.dll" />
-				  </Component>
-	  -->
+
 				  <Component Id="Enchant.Net.dll" Guid="{95F22469-1C72-4f90-99D8-D5FDFBA0DDF9}">
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
+
+				  <!--	 These are already installed by Chorus Merge Module
+				  Vulcan Help Provider
+
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
-				  <Component Id="linqbridge.dll" Guid="{D5FE0CB8-19D7-4457-8D6C-43E56E9A6FA0}">
-					<File Id="linqbridge.dll" Name="linqbridge.dll" KeyPath="yes" Source="..\..\output\release\linqbridge.dll" />
+
+				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
+					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
 				  </Component>
 
-				  <Component Id="CookComputing.XmlRpcV2.dll" Guid="{C23D78B7-A7F2-4dc2-9B7F-8A004167FF12}">
-					<File Id="CookComputing.XmlRpcV2.dll" Name="CookComputing.XmlRpcV2.dll" KeyPath="yes" Source="..\..\output\release\CookComputing.XmlRpcV2.dll" />
+				  <Component Id="PalasoUIWindowsForms.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E899}">
+					<File Id="PalasoUIWindowsForms.dll" Name="PalasoUIWindowsForms.dll" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.dll" />
+				  </Component>
+
+				  <Component Id="Palaso.Lift.dll" Guid="{3DDA9386-0A99-418D-BF33-E070D6337DDD}">
+					<File Id="Palaso.Lift.dll" Name="Palaso.Lift.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.dll" />
+				  </Component>
+
+				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
+					<File Id="Icu.Net.dll" Name="icu.net.dll" KeyPath="yes" Source="..\..\output\release\icu.net.dll" />
+				  </Component>
+
+				  <Component Id="IcuData.dll" Guid="{39EFEA93-2A23-42d0-A3EE-CD080A9F8C54}">
+					<File Id="IcuData.dll" Name="icudt40.dll" KeyPath="yes" Source="..\..\output\release\icudt40.dll" />
+				  </Component>
+				  <Component Id="IcuI18n.dll" Guid="{E47B3633-2C93-4bdc-AB68-4851EC13878F}">
+					<File Id="IcuI18n.dll" Name="icuin40.dll" KeyPath="yes" Source="..\..\output\release\icuin40.dll" />
+				  </Component>
+				  <Component Id="IcuCommon.dll" Guid="{15D5ACDF-802A-40b1-83C3-681F12B02D89}">
+					<File Id="IcuCommon.dll" Name="icuuc40.dll" KeyPath="yes" Source="..\..\output\release\icuuc40.dll" />
+				  </Component>
+
+				-->
+
+				  <!-- audio recording/playback engine used by palaso.media -->
+				  <Component Id="irrKlang.NET4.dll" Guid="{952F0A0C-F317-459f-A91C-55DE3D046B2C}">
+					<File Id="irrKlang.NET4.dll" Name="irrKlang.NET4.dll" KeyPath="yes" Source="..\..\output\release\irrKlang.NET4.dll" />
+				  </Component>
+
+				  <!-- needed by irrKlang on some machines that don't have it  -->
+				  <Component Id="msvcr100.dll" Guid="{7C89E927-6D7E-4103-B944-3BF8FD015F98}">
+					<File Id="msvcr100.dll" Name="msvcr100.dll" KeyPath="yes" Source="..\..\lib\release\msvcr100.dll" />
 				  </Component>
 
 				  <Component Id="ICSharpCode.SharpZipLib.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D9D7}">
@@ -187,44 +224,27 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="LexicalTools.pdb" Guid="{DB30AF44-2E65-49AB-84E4-969CB6605CCA}">
 					<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.pdb" />
 				  </Component>
-				  <Component Id="LiftIO.dll" Guid="{EC2E5E3E-19E8-4680-8377-447DBDDE9BDF}">
-					<File Id="LiftIO.dll" Name="LiftIO.dll" KeyPath="yes" Source="..\..\output\release\LiftIO.dll" />
-				  </Component>
 				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
 					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
 				  </Component>
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
-				  <!--
-		  <Component Id="NetReflector.pdb" Guid="{92497411-A442-436D-9421-FC99DF5298DA}">
-			<File Id="NetReflector.pdb" Name="NetReflector.pdb" KeyPath="yes" Source="..\..\output\release\NetReflector.pdb" />
-		  </Component>
-		  -->
 
-				  <Component Id="Chorus.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CCCC}">
-					<File Id="Chorus.exe" Name="Chorus.exe" KeyPath="yes" Source="..\..\output\release\Chorus.exe" />
-				  </Component>
 
-				  <Component Id="wrapShellCall.exe" Guid="{8984F36D-7C63-47aa-BE08-70A43962CDDD}">
-					<File Id="wrapShellCall.exe" Name="wrapShellCall.exe" KeyPath="yes" Source="..\..\output\release\wrapShellCall.exe" />
-				  </Component>
-
-				  <Component Id="Palaso.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
-					<File Id="Palaso.dll" Name="Palaso.dll" KeyPath="yes" Source="..\..\output\release\Palaso.dll" />
-				  </Component>
-
-				  <Component Id="Palaso.Services.dll" Guid="{B8D67640-A995-42ec-B13C-0B1EECC65659}">
-					<File Id="Palaso.Services.dll" Name="Palaso.Services.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Services.dll" />
+				  <Component Id="Palaso.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
+					<File Id="Palaso.DictionaryServices.dll" Name="Palaso.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.dll" />
 				  </Component>
 
 
-				  <Component Id="PalasoReporting.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E800}">
-					<File Id="PalasoReporting.dll" Name="PalasoReporting.dll" KeyPath="yes" Source="..\..\output\release\PalasoReporting.dll" />
+				  <Component Id="Palaso.Media.dll" Guid="{4739D7BD-6D1D-474f-BF01-E012E51361E4}">
+					<File Id="Palaso.Media.dll" Name="Palaso.Media.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Media.dll" />
 				  </Component>
-				  <Component Id="PalasoUIWindowsForms.dll" Guid="{63142923-BAE1-4884-957C-11F6F2A3E899}">
-					<File Id="PalasoUIWindowsForms.dll" Name="PalasoUIWindowsForms.dll" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.dll" />
+
+				  <Component Id="taglib_sharp.dll" Guid="{9E7A818B-9D51-4DFF-8CEE-93AA374DC25F}">
+					<File Id="taglib_sharp.dll" KeyPath="yes" Source="..\..\output\release\taglib-sharp.dll" />
 				  </Component>
+
 				  <Component Id="WeSay.App.exe.config" Guid="{ED8319B8-8325-4598-8E4C-004D3356E373}">
 					<File Id="WeSay.App.exe.config" Name="WeSay.App.exe.config" KeyPath="yes" Source="..\..\output\release\WeSay.App.exe.config" />
 				  </Component>
@@ -255,12 +275,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="WeSay.UI.pdb" Guid="{3A0709F0-361F-49F9-B50E-877BDA266A22}">
 					<File Id="WeSay.UI.pdb" Name="WeSay.UI.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.pdb" />
 				  </Component>
-
 				  <Component Id="Addin.Transform.dll" Guid="{6E1139F5-2998-44bc-A393-018D4DFC00B7}">
 					<File Id="Addin.Transform.dll" Name="Addin.Transform.dll" KeyPath="yes" Source="..\..\output\release\Addin.Transform.dll" />
 				  </Component>
-
-
 				  <Component Id="Addin.Backup.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7901122}">
 					<File Id="Addin.Backup.dll" Name="Addin.Backup.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.dll" />
 				  </Component>
@@ -269,39 +286,12 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			<File Id="Addin.LiftReports.dll" Name="Addin.LiftReports.dll" KeyPath="yes" Source="..\..\output\release\Addin.LiftReports.dll" />
 		  </Component>
 		  -->
-				  <!-- this is a LiftReports requirement -->
-				  <Component Id="NVelocity.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D444}">
-					<File Id="NVelocity.dll" Name="NVelocity.dll" KeyPath="yes" Source="..\..\output\release\NVelocity.dll" />
-				  </Component>
-				  <!-- this is an nvelocity requirement -->
-				  <Component Id="log4net.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D555}">
-					<File Id="log4net.dll" Name="log4net.dll" KeyPath="yes" Source="..\..\output\release\log4net.dll" />
-				  </Component>
-				  <!-- this is an nvelocity requirement -->
-				  <Component Id="commons.dll" Guid="{6254D0F2-A7AF-411C-801E-30EBB1E6D666}">
-					<File Id="commons.dll" Name="commons.dll" KeyPath="yes" Source="..\..\output\release\commons.dll" />
-				  </Component>
-
 				  <Component Id="WeSay.AddinLib.dll" Guid="{8597A830-9A97-4A74-A25F-3FEDF7902222}">
 					<File Id="WeSay.AddinLib.dll" Name="WeSay.AddinLib.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.dll" />
 				  </Component>
-				  <Component Id="Mono.Addins.exe" Guid="{6A969A5B-E42E-4dc7-A486-7828B54D9522}">
-					<File  Id="Mono.Addins.exe" Name="Mono.Addins.exe" KeyPath="yes" Source="..\..\output\release\Mono.Addins.exe" />
-					<RemoveFile Id="Mono.Addins.exe" Name="Mono.Addins.exe" On="install"/>
-				  </Component>
-
-				  <Component Id="Icu.Net.dll" Guid="{7EEB48AE-7494-4408-924F-24BCA99A6E22}">
-					<File Id="Icu.Net.dll" Name="icu.net.dll" KeyPath="yes" Source="..\..\output\release\icu.net.dll" />
-				  </Component>
-
-				  <Component Id="IcuData.dll" Guid="{39EFEA93-2A23-42d0-A3EE-CD080A9F8C54}">
-					<File Id="IcuData.dll" Name="icudt40.dll" KeyPath="yes" Source="..\..\output\release\icudt40.dll" />
-				  </Component>
-				  <Component Id="IcuI18n.dll" Guid="{E47B3633-2C93-4bdc-AB68-4851EC13878F}">
-					<File Id="IcuI18n.dll" Name="icuin40.dll" KeyPath="yes" Source="..\..\output\release\icuin40.dll" />
-				  </Component>
-				  <Component Id="IcuCommon.dll" Guid="{15D5ACDF-802A-40b1-83C3-681F12B02D89}">
-					<File Id="IcuCommon.dll" Name="icuuc40.dll" KeyPath="yes" Source="..\..\output\release\icuuc40.dll" />
+				  <Component Id="Mono.Addins.dll" Guid="{6A969A5B-E42E-4dc7-A486-7828B54D9522}">
+					<File  Id="Mono.Addins.dll" Name="Mono.Addins.dll" KeyPath="yes" Source="..\..\output\release\Mono.Addins.dll" />
+					<RemoveFile Id="Mono.Addins.dll" Name="Mono.Addins.dll" On="install"/>
 				  </Component>
 
 				  <Component Id="Keyman7Interop.dll" Guid="{4F786363-00D6-41ec-9464-9168B2EF3499}">
@@ -309,6 +299,169 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 
 
+<!-- Comment: used by PalasoUIWindowsForms for talking to scanner -->
+				  <Component Id="Interop.WIA.dll" Guid="{47038218-2646-4F83-BE95-4F83A8D41811}">
+					<File Id="Interop.WIA.dll" Name="Interop.WIA.dll" KeyPath="yes" Source="..\..\output\release\Interop.WIA.dll" />
+				  </Component>
+				  
+				  <!-- all the other essential files needed in the new install -->
+				<Component Id="Addin.Backup.pdb" Guid="{10714F3D-2A20-41FD-9350-C0A81EF364F0}">
+					<File Id="Addin.Backup.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Backup.pdb" />
+				</Component>
+				<Component Id="Addin.Backup.Tests.dll" Guid="{9B5BF1C3-1139-4476-96DB-16A8B7ABF3FF}">
+					<File Id="Addin.Backup.Tests.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.Tests.dll" />
+				</Component>
+				<Component Id="Addin.Backup.Tests.pdb" Guid="{10EB2CAA-35A5-4097-894B-AB6052FDAA1E}">
+					<File Id="Addin.Backup.Tests.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Backup.Tests.pdb" />
+				</Component>
+				<Component Id="Addin.Transform.dll.config" Guid="{BD2F7AC3-B17A-4E08-ACEE-D6537C527138}">
+					<File Id="Addin.Transform.dll.config" KeyPath="yes" Source="..\..\output\release\Addin.Transform.dll.config" />
+				</Component>
+				<Component Id="Addin.Transform.pdb" Guid="{24BDA882-8A90-4C0B-8749-0D191D13781B}">
+					<File Id="Addin.Transform.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Transform.pdb" />
+				</Component>
+				<Component Id="Addin.Transform.Tests.dll" Guid="{6B44252E-34C9-48F8-BC97-0AC8B0D01404}">
+					<File Id="Addin.Transform.Tests.dll" KeyPath="yes" Source="..\..\output\release\Addin.Transform.Tests.dll" />
+				</Component>
+				<Component Id="Addin.Transform.Tests.pdb" Guid="{D8CB34BE-7AD8-488B-810F-B2901D3B1E43}">
+					<File Id="Addin.Transform.Tests.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Transform.Tests.pdb" />
+				</Component>
+				<Component Id="Chorus.pdb" Guid="{7A747756-5AEB-4BEE-9B8A-A7CC4FC28688}">
+					<File Id="Chorus.pdb" KeyPath="yes" Source="..\..\output\release\Chorus.pdb" />
+				</Component>
+				<Component Id="ChorusMerge.pdb" Guid="{95475870-D8E2-4885-B021-ED2C665F8FDF}">
+					<File Id="ChorusMerge.pdb" KeyPath="yes" Source="..\..\output\release\ChorusMerge.pdb" />
+				</Component>
+				<Component Id="Enchant.Net.dll.config" Guid="{AB1072D4-9BA7-41DF-AF82-1352BAF7E949}">
+					<File Id="Enchant.Net.dll.config" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll.config" />
+				</Component>
+				<Component Id="geckofx_core.dll" Guid="{074F8093-9DA6-4545-B8AC-1DADE7D482D6}">
+					<File Id="geckofx_core.dll" KeyPath="yes" Source="..\..\output\release\geckofx-core.dll" />
+				</Component>
+				<Component Id="geckofx_core.dll.config" Guid="{04C658D5-A779-4F56-8786-7F1DD2A050BF}">
+					<File Id="geckofx_core.dll.config" KeyPath="yes" Source="..\..\output\release\geckofx-core.dll.config" />
+				</Component>
+				<Component Id="Geckofx_Winforms.dll" Guid="{AF29040E-CC91-4655-BD0E-8C161754EA04}">
+					<File Id="Geckofx_Winforms.dll" KeyPath="yes" Source="..\..\output\release\Geckofx-Winforms.dll" />
+				</Component>
+				<Component Id="Geckofx_Winforms.pdb" Guid="{5EF8CAA8-150F-48A9-BF9D-E0BE99DC1B1B}">
+					<File Id="Geckofx_Winforms.pdb" KeyPath="yes" Source="..\..\output\release\Geckofx-Winforms.pdb" />
+				</Component>
+				<Component Id="L10NSharp.dll" Guid="{9ECCBB7C-0753-4309-84D1-AE8BE691C7E6}">
+					<File Id="L10NSharp.dll" KeyPath="yes" Source="..\..\output\release\L10NSharp.dll" />
+				</Component>
+				<Component Id="L10NSharp.pdb" Guid="{EB990ACB-7E5F-4E92-AB78-6D24B6E94636}">
+					<File Id="L10NSharp.pdb" KeyPath="yes" Source="..\..\output\release\L10NSharp.pdb" />
+				</Component>
+				<Component Id="LexicalModel.Tests.dll" Guid="{584164A9-16E5-4487-AAE0-24C755DC9750}">
+					<File Id="LexicalModel.Tests.dll" KeyPath="yes" Source="..\..\output\release\LexicalModel.Tests.dll" />
+				</Component>
+				<Component Id="LexicalModel.Tests.pdb" Guid="{6F2C07C9-7D16-4BBD-8558-21093B33D229}">
+					<File Id="LexicalModel.Tests.pdb" KeyPath="yes" Source="..\..\output\release\LexicalModel.Tests.pdb" />
+				</Component>
+				<Component Id="LexicalTools.Tests.dll" Guid="{319C7C97-D878-4270-87B9-30D47B6906CF}">
+					<File Id="LexicalTools.Tests.dll" KeyPath="yes" Source="..\..\output\release\LexicalTools.Tests.dll" />
+				</Component>
+				<Component Id="LexicalTools.Tests.dll.config" Guid="{593BBFAB-A047-438D-8B0E-A67FB25E1E83}">
+					<File Id="LexicalTools.Tests.dll.config" KeyPath="yes" Source="..\..\output\release\LexicalTools.Tests.dll.config" />
+				</Component>
+				<Component Id="LexicalTools.Tests.pdb" Guid="{1B897585-DB8F-451B-9F70-682D42031D38}">
+					<File Id="LexicalTools.Tests.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.Tests.pdb" />
+				</Component>
+				<Component Id="LibChorus.pdb" Guid="{C8F30B83-1D51-4631-B6E2-C867B5D7D17B}">
+					<File Id="LibChorus.pdb" KeyPath="yes" Source="..\..\output\release\LibChorus.pdb" />
+				</Component>
+				<Component Id="lift2sfm.xsl" Guid="{3768D3EA-C6D3-46F6-80C3-55641DE586D3}">
+					<File Id="lift2sfm.xsl" KeyPath="yes" Source="..\..\output\release\lift2sfm.xsl" />
+				</Component>
+				<Component Id="nunit.framework.dll" Guid="{32FA47DB-4EB2-4035-B1E0-6F4E039B0BE2}">
+					<File Id="nunit.framework.dll" KeyPath="yes" Source="..\..\output\release\nunit.framework.dll" />
+				</Component>
+				<Component Id="nunit.framework.xml" Guid="{43F1B1DB-8C96-4F37-BE34-534925AEC098}">
+					<File Id="nunit.framework.xml" KeyPath="yes" Source="..\..\output\release\nunit.framework.xml" />
+				</Component>
+				<Component Id="NUnitForms.dll" Guid="{3651A09A-7986-4A5E-AFE3-141C249C66E7}">
+					<File Id="NUnitForms.dll" KeyPath="yes" Source="..\..\output\release\NUnitForms.dll" />
+				</Component>
+				<Component Id="NUnitForms.xml" Guid="{E682B6C1-6CBF-40B0-9E6F-B61DC8E267E7}">
+					<File Id="NUnitForms.xml" KeyPath="yes" Source="..\..\output\release\NUnitForms.xml" />
+				</Component>
+				<Component Id="Palaso.DictionaryServices.pdb" Guid="{8469CFC4-D014-4D7E-ACEB-509D3EDDA890}">
+					<File Id="Palaso.DictionaryServices.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.DictionaryServices.pdb" />
+				</Component>
+				<Component Id="Palaso.Lift.pdb" Guid="{FB13AD6A-4E3B-45E4-8EAE-477121C78551}">
+					<File Id="Palaso.Lift.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.Lift.pdb" />
+				</Component>
+				<Component Id="Palaso.Media.pdb" Guid="{5F493C7F-CA10-4D07-91F9-A028AF7C17DB}">
+					<File Id="Palaso.Media.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.Media.pdb" />
+				</Component>
+				<Component Id="Palaso.pdb" Guid="{DC1A18EB-6BFE-45FF-833E-C4D71B767B48}">
+					<File Id="Palaso.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.pdb" />
+				</Component>
+				<Component Id="Palaso.Tests.dll" Guid="{255A718A-9FF5-4139-8987-CA4C8E28B2A3}">
+					<File Id="Palaso.Tests.dll" KeyPath="yes" Source="..\..\output\release\Palaso.Tests.dll" />
+				</Component>
+				<Component Id="Palaso.Tests.pdb" Guid="{AF1E1AA2-948F-4AEF-9D1A-BFC99F8A2274}">
+					<File Id="Palaso.Tests.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.Tests.pdb" />
+				</Component>
+				<Component Id="Palaso.TestUtilities.dll" Guid="{27843475-345D-4FD6-9838-38C4D90A5C52}">
+					<File Id="Palaso.TestUtilities.dll" KeyPath="yes" Source="..\..\output\release\Palaso.TestUtilities.dll" />
+				</Component>
+				<Component Id="Palaso.TestUtilities.pdb" Guid="{60C94294-28ED-4DB0-9884-19EDE026B3E7}">
+					<File Id="Palaso.TestUtilities.pdb" KeyPath="yes" Source="..\..\output\release\Palaso.TestUtilities.pdb" />
+				</Component>
+				<Component Id="PalasoUIWindowsForms.pdb" Guid="{7D0E0215-F76D-452D-81D3-63108E652540}">
+					<File Id="PalasoUIWindowsForms.pdb" KeyPath="yes" Source="..\..\output\release\PalasoUIWindowsForms.pdb" />
+				</Component>
+				<Component Id="plift2html.xsl" Guid="{2D29595E-8F1F-42A5-BC92-5D83979685E0}">
+					<File Id="plift2html.xsl" KeyPath="yes" Source="..\..\output\release\plift2html.xsl" />
+				</Component>
+				<Component Id="SampleDataProcessor.exe" Guid="{9C47C3FF-8E99-47DC-B47C-B1D100E02D9D}">
+					<File Id="SampleDataProcessor.exe" KeyPath="yes" Source="..\..\output\release\SampleDataProcessor.exe" />
+				</Component>
+				<Component Id="SampleDataProcessor.pdb" Guid="{A21D097F-150E-403A-BB6E-DD476B675069}">
+					<File Id="SampleDataProcessor.pdb" KeyPath="yes" Source="..\..\output\release\SampleDataProcessor.pdb" />
+				</Component>
+				<Component Id="WeSay.AddinLib.pdb" Guid="{94AA939C-B22F-41C8-8545-A860963E803E}">
+					<File Id="WeSay.AddinLib.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.pdb" />
+				</Component>
+				<Component Id="WeSay.AddinLib.Tests.dll" Guid="{C816C0D2-2418-4D04-96A9-364E40CE7408}">
+					<File Id="WeSay.AddinLib.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.Tests.dll" />
+				</Component>
+				<Component Id="WeSay.AddinLib.Tests.pdb" Guid="{445D472C-B55B-4BDE-9850-7FDA5CE3E7D2}">
+					<File Id="WeSay.AddinLib.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.Tests.pdb" />
+				</Component>
+				<Component Id="WeSay.App.Tests.dll" Guid="{D5B62E3F-6EA7-4A65-905B-A9A70D14B7C2}">
+					<File Id="WeSay.App.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.App.Tests.dll" />
+				</Component>
+				<Component Id="WeSay.App.Tests.pdb" Guid="{3D89FC12-BC99-48AC-8EE9-2275F1994211}">
+					<File Id="WeSay.App.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.App.Tests.pdb" />
+				</Component>
+				<Component Id="WeSay.Data.Tests.dll" Guid="{F83FB33F-B1D8-40B7-BF96-6C62FBA85230}">
+					<File Id="WeSay.Data.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Data.Tests.dll" />
+				</Component>
+				<Component Id="WeSay.Data.Tests.pdb" Guid="{395D52CB-4F04-4D4D-BC92-1CEA4EE59A5D}">
+					<File Id="WeSay.Data.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Data.Tests.pdb" />
+				</Component>
+				<Component Id="WeSay.Project.Tests.dll" Guid="{401480D4-C6BE-4E87-8B92-AC08D061E257}">
+					<File Id="WeSay.Project.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Project.Tests.dll" />
+				</Component>
+				<Component Id="WeSay.Project.Tests.pdb" Guid="{5B98A049-BB64-4BEF-8B4C-0900948A7EF9}">
+					<File Id="WeSay.Project.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Project.Tests.pdb" />
+				</Component>
+				<Component Id="WeSay.TestUtilities.dll" Guid="{8F5466E7-CAC5-4A4B-8563-5A954A88AB1C}">
+					<File Id="WeSay.TestUtilities.dll" KeyPath="yes" Source="..\..\output\release\WeSay.TestUtilities.dll" />
+				</Component>
+				<Component Id="WeSay.TestUtilities.pdb" Guid="{4F509A71-B93C-4012-ADB0-6FCDB04BFC6A}">
+					<File Id="WeSay.TestUtilities.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.TestUtilities.pdb" />
+				</Component>
+				<Component Id="WeSay.UI.Tests.dll" Guid="{3F38E043-9493-49E2-8CF6-B7E37C845F0E}">
+					<File Id="WeSay.UI.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.UI.Tests.dll" />
+				</Component>
+				<Component Id="WeSay.UI.Tests.pdb" Guid="{B62FD0E7-BFC2-4678-92B0-9B4C7B7535DA}">
+					<File Id="WeSay.UI.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.Tests.pdb" />
+				</Component>
+				  
 				</Directory>
 			  </Directory>
 			</Directory>
@@ -318,6 +471,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id ="removeShortcutDir"/>
 
 			  <ComponentRef Id="DocFiles"/>
+			  <ComponentRef Id="WeSay_Helps.chm" />
+			  
+			  <MergeRef Id="ChorusMergeModule" />
 
 			  <!-- assemblies -->
 			  <ComponentRef Id="WeSayConfigurationTool" />
@@ -325,35 +481,25 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="WeSayConfigurationTool.pdb" />
 
 			  <ComponentRef Id="Castle.DynamicProxy.dll" />
-			  <ComponentRef Id="CommonTools.dll" />
-			  <ComponentRef Id="CommonTools.pdb" />
-   <!--           <ComponentRef Id="Db4objects.Db4o.dll" />
-			  <ComponentRef Id="Db4objects.Db4o.Tools.dll" />
-	   -->
+
 			  <ComponentRef Id="Enchant.Net.dll"/>
 
-			  <ComponentRef Id="autofac.dll"/>
-			  <ComponentRef Id="linqbridge.dll"/>
+			  <ComponentRef Id="irrKlang.NET4.dll"/>
+			  
+			  <ComponentRef Id="Interop.WIA.dll" />
 
 			  <ComponentRef Id="ICSharpCode.SharpZipLib.dll" />
-			  <ComponentRef Id="CookComputing.XmlRpcV2.dll" />
 			  <ComponentRef Id="KeymanLink.dll" />
 
 			  <ComponentRef Id="LexicalModel.dll" />
 			  <ComponentRef Id="LexicalModel.pdb" />
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
-			  <ComponentRef Id="LiftIO.dll" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
-			  <!--<ComponentRef Id="LiftIO.pdb" />-->
 			  <ComponentRef Id="NetReflector.dll" />
-			  <!--<ComponentRef Id="NetReflector.pdb" />-->
-			  <ComponentRef Id="Chorus.exe"/>
-			  <ComponentRef Id="wrapShellCall.exe"/>
-			  <ComponentRef Id="Palaso.dll"/>
-			  <ComponentRef Id="PalasoReporting.dll" />
-			  <ComponentRef Id="Palaso.Services.dll" />
-			  <ComponentRef Id="PalasoUIWindowsForms.dll" />
+			  <ComponentRef Id="Palaso.DictionaryServices.dll" />
+			  <ComponentRef Id="Palaso.Media.dll" />
+			  <ComponentRef Id="taglib_sharp.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
 			  <ComponentRef Id="WeSay.App.pdb" />
@@ -367,31 +513,84 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="WeSay.UI.pdb" />
 
 			  <ComponentRef Id="Addin.Backup.dll"/>
-			  <!--      <ComponentRef Id="Addin.LiftReports.dll"/> -->
+			  <!--	  <ComponentRef Id="Addin.LiftReports.dll"/> -->
 			  <ComponentRef Id="Addin.Transform.dll"/>
-			  <ComponentRef Id="NVelocity.dll"/>
-			  <ComponentRef Id="log4net.dll"/>
-			  <ComponentRef Id="commons.dll"/>
 			  <ComponentRef Id="WeSay.AddinLib.dll"/>
-			  <ComponentRef Id="Mono.Addins.exe"/>
+			  <ComponentRef Id="Mono.Addins.dll"/>
 
-			  <ComponentRef Id="Icu.Net.dll"/>
-
-			  <ComponentRef Id="IcuData.dll"/>
-			  <ComponentRef Id="IcuI18n.dll"/>
-			  <ComponentRef Id="IcuCommon.dll"/>
+			  <!--we get this from chorus merge module <ComponentRef Id="Icu.Net.dll"/> -->
 			  <ComponentRef Id="Keyman7Interop.dll"/>
+			  
+			  <!-- all the other essential ComponentRefs needed in the new install -->
+			  	<ComponentRef Id="Addin.Backup.pdb"/>
+				<ComponentRef Id="Addin.Backup.Tests.dll"/>
+				<ComponentRef Id="Addin.Backup.Tests.pdb"/>
+				<ComponentRef Id="Addin.Transform.dll.config"/>
+				<ComponentRef Id="Addin.Transform.pdb"/>
+				<ComponentRef Id="Addin.Transform.Tests.dll"/>
+				<ComponentRef Id="Addin.Transform.Tests.pdb"/>
+				<ComponentRef Id="Chorus.pdb"/>
+				<ComponentRef Id="ChorusMerge.pdb"/>
+				<ComponentRef Id="Enchant.Net.dll.config"/>
+				<ComponentRef Id="geckofx_core.dll"/>
+				<ComponentRef Id="geckofx_core.dll.config"/>
+				<ComponentRef Id="Geckofx_Winforms.dll"/>
+				<ComponentRef Id="Geckofx_Winforms.pdb"/>
+				<ComponentRef Id="L10NSharp.dll"/>
+				<ComponentRef Id="L10NSharp.pdb"/>
+				<ComponentRef Id="LexicalModel.Tests.dll"/>
+				<ComponentRef Id="LexicalModel.Tests.pdb"/>
+				<ComponentRef Id="LexicalTools.Tests.dll"/>
+				<ComponentRef Id="LexicalTools.Tests.dll.config"/>
+				<ComponentRef Id="LexicalTools.Tests.pdb"/>
+				<ComponentRef Id="LibChorus.pdb"/>
+				<ComponentRef Id="lift2sfm.xsl"/>
+				<ComponentRef Id="nunit.framework.dll"/>
+				<ComponentRef Id="nunit.framework.xml"/>
+				<ComponentRef Id="NUnitForms.dll"/>
+				<ComponentRef Id="NUnitForms.xml"/>
+				<ComponentRef Id="Palaso.DictionaryServices.pdb"/>
+				<ComponentRef Id="Palaso.Lift.pdb"/>
+				<ComponentRef Id="Palaso.Media.pdb"/>
+				<ComponentRef Id="Palaso.pdb"/>
+				<ComponentRef Id="Palaso.Tests.dll"/>
+				<ComponentRef Id="Palaso.Tests.pdb"/>
+				<ComponentRef Id="Palaso.TestUtilities.dll"/>
+				<ComponentRef Id="Palaso.TestUtilities.pdb"/>
+				<ComponentRef Id="PalasoUIWindowsForms.pdb"/>
+				<ComponentRef Id="plift2html.xsl"/>
+				<ComponentRef Id="SampleDataProcessor.exe"/>
+				<ComponentRef Id="SampleDataProcessor.pdb"/>
+				<ComponentRef Id="WeSay.AddinLib.pdb"/>
+				<ComponentRef Id="WeSay.AddinLib.Tests.dll"/>
+				<ComponentRef Id="WeSay.AddinLib.Tests.pdb"/>
+				<ComponentRef Id="WeSay.App.Tests.dll"/>
+				<ComponentRef Id="WeSay.App.Tests.pdb"/>
+				<ComponentRef Id="WeSay.Data.Tests.dll"/>
+				<ComponentRef Id="WeSay.Data.Tests.pdb"/>
+				<ComponentRef Id="WeSay.Project.Tests.dll"/>
+				<ComponentRef Id="WeSay.Project.Tests.pdb"/>
+				<ComponentRef Id="WeSay.TestUtilities.dll"/>
+				<ComponentRef Id="WeSay.TestUtilities.pdb"/>
+				<ComponentRef Id="WeSay.UI.Tests.dll"/>
+				<ComponentRef Id="WeSay.UI.Tests.pdb"/>
 
 			  <ComponentGroupRef Id ="defaultFiles"/>
 			  <ComponentGroupRef Id ="ddpStuff"/>
 			  <ComponentGroupRef Id ="biatahSample"/>
-			 <ComponentGroupRef Id ="templates"/>
+			  <ComponentGroupRef Id ="templates"/>
+			  <ComponentGroupRef Id ="xulrunner"/>
 			  <ComponentGroupRef Id ="PoFiles"/>
+			  <ComponentRef Id="msvcr100.dll"/> <!-- needed by irrklang -->
+			  
+			  
+			  
+			  
 			</Feature>
 			<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
 			<Icon Id="WeSay.App.exe" SourceFile ="..\..\output\release\WeSay.App.exe" />
 			<Property Id="ARPPRODUCTICON" Value="WeSay.App.exe" /><!-- what you see in add/remove programs control panel -->
-			<Icon Id="IconSetup.exe" SourceFile ="..\..\output\release\WeSay Configuration Tool.exe" />
+			<Icon Id="IconSetup.exe" SourceFile ="..\..\output\release\WeSay.ConfigTool.exe" />
 			<Icon Id="SampleSetupIcon" SourceFile ="..\..\artwork\WeSay.Config.File.ico" />
 			<Icon Id="SampleRunIcon" SourceFile ="..\..\artwork\WeSay.File.ico" />
 
@@ -402,7 +601,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 	<CustomAction Id='LaunchWelcomePage' Property='BROWSER' ExeCommand='www.google.com' Return='asyncNoWait' />
 -->
 			<InstallExecuteSequence>
+			  <!-- the MajorUpgrade declaration above handles this for us
 			  <RemoveExistingProducts After="InstallInitialize" />
+				-->
 
 			  <!--We need the condition here so that we only launch the executable when we make an installation but not when we remove the product-->
 			  <Custom Action='LaunchWelcomePage' After='InstallFinalize'>NOT Installed</Custom>

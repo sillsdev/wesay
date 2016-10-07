@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Foundation;
+using Palaso.Lift;
+using Palaso.UiBindings;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI
@@ -13,14 +16,14 @@ namespace WeSay.UI
 	{
 		private readonly IBindingList _chosenItems;
 		private readonly IEnumerable<KV> _sourceChoices;
-		private readonly IList<WritingSystem> _writingSystems;
+		private readonly IList<IWritingSystemDefinition> _writingSystems;
 		private readonly CommonEnumerations.VisibilitySetting _visibility;
 		private readonly IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> _choiceSystemAdaptor;
+		private readonly IServiceProvider _serviceProvider;
 		private IReportEmptiness _alternateEmptinessHelper;
-
+		private AutoCompleteWithCreationBox<KV, ValueT> _emptyPicker;
 		private int _popupWidth = -1;
 		private bool _ignoreListChanged;
-
 		public event EventHandler<CreateNewArgs> CreateNewTargetItem;
 
 		public ReferenceCollectionEditor()
@@ -28,13 +31,91 @@ namespace WeSay.UI
 			InitializeComponent();
 		}
 
+#if __MonoCS__
+		public override Size GetPreferredSize (Size proposedSize) {
+			Size retsize = GetPreferredSizeCore (proposedSize);
+			Size maximum_size = MaximumSize;
+			Size minimum_size = MinimumSize;
+			// If we're bigger than the MaximumSize, fix that
+			if (maximum_size.Width != 0 && retsize.Width > maximum_size.Width)
+				retsize.Width = maximum_size.Width;
+			if (maximum_size.Height != 0 && retsize.Height > maximum_size.Height)
+				retsize.Height = maximum_size.Height;
+
+			// If we're smaller than the MinimumSize, fix that
+			if (minimum_size.Width != 0 && retsize.Width < minimum_size.Width)
+				retsize.Width = minimum_size.Width;
+			if (minimum_size.Height != 0 && retsize.Height < minimum_size.Height)
+				retsize.Height = minimum_size.Height;
+
+			retsize.Height = Math.Max(20, retsize.Height); // get around Mono problem of collapsing
+			return retsize;
+		}
+		private Size GetPreferredSizeCore(Size proposedSize) {
+			int width = 0;
+			int height = 0;
+			int row_width = 0;
+			int row_height = 0;
+			int max_width = 10;
+			if (proposedSize.Width > 0)
+			{
+				max_width = proposedSize.Width;
+			}
+			else if (Parent != null)
+			{
+				// This is the normal case for sem dom, which is what this is used for in WeSay
+				// Adjust for the size of the other controls in this row for the parent.
+				// Looked but did not find a good way to reliably do that
+				max_width = Parent.DisplayRectangle.Width - 200;
+				if (max_width < 0)
+				{
+					max_width = 10;
+				}
+			}
+			if (MaximumSize.Width > 0)
+			{
+				max_width = Math.Min(MaximumSize.Width, max_width);
+			}
+			bool horizontal = FlowDirection == FlowDirection.LeftToRight || FlowDirection == FlowDirection.RightToLeft;
+			foreach (Control control in Controls)
+			{
+				Size control_preferred_size;
+				if (control.AutoSize)
+					control_preferred_size = control.PreferredSize;
+				else
+					control_preferred_size = control.Size;
+				Padding control_margin = control.Margin;
+				if (horizontal)
+				{
+					int control_width_increase =  control_preferred_size.Width + control_margin.Horizontal;
+					if (row_width + control_width_increase > max_width)
+					{
+						// Start a new row
+						row_width = 0;
+						height += row_height;
+					}
+					row_width += control_preferred_size.Width + control_margin.Horizontal;
+					row_height = Math.Max(row_height, control_preferred_size.Height + control_margin.Vertical);
+					width = Math.Max(width, row_width);
+				}
+				else
+				{
+					// Use standard logic for vertical aligned control
+					height += control_preferred_size.Height + control_margin.Vertical;
+					width = Math.Max(width, control_preferred_size.Width + control_margin.Horizontal);
+				}
+			}
+			height += row_height;
+			return new Size (width, height);
+		}
+#else
 		public override Size GetPreferredSize(Size proposedSize)
 		{
 			Size size = base.GetPreferredSize(proposedSize);
 			size.Height = Math.Max(20, size.Height); // get around Mono problem of collapsing
 			return size;
 		}
-
+#endif
 		/// <summary>
 		/// ctor
 		/// </summary>
@@ -44,11 +125,13 @@ namespace WeSay.UI
 		/// <param name="writingSystems">a list of writing systems ordered by preference</param>
 		/// <param name="visibility"></param>
 		/// <param name="adaptor">does all the conversion between keys, wrappers, actual objects, etc.</param>
+		/// <param name="serviceProvider">passed to the AutoCompleteWithCreation so it can get the appropriate type of AutoComplete control</param>
 		public ReferenceCollectionEditor(IBindingList chosenItems,
 										 IEnumerable<KV> sourceChoices,
-										 IList<WritingSystem> writingSystems,
+										 IList<IWritingSystemDefinition> writingSystems,
 										 CommonEnumerations.VisibilitySetting visibility,
-										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor)
+										 IChoiceSystemAdaptor<KV, ValueT, KEY_CONTAINER> adaptor,
+										IServiceProvider serviceProvider)
 		{
 			if (chosenItems == null)
 			{
@@ -75,6 +158,7 @@ namespace WeSay.UI
 			_choiceSystemAdaptor = adaptor;
 			chosenItems.ListChanged += chosenItems_ListChanged;
 			BackColorChanged += OnBackColorChanged;
+			_serviceProvider = serviceProvider;
 		}
 
 		private void OnBackColorChanged(object sender, EventArgs e)
@@ -116,7 +200,15 @@ namespace WeSay.UI
 
 		private void OnChildLostFocus(object sender, EventArgs e)
 		{
-			if (!ContainsFocus)
+			// due to the way the popup listbox works, if it has focus,
+			// ContainsFocus will not report it, so we check separately.
+			bool listBoxFocused = false;
+			var box = (IWeSayAutoCompleteTextBox) sender;
+			if (box != null)
+			{
+				listBoxFocused = box.ListBoxFocused;
+			}
+			if (!(listBoxFocused || ContainsFocus))
 					//doing cleanup while the user is in the area will lead to much grief
 			{
 				IReportEmptiness x = _alternateEmptinessHelper;
@@ -180,9 +272,9 @@ namespace WeSay.UI
 
 		private void AddEmptyPicker()
 		{
-			AutoCompleteWithCreationBox<KV, ValueT> emptyPicker = MakePicker();
-			emptyPicker.ValueChanged += emptyPicker_ValueChanged;
-			Controls.Add(emptyPicker);
+			_emptyPicker = MakePicker();
+			_emptyPicker.ValueChanged += emptyPicker_ValueChanged;
+			Controls.Add(_emptyPicker);
 		}
 
 		private void emptyPicker_ValueChanged(object sender, EventArgs e)
@@ -193,10 +285,12 @@ namespace WeSay.UI
 			if (kv != null)
 			{
 				picker.ValueChanged -= emptyPicker_ValueChanged;
+				_emptyPicker = null;
 				_ignoreListChanged = true;
 				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
 				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);
 				_ignoreListChanged = false;
+				picker.Box.Tag = newGuy;
 
 				//the binding itself doesn't need to be "owned" by us... it controls its own lifetime
 				new SimpleBinding<ValueT>(newGuy, picker);
@@ -208,20 +302,20 @@ namespace WeSay.UI
 		private AutoCompleteWithCreationBox<KV, ValueT> MakePicker()
 		{
 			AutoCompleteWithCreationBox<KV, ValueT> picker =
-					new AutoCompleteWithCreationBox<KV, ValueT>(_visibility);
-			picker.Box.FormToObectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
+					new AutoCompleteWithCreationBox<KV, ValueT>(_visibility, _serviceProvider);
+			picker.Box.FormToObjectFinder = _choiceSystemAdaptor.GetValueFromFormNonGeneric;
 
+			picker.Box.WritingSystem = _writingSystems[0];
 			picker.GetKeyValueFromValue = _choiceSystemAdaptor.GetKeyValueFromValue;
 			picker.GetValueFromKeyValue = _choiceSystemAdaptor.GetValueFromKeyValue;
 			picker.Box.ItemDisplayStringAdaptor = _choiceSystemAdaptor;
-			picker.Box.Mode = WeSayAutoCompleteTextBox.EntryMode.List;
+			picker.Box.Mode = EntryMode.List;
 			picker.Box.Items = _sourceChoices;
-			picker.Box.WritingSystem = _writingSystems[0];
 			picker.Box.MinimumSize = new Size(30, 10);
 			picker.Box.ItemFilterer = _choiceSystemAdaptor.GetItemsToOffer;
 			picker.Box.PopupWidth = _popupWidth;
 
-			picker.Box.LostFocus += OnChildLostFocus;
+			picker.Box.UserLostFocus += OnChildLostFocus;
 
 			if (CreateNewTargetItem != null)
 			{

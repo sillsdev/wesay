@@ -1,16 +1,15 @@
 using System;
-using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Palaso.UI.WindowsForms.i8n;
+using Palaso.i18n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools
 {
+
 	public abstract class TaskBase: ITask
 	{
 		public const int CountNotRelevant = -1;
@@ -23,13 +22,12 @@ namespace WeSay.LexicalTools
 		private readonly string _remainingCountText;
 		private readonly string _referenceCountText;
 		private readonly bool _isPinned;
-		private readonly string _cachePath;
-		private readonly string _cacheFilePath;
 		private int _remainingCount;
 		private int _referenceCount;
 
 		public TaskBase(ITaskConfiguration config,
-						LexEntryRepository lexEntryRepository)
+						LexEntryRepository lexEntryRepository,
+						TaskMemoryRepository taskMemoryRepository)
 		{
 			if (config.Label == null)
 			{
@@ -56,6 +54,8 @@ namespace WeSay.LexicalTools
 				throw new ArgumentNullException("lexEntryRepository");
 			}
 			_lexEntryRepository = lexEntryRepository;
+			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
+
 			// convert any amount of whitespace to one space
 			Regex rgx = new Regex("\\s+");
 			_label = rgx.Replace (config.Label.Trim(), " ");
@@ -65,10 +65,14 @@ namespace WeSay.LexicalTools
 			_referenceCountText = rgx.Replace (config.ReferenceCountText.Trim(), " ");
 			_isPinned = config.IsPinned;
 
-			_cachePath = WeSayWordsProject.Project.PathToCache;
-			_cacheFilePath = Path.Combine(_cachePath, MakeSafeName(Label + ".cache"));
+//            _cachePath = WeSayWordsProject.Project.PathToCache;
+//            _cacheFilePath = Path.Combine(_cachePath, MakeSafeName(Label + ".cache"));
+//
+//            ReadCacheFile();
 
-			ReadCacheFile();
+			_remainingCount = _taskMemory.Get("RemainingCount", CountNotComputed);
+			_referenceCount =  _taskMemory.Get("ReferenceCount", CountNotComputed);
+
 		}
 
 
@@ -79,81 +83,87 @@ namespace WeSay.LexicalTools
 		}
 
 		private bool _isActive;
+		private TaskMemory _taskMemory;
 
 		public virtual void Activate()
 		{
 			if (IsActive)
 			{
+				return;
+				//the following is reasonable, but after 4 hours, I (JH)
+				//gave up on trying to get a cross-process unit test (JumpToEntryMakesAppSwitchToUIMode)
+				//to not run afoul of it
 				throw new InvalidOperationException(
 						"Activate should not be called when object is active.");
 			}
 			IsActive = true;
 		}
 
-		public bool MustBeActivatedDuringPreCache
+		public virtual bool Available
 		{
 			get { return true; }
 		}
 
-		private static string MakeSafeName(string fileName)
-		{
-			foreach (char invalChar in Path.GetInvalidFileNameChars())
-			{
-				fileName = fileName.Replace(invalChar.ToString(), "");
-			}
-			return fileName;
-		}
 
-		private void WriteCacheFile()
-		{
-			try
-			{
-				if (!Directory.Exists(_cachePath))
-				{
-					Directory.CreateDirectory(_cachePath);
-				}
-				using (StreamWriter sw = File.CreateText(_cacheFilePath))
-				{
-					sw.Write(_remainingCount + ", " + _referenceCount);
-				}
-			}
-			catch
-			{
-				Console.WriteLine("Could not write cache file: " + _cacheFilePath);
-			}
-		}
+//        private static string MakeSafeName(string fileName)
+//        {
+//            foreach (char invalChar in Path.GetInvalidFileNameChars())
+//            {
+//                fileName = fileName.Replace(invalChar.ToString(), "");
+//            }
+//            return fileName;
+//        }
 
-		private void ReadCacheFile()
-		{
-			_remainingCount = CountNotComputed;
-			_referenceCount = CountNotComputed;
-			try
-			{
-				if (File.Exists(_cacheFilePath))
-				{
-					using (StreamReader sr = new StreamReader(_cacheFilePath))
-					{
-						string s;
-						s = sr.ReadToEnd();
-						string[] values = s.Split(',');
-						if (values.Length > 1) //old style didn't have reference
-						{
-							bool gotIt = int.TryParse(values[1], out _referenceCount);
-							Debug.Assert(gotIt);
-						}
-						if (values.Length > 0) //old style didn't have reference
-						{
-							bool gotIt = int.TryParse(values[0], out _remainingCount);
-							Debug.Assert(gotIt);
-						}
-					}
-				}
-			}
-			catch
-			{
-				// Console.WriteLine("Could not read cache file: " + cacheFilePath);
-			}
-		}
+//        private void WriteCacheFile()
+//        {
+//            try
+//            {
+//                if (!Directory.Exists(_cachePath))
+//                {
+//                    Directory.CreateDirectory(_cachePath);
+//                }
+//                using (StreamWriter sw = File.CreateText(_cacheFilePath))
+//                {
+//                    sw.Write(_remainingCount + ", " + _referenceCount);
+//                }
+//            }
+//            catch
+//            {
+//                Console.WriteLine("Could not write cache file: " + _cacheFilePath);
+//            }
+//        }
+
+//        private void ReadCacheFile()
+//        {
+//            _remainingCount = CountNotComputed;
+//            _referenceCount = CountNotComputed;
+//            try
+//            {
+//                if (File.Exists(_cacheFilePath))
+//                {
+//                    using (StreamReader sr = new StreamReader(_cacheFilePath))
+//                    {
+//                        string s;
+//                        s = sr.ReadToEnd();
+//                        string[] values = s.Split(',');
+//                        if (values.Length > 1) //old style didn't have reference
+//                        {
+//                            bool gotIt = int.TryParse(values[1], out _referenceCount);
+//                            Debug.Assert(gotIt);
+//                        }
+//                        if (values.Length > 0) //old style didn't have reference
+//                        {
+//                            bool gotIt = int.TryParse(values[0], out _remainingCount);
+//                            Debug.Assert(gotIt);
+//                        }
+//                    }
+//                }
+//            }
+//            catch
+//            {
+//                // Console.WriteLine("Could not read cache file: " + cacheFilePath);
+//            }
+//        }
 
 		public virtual void Deactivate()
 		{
@@ -184,7 +194,7 @@ namespace WeSay.LexicalTools
 
 		public string Label
 		{
-			get { return StringCatalog.Get(_label); }
+			get { return _label; }
 		}
 
 		/// <summary>
@@ -207,7 +217,8 @@ namespace WeSay.LexicalTools
 			if (count != CountNotComputed)
 			{
 				_remainingCount = count;
-				WriteCacheFile();
+				_taskMemory.Set("RemainingCount", _remainingCount); //WriteCacheFile();
+
 			}
 			return _remainingCount;
 		}
@@ -224,7 +235,7 @@ namespace WeSay.LexicalTools
 			get
 			{
 				_remainingCount = ComputeCount(true);
-				WriteCacheFile();
+				_taskMemory.Set("RemainingCount", _remainingCount); //WriteCacheFile();
 				return _remainingCount;
 			}
 		}
@@ -238,7 +249,7 @@ namespace WeSay.LexicalTools
 			if (count != CountNotComputed)
 			{
 				_referenceCount = count;
-				WriteCacheFile();
+				_taskMemory.Set("ReferenceCount", _referenceCount); //WriteCacheFile();
 			}
 
 			return _referenceCount;
@@ -291,6 +302,8 @@ namespace WeSay.LexicalTools
 			}
 			return result;
 		}
+
+		public abstract void FocusDesiredControl();
 
 		public bool AreCountsRelevant()
 		{

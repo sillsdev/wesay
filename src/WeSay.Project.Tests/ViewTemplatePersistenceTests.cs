@@ -4,7 +4,9 @@ using System.Text;
 using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
-using WeSay.Foundation;
+using Palaso.DictionaryServices.Model;
+using Palaso.Lift;
+using Palaso.Xml;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
@@ -81,8 +83,8 @@ namespace WeSay.Project.Tests
 		{
 			ViewTemplate f = MakeSampleInventory();
 
-			StringBuilder builder = new StringBuilder();
-			XmlWriter writer = XmlWriter.Create(builder);
+			var builder = new StringBuilder();
+			var writer = XmlWriter.Create(builder, CanonicalXmlSettings.CreateXmlWriterSettings());
 			f.Write(writer);
 			writer.Close();
 			return builder.ToString();
@@ -133,10 +135,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void DeserializeInvAndLoadBackIn()
 		{
-			XmlWriter writer = XmlWriter.Create(_path);
+			var writer = XmlWriter.Create(_path, CanonicalXmlSettings.CreateXmlWriterSettings());
 			MakeSampleInventory().Write(writer);
 			writer.Close();
-			ViewTemplate f = new ViewTemplate();
+			var f = new ViewTemplate();
 			f.Load(_path);
 			Assert.IsNotNull(f);
 			CheckInventoryMatchesDefinitionInResource(f);

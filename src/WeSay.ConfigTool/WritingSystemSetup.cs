@@ -1,227 +1,124 @@
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Palaso.Reporting;
-using WeSay.Foundation;
+using Palaso.UI.WindowsForms.Keyboarding;
+using Palaso.UI.WindowsForms.WritingSystems;
+using Palaso.UI.WindowsForms.WritingSystems.WSTree;
+using Palaso.WritingSystems;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class WritingSystemSetup: ConfigurationControlBase
+	public class WritingSystemSetup: ConfigurationControlBase
 	{
-		public WritingSystemSetup(): base("set up fonts, keyboards, and sorting")
+		private WritingSystemSetupView _view;
+
+		public WritingSystemSetup(ILogger logger, IWritingSystemRepository store)
+			: base("set up fonts, keyboards, and sorting", logger, "writingSystems")
 		{
 			InitializeComponent();
-			Resize += WritingSystemSetup_Resize;
+			store.WritingSystemIdChanged += OnWritingSystemIdChanged;
+			var writingSystemSetupModel = new WritingSystemSetupModel(store);
+			writingSystemSetupModel.WritingSystemSuggestor.SuggestVoice = true;
+			//nb: I (JH) wanted to hide IPA, but then in one week 2 people locally asked for it...
+			writingSystemSetupModel.WritingSystemSuggestor.SuggestIpa = true;
+			writingSystemSetupModel.WritingSystemSuggestor.SuggestDialects = false; // pretty unlikely in WeSay
+
+			this.SuspendLayout();
+			_view = new WritingSystemSetupView(writingSystemSetupModel)
+						{
+							LeftColumnWidth = 350,
+							Dock = DockStyle.Fill
+						};
+			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
+			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
+			writingSystemSetupModel.ItemAddedOrDeleted += OnWritingSystemAddOrDelete;
+			_view.UserWantsHelpWithDeletingWritingSystems += OnUserWantsHelpWithDeletingWritingSystems;
+			_view.UserWantsHelpWithCustomSorting += OnUserWantsHelpWithCustomSorting;
+			store.WritingSystemDeleted += OnWritingSystemDeleted;
+			store.WritingSystemConflated += OnWritingSystemConflated;
+			Controls.Add(_view);
+			this.ResumeLayout(false);
+			WeSayWordsProject.Project.EditorsSaveNow += OnEditorSaveNow;
 		}
 
-		private void WritingSystemSetup_Resize(object sender, EventArgs e)
+		private void OnUserWantsHelpWithDeletingWritingSystems(object sender, EventArgs e)
 		{
-			//this is part of dealing with .net not adjusting stuff well for different dpis
-			splitContainer1.Dock = DockStyle.None;
-			splitContainer1.Width = Width - 25;
+			Program.ShowHelpTopic("/WeSay_Configuration_Tool/Input_Systems/Delete_or_merge_an_input_system.htm");
 		}
 
-		public void WritingSystemSetup_Load(object sender, EventArgs e)
+		private void OnUserWantsHelpWithCustomSorting(object sender, EventArgs e)
 		{
-			if (DesignMode)
-			{
-				return;
-			}
-
-			LoadWritingSystemListBox();
-			//for checking that ids are unique
-			_basicControl.WritingSystemCollection = BasilProject.Project.WritingSystems;
+			Program.ShowHelpTopic("/WeSay_Configuration_Tool/Input_Systems/Sorting_tab.htm");
 		}
 
-		private void LoadWritingSystemListBox()
+		private void OnAskIfOkToDeleteWritingSystems(object sender, AskIfOkToDeleteEventArgs args)
 		{
-			_wsListBox.Items.Clear();
-			foreach (WritingSystem w in BasilProject.Project.WritingSystems.Values)
-			{
-				_wsListBox.Items.Add(new WsDisplayProxy(w));
-			}
-			_wsListBox.Sorted = true;
-			if (_wsListBox.Items.Count > 0)
-			{
-				_wsListBox.SelectedIndex = 0;
-			}
+			args.CanDelete = true;  //WeSay always lets people delete.
 		}
 
-		private void _wsListBox_SelectedIndexChanged(object sender, EventArgs e)
+		private void OnWritingSystemAddOrDelete(object sender, EventArgs e)
 		{
-			UpdateSelection();
+			SetWritingSystemsInRepo();
+		}
+		private void OnWritingSystemConflated(object sender, WritingSystemConflatedEventArgs e)
+		{
+			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
 
-		/// <summary>
-		/// nb: seperate from the event handler because the handler isn't called if the last item is deleted
-		/// </summary>
-		private void UpdateSelection()
+		private void OnEditorSaveNow(object sender, EventArgs e)
 		{
-			_tabControl.Visible = SelectedWritingSystem != null;
-			if (SelectedWritingSystem == null)
-			{
-				Refresh();
-				return;
-			}
-
-			_btnRemove.Enabled = true;
-			//                (SelectedWritingSystem != BasilProject.Project.WritingSystems.AnalysisWritingSystemDefault)
-			//              && (SelectedWritingSystem != BasilProject.Project.WritingSystems.VernacularWritingSystemDefault);
-			_basicControl.WritingSystem = SelectedWritingSystem;
-			_sortControl.WritingSystem = SelectedWritingSystem;
-			_fontControl.WritingSystem = SelectedWritingSystem;
+			SetWritingSystemsInRepo();
+			UnwireBeforeClosing();
 		}
 
-		private WritingSystem SelectedWritingSystem
+		public void SetWritingSystemsInRepo_OnLeave(object sender, EventArgs e)
 		{
-			get
-			{
-				WsDisplayProxy proxy = _wsListBox.SelectedItem as WsDisplayProxy;
-				if (proxy != null)
-				{
-					return proxy.WritingSystem;
-				}
-				else
-				{
-					return null;
-				}
-			}
+			SetWritingSystemsInRepo();
 		}
 
-		private void _btnRemove_Click(object sender, EventArgs e)
+		private void SetWritingSystemsInRepo()
 		{
-			if (SelectedWritingSystem != null &&
-				BasilProject.Project.WritingSystems.ContainsKey(SelectedWritingSystem.Id))
-			{
-				BasilProject.Project.WritingSystems.Remove(SelectedWritingSystem.Id);
-				LoadWritingSystemListBox();
-				UpdateSelection();
-			}
+			_view.SetWritingSystemsInRepo();
 		}
 
-		private void _btnAddWritingSystem_Click(object sender, EventArgs e)
+		private void UnwireBeforeClosing()
 		{
-			WritingSystem w = null;
-			string[] keys = {"xx", "x1", "x2", "x3"};
-			foreach (string s in keys)
-			{
-				if (!BasilProject.Project.WritingSystems.ContainsKey(s))
-				{
-					w = new WritingSystem(s, new Font("Doulos SIL", 12));
-					break;
-				}
-			}
-			if (w == null)
-			{
-				ErrorReport.ReportNonFatalMessage("Could not produce a unique ID.");
-			}
-			else
-			{
-				BasilProject.Project.WritingSystems.Add(w.Id, w);
-				WsDisplayProxy item = new WsDisplayProxy(w);
-				_wsListBox.Items.Add(item);
-				_wsListBox.SelectedItem = item;
-			}
+			Leave -= SetWritingSystemsInRepo_OnLeave;
+			_view.UnwireBeforeClosing();
 		}
 
-		/// <summary>
-		/// Called when, for example, the user changes the id of the selected ws
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void _basicControl_DisplayPropertiesChanged(object sender, EventArgs e)
+		private void InitializeComponent()
 		{
-			WritingSystem ws = sender as WritingSystem;
-			PropertyValueChangedEventArgs args = e as PropertyValueChangedEventArgs;
-			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
-			{
-				string oldId = args.OldValue.ToString();
-				if(!WeSayWordsProject.Project.MakeWritingSystemIdChange(ws, oldId))
-				{
-					ws.Id = oldId; //couldn't make the change
-				}
-				//                Reporting.ErrorReporter.ReportNonFatalMessage(
-				//                    "Currently, WeSay does not make a corresponding change to the id of this writing system in your LIFT xml file.  Please do that yourself, using something like NotePad to search for lang=\"{0}\" and change to lang=\"{1}\"",
-				//                    ws.Id, oldId);
-			}
+			this.SuspendLayout();
+			//
+			// WritingSystemSetup
+			//
+			this.Name = "WritingSystemSetup";
+			this.Leave += new System.EventHandler(this.SetWritingSystemsInRepo_OnLeave);
+			this.ResumeLayout(false);
 
-			//_wsListBox.Refresh(); didn't work
-			//this.Refresh();   didn't work
-			for (int i = 0;i < _wsListBox.Items.Count;i++)
-			{
-				_wsListBox.Items[i] = _wsListBox.Items[i];
-			}
-			UpdateSelection();
-			if (args != null && args.ChangedItem.PropertyDescriptor.Name == "Id")
-			{
-				LoadWritingSystemListBox();
-				foreach (WsDisplayProxy o in _wsListBox.Items)
-				{
-					if (o.WritingSystem == ws)
-					{
-						_wsListBox.SelectedItem = o;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	/// <summary>
-	/// An item to stick in the listview which represents a ws
-	/// </summary>
-	public class WsDisplayProxy
-	{
-		private WritingSystem _writingSystem;
-
-		public WsDisplayProxy(WritingSystem ws)
-		{
-			_writingSystem = ws;
 		}
 
-		public WritingSystem WritingSystem
+		private static void OnAskIfDataExistsInWritingSystemToBeDeleted(object sender, AskIfDataExistsInWritingSystemToBeDeletedEventArgs args)
 		{
-			get { return _writingSystem; }
-			set { _writingSystem = value; }
+			args.ProjectContainsDataInWritingSystemToBeDeleted = WeSayWordsProject.Project.IsWritingSystemUsedInLiftFile(args.WritingSystemId);
+			args.ErrorMessage = "It's in use in the LIFT file.";
 		}
 
-		public override string ToString()
+		private void OnAskIfOkToConflateWritingSystems(object sender, AskIfOkToConflateEventArgs args)
 		{
-			string s = _writingSystem.ToString();
+			args.CanConflate = true; //WeSay always lets people conflate.
+		}
 
-			switch (s)
-			{
-				default:
-					if (s == WritingSystem.IdForUnknownVernacular)
-					{
-						s += " (Change to your Vernacular)";
-					}
-					break;
-				case "fr":
-					s += " (French)";
-					break;
-				case "id":
-					s += " (Indonesian)";
-					break;
-				case "tpi":
-					s += " (Tok Pisin)";
-					break;
-				case "th":
-					s += " (Thai)";
-					break;
-				case "es":
-					s += " (Spanish)";
-					break;
-				case "en":
-					s += " (English)";
-					break;
-				case "my":
-					s += " (Burmese)";
-					break;
-			}
+		private static void OnWritingSystemDeleted(object sender, WritingSystemDeletedEventArgs args)
+		{
+			WeSayWordsProject.Project.DeleteWritingSystemId(args.Id);
+		}
 
-			return s;
+		private static void OnWritingSystemIdChanged(object sender, WritingSystemIdChangedEventArgs e)
+		{
+			WeSayWordsProject.Project.MakeWritingSystemIdChange(e.OldId, e.NewId);
 		}
 	}
 }

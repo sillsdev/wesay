@@ -2,12 +2,14 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.Data;
-using WeSay.Foundation;
-using WeSay.LexicalModel;
+using Palaso.Data;
+using Palaso.DictionaryServices.Model;
+using Palaso.WritingSystems;
+using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
+using WeSay.UI.TextBoxes;
 
-namespace WeSay.LexicalTools
+namespace WeSay.LexicalTools.GatherByWordList
 {
 	public partial class GatherWordListControl: UserControl
 	{
@@ -15,6 +17,7 @@ namespace WeSay.LexicalTools
 
 		//private System.Windows.Forms.Label _animatedText= new Label();
 		private bool _animationIsMovingFromList;
+		private bool _settingIndexInCode;
 
 		public GatherWordListControl()
 		{
@@ -22,44 +25,73 @@ namespace WeSay.LexicalTools
 			InitializeComponent();
 		}
 
-		public GatherWordListControl(GatherWordListTask task, WritingSystem lexicalUnitWritingSystem)
+		public GatherWordListControl(GatherWordListTask task, IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			_task = task;
 
 			InitializeComponent();
 			InitializeDisplaySettings();
 			_vernacularBox.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
-			_listViewOfWordsMatchingCurrentItem.Items.Clear();
-
-			_vernacularBox.WritingSystemsForThisField = new WritingSystem[]
+			_vernacularBox.WritingSystemsForThisField = new IWritingSystemDefinition[]
 															{lexicalUnitWritingSystem};
 			_vernacularBox.TextChanged += _vernacularBox_TextChanged;
 			_vernacularBox.KeyDown += _boxVernacularWord_KeyDown;
-			_vernacularBox.MinimumSize = _boxForeignWord.Size;
+			_vernacularBox.MinimumSize = new Size(_boxForeignWord.Size.Width - 25, _boxForeignWord.Size.Height);
+			_vernacularBox.ForeColor = System.Drawing.Color.Black;
 
-			_listViewOfWordsMatchingCurrentItem.WritingSystem = _task.WordWritingSystem;
-			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.WordWritingSystem.Font.GetHeight());
+			_listViewOfWordsMatchingCurrentItem.UserClick += new System.EventHandler(this.OnListViewOfWordsMatchingCurrentItem_Click);
+			_listViewOfWordsMatchingCurrentItem.Clear();
+			_listViewOfWordsMatchingCurrentItem.FormWritingSystem = lexicalUnitWritingSystem;
 
+			//  _listViewOfWordsMatchingCurrentItem.ItemHeight = (int)Math.Ceiling(_task.FormWritingSystem.Font.GetHeight());
+
+
+
+			_verticalWordListView.WritingSystem = task.PromptingWritingSystem;
+			_verticalWordListView.MaxLength = 18;
+			_verticalWordListView.MinLength = 10;  // Space fill to this length
+			_verticalWordListView.BackColor = Color.White;
+			_verticalWordListView.DataSource = task.Words;
 			UpdateStuff();
+			_verticalWordListView.ItemSelectionChanged += OnWordsList_SelectedIndexChanged;
 
-			_movingLabel.Font = _vernacularBox.TextBoxes[0].Font;
-			_movingLabel.Finished += OnAnimator_Finished;
+			_flyingLabel.Font = _vernacularBox.TextBoxes[0].Font;
+			_flyingLabel.Finished += OnAnimator_Finished;
+		}
+
+		private void OnWordsList_SelectedIndexChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		{
+			if (_settingIndexInCode)
+				return;
+
+			if(_verticalWordListView.SelectedIndex==-1)
+				return;
+
+			AddCurrentWord(); //don't throw away what they were typing
+			_task.NavigateToIndex(_verticalWordListView.SelectedIndex);
+			UpdateSourceWord();
 		}
 
 		private void InitializeDisplaySettings()
 		{
 			BackColor = DisplaySettings.Default.BackgroundColor;
+			_instructionLabel.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label3.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label4.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
+			label5.Font = (Font)Palaso.i18n.StringCatalog.LabelFont.Clone();
 		}
+
 
 		private void OnAnimator_Finished(object sender, EventArgs e)
 		{
 			if (_animationIsMovingFromList)
 			{
-				_vernacularBox.TextBoxes[0].Text = _movingLabel.Text;
+				_vernacularBox.TextBoxes[0].Text = _flyingLabel.Text;
 			}
-			_vernacularBox.TextBoxes[0].Focus();
-			_vernacularBox.TextBoxes[0].SelectionStart = 1000; //go to end
+			var box = _vernacularBox.TextBoxes[0];
+			box.Focus();
+			if(box is IWeSayTextBox)
+					((IWeSayTextBox) box).SelectionStart = 1000; //go to end
 		}
 
 		private void UpdateSourceWord()
@@ -86,7 +118,11 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-			if (_task.IsTaskComplete)
+			if (!string.IsNullOrEmpty(_task.LoadFailureMessage))
+			{
+				_congratulationsControl.Show(_task.LoadFailureMessage);
+			}
+			else if (_task.IsTaskComplete)
 			{
 				_congratulationsControl.Show("Congratulations. You have completed this task.");
 			}
@@ -95,8 +131,23 @@ namespace WeSay.LexicalTools
 				_congratulationsControl.Hide();
 				Debug.Assert(_vernacularBox.TextBoxes.Count == 1,
 							 "other code here (for now), assumes exactly one ws/text box");
-				_boxForeignWord.Text = _task.CurrentWordFromWordlist;
+				_boxForeignWord.Text = _task.CurrentPromptingForm;
+
 				PopulateWordsMatchingCurrentItem();
+
+				try //this is a late-added feature (2012), so we don't want to destabilize things
+				{
+					_settingIndexInCode = true;
+					_verticalWordListView.SelectedIndex = _task.CurrentIndexIntoWordlist;
+					_settingIndexInCode = false;
+				}
+				catch (Exception)
+				{
+#if DEBUG
+					throw;
+#endif
+				}
+
 			}
 			UpdateEnabledStates();
 		}
@@ -106,7 +157,7 @@ namespace WeSay.LexicalTools
 			_btnAddWord.Enabled = !_task.IsTaskComplete &&
 								  _vernacularBox.TextBoxes[0].Text.Trim() != "";
 			_btnNextWord.Enabled = _task.CanNavigateNext;
-			_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
+			//_btnPreviousWord.Enabled = _task.CanNavigatePrevious;
 		}
 
 		/// <summary>
@@ -115,11 +166,28 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		private void PopulateWordsMatchingCurrentItem()
 		{
-			_listViewOfWordsMatchingCurrentItem.Items.Clear();
+			_listViewOfWordsMatchingCurrentItem.Clear();
+			string longestWord = string.Empty;
 			foreach (RecordToken<LexEntry> recordToken in _task.GetRecordsWithMatchingGloss())
 			{
-				_listViewOfWordsMatchingCurrentItem.Items.Add(new RecordTokenToStringAdapter<LexEntry>("Form", recordToken));
+				var recordTokenToStringAdapter = new RecordTokenToStringAdapter<LexEntry>("Form", recordToken);
+				string word = recordTokenToStringAdapter.ToString();
+				if(!string.IsNullOrEmpty(word))
+				{
+					if (longestWord.Length < word.Length)
+					{
+						longestWord = word;
+					}
+					_listViewOfWordsMatchingCurrentItem.AddItem(recordTokenToStringAdapter);
+				}
+				else
+				{
+					//The matching gloss/def is there, but the lexeme form is empty. So just don't put it in the list
+				}
 			}
+			Size wordMax = TextRenderer.MeasureText(longestWord, _listViewOfWordsMatchingCurrentItem.Font);
+			_listViewOfWordsMatchingCurrentItem.ColumnWidth = wordMax.Width + 10;
+			_listViewOfWordsMatchingCurrentItem.ListCompleted();
 		}
 
 		private void _btnNextWord_Click(object sender, EventArgs e)
@@ -150,7 +218,7 @@ namespace WeSay.LexicalTools
 			{
 				return;
 			}
-			_task.WordCollected(_vernacularBox.MultiText);
+			_task.WordCollected(_vernacularBox.GetMultiText());
 
 			//_listViewOfWordsMatchingCurrentItem.Items.Add(s);
 			_vernacularBox.TextBoxes[0].Text = "";
@@ -171,7 +239,7 @@ namespace WeSay.LexicalTools
 					}
 					break;
 				case Keys.PageUp:
-					if (_btnPreviousWord.Enabled)
+					if ( _task.CanNavigatePrevious)
 					{
 						_btnPreviousWord_Click(this, null);
 					}
@@ -198,9 +266,9 @@ namespace WeSay.LexicalTools
 
 		private void OnListViewOfWordsMatchingCurrentItem_Click(object sender, EventArgs e)
 		{
-			if (_listViewOfWordsMatchingCurrentItem.SelectedItems.Count > 0)
+			if (_listViewOfWordsMatchingCurrentItem.SelectedItem != null)
 			{
-				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndices[0];
+				int selectedListIndex = _listViewOfWordsMatchingCurrentItem.SelectedIndex;
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
 
 				RecordToken<LexEntry> recordToken =
@@ -223,8 +291,18 @@ namespace WeSay.LexicalTools
 				// _vernacularBox.TextBoxes[0].Text = word;
 
 				_animationIsMovingFromList = true;
-				_movingLabel.Go(word, start, destination);
+				_flyingLabel.Go(word, start, destination);
 			}
+		}
+
+		public void Cleanup()
+		{
+			AddCurrentWord();
+		}
+
+		public void SelectInitialControl()
+		{
+			_vernacularBox.FocusOnFirstWsAlternative();
 		}
 	}
 }

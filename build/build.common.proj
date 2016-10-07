@@ -1,23 +1,35 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<LifeCycleStage>CANDIDATE</LifeCycleStage>
+		<LifeCycleStage>STABLE</LifeCycleStage>
 	</PropertyGroup>
 
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
 
-		<Split Input="$(BUILD_NUMBER)" Delimiter="." OutputSubString="2">
+		<Split Input="$(BUILD_NUMBER)" Delimiter=".~-+" OutputSubString="2">
 			<Output TaskParameter="ReturnValue" PropertyName="BuildCounter" />
 		</Split>
 
+		<Split Input="$(BUILD_NUMBER)" Delimiter="." OutputSubString="2">
+			<Output TaskParameter="ReturnValue" PropertyName="VersionSuffix" />
+		</Split>
+
 		<Message Text="BuildCounter: $(BuildCounter)" Importance="high"/>
+		<Message Text="VersionSuffix: $(VersionSuffix)" Importance="high"/>
 
 		<!-- Note, after some thought, we've decided this is the best place to keep the version number (not on TeamCity, not in the assemblies).     -->
-		<CreateProperty Value="1.4.$(BuildCounter)">
+		<CreateProperty Value="1.5">
+			<Output PropertyName="VersionBase" TaskParameter="Value"/>
+		</CreateProperty>
+		<CreateProperty Value="$(VersionBase).$(VersionSuffix)">
 			<Output PropertyName="Version" TaskParameter="Value"/>
+		</CreateProperty>
+		<CreateProperty Value="$(VersionBase).$(BuildCounter)">
+			<Output PropertyName="AssemblyVersion" TaskParameter="Value"/>
 		</CreateProperty>
 
 		<Message Text="Version: $(Version)" Importance="high"/>
+		<Message Text="AssemblyVersion: $(AssemblyVersion)" Importance="high"/>
 		<Message Text="LifeCycleStage: $(LifeCycleStage)" Importance="high"/>
 	</Target>
 
@@ -25,7 +37,7 @@
 		<AssemblyInfoFiles Include="$(RootDir)/src/**/AssemblyInfo.cs"/>
 	</ItemGroup>
 	<Target Name="SetAssemblyVersion" DependsOnTargets="VersionNumbers">
-	  <StampAssemblies Version="$(Version)" InputAssemblyPaths="@(AssemblyInfoFiles)" />
+	  <StampAssemblies Version="$(AssemblyVersion)" InputAssemblyPaths="@(AssemblyInfoFiles)" />
 	</Target>
 
 </Project>
