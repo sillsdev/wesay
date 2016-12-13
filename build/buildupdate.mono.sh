@@ -54,17 +54,21 @@ fi
 
 copy_wget() {
 echo "wget: $2 <= $1"
-f=$(basename $2)
-d=$(dirname $2)
-cd $d
+f1=$(basename $1)
+f2=$(basename $2)
+cd $(dirname $2)
 wget -q -L -N $1
+# wget has no true equivalent of curl's -o option.
+# Different versions of wget handle (or not) % escaping differently.
+# A URL query is the only reason why $f1 and $f2 should differ.
+if [ "$f1" != "$f2" ]; then mv $f2\?* $f2; fi
 cd -
 }
 
 
 # *** Results ***
 # build: wesay1.5-precise64-publish (bt443)
-# project: WeSay1.5-Linux
+# project: WeSay1.5
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt443
 # VCS: https://github.com/sillsdev/wesay.git [develop]
 # dependencies:
@@ -88,72 +92,88 @@ cd -
 #     clean: false
 #     revision: wesay1.5.tcbuildtag
 #     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.dll.mdb"=>"lib/Release"}
-#     VCS: https://bitbucket.org/sillsdev/l10nsharp []
+#     VCS: https://github.com/sillsdev/l10nsharp [master]
 # [3] build: L10NSharp Mono continuous (bt271)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt271
 #     clean: false
 #     revision: wesay1.5.tcbuildtag
 #     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.dll.mdb"=>"lib/Debug"}
-#     VCS: https://bitbucket.org/sillsdev/l10nsharp []
-# [4] build: palaso-precise64-master Continuous (bt322)
-#     project: libpalaso
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt322
-#     clean: false
-#     revision: wesay1.5.tcbuildtag
-#     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.dll.mdb"=>"lib/Release", "Palaso.dll.config"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.dll.mdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.dll.mdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.dll.mdb"=>"lib/Release", "Palaso.Media.dll.config"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.Tests.dll.mdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll.config"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll.mdb"=>"lib/Release", "Ionic.Zip.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release", "debug/**"=>"lib/Debug"}
-#     VCS: https://github.com/sillsdev/libpalaso.git [master]
-# [5] build: icucil-precise64-Continuous (bt281)
+#     VCS: https://github.com/sillsdev/l10nsharp [master]
+# [4] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: wesay1.5.tcbuildtag
 #     paths: {"icu.net.*"=>"lib/Debug/icu48"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [6] build: icucil-precise64-Continuous (bt281)
+# [5] build: icucil-precise64-Continuous (bt281)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt281
 #     clean: false
 #     revision: wesay1.5.tcbuildtag
 #     paths: {"icu.net.*"=>"lib/Release/icu48"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [7] build: icucil-precise64-icu52 Continuous (bt413)
+# [6] build: icucil-precise64-icu52 Continuous (bt413)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: wesay1.5.tcbuildtag
 #     paths: {"icu.net.*"=>"lib/Debug/icu52"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [8] build: icucil-precise64-icu52 Continuous (bt413)
+# [7] build: icucil-precise64-icu52 Continuous (bt413)
 #     project: Libraries
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: wesay1.5.tcbuildtag
 #     paths: {"icu.net.*"=>"lib/Release/icu52"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
-# [9] build: wesay-doc-default (bt184)
-#     project: WeSay Windows
+# [8] build: icucil-precise64-icu55 Continuous (Icu55)
+#     project: Libraries
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=Icu55
+#     clean: false
+#     revision: wesay1.5.tcbuildtag
+#     paths: {"icu.net.*"=>"lib/Release/icu55"}
+#     VCS: https://github.com/sillsdev/icu-dotnet [master]
+# [9] build: icucil-precise64-icu55 Continuous (Icu55)
+#     project: Libraries
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=Icu55
+#     clean: false
+#     revision: wesay1.5.tcbuildtag
+#     paths: {"icu.net.*"=>"lib/Debug/icu55"}
+#     VCS: https://github.com/sillsdev/icu-dotnet [master]
+# [10] build: wesay-doc-default (bt184)
+#     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"WeSay_Helps.chm"=>"common"}
 #     VCS: http://hg.palaso.org/wesay-doc []
-# [10] build: wesay-localize-dev Update Pot and Po (bt52)
-#     project: WeSay Windows
+# [11] build: wesay-localize-dev Update Pot and Po (bt52)
+#     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt52
 #     clean: false
 #     revision: latest.lastFinished
 #     paths: {"*.po"=>"common"}
 #     VCS: http://hg.palaso.org/wesay-tx []
+# [12] build: palaso-precise64-master Continuous (bt322)
+#     project: libpalaso
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt322
+#     clean: false
+#     revision: wesay1.5.tcbuildtag
+#     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "Palaso.dll"=>"lib/Release", "Palaso.dll.mdb"=>"lib/Release", "Palaso.dll.config"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.dll.mdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.dll.mdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.dll.mdb"=>"lib/Release", "Palaso.Media.dll.config"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.Tests.dll.mdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.dll.mdb"=>"lib/Release", "PalasoUIWindowsForms.dll.config"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll.mdb"=>"lib/Release", "Ionic.Zip.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release", "debug/**"=>"lib/Debug"}
+#     VCS: https://github.com/sillsdev/libpalaso.git [master]
 
 # make sure output directories exist
 mkdir -p ../common
 mkdir -p ../lib/Debug
 mkdir -p ../lib/Debug/icu48
 mkdir -p ../lib/Debug/icu52
+mkdir -p ../lib/Debug/icu55
 mkdir -p ../lib/Release
 mkdir -p ../lib/Release/icu48
 mkdir -p ../lib/Release/icu52
+mkdir -p ../lib/Release/icu55
 mkdir -p ../lib/common
 
 # download artifact dependencies
@@ -192,6 +212,48 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/wesay1.5.t
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/wesay1.5.tcbuildtag/L10NSharp.dll.mdb ../lib/Release/L10NSharp.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/wesay1.5.tcbuildtag/L10NSharp.dll ../lib/Debug/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/wesay1.5.tcbuildtag/L10NSharp.dll.mdb ../lib/Debug/L10NSharp.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll ../lib/Debug/icu48/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Debug/icu48/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Debug/icu48/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll ../lib/Release/icu48/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Release/icu48/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Release/icu48/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll ../lib/Debug/icu52/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Debug/icu52/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Debug/icu52/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll ../lib/Release/icu52/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Release/icu52/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Release/icu52/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/Icu55/wesay1.5.tcbuildtag/icu.net.dll ../lib/Release/icu55/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/Icu55/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Release/icu55/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/Icu55/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Release/icu55/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/Icu55/wesay1.5.tcbuildtag/icu.net.dll ../lib/Debug/icu55/icu.net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/Icu55/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Debug/icu55/icu.net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/Icu55/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Debug/icu55/icu.net.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../common/WeSay_Helps.chm
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.az.po ../common/wesay.az.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.da.po ../common/wesay.da.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.es.po ../common/wesay.es.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.fr.po ../common/wesay.fr.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.he.po ../common/wesay.he.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.hi.po ../common/wesay.hi.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.id.po ../common/wesay.id.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.is.po ../common/wesay.is.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.km.po ../common/wesay.km.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.lo.po ../common/wesay.lo.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.my.po ../common/wesay.my.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.nl.po ../common/wesay.nl.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.oc.po ../common/wesay.oc.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.pl.po ../common/wesay.pl.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.pt.po ../common/wesay.pt.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.ru.po ../common/wesay.ru.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.rw.po ../common/wesay.rw.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.sv.po ../common/wesay.sv.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.th.po ../common/wesay.th.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.tpi.po ../common/wesay.tpi.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.vi.po ../common/wesay.vi.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_CN.po ../common/wesay.zh_CN.po
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_TW.po ../common/wesay.zh_TW.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/wesay1.5.tcbuildtag/Enchant.Net.dll ../lib/Release/Enchant.Net.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/wesay1.5.tcbuildtag/Enchant.Net.dll.config ../lib/Release/Enchant.Net.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/wesay1.5.tcbuildtag/ibusdotnet.dll ../lib/Release/ibusdotnet.dll
@@ -244,40 +306,4 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/wesay1.5.t
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/wesay1.5.tcbuildtag/debug/PalasoUIWindowsForms.dll.mdb ../lib/Debug/PalasoUIWindowsForms.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/wesay1.5.tcbuildtag/debug/ibusdotnet.dll ../lib/Debug/ibusdotnet.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt322/wesay1.5.tcbuildtag/debug/taglib-sharp.dll ../lib/Debug/taglib-sharp.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll ../lib/Debug/icu48/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Debug/icu48/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Debug/icu48/icu.net.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll ../lib/Release/icu48/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Release/icu48/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt281/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Release/icu48/icu.net.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll ../lib/Debug/icu52/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Debug/icu52/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Debug/icu52/icu.net.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll ../lib/Release/icu52/icu.net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.config ../lib/Release/icu52/icu.net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt413/wesay1.5.tcbuildtag/icu.net.dll.mdb ../lib/Release/icu52/icu.net.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../common/WeSay_Helps.chm
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.az.po ../common/wesay.az.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.da.po ../common/wesay.da.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.es.po ../common/wesay.es.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.fr.po ../common/wesay.fr.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.he.po ../common/wesay.he.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.hi.po ../common/wesay.hi.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.id.po ../common/wesay.id.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.is.po ../common/wesay.is.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.km.po ../common/wesay.km.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.lo.po ../common/wesay.lo.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.my.po ../common/wesay.my.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.nl.po ../common/wesay.nl.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.oc.po ../common/wesay.oc.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.pl.po ../common/wesay.pl.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.pt.po ../common/wesay.pt.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.ru.po ../common/wesay.ru.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.rw.po ../common/wesay.rw.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.sv.po ../common/wesay.sv.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.th.po ../common/wesay.th.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.tpi.po ../common/wesay.tpi.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.vi.po ../common/wesay.vi.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_CN.po ../common/wesay.zh_CN.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_TW.po ../common/wesay.zh_TW.po
 # End of script
