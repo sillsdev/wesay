@@ -1,0 +1,8 @@
+Code-Review+2: Stephen McConnel <stephen_mcconnel@sil.org>
+Verified+1: Chris Hubbard <chris_hubbard@sil.org>
+Verified-Linux+1: Chris Hubbard <chris_hubbard@sil.org>
+Submitted-by: Chris Hubbard <chris_hubbard@sil.org>
+Submitted-at: Tue, 13 Dec 2016 19:24:35 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/4813
+Project: wesay
+Branch: refs/heads/release/1.5
