@@ -1,3 +1,10 @@
+wesay (1.5.46) stable; urgency=medium
+
+  * Remove obsolete languages names
+  * Add new semantic domain languages: Arabic, Burmese, Portuguese, Swahili
+
+ -- Chris Hubbard <chris_hubbard@sil.org>  Fri, 16 Dec 2016 11:22:22 -0500
+
 wesay (1.5.38) stable; urgency=medium
 
   * Release build
