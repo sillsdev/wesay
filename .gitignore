@@ -35,16 +35,17 @@ Chorus*.exe*
 Geckofx-Winforms-14.dll
 L10NSharp.dll
 LibChorus*.dll*
+ChorusMergeModule.msm
 NDesk.DBus.dll*
 Palaso*.dll*
 SIL.Archiving.dll*
 geckofix.so
-geckofx-core-14.dll*
+geckofx-*.dll*
 ibusdotnet.dll
+interop.wia.dll*
 icu*.dll*
 Mercurial*.zip
 vagrant/.vagrant
-externals
 common/WeSay_Helps.chm
 common/Chorus_Help.chm
 Enchant.Net.dll*
@@ -52,3 +53,7 @@ Ionic.Zip.dll
 taglib-sharp.dll
 common/*.po
 package/lucid/rules
+Downloads
+External
+MercurialExtensions
+xulrunner
