@@ -7,9 +7,9 @@ CHORUS_CONFIGURATION=@CHORUS_CONFIGURATION@
 CHORUSVER=$(shell ls -1 externals/chorus-* | sed -e 's/externals\/chorus\-\(.*\).tar.gz/\1/')
 PALASOVER=$(shell tar tfz externals/chorus-$(CHORUSVER).tar.gz | grep libpalaso | sed -e 's/.*externals\/libpalaso\-\(.*\).tar.gz/\1/')
 
-XBUILD=xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
-PALASO_XBUILD=xbuild libpalaso-$(PALASOVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/libpalaso-$(PALASOVER)
-CHORUS_XBUILD=xbuild chorus-$(CHORUSVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/chorus-$(CHORUSVER)
+XBUILD=BUILD=Release . ./environ && /opt/mono-sil/bin/xbuild build/build.mono.proj /p:RootDir=$(CURDIR)
+PALASO_XBUILD=BUILD=Release . ./environ && /opt/mono-sil/bin/xbuild libpalaso-$(PALASOVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/libpalaso-$(PALASOVER)
+CHORUS_XBUILD=BUILD=Release . ./environ && /opt/mono-sil/bin/xbuild chorus-$(CHORUSVER)/build/build.mono.proj /p:RootDir=$(CURDIR)/chorus-$(CHORUSVER)
 
 export MONO_SHARED_DIR=/tmp
 
