@@ -80,6 +80,40 @@ namespace WeSay.Project.Tests
 				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
 				Assert.IsTrue(r.GetFileExistsInRepo(s));
 			}
+			public void AssertFileDoesNotExistInRepo(string s)
+			{
+				var r = new HgRepository(PathToBackupProjectDir, new NullProgress());
+				Assert.IsFalse(r.GetFileExistsInRepo(s));
+			}
+			public void MakeTestLiftFile(string filename)
+			{
+				StringBuilder builder = new StringBuilder();
+				int numberOfTestLexEntries = 50;
+				for (int i = 0; i < numberOfTestLexEntries; i++)
+				{
+					builder.AppendFormat(@"
+				<entry id='{0}'>
+					<lexical-unit>
+					  <form lang='qaa-x-qaa'>
+						<text>{0}</text>
+					  </form>
+					</lexical-unit>
+					<sense>
+						<grammatical-info value='n'/>
+						<definition><form lang='en'><text>blah blah {0} blah blah</text></form></definition>
+						<example lang='qaa-x-qaa'><text>and example of lah blah {0} blah blah</text></example>
+					</sense>
+				</entry>", i);
+				}
+
+				string liftContents =
+						  string.Format(
+								  "<?xml version='1.0' encoding='utf-8'?><lift version='{0}'>{1}</lift>",
+								  .12,
+								  builder.ToString());
+
+				File.WriteAllText(Path.Combine(SourceProjectDir, filename), liftContents);
+			}
 		}
 
 		[Test]
@@ -102,13 +136,27 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		public void BackupNow_ExistingRepository_AddsInvalidNewFileToBackupDir()
+		{
+			// Test causes a crash in WrapShellCall.exe - is there an updated version?
+			using (var scenario = new BackupScenario("BackupNow_ExistingRepository_AddsInvalidNewFileToBackupDir"))
+			{
+				scenario.BackupNow();
+				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
+				scenario.BackupNow();
+				scenario.AssertFileDoesNotExistInWorkingDirectory("blah.lift");
+				scenario.AssertFileDoesNotExistInRepo("blah.lift");
+			}
+		}
+
+		[Test]
 		public void BackupNow_ExistingRepository_AddsNewFileToBackupDir()
 		{
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (var scenario = new BackupScenario("BackupNow_ExistingRepository_AddsNewFileToBackupDir"))
 			{
 				scenario.BackupNow();
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
+				scenario.MakeTestLiftFile("blah.lift");
 				scenario.BackupNow();
 				scenario.AssertFileExistsInWorkingDirectory("blah.lift");
 				scenario.AssertFileExistsInRepo("blah.lift");
@@ -121,7 +169,7 @@ namespace WeSay.Project.Tests
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
 			using (var scenario = new BackupScenario("BackupNow_RemoveFile_RemovedFromBackupDir"))
 			{
-				File.Create(Path.Combine(scenario.SourceProjectDir, "blah.lift")).Close();
+				scenario.MakeTestLiftFile("blah.lift");
 				scenario.BackupNow();
 				File.Delete(Path.Combine(scenario.SourceProjectDir, "blah.lift"));
 				scenario.BackupNow();

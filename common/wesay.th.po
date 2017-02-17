@@ -1,30 +1,31 @@
 #
+# Translators:
+# palaso_admin <admin@palaso.org>, 2011
+# Greg Blok <greg_blok@sil.org>, 2011
+# palaso_admin <admin@palaso.org>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "Report-Msgid-Bugs-To: http://issues.wesay.org/\n"
-"POT-Creation-Date: 2011-04-28T04:35:01\n"
-"PO-Revision-Date: 2011-03-22 15:09+0000\n"
-"Last-Translator: palaso_admin <admin@palaso.org>\n"
-"Language-Team: Thai (http://www.transifex.net/projects/p/wesay/team/th/)\n"
+"POT-Creation-Date: 2012-05-11T20:29:49\n"
+"PO-Revision-Date: 2012-05-01 08:17+0000\n"
+"Last-Translator: Greg Blok <greg_blok@sil.org>\n"
+"Language-Team: Thai (http://www.transifex.com/projects/p/wesay/language/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: th\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 # Project-Id-Version: WeSay
 # Report-Msgid-Bugs-To: hattonjohn@gmail.com
-# POT-Creation-Date: 2011-04-28T04:35:01
+# POT-Creation-Date: 2012-05-11T20:29:49
 # Content-Type: text/plain; charset=UTF-8
-msgid "Delete Sense"
-msgstr "Thai: delete sense มายข"
-
 msgid "Meanings"
 msgstr "ความหมาย"
 
 msgid "Add Meanings"
-msgstr ""
+msgstr "เพิ่มเติม ความหมาย"
 
 msgid "Add meanings (senses) to entries where they are missing."
 msgstr "ป้อนความหมายของคำที่ยังไม่ได้รับการป้อน"
@@ -33,7 +34,7 @@ msgid "Parts of Speech"
 msgstr "ป้อนชนิดของคำ"
 
 msgid "Add Parts of Speech"
-msgstr ""
+msgstr "เพิ่มชิ้นส่วนของคำพูด"
 
 msgid "Add parts of speech to senses where they are missing."
 msgstr "ป้อนการแยกส่วนคำบรรยายสู่ที่ที่ขาดความหมาย"
@@ -42,7 +43,7 @@ msgid "Example Sentences"
 msgstr "ตัวอย่างประโยค"
 
 msgid "Add Example Sentences"
-msgstr ""
+msgstr "แสดงตัวอย่างประโยค"
 
 msgid "Add example sentences to senses where they are missing."
 msgstr "ป้อนประโยคตัวอย่างของคำที่ยังไม่ได้รับการป้อน"
@@ -60,8 +61,8 @@ msgid ""
 msgstr ""
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
-msgid "Looking for USB Keys..."
-msgstr "ค้นหาอุปกรณ์เก็บข้อมูล USB"
+msgid "Looking for USB Flash Drives..."
+msgstr "มองหา ยูเอสบี แฟลชไดร์"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
@@ -89,8 +90,8 @@ msgid "&OK"
 msgstr "&ตกลง"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
-msgid "Please insert the USB Key to backup to."
-msgstr "โปรดติดตั้งอุปกรณ์เก็บข้อมูล USB เพื่อสำรองข้อมูล"
+msgid "Please insert the USB Flash Drive to backup to."
+msgstr "กรุณานำแฟลชไดร์เข้าเพื่อสำรองข้อมูล"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupDialog.cs
 msgid "Unable to look for the device due to an error."
@@ -119,8 +120,8 @@ msgstr "สำรองข้อมูลลงในอุปกรณ์"
 
 #. description of usb backup action
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupToDevice.cs
-msgid "Saves a backup on an external device, like a USB key."
-msgstr "เก็บข้อมูลสำรองในอุปกรณ์เชื่อมต่อภายนอก เช่น อุปกรณ์เก็บข้อมูล USB"
+msgid "Saves a backup on an external device, like a USB Flash Drive."
+msgstr "บันทึกการสำรองข้อมูลสู่ External Device เหมือน ยูเอสบี แฟลชไดร์"
 
 #. Short buton label for usb flash-drive backup action
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Backup\BackupToDevice.cs
@@ -217,12 +218,12 @@ msgstr "นำออกไปที่ HTML"
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\HtmlTransformer.cs
 msgid ""
 "Creates a simple Html version of the dictionary.  Not a very good way to go."
-msgstr ""
+msgstr "สร้างรูปแบบ HTML ที่เรียบง่ายของพจนานุกรม ไม่ใช่ทางเลือกที่ดีสำหรับการเลือกทำ"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\SimpleProgressDialog.Designer.cs
 msgid "Backing up..."
-msgstr ""
+msgstr "กำลังสำรองข้อมูล"
 
 #. It's up to you whether to bother translating this or not.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\LameProgressDialog.Designer.cs
@@ -253,17 +254,12 @@ msgstr "เปิดใช้ Lexique Pro"
 msgid ""
 "Open dictionary in Lexique Pro for printing or web-page creation. Requires "
 "version LP ver 3.0 or higher."
-msgstr ""
-"เปิดพจนานุกรมในLexique Pro ปริ๊น หรือ การสร้าง web - page ต้องใช้ เวอร์ชั่น "
-"LP เวอร์ชั่น 3.0 หรือรุ่นที่สูงกว่า"
+msgstr "เปิดพจนานุกรมในLexique Pro ปริ๊น หรือ การสร้าง web - page ต้องใช้ เวอร์ชั่น LP เวอร์ชั่น 3.0 หรือรุ่นที่สูงกว่า"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
-msgid "Save in OpenOffice"
-msgstr "บันทึกใน OpenOffice"
-
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 msgid "Make OpenOffice Document"
-msgstr ""
+msgstr "สร้างเอกสารจากโปรแกรม Open Office "
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
 msgid "http://princexml.com"
@@ -275,7 +271,7 @@ msgstr "http://wesay.org/wiki/MakePdfDictionary"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
 msgid "About Make Pdf Dictionary"
-msgstr ""
+msgstr "เกี่ยวกับการทำพจนานุกรม Pdf"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\PdfDictionary\PdfMaker.cs
 msgid "Make Pdf Dictionary"
@@ -307,7 +303,7 @@ msgstr "ภาษาพื้นเมือง"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Setup Standard Format Export..."
-msgstr ""
+msgstr "การส่งออกรูปแบบการตั้งค่ามาตรฐาน ..."
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
@@ -315,11 +311,11 @@ msgstr "นำออกไปสู่ SFM"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
-msgstr ""
+msgstr "บันทึกศัพท์ในรูปแบบมาตรฐาน"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Addin.Transform\Xhtml\XHtml.cs
 msgid "Export to XHTML"
-msgstr ""
+msgstr "ส่งออกสู่ XHTML"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Image Picker Test
 #: App\ImagePicker\Form1.Designer.cs
@@ -346,11 +342,10 @@ msgstr "ปัญหานี้คืออะไร"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\Image Picker Test
 #: App\ImagePicker\ImageDisplayWidget.Designer.cs
-#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.Designer.cs
 msgid "Remove Image..."
 msgstr "ย้ายภาพ"
 
-#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalModel\Foundation\WritingSystem.cs
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalModel\Foundation\SpellCheckerIdToDisplayStringConverter.cs
 msgid "Not installed"
 msgstr "ยังไม่ติดตั้ง"
 
@@ -421,7 +416,7 @@ msgstr "✔"
 #. other tasks and jump to them.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\Dash.cs
 msgid "Home"
-msgstr ""
+msgstr "หน้าหลัก"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\Dash.cs
 msgid "Switch tasks and see current status of tasks"
@@ -431,9 +426,7 @@ msgstr "สลับงานและดูสถานะปัจจุบั
 msgid ""
 "NOTE: This control should be the same size as the initial tab page size so "
 "the in"
-msgstr ""
-"NOTE: This control should be the same size as the initial tab page size so "
-"the in"
+msgstr "NOTE: This control should be the same size as the initial tab page size so the in"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\Dashboard\DictionaryStatusControl.designer.cs
 msgid "{1} dictionary has {0} words"
@@ -484,11 +477,11 @@ msgstr "ไม่โดดเด่น"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "Hide &Uncommon Fields"
-msgstr ""
+msgstr "ซ่อนรายละเอียดเพิ่มเติม"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "Show &Uncommon Fields"
-msgstr ""
+msgstr "รายละเอียดเพิ่มเติม"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&Show All Fields"
@@ -507,7 +500,7 @@ msgstr "คำใหม่"
 #. the project.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryTask.cs
 msgid "See all {0} {1} words."
-msgstr ""
+msgstr "แสดงทั้งหมดที่ {0} {1} คำ"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
 msgid "en"
@@ -552,11 +545,11 @@ msgstr "ลองคิดคำที่ใช้เพื่อจะพูด
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Question goes here."
-msgstr ""
+msgstr "คำถาม ที่นี่"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Description goes here."
-msgstr ""
+msgstr "บอกลักษณะ ที่นี่"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "\"Don't translate\" warning goes here."
@@ -611,7 +604,7 @@ msgstr "คำแปล"
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\LexSenseLayouter.cs
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Gloss"
-msgstr ""
+msgstr "คำอธิบาย"
 
 #. Generic desciption of how many items in a task are left to do.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\LexicalTools\TaskBase.cs
@@ -697,6 +690,10 @@ msgstr "Count number of chars in the input text."
 msgid "Input files to count."
 msgstr "เพิ่มแฟ้มเข้าเพื่อนับ"
 
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\StatusBarController.cs
+msgid "Configure This Project..."
+msgstr "จัดเตรียมสำหรับโครงการนี้"
+
 #. Shown at the bottom of the screen.
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\StatusBarController.cs
 msgid "Dictionary has {0} words"
@@ -721,6 +718,18 @@ msgid "Please wait while WeSay prepares your data"
 msgstr "กรุณารอในขณะที่ WeSay กำลังเตรียมข้อมูล"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid ""
+"Welcome to WeSay.\\r\\nThe Configuration Tool will now open so that you can "
+"make a new project or choose an existing one."
+msgstr "ยินดีต้อนรับสู่ WeSay. \\ r \\ n เครื่องมือการกำหนดค่าในขณะนี้จะเปิดเพื่อให้คุณสามารถทำโครงการใหม่หรือเลือกที่มีอยู่เดิม"
+
+#. The label on the message box which the user sees if WeSay can't figure out
+#. what project to open.
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "No Default Project"
+msgstr "ไม่มีโครงการ"
+
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
 msgid "Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
 msgstr "หนทางเข้าสู่ Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
 
@@ -732,21 +741,21 @@ msgstr "ภาษาที่ใช้แสดงในหน้าของผ
 msgid ""
 "Start without a user interface (will have no effect if WeSay is already "
 "running with a UI."
-msgstr ""
-"Start without a user interface (will have no effect if WeSay is already "
-"running with a UI."
+msgstr "Start without a user interface (will have no effect if WeSay is already running with a UI."
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
 msgid ""
 "Some things, like backup, just gum up automated tests.  This is used to turn"
 " them off."
-msgstr ""
-"Some things, like backup, just gum up automated tests.  This is used to turn"
-" them off."
+msgstr "Some things, like backup, just gum up automated tests.  This is used to turn them off."
+
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.App\WeSayApp.cs
+msgid "Make it easy to get back to the configuration tool."
+msgstr "ทำให้ง่ายต่อการกลับไปที่เครื่องมือการกำหนดค่า"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Gather"
-msgstr ""
+msgstr "เก็บคำ"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Describe"
@@ -754,15 +763,15 @@ msgstr "อธิบาย"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Refine"
-msgstr ""
+msgstr "กลั่น"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Review"
-msgstr ""
+msgstr "การทบทวน"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Share"
-msgstr ""
+msgstr "แบ่งปัน"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ChorusBackupMaker.cs
 msgid "Wesay Automatic Backup"
@@ -788,11 +797,9 @@ msgstr "ส่ง/รับ"
 #. description of send/receive action
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid ""
-"Sends your changes to usb key, server, or other users, and receives the "
-"changes made by other members of your team."
+"Sends your changes to a USB flash drive, server, or other users, and "
+"receives the changes made by other members of your team."
 msgstr ""
-"ส่งการเปลี่ยนแปลงของคุณผ่าน usb, server,หรือผู้ใช้อื่น "
-"หรือรับการเปลี่ยนแปลงของสมาชิกอื่น ๆ ในทีมของคุณเอง"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid "WeSay Send/Receive"
@@ -802,8 +809,7 @@ msgstr "WeSay ส่ง/รับ"
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid ""
 "Send/Receive Changes to devices, servers, or other users on your network."
-msgstr ""
-"ส่ง/รับ การเปลี่ยนแปลงอุปกรณ์พิเศษ,server,หรือ ผู้ใช้คนอื่นในระบบเครือข่าย"
+msgstr "ส่ง/รับ การเปลี่ยนแปลงอุปกรณ์พิเศษ,server,หรือ ผู้ใช้คนอื่นในระบบเครือข่าย"
 
 #. The label for the field holding the citation form, which is how the word
 #. will be displayed in the dictionary.  This is used in languages where the
@@ -853,7 +859,7 @@ msgstr "ตัวอย่าคำแปล"
 #. The label for the field showing Semantic Domains
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\ViewTemplate.cs
 msgid "Sem Dom"
-msgstr ""
+msgstr "ชุดของคำ"
 
 #. The label for the field showing the entry which this entry is derived from,
 #. is a subentry of, etc.
@@ -865,17 +871,25 @@ msgstr "รูปแบบพื้นฐาน"
 msgid "Cross Reference"
 msgstr "คำที่เกี่ยวข้อง"
 
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\WeSayWordsProject.cs
+msgid "Checking file..."
+msgstr "ตรวจสอบไฟล์"
+
+#: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.Project\WeSayWordsProject.cs
+msgid "Checking files..."
+msgstr "ตรวจสอบหลายไฟล์"
+
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\CheckBoxControl.Designer.cs
 msgid "checkBox1"
 msgstr "checkBox1"
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.Designer.cs
-msgid "Choose Image File..."
-msgstr "เลือกแฟ้มภาพ"
+msgid "Remove Picture..."
+msgstr ""
 
 #: C\BuildAgent\work\wesay-localize-dev\bld\..\src\WeSay.UI\PictureControl.Designer.cs
-msgid "Search Gallery..."
-msgstr "หาจากห้องภาพ"
+msgid "Get Picture..."
+msgstr ""
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no
 #. option has been chosen, or the user just doesn't know what to put in this

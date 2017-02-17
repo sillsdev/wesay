@@ -181,15 +181,21 @@ result in $wesay/output/Release.  If you prefer a Debug build, then add Debug
 as a command line argument to TestBuild.bat or TestBuild.sh.  The result would
 then appear in $wesay/output/Debug.
 
+On Windows, if you are using Visual Studio instead of running the first build
+on the command line, you need to unzip lib/Release/Mercurial.zip in each of the
+output folders.
+
+On Linux, if you are using Monodevelop instead of running the first build
+on the command line, you need to unzip lib/common/Mercurial-i686.zip or
+lib/common/Mercurial-x86_64.zip in each of the output folders.
 
 6. USING MONODEVELOP ON LINUX
 
-In Windows, WeSay can be debugged using Visual Studio 2010, and probably Visual
-Studio Express 2010.  For Linux, debugging requires using MonoDevelop, the
-standard Mono IDE.  You have a choice of using the standard MonoDevelop that
-comes with the system, which for Ubuntu/Precise was version 2.8, or using a
-newer version installed into /opt.  The newer version can be installed as
-follows:
+In Windows, WeSay can be debugged using Visual Studio Community 2015.
+For Linux, debugging requires using MonoDevelop, the standard Mono IDE.
+You have a choice of using the standard MonoDevelop that comes with the
+system, which for Ubuntu/Precise was version 2.8, or using a newer version
+installed into /opt.  The newer version can be installed as follows:
 
 	sudo add-apt-repository ppa:ermshiperete/monodevelop
 	sudo apt-get update
