@@ -1,6 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<RootDir>$(teamcity_build_checkoutDir)</RootDir>
+		<RootDir Condition="'$(teamcity_build_checkoutDir)' == '' And '$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
+		<RootDir Condition="'$(teamcity_build_checkoutDir)' != ''">$(teamcity_build_checkoutDir)</RootDir>
 	</PropertyGroup>
 
 	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
@@ -12,7 +13,7 @@
 	<UsingTask TaskName="File" AssemblyFile="$(RootDir)/build/MSBuild.ExtensionPack.dll" />
 	<UsingTask TaskName="MsBuild.Community.Tasks.WebDownload" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
 	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-		<UsingTask TaskName="NUnitTeamCity"
+	<UsingTask TaskName="NUnitTeamCity"
 		AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"
 		Condition=" '$(teamcity_version)' != '' And '$(OS)'=='Windows_NT'"/>
 	<UsingTask TaskName="NUnitTeamCity"
@@ -21,7 +22,6 @@
 
 	<PropertyGroup>
 		<Solution>WeSay VS2010.sln</Solution>
-		<RootDir>$(MSBuildProjectDirectory)\..</RootDir>
 		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
 		<Configuration>Release</Configuration>
@@ -132,14 +132,15 @@
 				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
 		</ItemGroup>
 
-		<NUnit Assemblies="@(TestAssemblies)"
+		<NUnit
+			WorkingDirectory="$(OutputDir)/.."
+			Assemblies="@(TestAssemblies)"
 			ToolPath="$(RootDir)/src/packages/NUnit.Runners.Net4.2.6.4/tools"
 			TestInNewThread="false"
 			ExcludeCategory="$(excludedCategories)$(ExtraExcludeCategories)"
-			WorkingDirectory="$(RootDir)/output/$(Configuration)"
 			Force32Bit="$(useNUnit-x86)"
-			Verbose="true"
-			OutputXmlFile="$(RootDir)/output/$(Configuration)/TestResults.xml"/>
+			Timeout="4500000"
+			OutputXmlFile="$(OutputDir)/TestResults.xml"/>
 	</Target>
 
 

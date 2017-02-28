@@ -88,7 +88,6 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			_currentItem = null;
 			string lexicalForm = "test";

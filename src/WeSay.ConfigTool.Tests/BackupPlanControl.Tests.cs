@@ -16,6 +16,7 @@ namespace WeSay.ConfigTool.Tests
 		public void Setup()
 		{
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
 		}
 
 		private void GoToBackupTab()
@@ -35,6 +36,7 @@ namespace WeSay.ConfigTool.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 

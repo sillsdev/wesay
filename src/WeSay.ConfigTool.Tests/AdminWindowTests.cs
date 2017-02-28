@@ -26,6 +26,7 @@ namespace WeSay.ConfigTool.Tests
 			Palaso.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
@@ -37,6 +38,7 @@ namespace WeSay.ConfigTool.Tests
 		public override void TearDown()
 		{
 			_mainWindowTester.Close();
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 			base.TearDown();
 			if (BasilProject.IsInitialized)
 			{
@@ -230,15 +232,19 @@ namespace WeSay.ConfigTool.Tests
 		public void OpenProject_OpenedWithDirNameWhichDoesNotMatchProjectName_Opens()
 		{
 			using (var projectDir = new ProjectDirectorySetupForTesting(""))
-			using(var window = new ConfigurationWindow(new string[] {}))
 			{
-				Assert.AreNotEqual(
-					Path.GetFileNameWithoutExtension(projectDir.PathToLiftFile),
-					Path.GetFileName(projectDir.PathToDirectory));
+				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+				using (var window = new ConfigurationWindow(new string[] { }))
+				{
+					Assert.AreNotEqual(
+						Path.GetFileNameWithoutExtension(projectDir.PathToLiftFile),
+						Path.GetFileName(projectDir.PathToDirectory));
 
-				window.DisableBackupAndChorusStuffForTests();
-				window.Show();
-			   Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
+					window.DisableBackupAndChorusStuffForTests();
+					window.Show();
+					Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
+				}
+				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 			}
 		}
 	}

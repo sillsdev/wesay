@@ -16,9 +16,18 @@ namespace WeSay.ConfigTool.Tests
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			_window.Close();
+			_window.Dispose();
+			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 		}
 
 		[Test, RequiresSTA]
@@ -26,7 +35,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			using(TemporaryFolder f = new TemporaryFolder("ProjectIsCreatedTest") )
 			{
-				_window.CreateAndOpenProject(f.FolderPath, "th", "Thai");
+				_window.CreateAndOpenProject(f.Path, "th", "Thai");
 				_window.DisableBackupAndChorusStuffForTests();
 				_window.Close();
 				_window.Dispose();

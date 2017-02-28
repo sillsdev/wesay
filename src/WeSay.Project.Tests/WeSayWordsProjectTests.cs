@@ -766,15 +766,18 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ProjectCreation_WritingSystemLdml_IsLatestVersion()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
-				var namespaceManager = new XmlNamespaceManager(new NameTable());
-				namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
-				var wsFolderPath = WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(project.ProjectDirectoryPath);
-				var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
-				AssertThatXmlIn.File(pathToEnglish).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
-				var pathToQaa = Path.Combine(wsFolderPath, "qaa-x-qaa.ldml");
-				AssertThatXmlIn.File(pathToQaa).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
+				using (var project = projdir.CreateLoadedProject())
+				{
+					var namespaceManager = new XmlNamespaceManager(new NameTable());
+					namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
+					var wsFolderPath = WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(project.ProjectDirectoryPath);
+					var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
+					AssertThatXmlIn.File(pathToEnglish).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
+					var pathToQaa = Path.Combine(wsFolderPath, "qaa-x-qaa.ldml");
+					AssertThatXmlIn.File(pathToQaa).HasAtLeastOneMatchForXpath(String.Format("/ldml/special/palaso:version[@value = {0}]", WritingSystemDefinition.LatestWritingSystemDefinitionVersion), namespaceManager);
+				}
 			}
 		}
 
@@ -783,9 +786,12 @@ namespace WeSay.Project.Tests
 		[Category("For review")]
 		public void ProjectCreation_WritingSystemCollection_HasUnknownVernacular()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.OtherIdForTest));
+				using (var project = projdir.CreateLoadedProject())
+				{
+					Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.OtherIdForTest));
+				}
 			}
 		}
 
@@ -794,9 +800,12 @@ namespace WeSay.Project.Tests
 		[Category("For review")]
 		public void WritingSystemCollection_HasUnknownAnalysis()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.AnalysisIdForTest));
+				using (var project = projdir.CreateLoadedProject())
+				{
+					Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.AnalysisIdForTest));
+				}
 			}
 		}
 
@@ -1011,38 +1020,50 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void IsWritingSystemInUse_LiftFileContainsWritingSystem_ReturnsTrue()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
-				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				using (var project = projdir.CreateLoadedProject())
+				{
+					File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				}
 			}
 		}
 
 		[Test]
 		public void IsWritingSystemInUse_WritingSystemIsNotUsed_ReturnsFalse()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				using (var project = projdir.CreateLoadedProject())
+				{
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				}
 			}
 		}
 
 		[Test]
 		public void IsWritingSystemInUseInLift_LiftFileContainsWritingSystem_ReturnsTrue()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
-				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				using (var project = projdir.CreateLoadedProject())
+				{
+					File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				}
 			}
 		}
 
 		[Test]
 		public void IsWritingSystemInUseInLift_WritingSystemIsNotUsed_ReturnsFalse()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				using (var project = projdir.CreateLoadedProject())
+				{
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				}
 			}
 		}
 

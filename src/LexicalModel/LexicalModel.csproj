@@ -115,7 +115,7 @@
     </Reference>
     <Reference Include="irrKlang.NET4, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a854741bd80517c7">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\irrKlang.NET2.0.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\irrKlang.NET4.dll</HintPath>
     </Reference>
     <Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>

@@ -7,7 +7,6 @@ using Palaso.Lift;
 using Palaso.Reporting;
 using WeSay.Project;
 using WeSay.LexicalModel;
-using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
