@@ -8,7 +8,6 @@
 	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll" />
 
 	<PropertyGroup>
 		<Solution>WeSay VS2010.sln</Solution>
@@ -32,13 +31,6 @@
 		<CallTarget Targets="SetAssemblyVersion"/>
 		<CallTarget Targets="Compile"/>
 		<Message Text="Build Complete"/>
-	</Target>
-
-	<Target Name="LocalTest">
-		<Exec
-			Command="$(MONO_PREFIX)/bin/mono --debug $(MONO_PREFIX)/lib/mono/4.5/nunit-console.exe -noshadow [!P]*.Tests.dll -xml=WeSay.nunit-output.xml -exclude=&quot;SkipOnTeamCity&quot;"
-			WorkingDirectory="$(RootDir)/output/$(Configuration)"
-			Timeout="4500000"/>
 	</Target>
 
 	<ItemGroup>
@@ -69,17 +61,11 @@
 		<Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
 	</Target>
 
-	<Target Name="Test" DependsOnTargets="Build">
-		<CreateItem
-			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/Palaso*.dll">
-			<Output ItemName="TestAssemblies" TaskParameter="Include" />
-		</CreateItem>
-		<NUnitTeamCity
-			Assemblies="@(TestAssemblies)"
-			ExcludeCategory="SkipOnBuildServer;SkipOnTeamCity;KnownMonoIssue;NUnit Windows Forms"
-			NUnitVersion="NUnit-2.5.5" />
+	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
+		<CallTarget Targets="TestOnly"/>
 	</Target>
+
+	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
 
 	<ItemGroup>
 		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />

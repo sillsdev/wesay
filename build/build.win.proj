@@ -12,13 +12,6 @@
 	<UsingTask TaskName="DNZip" AssemblyFile="$(RootDir)/build/MSBuild.ExtensionPack.dll" />
 	<UsingTask TaskName="File" AssemblyFile="$(RootDir)/build/MSBuild.ExtensionPack.dll" />
 	<UsingTask TaskName="MsBuild.Community.Tasks.WebDownload" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
-	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="NUnitTeamCity"
-		AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"
-		Condition=" '$(teamcity_version)' != '' And '$(OS)'=='Windows_NT'"/>
-	<UsingTask TaskName="NUnitTeamCity"
-		AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll"
-		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
 
 	<PropertyGroup>
 		<Solution>WeSay VS2010.sln</Solution>
@@ -31,7 +24,7 @@
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
 	<Import Project="$(RootDir)/build/NuGet.targets"/>
-	
+
 	<PropertyGroup>
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
 	</PropertyGroup>
@@ -49,7 +42,7 @@
 			Exclude="$(RootDir)\**\*Tests\**;$(RootDir)\**\WeSay.ConfigTool\**" />
 		<XmlFiles Include="$(RootDir)\common\**\*.WeSayConfig"/>
 	</ItemGroup>
-	
+
 	<Target Name="DownloadDistFiles">
 		<MakeDir Directories= "$(RootDir)\External"/>
 		<WebDownload FileUri="https://dl.dropboxusercontent.com/s/599lb0od6shtqqa/WeSay_Helps.chm?dl=1" FileName="$(RootDir)\External\WeSay_Helps.chm"></WebDownload>
@@ -112,38 +105,6 @@
 
 	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
 
-	<Target Name="RunNUnitTC" Condition="'$(teamcity_version)' != ''">
-		<ItemGroup>
-			<TestAssemblies
-				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
-		</ItemGroup>
-
-		<NUnitTeamCity
-			Assemblies="@(TestAssemblies)"
-			ExcludeCategory="SkipOnTeamCity;ByHand$(ExtraExcludeCategories)"
-			NUnitVersion="NUnit-2.6.3" />
-	</Target>
-
-	<Target Name="RunNUnit" Condition="'$(teamcity_version)' == ''">
-		<ItemGroup>
-			<TestAssemblies
-				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
-		</ItemGroup>
-
-		<NUnit
-			WorkingDirectory="$(OutputDir)/.."
-			Assemblies="@(TestAssemblies)"
-			ToolPath="$(RootDir)/src/packages/NUnit.Runners.Net4.2.6.4/tools"
-			TestInNewThread="false"
-			ExcludeCategory="$(excludedCategories)$(ExtraExcludeCategories)"
-			Force32Bit="$(useNUnit-x86)"
-			Timeout="4500000"
-			OutputXmlFile="$(OutputDir)/TestResults.xml"/>
-	</Target>
-
-
 	<Target Name="UnzipMercurial" DependsOnTargets="">
 		<!-- Extract a zip file-->
 		<!-- This output path is different from the old wesay, but the same as chorus.  WeSay used to be output/release/mercurial -->
@@ -200,7 +161,7 @@
 			<Output TaskParameter="OutputFilePath" ItemName="Compile" />
 		</MakeWixForDirTree>
 	</Target>
-	
+
 	<Target Name="MakeWixForXulrunner">
 		<MakeWixForDirTree
 			DirectoryReferenceId="XulrunnerFiles"

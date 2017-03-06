@@ -1,4 +1,12 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="NUnitTeamCity"
+		AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)"
+		Condition=" '$(teamcity_version)' != '' And '$(OS)'=='Windows_NT'"/>
+	<UsingTask TaskName="NUnitTeamCity"
+		AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll"
+		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
+
 	<PropertyGroup>
 		<LifeCycleStage>ALPHA</LifeCycleStage>
 	</PropertyGroup>
@@ -40,4 +48,34 @@
 	  <StampAssemblies Version="$(AssemblyVersion)" InputAssemblyPaths="@(AssemblyInfoFiles)" />
 	</Target>
 
+	<Target Name="RunNUnitTC" Condition="'$(teamcity_version)' != ''">
+		<ItemGroup>
+			<TestAssemblies
+				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
+		</ItemGroup>
+
+		<NUnitTeamCity
+			Assemblies="@(TestAssemblies)"
+			ExcludeCategory="SkipOnTeamCity;ByHand$(ExtraExcludeCategories)"
+			NUnitVersion="NUnit-2.6.4" />
+	</Target>
+
+	<Target Name="RunNUnit" Condition="'$(teamcity_version)' == ''">
+		<ItemGroup>
+			<TestAssemblies
+				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
+		</ItemGroup>
+
+		<NUnit
+			WorkingDirectory="$(OutputDir)/.."
+			Assemblies="@(TestAssemblies)"
+			ToolPath="$(RootDir)/src/packages/NUnit.Runners.Net4.2.6.4/tools"
+			TestInNewThread="false"
+			ExcludeCategory="$(excludedCategories)$(ExtraExcludeCategories)"
+			Force32Bit="$(useNUnit-x86)"
+			Timeout="4500000"
+			OutputXmlFile="$(OutputDir)/TestResults.xml"/>
+	</Target>
 </Project>
