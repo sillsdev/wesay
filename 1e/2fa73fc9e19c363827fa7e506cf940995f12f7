@@ -1,0 +1,7 @@
+Verified-Linux-1: Jenkins CI <jenkins@sil.org>
+Verified-1: Jenkins CI <jenkins@sil.org>
+Submitted-by: Robin Munn <robin_munn@sil.org>
+Submitted-at: Tue, 07 Mar 2017 07:47:03 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/5007
+Project: wesay
+Branch: refs/heads/master

@@ -1,0 +1,16 @@
+Code-Review+2: Eberhard Beilharz <eb1@sil.org>
+Verified-Linux-1: Jenkins CI <jenkins@sil.org>
+Verified-1: Jenkins CI <jenkins@sil.org>
+Code-Review+2: Christopher Hirt <chris_hirt@sil.org>
+Verified+1: Christopher Hirt <chris_hirt@sil.org>
+Verified-Linux+1: Christopher Hirt <chris_hirt@sil.org>
+Verified+1: Daniel Glassey <daniel_glassey@sil.org>
+Verified-Linux+1: Daniel Glassey <daniel_glassey@sil.org>
+Code-Review+2: Robin Munn <robin_munn@sil.org>
+Verified+1: Robin Munn <robin_munn@sil.org>
+Verified-Linux+1: Robin Munn <robin_munn@sil.org>
+Submitted-by: Robin Munn <robin_munn@sil.org>
+Submitted-at: Tue, 07 Mar 2017 07:47:03 +0000
+Reviewed-on: https://gerrit.lsdev.sil.org/4953
+Project: wesay
+Branch: refs/heads/master
