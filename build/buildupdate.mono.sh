@@ -84,7 +84,7 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=ChorusPrecise64v25Cont
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Chorus.exe"=>"lib/Release", "Chorus.exe.mdb"=>"lib/Release", "ChorusHub.exe"=>"lib/Release", "ChorusHub.exe.mdb"=>"lib/Release", "ChorusHubApp.exe"=>"lib/Release", "ChorusHubApp.exe.mdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.exe.mdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.dll.mdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.dll.mdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "NDesk.DBus.dll"=>"lib/Release", "NDesk.DBus.dll.config"=>"lib/Release", "debug/**"=>"lib/Debug", "Mercurial-i686.zip"=>"lib/common", "Mercurial-x86_64.zip"=>"lib/common"}
+#     paths: {"Chorus.exe"=>"lib/Release", "Chorus.exe.mdb"=>"lib/Release", "ChorusHub.exe"=>"lib/Release", "ChorusHub.exe.mdb"=>"lib/Release", "ChorusHubApp.exe"=>"lib/Release", "ChorusHubApp.exe.mdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.exe.mdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.dll.mdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.dll.mdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "NDesk.DBus.dll"=>"lib/Release", "NDesk.DBus.dll.config"=>"lib/Release", "debug/**"=>"lib/Debug", "Mercurial-i686.zip"=>"lib/common", "MercurialExtensions/**"=>"MercurialExtensions", "Mercurial-x86_64.zip"=>"lib/common"}
 #     VCS: https://github.com/sillsdev/chorus.git [chorus-2.5]
 # [2] build: L10NSharp Mono continuous (bt271)
 #     project: L10NSharp
@@ -123,6 +123,8 @@ cd -
 #     VCS: https://github.com/sillsdev/libpalaso.git [libpalaso-2.6]
 
 # make sure output directories exist
+mkdir -p ../MercurialExtensions
+mkdir -p ../MercurialExtensions/fixutf8
 mkdir -p ../common
 mkdir -p ../lib/Debug
 mkdir -p ../lib/Release
@@ -159,6 +161,24 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v
 copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/debug/NDesk.DBus.dll?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/debug/NDesk.DBus.dll.config?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/Mercurial-i686.zip?branch=%3Cdefault%3E ../lib/common/Mercurial-i686.zip
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/.guidsForInstaller.xml?branch=%3Cdefault%3E ../MercurialExtensions/.guidsForInstaller.xml
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/Dummy.txt?branch=%3Cdefault%3E ../MercurialExtensions/Dummy.txt
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/.gitignore?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/.gitignore
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/.guidsForInstaller.xml?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/.guidsForInstaller.xml
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/.hg_archival.txt?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/.hg_archival.txt
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/.hgignore?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/.hgignore
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/README.?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/README.
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/buildcpmap.py?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/buildcpmap.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/cpmap.pyc?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/cpmap.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/fixutf8.py?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/fixutf8.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/fixutf8.pyc?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/fixutf8.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/fixutf8.pyo?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/fixutf8.pyo
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/osutil.py?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/osutil.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/osutil.pyc?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/osutil.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/osutil.pyo?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/osutil.pyo
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.py?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/win32helper.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.pyc?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/win32helper.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.pyo?branch=%3Cdefault%3E ../MercurialExtensions/fixutf8/win32helper.pyo
 copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusPrecise64v25Cont/latest.lastSuccessful/Mercurial-x86_64.zip?branch=%3Cdefault%3E ../lib/common/Mercurial-x86_64.zip
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/l10nsharp-1.2.tcbuildtag/L10NSharp.dll ../lib/Release/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/l10nsharp-1.2.tcbuildtag/L10NSharp.dll.mdb ../lib/Release/L10NSharp.dll.mdb
