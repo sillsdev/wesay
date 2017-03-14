@@ -98,8 +98,14 @@
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>\usr\lib\cli\geckofx-29\Geckofx-Core.dll</HintPath>
+    </Reference>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>\usr\lib\cli\geckofx-29\Geckofx-Winforms.dll</HintPath>
+    </Reference>
     <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
