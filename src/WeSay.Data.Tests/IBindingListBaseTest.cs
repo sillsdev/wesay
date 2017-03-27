@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
-	public class IBindingListBaseTest<T, K> where T : new()
+	public abstract class IBindingListBaseTest<T, K> where T : new()
 	{
 		protected IBindingList _bindingList;
 		protected PropertyDescriptor _property;

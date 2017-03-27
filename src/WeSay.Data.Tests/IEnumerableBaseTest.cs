@@ -8,7 +8,7 @@ namespace WeSay.Data.Tests
 	/// <summary>
 	/// A collection of _itemCount items should be initialized in _enumerable.
 	/// </summary>
-	public class IEnumerableBaseTest<T>
+	public abstract class IEnumerableBaseTest<T>
 	{
 		protected IEnumerable _enumerable;
 		protected int _itemCount;
