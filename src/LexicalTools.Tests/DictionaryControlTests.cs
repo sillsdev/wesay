@@ -25,6 +25,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture, RequiresSTA]
 	public class DictionaryControlTests: NUnitFormTest
 	{
+		private WeSayWordsProject _project;
 		private TemporaryFolder _tempFolder;
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
@@ -43,12 +44,13 @@ namespace WeSay.LexicalTools.Tests
 		public void SetupFixture()
 		{
 			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
-			WeSayProjectTestHelper.InitializeForTests();
+			_project = WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[TestFixtureTearDown]
 		public void TearDownFixture()
 		{
+			_project.Dispose ();
 			Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 		}
 
