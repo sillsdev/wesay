@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
-	public class ICollectionBaseTest<T>
+	public abstract class ICollectionBaseTest<T>
 	{
 		protected ICollection _collection;
 		protected int _itemCount;
