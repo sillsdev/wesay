@@ -53,16 +53,20 @@ fi
 
 copy_wget() {
 echo "wget: $2 <= $1"
-f=$(basename $2)
-d=$(dirname $2)
-cd $d
+f1=$(basename $1)
+f2=$(basename $2)
+cd $(dirname $2)
 wget -q -L -N $1
+# wget has no true equivalent of curl's -o option.
+# Different versions of wget handle (or not) % escaping differently.
+# A URL query is the only reason why $f1 and $f2 should differ.
+if [ "$f1" != "$f2" ]; then mv $f2\?* $f2; fi
 cd -
 }
 
 
 # *** Results ***
-# build: wesay1.6-precise64-continuous (bt456)
+# build: wesay1.9-trusty64-continuous (bt456)
 # project: WeSay1.5
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt456
 # VCS: https://github.com/sillsdev/wesay.git [SILWritingSystems]
@@ -74,36 +78,36 @@ cd -
 #     revision: latest.lastSuccessful
 #     paths: {"Chorus_Help.chm"=>"common"}
 #     VCS: https://github.com/sillsdev/chorushelp.git [master]
-# [1] build: chorus-precise64-SILWritingSystems Continuous (bt454)
+# [1] build: chorus-trusty64-master Continuous [build only] (bt459)
 #     project: Chorus
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt454
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt459
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"Chorus.exe"=>"lib/Release", "Chorus.exe.mdb"=>"lib/Release", "ChorusHub.exe"=>"lib/Release", "ChorusHub.exe.mdb"=>"lib/Release", "ChorusHubApp.exe"=>"lib/Release", "ChorusHubApp.exe.mdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.exe.mdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.dll.mdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.dll.mdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "NDesk.DBus.dll"=>"lib/Release", "NDesk.DBus.dll.config"=>"lib/Release", "debug/**"=>"lib/Debug", "Mercurial-i686.zip"=>"lib/common", "Mercurial-x86_64.zip"=>"lib/common"}
-#     VCS: https://github.com/sillsdev/chorus.git [SILWritingSystems]
-# [2] build: L10NSharp Mono continuous (bt271)
+#     VCS: https://github.com/sillsdev/chorus.git [master]
+# [2] build: L10NSharp Version2.0 Mono continuous (bt271)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt271
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.dll.mdb"=>"lib/Release"}
-#     VCS: https://bitbucket.org/sillsdev/l10nsharp []
-# [3] build: L10NSharp Mono continuous (bt271)
+#     VCS: https://github.com/sillsdev/l10nsharp [Version2.0]
+# [3] build: L10NSharp Version2.0 Mono continuous (bt271)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt271
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.dll.mdb"=>"lib/Debug"}
-#     VCS: https://bitbucket.org/sillsdev/l10nsharp []
+#     VCS: https://github.com/sillsdev/l10nsharp [Version2.0]
 # [4] build: icucil-precise64-icu52 Continuous (bt413)
-#     project: Libraries
+#     project: Archived
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"icu.net.*"=>"lib/Debug/icu52"}
 #     VCS: https://github.com/sillsdev/icu-dotnet [master]
 # [5] build: icucil-precise64-icu52 Continuous (bt413)
-#     project: Libraries
+#     project: Archived
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt413
 #     clean: false
 #     revision: latest.lastSuccessful
@@ -123,20 +127,20 @@ cd -
 #     revision: latest.lastFinished
 #     paths: {"*.po"=>"common"}
 #     VCS: http://hg.palaso.org/wesay-tx []
-# [8] build: palaso-precise64-SILWritingSystems Continuous (bt441)
+# [8] build: palaso-trusty64-libpalaso-3.1 Continuous (bt324)
 #     project: libpalaso
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt441
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt324
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "SIL.Archiving.dll"=>"lib/Release", "SIL.Archiving.dll.mdb"=>"lib/Release", "SIL.Core.dll"=>"lib/Release", "SIL.Core.dll.mdb"=>"lib/Release", "SIL.Core.dll.config"=>"lib/Release", "SIL.Core.Tests.dll"=>"lib/Release", "SIL.Core.Tests.dll.mdb"=>"lib/Release", "SIL.DictionaryServices.dll"=>"lib/Release", "SIL.DictionaryServices.dll.mdb"=>"lib/Release", "SIL.Lexicon.dll"=>"lib/Release", "SIL.Lexicon.mdb"=>"lib/Release", "SIL.LexiconUtils.config"=>"lib/Release", "SIL.Lift.dll"=>"lib/Release", "SIL.Lift.dll.mdb"=>"lib/Release", "SIL.Media.dll"=>"lib/Release", "SIL.Media.dll.mdb"=>"lib/Release", "SIL.Media.dll.config"=>"lib/Release", "SIL.Scripture.dll"=>"lib/Release", "SIL.Scripture.mdb"=>"lib/Release", "SIL.Scripture.config"=>"lib/Release", "SIL.TestUtilities.dll"=>"lib/Release", "SIL.TestUtilities.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.dll"=>"lib/Release", "SIL.Windows.Forms.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.dll.config"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll.config"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll.config"=>"lib/Release", "SIL.WritingSystems.dll"=>"lib/Release", "SIL.WritingSystems.dll.mdb"=>"lib/Release", "SIL.WritingSystems.dll.config"=>"lib/Release", "SIL.WritingSystems.Tests.dll"=>"lib/Release", "SIL.WritingSystems.Tests.dll.mdb"=>"lib/Release", "SIL.WritingSystems.Tests.dll.config"=>"lib/Release", "Ionic.Zip.dll"=>"lib/Release", "Spart.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release"}
-#     VCS: https://github.com/sillsdev/libpalaso.git [SILWritingSystems]
-# [9] build: palaso-precise64-SILWritingSystems Continuous (bt441)
+#     paths: {"Enchant.Net.dll"=>"lib/Release", "Enchant.Net.dll.config"=>"lib/Release", "ibusdotnet.dll"=>"lib/Release", "SIL.Archiving.dll"=>"lib/Release", "SIL.Archiving.dll.mdb"=>"lib/Release", "SIL.Core.dll"=>"lib/Release", "SIL.Core.dll.mdb"=>"lib/Release", "SIL.Core.dll.config"=>"lib/Release", "SIL.Core.Tests.dll"=>"lib/Release", "SIL.Core.Tests.dll.mdb"=>"lib/Release", "SIL.DictionaryServices.dll"=>"lib/Release", "SIL.DictionaryServices.dll.mdb"=>"lib/Release", "SIL.Lexicon.dll"=>"lib/Release", "SIL.Lexicon.dll.mdb"=>"lib/Release", "SIL.Lift.dll"=>"lib/Release", "SIL.Lift.dll.mdb"=>"lib/Release", "SIL.Media.dll"=>"lib/Release", "SIL.Media.dll.mdb"=>"lib/Release", "SIL.Media.dll.config"=>"lib/Release", "SIL.Scripture.dll"=>"lib/Release", "SIL.Scripture.dll.mdb"=>"lib/Release", "SIL.TestUtilities.dll"=>"lib/Release", "SIL.TestUtilities.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.dll"=>"lib/Release", "SIL.Windows.Forms.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.dll.config"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Release", "SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll"=>"lib/Release", "SIL.Windows.Forms.Keyboarding.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll"=>"lib/Release", "SIL.Windows.Forms.Scripture.dll.mdb"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll"=>"lib/Release", "SIL.Windows.Forms.WritingSystems.dll.mdb"=>"lib/Release", "SIL.WritingSystems.dll"=>"lib/Release", "SIL.WritingSystems.dll.mdb"=>"lib/Release", "SIL.WritingSystems.Tests.dll"=>"lib/Release", "SIL.WritingSystems.Tests.dll.mdb"=>"lib/Release", "Ionic.Zip.dll"=>"lib/Release", "Spart.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release"}
+#     VCS: https://github.com/sillsdev/libpalaso.git [libpalaso-3.1]
+# [9] build: palaso-trusty64-libpalaso-3.1 Continuous (bt324)
 #     project: libpalaso
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt441
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt324
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"debug/Enchant.Net.dll"=>"lib/Debug", "debug/Enchant.Net.dll.config"=>"lib/Debug", "debug/ibusdotnet.dll"=>"lib/Debug", "debug/SIL.Archiving.dll"=>"lib/Debug", "debug/SIL.Archiving.dll.mdb"=>"lib/Debug", "debug/SIL.Core.dll"=>"lib/Debug", "debug/SIL.Core.dll.mdb"=>"lib/Debug", "debug/SIL.Core.dll.config"=>"lib/Debug", "debug/SIL.Core.Tests.dll"=>"lib/Debug", "debug/SIL.Core.Tests.dll.mdb"=>"lib/Debug", "debug/SIL.DictionaryServices.dll"=>"lib/Debug", "debug/SIL.DictionaryServices.dll.mdb"=>"lib/Debug", "debug/SIL.Lexicon.dll"=>"lib/Debug", "debug/SIL.Lexicon.dll.mdb"=>"lib/Debug", "debug/SIL.Lift.dll"=>"lib/Debug", "debug/SIL.Lift.dll.mdb"=>"lib/Debug", "debug/SIL.Media.dll"=>"lib/Debug", "debug/SIL.Media.dll.mdb"=>"lib/Debug", "debug/SIL.Media.dll.config"=>"lib/Debug", "debug/SIL.Scripture.dll"=>"lib/Debug", "debug/SIL.Scripture.dll.mdb"=>"lib/Debug", "debug/SIL.TestUtilities.dll"=>"lib/Debug", "debug/SIL.TestUtilities.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.dll.config"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.Scripture.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.Scripture.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.dll.config"=>"lib/Debug", "debug/SIL.WritingSystems.dll"=>"lib/Debug", "debug/SIL.WritingSystems.dll.mdb"=>"lib/Debug", "debug/SIL.WritingSystems.dll.config"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.dll"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.dll.mdb"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.dll.config"=>"lib/Debug", "debug/Ionic.Zip.dll"=>"lib/Debug", "debug/Spart.dll"=>"lib/Debug", "debug/taglib-sharp.dll"=>"lib/Debug"}
-#     VCS: https://github.com/sillsdev/libpalaso.git [SILWritingSystems]
+#     paths: {"debug/Enchant.Net.dll"=>"lib/Debug", "debug/Enchant.Net.dll.config"=>"lib/Debug", "debug/ibusdotnet.dll"=>"lib/Debug", "debug/SIL.Archiving.dll"=>"lib/Debug", "debug/SIL.Archiving.dll.mdb"=>"lib/Debug", "debug/SIL.Core.dll"=>"lib/Debug", "debug/SIL.Core.dll.mdb"=>"lib/Debug", "debug/SIL.Core.dll.config"=>"lib/Debug", "debug/SIL.Core.Tests.dll"=>"lib/Debug", "debug/SIL.Core.Tests.dll.mdb"=>"lib/Debug", "debug/SIL.DictionaryServices.dll"=>"lib/Debug", "debug/SIL.DictionaryServices.dll.mdb"=>"lib/Debug", "debug/SIL.Lexicon.dll"=>"lib/Debug", "debug/SIL.Lexicon.dll.mdb"=>"lib/Debug", "debug/SIL.Lift.dll"=>"lib/Debug", "debug/SIL.Lift.dll.mdb"=>"lib/Debug", "debug/SIL.Media.dll"=>"lib/Debug", "debug/SIL.Media.dll.mdb"=>"lib/Debug", "debug/SIL.Media.dll.config"=>"lib/Debug", "debug/SIL.Scripture.dll"=>"lib/Debug", "debug/SIL.Scripture.dll.mdb"=>"lib/Debug", "debug/SIL.TestUtilities.dll"=>"lib/Debug", "debug/SIL.TestUtilities.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.dll.config"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.Keyboarding.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.Scripture.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.Scripture.dll.mdb"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.dll"=>"lib/Debug", "debug/SIL.Windows.Forms.WritingSystems.dll.mdb"=>"lib/Debug", "debug/SIL.WritingSystems.dll"=>"lib/Debug", "debug/SIL.WritingSystems.dll.mdb"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.dll"=>"lib/Debug", "debug/SIL.WritingSystems.Tests.dll.mdb"=>"lib/Debug", "debug/Ionic.Zip.dll"=>"lib/Debug", "debug/Spart.dll"=>"lib/Debug", "debug/taglib-sharp.dll"=>"lib/Debug"}
+#     VCS: https://github.com/sillsdev/libpalaso.git [libpalaso-3.1]
 
 # make sure output directories exist
 mkdir -p ../common
@@ -148,36 +152,36 @@ mkdir -p ../lib/common
 
 # download artifact dependencies
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt216/latest.lastSuccessful/Chorus_Help.chm ../common/Chorus_Help.chm
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/Chorus.exe ../lib/Release/Chorus.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/Chorus.exe.mdb ../lib/Release/Chorus.exe.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/ChorusHub.exe ../lib/Release/ChorusHub.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/ChorusHub.exe.mdb ../lib/Release/ChorusHub.exe.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/ChorusHubApp.exe ../lib/Release/ChorusHubApp.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/ChorusHubApp.exe.mdb ../lib/Release/ChorusHubApp.exe.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/ChorusMerge.exe ../lib/Release/ChorusMerge.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/ChorusMerge.exe.mdb ../lib/Release/ChorusMerge.exe.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/LibChorus.dll ../lib/Release/LibChorus.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/LibChorus.dll.mdb ../lib/Release/LibChorus.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/LibChorus.TestUtilities.dll ../lib/Release/LibChorus.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/LibChorus.TestUtilities.dll.mdb ../lib/Release/LibChorus.TestUtilities.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/Autofac.dll ../lib/Release/Autofac.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/NDesk.DBus.dll ../lib/Release/NDesk.DBus.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/NDesk.DBus.dll.config ../lib/Release/NDesk.DBus.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/Autofac.dll ../lib/Debug/Autofac.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/Chorus.exe ../lib/Debug/Chorus.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/Chorus.exe.mdb ../lib/Debug/Chorus.exe.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/ChorusHub.exe ../lib/Debug/ChorusHub.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/ChorusHub.exe.mdb ../lib/Debug/ChorusHub.exe.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/ChorusMerge.exe ../lib/Debug/ChorusMerge.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/ChorusMerge.exe.mdb ../lib/Debug/ChorusMerge.exe.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/LibChorus.TestUtilities.dll ../lib/Debug/LibChorus.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/LibChorus.TestUtilities.dll.mdb ../lib/Debug/LibChorus.TestUtilities.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/LibChorus.dll ../lib/Debug/LibChorus.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/LibChorus.dll.mdb ../lib/Debug/LibChorus.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/NDesk.DBus.dll ../lib/Debug/NDesk.DBus.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/debug/NDesk.DBus.dll.config ../lib/Debug/NDesk.DBus.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/Mercurial-i686.zip ../lib/common/Mercurial-i686.zip
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt454/latest.lastSuccessful/Mercurial-x86_64.zip ../lib/common/Mercurial-x86_64.zip
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/Chorus.exe?branch=%3Cdefault%3E ../lib/Release/Chorus.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/Chorus.exe.mdb?branch=%3Cdefault%3E ../lib/Release/Chorus.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/ChorusHub.exe?branch=%3Cdefault%3E ../lib/Release/ChorusHub.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/ChorusHub.exe.mdb?branch=%3Cdefault%3E ../lib/Release/ChorusHub.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/ChorusHubApp.exe?branch=%3Cdefault%3E ../lib/Release/ChorusHubApp.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/ChorusHubApp.exe.mdb?branch=%3Cdefault%3E ../lib/Release/ChorusHubApp.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/ChorusMerge.exe?branch=%3Cdefault%3E ../lib/Release/ChorusMerge.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/ChorusMerge.exe.mdb?branch=%3Cdefault%3E ../lib/Release/ChorusMerge.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/LibChorus.dll?branch=%3Cdefault%3E ../lib/Release/LibChorus.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/LibChorus.dll.mdb?branch=%3Cdefault%3E ../lib/Release/LibChorus.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/LibChorus.TestUtilities.dll?branch=%3Cdefault%3E ../lib/Release/LibChorus.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/LibChorus.TestUtilities.dll.mdb?branch=%3Cdefault%3E ../lib/Release/LibChorus.TestUtilities.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/Autofac.dll?branch=%3Cdefault%3E ../lib/Release/Autofac.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/NDesk.DBus.dll?branch=%3Cdefault%3E ../lib/Release/NDesk.DBus.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/NDesk.DBus.dll.config?branch=%3Cdefault%3E ../lib/Release/NDesk.DBus.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/Autofac.dll?branch=%3Cdefault%3E ../lib/Debug/Autofac.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/Chorus.exe?branch=%3Cdefault%3E ../lib/Debug/Chorus.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/Chorus.exe.mdb?branch=%3Cdefault%3E ../lib/Debug/Chorus.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/ChorusHub.exe?branch=%3Cdefault%3E ../lib/Debug/ChorusHub.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/ChorusHub.exe.mdb?branch=%3Cdefault%3E ../lib/Debug/ChorusHub.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/ChorusMerge.exe?branch=%3Cdefault%3E ../lib/Debug/ChorusMerge.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/ChorusMerge.exe.mdb?branch=%3Cdefault%3E ../lib/Debug/ChorusMerge.exe.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/LibChorus.TestUtilities.dll?branch=%3Cdefault%3E ../lib/Debug/LibChorus.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/LibChorus.TestUtilities.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/LibChorus.TestUtilities.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/LibChorus.dll?branch=%3Cdefault%3E ../lib/Debug/LibChorus.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/LibChorus.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/LibChorus.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/NDesk.DBus.dll?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/debug/NDesk.DBus.dll.config?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/Mercurial-i686.zip?branch=%3Cdefault%3E ../lib/common/Mercurial-i686.zip
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt459/latest.lastSuccessful/Mercurial-x86_64.zip?branch=%3Cdefault%3E ../lib/common/Mercurial-x86_64.zip
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll ../lib/Release/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll.mdb ../lib/Release/L10NSharp.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt271/latest.lastSuccessful/L10NSharp.dll ../lib/Debug/L10NSharp.dll
@@ -212,95 +216,86 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.last
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.vi.po ../common/wesay.vi.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_CN.po ../common/wesay.zh_CN.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_TW.po ../common/wesay.zh_TW.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/Enchant.Net.dll ../lib/Release/Enchant.Net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/Enchant.Net.dll.config ../lib/Release/Enchant.Net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/ibusdotnet.dll ../lib/Release/ibusdotnet.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Archiving.dll ../lib/Release/SIL.Archiving.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Archiving.dll.mdb ../lib/Release/SIL.Archiving.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Core.dll ../lib/Release/SIL.Core.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Core.dll.mdb ../lib/Release/SIL.Core.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Core.dll.config ../lib/Release/SIL.Core.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Core.Tests.dll ../lib/Release/SIL.Core.Tests.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Core.Tests.dll.mdb ../lib/Release/SIL.Core.Tests.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.DictionaryServices.dll ../lib/Release/SIL.DictionaryServices.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.DictionaryServices.dll.mdb ../lib/Release/SIL.DictionaryServices.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Lexicon.dll ../lib/Release/SIL.Lexicon.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Lexicon.mdb ../lib/Release/SIL.Lexicon.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.LexiconUtils.config ../lib/Release/SIL.LexiconUtils.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Lift.dll ../lib/Release/SIL.Lift.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Lift.dll.mdb ../lib/Release/SIL.Lift.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Media.dll ../lib/Release/SIL.Media.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Media.dll.mdb ../lib/Release/SIL.Media.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Media.dll.config ../lib/Release/SIL.Media.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Scripture.dll ../lib/Release/SIL.Scripture.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Scripture.mdb ../lib/Release/SIL.Scripture.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Scripture.config ../lib/Release/SIL.Scripture.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.TestUtilities.dll ../lib/Release/SIL.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.TestUtilities.dll.mdb ../lib/Release/SIL.TestUtilities.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.dll ../lib/Release/SIL.Windows.Forms.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.dll.mdb ../lib/Release/SIL.Windows.Forms.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.dll.config ../lib/Release/SIL.Windows.Forms.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.GeckoBrowserAdapter.dll ../lib/Release/SIL.Windows.Forms.GeckoBrowserAdapter.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb ../lib/Release/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.Keyboarding.dll ../lib/Release/SIL.Windows.Forms.Keyboarding.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.Keyboarding.dll.mdb ../lib/Release/SIL.Windows.Forms.Keyboarding.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.Scripture.dll ../lib/Release/SIL.Windows.Forms.Scripture.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.Scripture.dll.mdb ../lib/Release/SIL.Windows.Forms.Scripture.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.Scripture.dll.config ../lib/Release/SIL.Windows.Forms.Scripture.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.WritingSystems.dll ../lib/Release/SIL.Windows.Forms.WritingSystems.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.WritingSystems.dll.mdb ../lib/Release/SIL.Windows.Forms.WritingSystems.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.Windows.Forms.WritingSystems.dll.config ../lib/Release/SIL.Windows.Forms.WritingSystems.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.WritingSystems.dll ../lib/Release/SIL.WritingSystems.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.WritingSystems.dll.mdb ../lib/Release/SIL.WritingSystems.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.WritingSystems.dll.config ../lib/Release/SIL.WritingSystems.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.WritingSystems.Tests.dll ../lib/Release/SIL.WritingSystems.Tests.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.WritingSystems.Tests.dll.mdb ../lib/Release/SIL.WritingSystems.Tests.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/SIL.WritingSystems.Tests.dll.config ../lib/Release/SIL.WritingSystems.Tests.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/Ionic.Zip.dll ../lib/Release/Ionic.Zip.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/Spart.dll ../lib/Release/Spart.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/taglib-sharp.dll ../lib/Release/taglib-sharp.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/Enchant.Net.dll ../lib/Debug/Enchant.Net.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/Enchant.Net.dll.config ../lib/Debug/Enchant.Net.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/ibusdotnet.dll ../lib/Debug/ibusdotnet.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Archiving.dll ../lib/Debug/SIL.Archiving.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Archiving.dll.mdb ../lib/Debug/SIL.Archiving.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Core.dll ../lib/Debug/SIL.Core.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Core.dll.mdb ../lib/Debug/SIL.Core.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Core.dll.config ../lib/Debug/SIL.Core.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Core.Tests.dll ../lib/Debug/SIL.Core.Tests.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Core.Tests.dll.mdb ../lib/Debug/SIL.Core.Tests.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.DictionaryServices.dll ../lib/Debug/SIL.DictionaryServices.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.DictionaryServices.dll.mdb ../lib/Debug/SIL.DictionaryServices.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Lexicon.dll ../lib/Debug/SIL.Lexicon.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Lexicon.dll.mdb ../lib/Debug/SIL.Lexicon.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Lift.dll ../lib/Debug/SIL.Lift.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Lift.dll.mdb ../lib/Debug/SIL.Lift.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Media.dll ../lib/Debug/SIL.Media.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Media.dll.mdb ../lib/Debug/SIL.Media.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Media.dll.config ../lib/Debug/SIL.Media.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Scripture.dll ../lib/Debug/SIL.Scripture.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Scripture.dll.mdb ../lib/Debug/SIL.Scripture.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.TestUtilities.dll ../lib/Debug/SIL.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.TestUtilities.dll.mdb ../lib/Debug/SIL.TestUtilities.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.dll ../lib/Debug/SIL.Windows.Forms.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.dll.mdb ../lib/Debug/SIL.Windows.Forms.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.dll.config ../lib/Debug/SIL.Windows.Forms.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll ../lib/Debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb ../lib/Debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.Keyboarding.dll ../lib/Debug/SIL.Windows.Forms.Keyboarding.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.Keyboarding.dll.mdb ../lib/Debug/SIL.Windows.Forms.Keyboarding.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.Scripture.dll ../lib/Debug/SIL.Windows.Forms.Scripture.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.Scripture.dll.mdb ../lib/Debug/SIL.Windows.Forms.Scripture.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.WritingSystems.dll ../lib/Debug/SIL.Windows.Forms.WritingSystems.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.WritingSystems.dll.mdb ../lib/Debug/SIL.Windows.Forms.WritingSystems.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.Windows.Forms.WritingSystems.dll.config ../lib/Debug/SIL.Windows.Forms.WritingSystems.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.WritingSystems.dll ../lib/Debug/SIL.WritingSystems.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.WritingSystems.dll.mdb ../lib/Debug/SIL.WritingSystems.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.WritingSystems.dll.config ../lib/Debug/SIL.WritingSystems.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.WritingSystems.Tests.dll ../lib/Debug/SIL.WritingSystems.Tests.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.WritingSystems.Tests.dll.mdb ../lib/Debug/SIL.WritingSystems.Tests.dll.mdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/SIL.WritingSystems.Tests.dll.config ../lib/Debug/SIL.WritingSystems.Tests.dll.config
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/Ionic.Zip.dll ../lib/Debug/Ionic.Zip.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/Spart.dll ../lib/Debug/Spart.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt441/latest.lastSuccessful/debug/taglib-sharp.dll ../lib/Debug/taglib-sharp.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/Enchant.Net.dll?branch=%3Cdefault%3E ../lib/Release/Enchant.Net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/Enchant.Net.dll.config?branch=%3Cdefault%3E ../lib/Release/Enchant.Net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/ibusdotnet.dll?branch=%3Cdefault%3E ../lib/Release/ibusdotnet.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Archiving.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Archiving.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Archiving.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Archiving.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Core.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Core.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Core.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Core.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Core.dll.config?branch=%3Cdefault%3E ../lib/Release/SIL.Core.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Core.Tests.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Core.Tests.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Core.Tests.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Core.Tests.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.DictionaryServices.dll?branch=%3Cdefault%3E ../lib/Release/SIL.DictionaryServices.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.DictionaryServices.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.DictionaryServices.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Lexicon.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Lexicon.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Lexicon.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Lexicon.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Lift.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Lift.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Lift.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Lift.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Media.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Media.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Media.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Media.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Media.dll.config?branch=%3Cdefault%3E ../lib/Release/SIL.Media.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Scripture.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Scripture.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Scripture.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Scripture.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.TestUtilities.dll?branch=%3Cdefault%3E ../lib/Release/SIL.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.TestUtilities.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.TestUtilities.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.dll.config?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.GeckoBrowserAdapter.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.GeckoBrowserAdapter.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.Keyboarding.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.Keyboarding.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.Keyboarding.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.Keyboarding.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.Scripture.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.Scripture.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.Scripture.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.Scripture.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.WritingSystems.dll?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.WritingSystems.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.Windows.Forms.WritingSystems.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.Windows.Forms.WritingSystems.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.WritingSystems.dll?branch=%3Cdefault%3E ../lib/Release/SIL.WritingSystems.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.WritingSystems.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.WritingSystems.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.WritingSystems.Tests.dll?branch=%3Cdefault%3E ../lib/Release/SIL.WritingSystems.Tests.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/SIL.WritingSystems.Tests.dll.mdb?branch=%3Cdefault%3E ../lib/Release/SIL.WritingSystems.Tests.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/Ionic.Zip.dll?branch=%3Cdefault%3E ../lib/Release/Ionic.Zip.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/Spart.dll?branch=%3Cdefault%3E ../lib/Release/Spart.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/taglib-sharp.dll?branch=%3Cdefault%3E ../lib/Release/taglib-sharp.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/Enchant.Net.dll?branch=%3Cdefault%3E ../lib/Debug/Enchant.Net.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/Enchant.Net.dll.config?branch=%3Cdefault%3E ../lib/Debug/Enchant.Net.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/ibusdotnet.dll?branch=%3Cdefault%3E ../lib/Debug/ibusdotnet.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Archiving.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Archiving.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Archiving.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Archiving.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Core.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Core.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Core.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Core.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Core.dll.config?branch=%3Cdefault%3E ../lib/Debug/SIL.Core.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Core.Tests.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Core.Tests.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Core.Tests.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Core.Tests.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.DictionaryServices.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.DictionaryServices.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.DictionaryServices.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.DictionaryServices.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Lexicon.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Lexicon.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Lexicon.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Lexicon.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Lift.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Lift.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Lift.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Lift.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Media.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Media.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Media.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Media.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Media.dll.config?branch=%3Cdefault%3E ../lib/Debug/SIL.Media.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Scripture.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Scripture.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Scripture.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Scripture.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.TestUtilities.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.TestUtilities.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.TestUtilities.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.dll.config?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.dll.config
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.GeckoBrowserAdapter.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.Keyboarding.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.Keyboarding.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.Keyboarding.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.Keyboarding.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.Scripture.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.Scripture.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.Scripture.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.Scripture.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.WritingSystems.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.WritingSystems.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.Windows.Forms.WritingSystems.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.Windows.Forms.WritingSystems.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.WritingSystems.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.WritingSystems.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.WritingSystems.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.WritingSystems.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.WritingSystems.Tests.dll?branch=%3Cdefault%3E ../lib/Debug/SIL.WritingSystems.Tests.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/SIL.WritingSystems.Tests.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/SIL.WritingSystems.Tests.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/Ionic.Zip.dll?branch=%3Cdefault%3E ../lib/Debug/Ionic.Zip.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/Spart.dll?branch=%3Cdefault%3E ../lib/Debug/Spart.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/bt324/latest.lastSuccessful/debug/taglib-sharp.dll?branch=%3Cdefault%3E ../lib/Debug/taglib-sharp.dll
 # End of script
