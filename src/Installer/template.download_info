@@ -6,8 +6,8 @@
   "platform_version": "",
   "architecture": "",
   "stability": "_CHANNEL_",
-  "file": "WeSayInstaller._VERSION_.exe",
+  "file": "WeSayInstaller._VERSION_.msi",
   "md5": "",
-  "type": "exe",
+  "type": "msi",
   "build": ""
 }
