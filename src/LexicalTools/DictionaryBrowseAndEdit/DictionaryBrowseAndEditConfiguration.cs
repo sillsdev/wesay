@@ -7,16 +7,19 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	public class DictionaryBrowseAndEditConfiguration : TaskConfigurationBase, ITaskConfiguration
 	{
+		public string MeaningField { get; set; }
+
 		public DictionaryBrowseAndEditConfiguration(string xml)
 			:base(xml)
 		{
+			MeaningField = GetStringFromConfigNode("meaningField", "definition");
 		}
 
 		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
 		{
 			get
 			{
-				yield break;
+				yield return new KeyValuePair<string, string>("meaningField", MeaningField);
 			}
 		}
 
@@ -37,6 +40,14 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		public override string ToString()
 		{
 			return "Dictionary Browse & Edit";
+		}
+
+		public string meaningField
+		{
+			get
+			{
+				return GetStringFromConfigNode("meaningField", "definition");
+			}
 		}
 
 		public string LongLabel
@@ -70,12 +81,23 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get { return true; }
 		}
 
+		public bool ChangeToDefinition()
+		{
+			return true;
+		}
 
-		public static DictionaryBrowseAndEditConfiguration CreateForTests()
+		public bool ChangeToGloss()
+		{
+			return true;
+		}
+
+		public static DictionaryBrowseAndEditConfiguration CreateForTests(string meaningField)
 		{
 			string x =
 			   String.Format(
-				   @"   <task taskName='Dictionary' visible='true'>  </task>");
+				   @"   <task taskName='Dictionary' visible='true'>
+	  <meaningField>{0}</meaningField>
+	</task>", meaningField);
 			return new DictionaryBrowseAndEditConfiguration(x);
 		}
 	}

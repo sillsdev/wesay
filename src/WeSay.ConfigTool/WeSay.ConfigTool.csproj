@@ -115,8 +115,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core"/>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms"/>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
     <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -287,6 +287,10 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tasks\DictionaryBrowseEditTaskConfigControl.resx">
+      <DependentUpon>DictionaryBrowseEditTaskConfigControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tasks\GatherBySemDomTaskConfigControl.resx">
       <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -343,6 +347,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
+    <Compile Include="Tasks\DictionaryBrowseEditTaskConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tasks\DictionaryBrowseEditTaskConfigControl.Designer.cs">
+      <DependentUpon>DictionaryBrowseEditTaskConfigControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tasks\GatherBySemDomTaskConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
