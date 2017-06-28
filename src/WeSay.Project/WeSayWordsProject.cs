@@ -83,6 +83,8 @@ namespace WeSay.Project
 		public event EventHandler<StringPair> WritingSystemChanged;
 		public event WritingSystemDeleted WritingSystemDeleted;
 
+		public event EventHandler<StringPair> MeaningFieldChanged;
+
 		public WeSayWordsProject()
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
@@ -1701,6 +1703,21 @@ namespace WeSay.Project
 				p.from = oldId;
 				p.to = newId;
 				WritingSystemChanged(this, p);
+			}
+		}
+
+		public void MakeMeaningFieldChange(string oldId, string newId)
+		{
+			//change meaning field in template
+			DefaultViewTemplate.OnMeaningFieldChange(newId);
+
+			// lets tasks know that meaning field has changed
+			if (MeaningFieldChanged != null)
+			{
+				StringPair p = new StringPair();
+				p.from = oldId;
+				p.to = newId;
+				MeaningFieldChanged(this, p);
 			}
 		}
 

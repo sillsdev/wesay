@@ -211,10 +211,15 @@ namespace WeSay.Project
 			RemoveDuplicateGloss();
 
 			//In Jan 2008 (still in version 1 Preview 3, just a hand-full of users)
-			//we switch from "meaning" being the gloss, to the definition, making Defintion
+			//we switch from "meaning" being the gloss, to the definition, making Definition
 			//a non-optional field, and gloss a normally hidden field
 
+
 			Field def = GetField(LexSense.WellKnownProperties.Definition);
+
+			// In June 2017 the option was put in to have the meaning field be the gloss
+			// so disabling this code (pending removal once thie change is complete)
+			/*
 			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
 
 			//this is an upgrade situation
@@ -238,9 +243,12 @@ namespace WeSay.Project
 
 			def.Enabled = true;
 			def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+			*/
+
 
 			// In Feb 2008 we started giving user control over field order, but
 			// certain key fields must be first.
+
 			MoveToFirstInClass(def);
 			MoveToFirstInClass(GetField(Field.FieldNames.EntryLexicalForm.ToString()));
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
@@ -366,6 +374,7 @@ namespace WeSay.Project
 					"The definition of this sense of the word, in one or more languages. Shows up next to the Meaning label.";
 			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			definitionField.Enabled = true;
+			definitionField.IsMeaningField = true;
 			definitionField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(definitionField);
 
@@ -379,6 +388,7 @@ namespace WeSay.Project
 			glossField.Description = "Normally a single word, used when interlinearizing texts.";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			glossField.Enabled = false;
+			glossField.IsMeaningField = false;
 			glossField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(glossField);
 
@@ -593,6 +603,36 @@ namespace WeSay.Project
 				{
 					field.ChangeWritingSystemId(from, to);
 				}
+			}
+		}
+
+		public void OnMeaningFieldChange(string meaningField)
+		{
+			Field def = GetField(LexSense.WellKnownProperties.Definition);
+			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
+
+			def.DisplayName = "Description";
+			def.Description =
+		"The definition of this sense of the word, in one or more languages.";
+			gloss.DisplayName = "Gloss";
+			gloss.Description = "Normally a single word, used when interlinearizing texts.";
+
+			switch (meaningField)
+			{
+				case "definition":
+					def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+					def.IsMeaningField = true;
+					gloss.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+					gloss.IsMeaningField = false;
+					def.Enabled = true;
+					break;
+				case "gloss":
+					def.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+					def.IsMeaningField = false;
+					gloss.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+					gloss.IsMeaningField = true;
+					gloss.Enabled = true;
+					break;
 			}
 		}
 

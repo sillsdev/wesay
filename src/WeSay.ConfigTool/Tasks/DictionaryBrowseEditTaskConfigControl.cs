@@ -32,11 +32,13 @@ namespace WeSay.ConfigTool.Tasks
 		private void OnGloss_RadioClicked(object sender, EventArgs e)
 		{
 			Configuration.MeaningField = "gloss";
+			WeSayWordsProject.Project.MakeMeaningFieldChange("definition", "gloss");
 		}
 
 		private void OnDefinition_RadioClicked(object sender, EventArgs e)
 		{
 			Configuration.MeaningField = "definition";
+			WeSayWordsProject.Project.MakeMeaningFieldChange("gloss", "definition");
 		}
 
 	}

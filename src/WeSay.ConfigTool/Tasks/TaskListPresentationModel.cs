@@ -20,6 +20,8 @@ namespace WeSay.ConfigTool.Tasks
 
 			WeSayWordsProject.Project.WritingSystemChanged += OnProject_WritingSystemChanged;
 			WeSayWordsProject.Project.WritingSystemDeleted += OnProject_WritingSystemDeleted;
+
+			WeSayWordsProject.Project.MeaningFieldChanged += OnProject_MeaningFieldChanged;
 		}
 
 		private void OnProject_WritingSystemDeleted(object sender, WritingSystemDeletedEventArgs e)
@@ -43,6 +45,19 @@ namespace WeSay.ConfigTool.Tasks
 			}
 		}
 
+		private IEnumerable<ICareThatMeaningFieldChanged> ICareThatMeaningFieldChangedTasks
+		{
+			get
+			{
+				foreach (object task in Tasks)
+				{
+					if (null == task as ICareThatMeaningFieldChanged)
+						continue;
+					yield return ((ICareThatMeaningFieldChanged)task);
+				}
+			}
+		}
+
 		public IEnumerable<ITaskConfiguration> Tasks
 		{
 			get { return _taskCollection; }
@@ -56,6 +71,15 @@ namespace WeSay.ConfigTool.Tasks
 				task.OnWritingSystemIdChanged(pair.from, pair.to);
 			}
 		}
+
+		private void OnProject_MeaningFieldChanged(object sender, WeSayWordsProject.StringPair pair)
+		{
+			foreach (var task in ICareThatMeaningFieldChangedTasks)
+			{
+				task.OnMeaningFieldChanged(pair.from, pair.to);
+			}
+		}
+
 
 		public bool DoShowTask(ITaskConfiguration task)
 		{
