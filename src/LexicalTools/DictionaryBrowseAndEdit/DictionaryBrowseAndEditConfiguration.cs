@@ -5,7 +5,7 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
-	public class DictionaryBrowseAndEditConfiguration : TaskConfigurationBase, ITaskConfiguration
+	public class DictionaryBrowseAndEditConfiguration : TaskConfigurationBase, ITaskConfiguration, ICareThatMeaningFieldChanged
 	{
 		public string MeaningField { get; set; }
 
@@ -42,14 +42,6 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			return "Dictionary Browse & Edit";
 		}
 
-		public string meaningField
-		{
-			get
-			{
-				return GetStringFromConfigNode("meaningField", "definition");
-			}
-		}
-
 		public string LongLabel
 		{
 			get
@@ -81,14 +73,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get { return true; }
 		}
 
-		public bool ChangeToDefinition()
+		public void OnMeaningFieldChanged(string from, string to)
 		{
-			return true;
-		}
-
-		public bool ChangeToGloss()
-		{
-			return true;
+			if (!MeaningField.Equals(from))
+			{
+				MeaningField = from;
+			}
 		}
 
 		public static DictionaryBrowseAndEditConfiguration CreateForTests(string meaningField)

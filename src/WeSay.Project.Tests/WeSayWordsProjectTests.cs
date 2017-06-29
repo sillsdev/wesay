@@ -1114,5 +1114,48 @@ namespace WeSay.Project.Tests
 				Assert.That(project.PathToLiftFile, Is.EqualTo(e.PathToLiftFile));
 			}
 		}
+
+		[Test]
+		public void ChangeMeaningFieldToGloss()
+		{
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				project.MakeMeaningFieldChange("definition", "gloss");
+
+				// want to assert the following changes
+
+				// field and gloss field configs have changed
+				// field:meaningField exists
+				ViewTemplate template = project.DefaultViewTemplate;
+				Assert.IsNotNull(template);
+
+				Field def = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+				Field gloss = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+
+				Assert.AreEqual("Definition", def.DisplayName);
+				Assert.AreEqual(false, def.IsMeaningField);
+				Assert.AreEqual(false, def.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.NormallyHidden, def.Visibility);
+
+				Assert.AreEqual("Gloss (Meaning)", gloss.DisplayName);
+				Assert.AreEqual(true, gloss.IsMeaningField);
+				Assert.AreEqual(true, gloss.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, gloss.Visibility);
+
+
+				// dictionary task meaningfield
+				//		hopefully this will be set
+				// MissingInfo tasks have changed
+				//		hopefully this will be set
+			}
+		}
+
+		[Test]
+		public void ChangeMeaningFieldToGlossAndBackToDefinition()
+		{
+
+		}
 	}
 }
