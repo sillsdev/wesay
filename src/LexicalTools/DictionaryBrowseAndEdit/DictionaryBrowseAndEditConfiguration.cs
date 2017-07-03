@@ -75,9 +75,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public void OnMeaningFieldChanged(string from, string to)
 		{
-			if (!MeaningField.Equals(from))
+			if (!MeaningField.Equals(to))
 			{
-				MeaningField = from;
+				MeaningField = to;
 			}
 		}
 

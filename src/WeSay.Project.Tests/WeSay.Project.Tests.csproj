@@ -158,6 +158,10 @@
       <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
       <Name>LexicalModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
+      <Project>{87af0b02-2983-486d-857f-d1859535c234}</Project>
+      <Name>LexicalTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
       <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
       <Name>WeSay.Data</Name>

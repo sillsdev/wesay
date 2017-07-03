@@ -16,6 +16,8 @@ using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
+using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Tests.ConfigMigration.WritingSystem;
@@ -1115,6 +1117,18 @@ namespace WeSay.Project.Tests
 			}
 		}
 
+		private void OnProject_MeaningFieldChanged(object sender, WeSayWordsProject.StringPair pair)
+		{
+			var project = sender as WeSayWordsProject;
+			foreach (var task in project.TaskConfigurations)
+			{
+				var mf = task as ICareThatMeaningFieldChanged;
+				if (null == mf)
+					continue;
+				mf.OnMeaningFieldChanged(pair.from, pair.to);
+			}
+		}
+
 		[Test]
 		public void ChangeMeaningFieldToGloss()
 		{
@@ -1122,6 +1136,8 @@ namespace WeSay.Project.Tests
 			{
 				var project = new WeSayWordsProject();
 				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				project.LoadTasksFromConfigFile();
+				WeSayWordsProject.Project.MeaningFieldChanged += OnProject_MeaningFieldChanged;
 				project.MakeMeaningFieldChange("definition", "gloss");
 
 				// want to assert the following changes
@@ -1144,11 +1160,50 @@ namespace WeSay.Project.Tests
 				Assert.AreEqual(true, gloss.Enabled);
 				Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, gloss.Visibility);
 
-
 				// dictionary task meaningfield
 				//		hopefully this will be set
 				// MissingInfo tasks have changed
 				//		hopefully this will be set
+				bool dict = false, meanings = false, pos = false, exsent = false;
+				Assert.NotNull(project.Tasks);
+				foreach (object task in project.TaskConfigurations)
+				{
+					Assert.NotNull(task);
+
+					if (null != task as DictionaryBrowseAndEditConfiguration)
+					{
+						DictionaryBrowseAndEditConfiguration dbe = (DictionaryBrowseAndEditConfiguration) task;
+						System.Console.WriteLine("dbe: checking meaningField");
+						Assert.AreEqual("gloss", dbe.MeaningField);
+						dict = true;
+					}
+					MissingInfoConfiguration missinginfo = task as MissingInfoConfiguration;
+					if (missinginfo != null)
+					{
+						switch (missinginfo.Label)
+						{
+							case "Meanings":
+								Assert.AreEqual("gloss", missinginfo.MissingInfoFieldName);
+								Assert.AreEqual(true, missinginfo.IncludesField("gloss"));
+								meanings = true;
+								break;
+							case "Parts of Speech":
+								Assert.AreEqual(true, missinginfo.IncludesReadOnlyField("gloss"));
+								pos = true;
+								break;
+							case "Example Sentences":
+								Assert.AreEqual(true, missinginfo.IncludesReadOnlyField("gloss"));
+								exsent = true;
+								break;
+							default:
+								break;
+						}
+					}
+				}
+				Assert.IsTrue(dict);
+				Assert.IsTrue(meanings);
+				Assert.IsTrue(pos);
+				Assert.IsTrue(exsent);
 			}
 		}
 

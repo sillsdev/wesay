@@ -298,5 +298,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			return _fieldsToShow.Contains(fieldName);
 		}
+
+		public bool IncludesReadOnlyField(string fieldName)
+		{
+			return _fieldsReadOnly.Contains(fieldName);
+		}
 	}
 }
