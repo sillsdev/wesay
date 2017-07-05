@@ -1131,10 +1131,9 @@ namespace WeSay.Project.Tests
 
 		private void VerifyTasks(IEnumerable<ITaskConfiguration> taskconfigs, string meaningField)
 		{
+			// want to assert the following changes
 			// dictionary task meaningfield
-			//		hopefully this will be set
 			// MissingInfo tasks have changed
-			//		hopefully this will be set
 			bool dict = false, meanings = false, pos = false, exsent = false;
 			Assert.NotNull(taskconfigs);
 			foreach (object task in taskconfigs)
