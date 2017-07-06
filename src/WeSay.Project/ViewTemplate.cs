@@ -218,10 +218,10 @@ namespace WeSay.Project
 			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
 
 			// In June 2017 the option was put in to have the meaning field be the gloss
-			// so disabling this code (pending removal once thie change is complete)
-			/*
+			// so making sure gloss isn't the meaning field before doing it
+
 			//this is an upgrade situation
-			if (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible)
+			if (!gloss.IsMeaningField && (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible))
 			{
 				//copy writing systems from glosses
 				foreach (string writingSystemId in gloss.WritingSystemIds)
@@ -234,20 +234,27 @@ namespace WeSay.Project
 			}
 
 			//detect pre-gloss-to-definition switch
-			if (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible)
+			if (!gloss.IsMeaningField && (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible))
 			{
 				gloss.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			}
 
-			def.Enabled = true;
-			def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
-			*/
-
 
 			// In Feb 2008 we started giving user control over field order, but
 			// certain key fields must be first.
+			if (gloss.IsMeaningField)
+			{
+				gloss.Enabled = true;
+				gloss.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+				MoveToFirstInClass(gloss);
+			}
+			else
+			{
+				def.Enabled = true;
+				def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+				MoveToFirstInClass(def);
+			}
 
-			MoveToFirstInClass(def);
 			MoveToFirstInClass(GetField(Field.FieldNames.EntryLexicalForm.ToString()));
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
 

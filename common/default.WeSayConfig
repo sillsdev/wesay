@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<configuration version="8">
+<configuration version="9">
   <components>
 	<viewTemplate>
 	  <fields>
@@ -9,6 +9,7 @@
 		  <displayName>Word</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>EntryLexicalForm</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -23,6 +24,7 @@
 		  <displayName>Citation Form</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>citation</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -37,6 +39,7 @@
 		  <displayName>Definition (Meaning)</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>definition</fieldName>
+		  <meaningField>True</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>True</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -51,6 +54,7 @@
 		  <displayName>Gloss</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>gloss</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>True</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -65,6 +69,7 @@
 		  <displayName>Literal Meaning</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>literal-meaning</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>True</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -79,6 +84,7 @@
 		  <displayName>Note</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>note</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>True</multiParagraph>
 		  <spellCheckingEnabled>True</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -93,6 +99,7 @@
 		  <displayName>Picture</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>Picture</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -107,6 +114,7 @@
 		  <displayName>PartOfSpeech</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>POS</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -122,6 +130,7 @@
 		  <displayName>SILCAWL</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>SILCAWL</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>True</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -136,6 +145,7 @@
 		  <displayName>Example Sentence</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>ExampleSentence</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>True</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -150,6 +160,7 @@
 		  <displayName>Example Translation</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>ExampleTranslation</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>True</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -164,6 +175,7 @@
 		  <displayName>Sem Dom</displayName>
 		  <enabled>True</enabled>
 		  <fieldName>semantic-domain-ddp4</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -179,6 +191,7 @@
 		  <displayName>Base Form</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>BaseForm</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOr1</multiplicity>
@@ -193,6 +206,7 @@
 		  <displayName>Cross Reference</displayName>
 		  <enabled>False</enabled>
 		  <fieldName>confer</fieldName>
+		  <meaningField>False</meaningField>
 		  <multiParagraph>False</multiParagraph>
 		  <spellCheckingEnabled>False</spellCheckingEnabled>
 		  <multiplicity>ZeroOrMore</multiplicity>
@@ -207,7 +221,9 @@
   </components>
   <tasks>
 	<task taskName="Dashboard" visible="true" />
-	<task taskName="Dictionary" visible="true" />
+	<task taskName="Dictionary" visible="true">
+	  <meaningField>definition</meaningField>
+	</task>
 	<task taskName="AddMissingInfo" visible="false">
 	  <label>Meanings</label>
 	  <longLabel>Add Meanings</longLabel>
