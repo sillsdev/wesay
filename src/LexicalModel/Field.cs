@@ -304,7 +304,7 @@ namespace WeSay.LexicalModel
 			get
 			{
 				if (_fieldName == FieldNames.EntryLexicalForm.ToString() ||
-					_fieldName == LexSense.WellKnownProperties.Definition ||
+					IsMeaningField ||
 					_fieldName == FieldNames.ExampleSentence.ToString())
 				{
 					return false;

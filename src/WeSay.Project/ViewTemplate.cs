@@ -650,6 +650,7 @@ namespace WeSay.Project
 					gloss.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 					gloss.IsMeaningField = false;
 					gloss.Enabled = false;
+					MoveToFirstInClass(def);
 					break;
 				case "gloss":
 					def.DisplayName = RemoveMeaning(def.DisplayName);
@@ -660,6 +661,7 @@ namespace WeSay.Project
 					gloss.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 					gloss.IsMeaningField = true;
 					gloss.Enabled = true;
+					MoveToFirstInClass(gloss);
 					break;
 			}
 
