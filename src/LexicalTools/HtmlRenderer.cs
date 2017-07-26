@@ -55,14 +55,23 @@ namespace WeSay.LexicalTools
 				++senseNumber;
 			}
 
-#if GlossMeaning
-			html.Append(RenderGhostedField("Gloss", currentItem, entry.Senses.Count + 1));
-#else
-			html.Append(RenderGhostedField(null,
-				LexSense.WellKnownProperties.Definition,
-										  currentItem,
-										  entry.Senses.Count + 1));
-#endif
+			Field glossField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(LexSense.WellKnownProperties.Gloss);
+			if (glossField.IsMeaningField)
+			{
+				html.Append(RenderGhostedField(null,
+							  LexSense.WellKnownProperties.Gloss,
+							  currentItem,
+							  entry.Senses.Count + 1));
+
+			}
+			else
+			{
+				html.Append(RenderGhostedField(null,
+							  LexSense.WellKnownProperties.Definition,
+							  currentItem,
+							  entry.Senses.Count + 1));
+
+			}
 
 			html.Append("</div></body></html>");
 			String strHtmlColor = System.Drawing.ColorTranslator.ToHtml(backColor);
@@ -72,26 +81,29 @@ namespace WeSay.LexicalTools
 
 		private static void RenderSense(LexEntry entry, LexSense sense, int senseNumber, CurrentItemEventArgs currentItem, StringBuilder html)
 		{
-#if GlossMeaning
-			if (entry.Senses.Count > 1 || (currentItem != null && currentItem.PropertyName == "Gloss"))
-#else
+			Field glossField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(LexSense.WellKnownProperties.Gloss);
+
 			if (entry.Senses.Count > 1 ||
 				(currentItem != null &&
-				 currentItem.PropertyName == LexSense.WellKnownProperties.Definition))
-#endif
+				 ( (glossField.IsMeaningField && currentItem.PropertyName == LexSense.WellKnownProperties.Gloss) ||
+					(!glossField.IsMeaningField && currentItem.PropertyName == LexSense.WellKnownProperties.Definition))
+				 ))
 			{
 				html.Append(" " + senseNumber);
 			}
 
 			RenderPartOfSpeech(sense, currentItem, html);
 
-#if GlossMeaning
-			html.Append(" " + RenderField(sense.Gloss, currentItem));
-#else
-			// Render the Definition (meaning) field
-			Field dfnField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(LexSense.WellKnownProperties.Definition);
-			html.Append(" " + RenderField(sense.Definition, currentItem, 0, dfnField));
-#endif
+			// Render the Gloss/Definition (meaning) field
+			if (glossField.IsMeaningField)
+			{
+				html.Append(" " + RenderField(sense.Gloss, currentItem, 0, glossField));
+			}
+			else
+			{
+				Field dfnField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(LexSense.WellKnownProperties.Definition);
+				html.Append(" " + RenderField(sense.Definition, currentItem, 0, dfnField));
+			}
 
 			RenderExampleSentences(currentItem, html, sense);
 
