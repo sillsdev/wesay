@@ -33,7 +33,14 @@ namespace WeSay.LexicalTools
 				 viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
 
 			var glossField = _viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
-			_glossMeaningField = glossField.IsMeaningField;
+			if (glossField == null)
+			{
+				_glossMeaningField = false;
+			}
+			else
+			{
+				_glossMeaningField = glossField.IsMeaningField;
+			}
 		}
 
 		protected IWritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
