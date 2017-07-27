@@ -231,16 +231,25 @@ namespace WeSay.LexicalTools
 	public class SenseSearchTermProvider : ISearchTermProvider
 	{
 		private readonly LexSense _sense;
+		private bool _glossMeaningField;
 
 		public SenseSearchTermProvider(LexSense sense)
 		{
 			_sense = sense;
+			Field glossField = WeSayWordsProject.Project.GetFieldFromDefaultViewTemplate(LexSense.WellKnownProperties.Gloss);
+			if (glossField == null)
+			{
+				_glossMeaningField = false;
+			}
+			else
+			{
+				_glossMeaningField = glossField.IsMeaningField;
+			}
 		}
 
 		public string SearchString
 		{
-			//WDG : What about this?
-			get { return _sense.Definition.GetFirstAlternative(); }//review
+			get { return _glossMeaningField ? _sense.Gloss.GetFirstAlternative() : _sense.Definition.GetFirstAlternative(); }//review
 		}
 	}
 }
