@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Palaso.WritingSystems;
-using WeSay.Project;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
@@ -26,35 +26,9 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnProject_WritingSystemDeleted(object sender, WritingSystemDeletedEventArgs e)
 		{
-			foreach (var task in ICareThatWritingSystemIdChangedTasks)
+			foreach (var task in Tasks.OfType<ICareThatWritingSystemIdChanged>())
 			{
 				task.OnWritingSystemIdDeleted(e.Id);
-			}
-		}
-
-		private IEnumerable<ICareThatWritingSystemIdChanged> ICareThatWritingSystemIdChangedTasks
-		{
-			get
-			{
-				foreach (object task in Tasks)
-				{
-					if (null == task as ICareThatWritingSystemIdChanged)
-						continue;
-					yield return ((ICareThatWritingSystemIdChanged) task);
-				}
-			}
-		}
-
-		private IEnumerable<ICareThatMeaningFieldChanged> ICareThatMeaningFieldChangedTasks
-		{
-			get
-			{
-				foreach (object task in Tasks)
-				{
-					if (null == task as ICareThatMeaningFieldChanged)
-						continue;
-					yield return ((ICareThatMeaningFieldChanged)task);
-				}
 			}
 		}
 
@@ -66,7 +40,7 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnProject_WritingSystemChanged(object sender, WeSayWordsProject.StringPair pair)
 		{
-			foreach (var task in ICareThatWritingSystemIdChangedTasks)
+			foreach (var task in Tasks.OfType<ICareThatWritingSystemIdChanged>())
 			{
 				task.OnWritingSystemIdChanged(pair.from, pair.to);
 			}
@@ -74,12 +48,11 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnProject_MeaningFieldChanged(object sender, WeSayWordsProject.StringPair pair)
 		{
-			foreach (var task in ICareThatMeaningFieldChangedTasks)
+			foreach (var task in Tasks.OfType<ICareThatMeaningFieldChanged>())
 			{
 				task.OnMeaningFieldChanged(pair.from, pair.to);
 			}
 		}
-
 
 		public bool DoShowTask(ITaskConfiguration task)
 		{

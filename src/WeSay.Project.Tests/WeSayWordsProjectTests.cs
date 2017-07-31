@@ -1120,12 +1120,9 @@ namespace WeSay.Project.Tests
 		private void OnProject_MeaningFieldChanged(object sender, WeSayWordsProject.StringPair pair)
 		{
 			var project = sender as WeSayWordsProject;
-			foreach (var task in project.TaskConfigurations)
+			foreach (var task in project.TaskConfigurations.OfType<ICareThatMeaningFieldChanged>())
 			{
-				var mf = task as ICareThatMeaningFieldChanged;
-				if (null == mf)
-					continue;
-				mf.OnMeaningFieldChanged(pair.from, pair.to);
+				task.OnMeaningFieldChanged(pair.from, pair.to);
 			}
 		}
 
@@ -1140,13 +1137,13 @@ namespace WeSay.Project.Tests
 			{
 				Assert.NotNull(task);
 
-				if (null != task as DictionaryBrowseAndEditConfiguration)
+				DictionaryBrowseAndEditConfiguration dbe = task as DictionaryBrowseAndEditConfiguration;
+				if (dbe != null)
 				{
-					DictionaryBrowseAndEditConfiguration dbe = (DictionaryBrowseAndEditConfiguration)task;
-					System.Console.WriteLine("dbe: checking meaningField");
 					Assert.AreEqual(meaningField, dbe.MeaningField);
 					dict = true;
 				}
+
 				MissingInfoConfiguration missinginfo = task as MissingInfoConfiguration;
 				if (missinginfo != null)
 				{
