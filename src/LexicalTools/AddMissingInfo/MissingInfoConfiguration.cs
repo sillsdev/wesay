@@ -218,8 +218,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			get
 			{
-				string s = string.Join(", ", _fieldsReadOnly);
-				return s.TrimStart(new char[] { ' ', ',' });
+				return string.Join(", ", _fieldsReadOnly);
 			}
 		}
 
@@ -227,8 +226,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			get
 			{
-				string s = string.Join(", ", _fieldsToShow);
-				return s.TrimStart(new char[] {' ', ','});
+				return string.Join(", ", _fieldsToShow);
 			}
 		}
 
