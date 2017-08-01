@@ -10,16 +10,20 @@ using Palaso.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
-	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration, ICareThatWritingSystemIdChanged
+	public class MissingInfoConfiguration : TaskConfigurationBase, ITaskConfiguration, ICareThatWritingSystemIdChanged, ICareThatMeaningFieldChanged
 	{
 		private List<string> _fieldsToShow;
+		private List<string> _fieldsReadOnly;
+		private string _field;
 		private List<string> _writingSystemsWeWantToFillIn;
 		private List<string> _writingSystemsWhichAreRequired;
 
 		public MissingInfoConfiguration(string configurationXml)//, ViewTemplate viewTemplate)
 			: base(configurationXml)
 		{
+			_field = GetStringFromConfigNode("field");
 			_fieldsToShow = GetStringFromConfigNode("showFields").SplitTrimmed(',');
+			_fieldsReadOnly = GetStringFromConfigNode("readOnly", "").SplitTrimmed(',');
 			_writingSystemsWeWantToFillIn = GetStringFromConfigNode("writingSystemsToMatch", string.Empty).SplitTrimmed(',');
 			_writingSystemsWhichAreRequired = GetStringFromConfigNode("writingSystemsWhichAreRequired", string.Empty).SplitTrimmed(',');
 		}
@@ -31,6 +35,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public event EventHandler WritingSystemIdChanged;
 		public event EventHandler WritingSystemIdDeleted;
+		//public event EventHandler ChangeMeaningField;
 
 		public void OnWritingSystemIdChanged(string from, string to)
 		{
@@ -85,6 +90,29 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 		}
 
+		public void OnMeaningFieldChanged(string from, string to)
+		{
+			// if field contains the old meaning field then change it
+			if (_field.Equals(from))
+				_field = to;
+
+			// if showfields contains the old meaning field then change it
+			if (IncludesField(from))
+			{
+				SetInclusionOfField(from, false);
+				SetInclusionOfField(to, true);
+			}
+
+			// if read-only contains the old meaning field then change it
+			if (_fieldsReadOnly.Contains(from))
+			{
+				if (!_fieldsReadOnly.Contains(to))
+					_fieldsReadOnly.Add(to);
+				if (_fieldsReadOnly.Contains(from))
+					_fieldsReadOnly.Remove(from);
+			}
+		}
+
 		public DashboardGroup Group
 		{
 			get
@@ -111,7 +139,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				yield return new KeyValuePair<string, string>("description", Description);
 				yield return new KeyValuePair<string, string>("field", MissingInfoFieldName);
 				yield return new KeyValuePair<string, string>("showFields", FieldsToShowCommaSeparated);
-				yield return new KeyValuePair<string, string>("readOnly", FieldsToShowReadOnly);
+				yield return new KeyValuePair<string, string>("readOnly", FieldsToShowReadOnlyCommaSeparated);
 				yield return new KeyValuePair<string, string>("writingSystemsToMatch", WritingSystemsWeWantToFillInCommaSeparated);
 				yield return new KeyValuePair<string, string>("writingSystemsWhichAreRequired", WritingSystemsWhichAreRequiredCommaSeparated);
 			}
@@ -186,18 +214,19 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			return true;
 		}
 
-		public string FieldsToShowReadOnly
+		public string FieldsToShowReadOnlyCommaSeparated
 		{
-			get { return GetStringFromConfigNode("readOnly", string.Empty); ; }
+			get
+			{
+				return string.Join(", ", _fieldsReadOnly);
+			}
 		}
 
 		public string FieldsToShowCommaSeparated //<showFields>
 		{
 			get
 			{
-				string s = string.Empty;
-				_fieldsToShow.ForEach(f=>s+=", "+f);
-				return s.TrimStart(new char[] {' ', ','});
+				return string.Join(", ", _fieldsToShow);
 			}
 		}
 
@@ -217,7 +246,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public string MissingInfoFieldName //<field>
 		{
-			get { return GetStringFromConfigNode("field"); }
+			get { return _field; }
 		}
 
 		public string[] WritingSystemsWeWantToFillInArray
@@ -264,6 +293,11 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		public bool IncludesField(string fieldName)
 		{
 			return _fieldsToShow.Contains(fieldName);
+		}
+
+		public bool IncludesReadOnlyField(string fieldName)
+		{
+			return _fieldsReadOnly.Contains(fieldName);
 		}
 	}
 }

@@ -61,7 +61,7 @@ namespace WeSay.LexicalTools.Tests
 			_dictControlFactory = (memory=>new DictionaryControl(entryViewFactory, _lexEntryRepository,_viewTemplate, memory, new StringLogger()));
 
 			_taskMemoryRepository = new TaskMemoryRepository();
-			_task = new DictionaryTask(_dictControlFactory,  DictionaryBrowseAndEditConfiguration.CreateForTests(),  _lexEntryRepository,
+			_task = new DictionaryTask(_dictControlFactory,  DictionaryBrowseAndEditConfiguration.CreateForTests("definition"),  _lexEntryRepository,
 				_taskMemoryRepository);
 
 //            _task = new DictionaryTask( DictionaryBrowseAndEditConfiguration.CreateForTests(),  _lexEntryRepository,
@@ -86,7 +86,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateAndActivate_TaskMemoryIsEmpty_Ok()
 		{
-			var task = new DictionaryTask(_dictControlFactory,  DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository,
+			var task = new DictionaryTask(_dictControlFactory,  DictionaryBrowseAndEditConfiguration.CreateForTests("definition"), _lexEntryRepository,
 				new TaskMemoryRepository());
 			task.Activate();
 			task.Deactivate();
@@ -105,7 +105,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateAndActivate_LastUrlDoesntExistAnymore_DoesNotCrash()
 		{
-			DictionaryBrowseAndEditConfiguration config = DictionaryBrowseAndEditConfiguration.CreateForTests();
+			DictionaryBrowseAndEditConfiguration config = DictionaryBrowseAndEditConfiguration.CreateForTests("definition");
 
 			_taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName).Set(DictionaryTask.LastUrlKey, "longGone");
 

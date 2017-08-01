@@ -211,14 +211,17 @@ namespace WeSay.Project
 			RemoveDuplicateGloss();
 
 			//In Jan 2008 (still in version 1 Preview 3, just a hand-full of users)
-			//we switch from "meaning" being the gloss, to the definition, making Defintion
+			//we switch from "meaning" being the gloss, to the definition, making Definition
 			//a non-optional field, and gloss a normally hidden field
 
 			Field def = GetField(LexSense.WellKnownProperties.Definition);
 			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
 
+			// In June 2017 the option was put in to have the meaning field be the gloss
+			// so making sure gloss isn't the meaning field before doing it
+
 			//this is an upgrade situation
-			if (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible)
+			if (!gloss.IsMeaningField && (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible))
 			{
 				//copy writing systems from glosses
 				foreach (string writingSystemId in gloss.WritingSystemIds)
@@ -231,17 +234,27 @@ namespace WeSay.Project
 			}
 
 			//detect pre-gloss-to-definition switch
-			if (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible)
+			if (!gloss.IsMeaningField && (!def.Enabled || def.Visibility != CommonEnumerations.VisibilitySetting.Visible))
 			{
 				gloss.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			}
 
-			def.Enabled = true;
-			def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 
 			// In Feb 2008 we started giving user control over field order, but
 			// certain key fields must be first.
-			MoveToFirstInClass(def);
+			if (gloss.IsMeaningField)
+			{
+				gloss.Enabled = true;
+				gloss.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+				MoveToFirstInClass(gloss);
+			}
+			else
+			{
+				def.Enabled = true;
+				def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+				MoveToFirstInClass(def);
+			}
+
 			MoveToFirstInClass(GetField(Field.FieldNames.EntryLexicalForm.ToString()));
 			MoveToFirstInClass(GetField(Field.FieldNames.ExampleSentence.ToString()));
 
@@ -363,9 +376,10 @@ namespace WeSay.Project
 							  "The label for the field showing the definition of the word.");
 			definitionField.DisplayName = "Definition (Meaning)";
 			definitionField.Description =
-					"The definition of this sense of the word, in one or more languages. Shows up next to the Meaning label.";
+					"The definition of this sense of the word, in one or more languages.";
 			definitionField.Visibility = CommonEnumerations.VisibilitySetting.Visible;
 			definitionField.Enabled = true;
+			definitionField.IsMeaningField = true;
 			definitionField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(definitionField);
 
@@ -379,6 +393,7 @@ namespace WeSay.Project
 			glossField.Description = "Normally a single word, used when interlinearizing texts.";
 			glossField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
 			glossField.Enabled = false;
+			glossField.IsMeaningField = false;
 			glossField.IsSpellCheckingEnabled = true;
 			masterTemplate.Add(glossField);
 
@@ -594,6 +609,60 @@ namespace WeSay.Project
 					field.ChangeWritingSystemId(from, to);
 				}
 			}
+		}
+
+		internal string RemoveMeaning(string displayname)
+		{
+			if (displayname.EndsWith(" (Meaning)"))
+			{
+				int index = displayname.IndexOf(" (Meaning)");
+				return displayname.Remove(index);
+			}
+			else return displayname;
+		}
+
+		internal string AddMeaning(string displayname)
+		{
+			if (!displayname.EndsWith(" (Meaning)"))
+			{
+				return displayname + " (Meaning)";
+			}
+			else return displayname;
+		}
+
+		public void OnMeaningFieldChange(string meaningField)
+		{
+			Field def = GetField(LexSense.WellKnownProperties.Definition);
+			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
+
+			// reset description to remove text about it being the meaning field
+			def.Description =
+		"The definition of this sense of the word, in one or more languages.";
+
+			switch (meaningField)
+			{
+				case "definition":
+					def.DisplayName = AddMeaning(def.DisplayName);
+					def.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+					def.IsMeaningField = true;
+					def.Enabled = true;
+					gloss.DisplayName = RemoveMeaning(gloss.DisplayName);
+					gloss.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+					gloss.IsMeaningField = false;
+					gloss.Enabled = false;
+					break;
+				case "gloss":
+					def.DisplayName = RemoveMeaning(def.DisplayName);
+					def.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
+					def.IsMeaningField = false;
+					def.Enabled = false;
+					gloss.DisplayName = AddMeaning(gloss.DisplayName);
+					gloss.Visibility = CommonEnumerations.VisibilitySetting.Visible;
+					gloss.IsMeaningField = true;
+					gloss.Enabled = true;
+					break;
+			}
+
 		}
 
 		public bool IsWritingSystemUsedInField(string writingSystemId, string fieldName)

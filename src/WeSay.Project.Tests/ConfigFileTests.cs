@@ -50,7 +50,7 @@ namespace WeSay.Project.Tests
 								  GetV7ConfigFileContent());
 			var configFile = new ConfigFile(pathToConfigFile);
 			configFile.MigrateIfNecassary();
-			Assert.That(configFile.Version, Is.EqualTo(8));
+			Assert.That(configFile.Version, Is.EqualTo(ConfigFile.LatestVersion));
 		}
 
 		[Test]

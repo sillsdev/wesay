@@ -29,4 +29,10 @@ namespace WeSay.Project
 		void OnWritingSystemIdChanged(string from, string to);
 		void OnWritingSystemIdDeleted(string id);
 	}
+
+	public interface ICareThatMeaningFieldChanged
+	{
+		void OnMeaningFieldChanged(string from, string to);
+	}
+
 }

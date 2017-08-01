@@ -16,6 +16,8 @@ using Palaso.TestUtilities;
 using Palaso.WritingSystems;
 using Palaso.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
+using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.Project.Tests.ConfigMigration.WritingSystem;
@@ -1112,6 +1114,134 @@ namespace WeSay.Project.Tests
 				var project = new WeSayWordsProject();
 				project.LoadFromLiftLexiconPath(e.PathToLiftFile);
 				Assert.That(project.PathToLiftFile, Is.EqualTo(e.PathToLiftFile));
+			}
+		}
+
+		private void OnProject_MeaningFieldChanged(object sender, WeSayWordsProject.StringPair pair)
+		{
+			var project = sender as WeSayWordsProject;
+			foreach (var task in project.TaskConfigurations.OfType<ICareThatMeaningFieldChanged>())
+			{
+				task.OnMeaningFieldChanged(pair.from, pair.to);
+			}
+		}
+
+		private void VerifyTasks(IEnumerable<ITaskConfiguration> taskconfigs, string meaningField)
+		{
+			// want to assert the following changes
+			// dictionary task meaningfield
+			// MissingInfo tasks have changed
+			bool dict = false, meanings = false, pos = false, exsent = false;
+			Assert.NotNull(taskconfigs);
+			foreach (object task in taskconfigs)
+			{
+				Assert.NotNull(task);
+
+				DictionaryBrowseAndEditConfiguration dbe = task as DictionaryBrowseAndEditConfiguration;
+				if (dbe != null)
+				{
+					Assert.AreEqual(meaningField, dbe.MeaningField);
+					dict = true;
+				}
+
+				MissingInfoConfiguration missinginfo = task as MissingInfoConfiguration;
+				if (missinginfo != null)
+				{
+					switch (missinginfo.Label)
+					{
+						case "Meanings":
+							Assert.AreEqual(meaningField, missinginfo.MissingInfoFieldName);
+							Assert.AreEqual(true, missinginfo.IncludesField(meaningField));
+							meanings = true;
+							break;
+						case "Parts of Speech":
+							Assert.AreEqual(true, missinginfo.IncludesReadOnlyField(meaningField));
+							pos = true;
+							break;
+						case "Example Sentences":
+							Assert.AreEqual(true, missinginfo.IncludesReadOnlyField(meaningField));
+							exsent = true;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			Assert.IsTrue(dict);
+			Assert.IsTrue(meanings);
+			Assert.IsTrue(pos);
+			Assert.IsTrue(exsent);
+		}
+
+		[Test]
+		public void ChangeMeaningFieldToGloss()
+		{
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				project.LoadTasksFromConfigFile();
+				WeSayWordsProject.Project.MeaningFieldChanged += OnProject_MeaningFieldChanged;
+				project.MakeMeaningFieldChange("definition", "gloss");
+
+				// want to assert the following changes
+
+				// field and gloss field configs have changed
+				// field:meaningField exists
+				ViewTemplate template = project.DefaultViewTemplate;
+				Assert.IsNotNull(template);
+
+				Field def = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+				Field gloss = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+
+				Assert.AreEqual("Definition", def.DisplayName);
+				Assert.AreEqual(false, def.IsMeaningField);
+				Assert.AreEqual(false, def.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.NormallyHidden, def.Visibility);
+
+				Assert.AreEqual("Gloss (Meaning)", gloss.DisplayName);
+				Assert.AreEqual(true, gloss.IsMeaningField);
+				Assert.AreEqual(true, gloss.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, gloss.Visibility);
+
+				VerifyTasks(project.TaskConfigurations, "gloss");
+			}
+		}
+
+		[Test]
+		public void ChangeMeaningFieldToGlossAndBackToDefinition()
+		{
+
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				project.LoadTasksFromConfigFile();
+				WeSayWordsProject.Project.MeaningFieldChanged += OnProject_MeaningFieldChanged;
+				project.MakeMeaningFieldChange("definition", "gloss");
+				project.MakeMeaningFieldChange("gloss", "definition");
+
+				// want to assert the following changes
+
+				// field and gloss field configs have changed
+				// field:meaningField exists
+				ViewTemplate template = project.DefaultViewTemplate;
+				Assert.IsNotNull(template);
+
+				Field def = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+				Field gloss = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+
+				Assert.AreEqual("Definition (Meaning)", def.DisplayName);
+				Assert.AreEqual(true, def.IsMeaningField);
+				Assert.AreEqual(true, def.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, def.Visibility);
+
+				Assert.AreEqual("Gloss", gloss.DisplayName);
+				Assert.AreEqual(false, gloss.IsMeaningField);
+				Assert.AreEqual(false, gloss.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.NormallyHidden, gloss.Visibility);
+
+				VerifyTasks(project.TaskConfigurations, "definition");
 			}
 		}
 	}

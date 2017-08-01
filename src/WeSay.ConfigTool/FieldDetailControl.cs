@@ -80,6 +80,9 @@ namespace WeSay.ConfigTool
 				FillClassNameCombo();
 				FillDataTypeCombo();
 				_writingSystemsControl.CurrentField = value;
+
+				possibleMeaningField.Visible = (_field.FieldName == "definition" || _field.FieldName == "gloss") ? true : false;
+
 				UpdateDisplay();
 				_displayName.SelectAll();
 				_displayName.Focus();

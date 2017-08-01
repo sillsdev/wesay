@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -93,8 +93,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core"/>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms"/>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
     <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -166,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

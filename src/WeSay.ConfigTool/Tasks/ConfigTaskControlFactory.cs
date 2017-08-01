@@ -22,6 +22,10 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				return new GatherBySemDomTaskConfigControl(config);
 			}
+			if (config.TaskName == "Dictionary")
+			{
+				return new DictionaryBrowseEditTaskConfigControl(config);
+			}
 			return new DefaultTaskConfigurationControl(config, false);
 		}
 	}

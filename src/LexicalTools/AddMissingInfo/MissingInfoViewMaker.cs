@@ -12,13 +12,13 @@ namespace WeSay.LexicalTools.AddMissingInfo
 	{
 		public static ViewTemplate CreateViewTemplate(MissingInfoConfiguration config, ViewTemplate baseTemplate)
 		{
-			var template = CreateViewTemplateFromListOfFields(baseTemplate, config.FieldsToShowCommaSeparated, config.FieldsToShowReadOnly);
+			var template = CreateViewTemplateFromListOfFields(baseTemplate, config.FieldsToShowCommaSeparated, config.FieldsToShowReadOnlyCommaSeparated);
 
 			//see WS-1120 (martin_diprose@sil.org) Add option to limit "add meanings" task to the ones that have a semantic domain
 			//for now, let's just turn off all ghosts in these fill-in tasks
 			template.DoWantGhosts = false;
 
-			MarkReadOnlyFields(template, config.FieldsToShowReadOnly);
+			MarkReadOnlyFields(template, config.FieldsToShowReadOnlyCommaSeparated);
 
 			//hack until we overhaul how Tasks are setup:
 			var isBaseFormFillingTask = config.FieldsToShowCommaSeparated.Contains(LexEntry.WellKnownProperties.BaseForm);
