@@ -206,7 +206,24 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				return false;
 
 			if(task.MissingInfoFieldName != MissingInfoFieldName)
-				return false;
+			{
+				// The field of "Add Meanings" will be definition or gloss depending what the meaning field is
+				// the default config has it as definition so must be considered as equivalent to gloss
+				if (task.MissingInfoFieldName == LexSense.WellKnownProperties.Definition)
+				{
+					if (MissingInfoFieldName != LexSense.WellKnownProperties.Gloss)
+						return false;
+				}
+				else if (task.MissingInfoFieldName == LexSense.WellKnownProperties.Gloss)
+				{
+					if (MissingInfoFieldName != LexSense.WellKnownProperties.Definition)
+						return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
 
 			if (task.Label != Label)
 				return false;
