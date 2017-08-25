@@ -8,8 +8,8 @@ This file contains information that may be useful to anyone wanting to work on
 WeSay development.  Much of this information is Linux specific, but some of it
 applies to both Linux and Windows development.
 
-In this document, $wesay refers to the directory of the wesay repository (e.g.
-~/src/wesay).
+In this document, `$wesay` refers to the directory of the wesay repository
+(e.g. `~/src/wesay`).
 
 ### UBUNTU DISTRIBUTION PACKAGES NEEDED
 
@@ -73,7 +73,7 @@ The first four repositories contain the actual source code cloned from the Mono
 project.  The fifth repository contains the build scripts and packaging
 information developed by SIL, largely by the Linux team based in Calgary.  After
 cloning these repositories, then the patched mono can be built and installed to
-/opt/mono-sil by the following command (assuming these five repositories are all
+`/opt/mono-sil` by the following command (assuming these five repositories are all
 cloned with their default names and the current directory is still the common
 parent):
 
@@ -92,7 +92,7 @@ the following packages from PSO (or PSO-experimental as the case may be):
 	gtk-sharp2-sil
 	libgdiplus-sil
 
-These packages install everything into the same place, /opt/mono-sil.  I
+These packages install everything into the same place, `/opt/mono-sil`.  I
 haven't actually tested whether installing works as well as building.
 
 ### BUILDING WESAY
@@ -109,8 +109,8 @@ For Linux, execute the script:
 	build/buildupdate.mono.sh
 
 After all the dependencies have been downloaded, the simplest way to compile
-wesay is to use a batch file that calls msbuild.exe (on Windows) or a shell
-script that calls xbuild (on Linux).  For example, in a Windows "DOS box"
+wesay is to use a batch file that calls `msbuild.exe` (on Windows) or a shell
+script that calls `xbuild` (on Linux).  For example, in a Windows "DOS box"
 window,
 
 	cd $wesay\build
@@ -121,18 +121,18 @@ On linux, the operation is similar:
 	cd $wesay/build
 	./TestBuild.sh
 
-Without any arguments, these scripts perform a Release build, placing the
-result in $wesay/output/Release.  If you prefer a Debug build, then add Debug
-as a command line argument to TestBuild.bat or TestBuild.sh.  The result would
-then appear in $wesay/output/Debug.
+Without any arguments, these scripts perform a Debug build, placing the
+result in `$wesay/output/Debug`.  If you prefer a Release build, then add `Release`
+as a command line argument to `TestBuild.bat` or `TestBuild.sh`.  The result would
+then appear in `$wesay/output/Release`.
 
 On Windows, if you are using Visual Studio instead of running the first build
-on the command line, you need to unzip lib/Release/Mercurial.zip in each of the
+on the command line, you need to unzip `lib/Release/Mercurial.zip` in each of the
 output folders.
 
 On Linux, if you are using Monodevelop instead of running the first build
-on the command line, you need to unzip lib/common/Mercurial-i686.zip or
-lib/common/Mercurial-x86_64.zip in each of the output folders.
+on the command line, you need to unzip `lib/common/Mercurial-i686.zip` or
+`lib/common/Mercurial-x86_64.zip` in each of the output folders.
 
 ### USING MONODEVELOP ON LINUX
 
@@ -140,7 +140,7 @@ In Windows, WeSay can be debugged using Visual Studio Community 2015.
 For Linux, debugging requires using MonoDevelop, the standard Mono IDE.
 You have a choice of using the standard MonoDevelop that comes with the
 system, which for Ubuntu/Precise was version 2.8, or using a newer version
-installed into /opt.  The newer version can be installed as follows:
+installed into `/opt`.  The newer version can be installed as follows:
 
 	sudo add-apt-repository ppa:ermshiperete/monodevelop
 	sudo apt-get update
@@ -150,15 +150,15 @@ In either version of MonoDevelop, you can choose which Mono runtime to use for
 a project, and you can add new Mono runtimes to the known list.  The Edit menu
 has a Preferences command near the bottom.  Click on that and choose the ".NET
 Runtimes" panel under Projects.  Click on the Add button and use the file
-chooser to find /opt/mono-sil.  Once you choose that, you should see "Mono
-2.10.9.1 (develop/xxxxxxx)(/opt/mono-sil)" as a possible choice.  Click on that
+chooser to find `/opt/mono-sil`.  Once you choose that, you should see "Mono
+3.4.0.1 (/opt/mono-sil)" as a possible choice.  Click on that
 item to select it, then click on "Set as Default".  (of course, only if you do
 want it as the default...)  After loading the WeSay solution (or creating your
 own solution to run WeSay if you like to be tricky), double check the runtime
 with the "Active Runtime" command in the Project menu.
 
 One more step is essential to actually get WeSay to run properly with the Mono
-runtime in /opt/mono-sil.  Under the Project menu, select the "<ProjectName>
+runtime in `/opt/mono-sil`.  Under the Project menu, select the "_ProjectName_
 Options" command.  This brings up the Project Options dialog. Choose the
 General pane under Run and add the environment variable MONO_ENVIRON with the
 proper value for your installation.  This would be the full path to your wesay
@@ -181,18 +181,18 @@ of us will have to verify whether it's a general solution.
 The project files in the $wesay/build folder have targets that will run all of
 the unit tests.  Once everything has been built with the Build or Compile
 target (which is what the TestBuild files described above do), then unit tests
-can be run by using the LocalTest target.  For Windows, the command line would
+can be run by using the TestOnly target.  For Windows, the command line would
 look something like this:
 
 	cd $wesay\build
-	msbuild.exe /t:LocalTest /p:RootDir=.. /p:Configuration=Release build.win.proj
+	msbuild.exe /t:TestOnly /p:RootDir=.. /p:Configuration=Release build.win.proj
 
 For Linux, it would be similar (adjust the setting for MONO_ENVIRON):
 
 	cd $wesay
 	export MONO_ENVIRON=$PWD/environ
 	cd build
-	/opt/mono-sil/bin/xbuild /t:LocalTest /p:RootDir=.. /p:Configuration=Release build.mono.proj
+	/opt/mono-sil/bin/xbuild /t:TestOnly /p:RootDir=.. /p:Configuration=Release build.mono.proj
 
 ### OTHER LINUX PACKAGES NEEDED
 
@@ -212,14 +212,14 @@ Linux from the command-line:
 
 	sudo apt-get install vagrant
 
-To install on Windows or Mac, download the installer from www.vagrantup.com/downloads.html.
+To install on Windows or Mac, download the [installer](www.vagrantup.com/downloads.html).
 After installation, install the required plugins from the command-line on all platforms:
 
 	vagrant plugin install vagrant-cachier
 	vagrant plugin install vagrant-vbguest
 
 The pre-packaged base images do not have dependencies installed.  The provisioning script
-(bootstrap.sh) is executed once when the VM is started and will install all the dependencies
+(`bootstrap.sh`) is executed once when the VM is started and will install all the dependencies
 needed to run a local build of WeSay executables.  The first time the VM is started, it
 will have to download the required packages and then they are cached for subsequent runs.
 Run these commands from the command-line in the host (use the appropriate directory separator):
@@ -227,10 +227,10 @@ Run these commands from the command-line in the host (use the appropriate direct
 	cd $wesay/vagrant
 	vagrant up precise64 (or wasta)
 
-The status output of the provisioning (bootstrap.sh) will display in the terminal console that
-executed the vagrant up command. When it is completed, it will have mounted $wesay to /wesay
+The status output of the provisioning (`bootstrap.sh`) will display in the terminal console that
+executed the vagrant up command. When it is completed, it will have mounted `$wesay` to `/wesay`
 inside the VM.  If the host and VM with have the same line endings (e.g. Ubuntu Saucy host
-and Ubuntu Precise VM), the /wesay directory can be used directly within the VM.
+and Ubuntu Precise VM), the `/wesay` directory can be used directly within the VM.
 Run these commands from the command-line in the VM:
 
 	cd /wesay
@@ -243,15 +243,15 @@ command-line of the host machine:
 	cd $wesay/vagrant
 	vagrant destroy precise64 (or wasta)
 
-Run 'vagrant -h' from the command-line for other commands to halt, suspend, resume, etc or
-refer to the documentation at http://vagrantup.com
+Run `vagrant -h` from the command-line for other commands to halt, suspend, resume, etc or
+refer to the [documentation](http://vagrantup.com).
 
 #### WINDOWS HOST WITH LINUX VAGRANT VM
 
 If the host and VM have different line endings (e.g. Windows host and Ubuntu Precise VM),
 then the mapped drive within the VM will have files with non-native line endings.  To work
-around this, setup a development directory inside the VM.  There is a script in the $wesay/vagrant
-directory to setup a clone in the ~/src/wesay directory referencing the git repo in the host.
+around this, setup a development directory inside the VM.  There is a script in the `$wesay/vagrant`
+directory to setup a clone in the `~/src/wesay` directory referencing the git repo in the host.
 Run these commands from the command-line inside the VM:
 
 	cd /wesay/vagrant
@@ -264,8 +264,8 @@ Run these commands from the command-line inside the VM:
 
 #### TESTING TEAMCITY CONFIGURATIONS
 
-To test changes in TeamCity configuration and build/buildupdate.*.sh, it is best to use a clean
-environment.  There is a script in the $wesay/vagrant directory to install buildupdate to enable
+To test changes in TeamCity configuration and `build/buildupdate.*.sh`, it is best to use a clean
+environment.  There is a script in the `$wesay/vagrant` directory to install `buildupdate` to enable
 updating the buildupdate scripts.  A clean development directory should be setup first.
 Run these commands from the command-line inside the VM:
 
@@ -285,43 +285,40 @@ To set up a windows box for developing WeSay you need to install the following t
 
 - VS 2010, (Express works OK)
 - WIX 3.5  (Works fine)
-- Git-1.9.x (See a helpful configuration below for as you install it) => you can grab this from: http://msysgit.github.io
-
-	- Select Components Dialog
-		- Additional Icons (if you want them)
-		- Windows Explorer integration (simple, check all)
-		- Otherwise stick with the defaults
-	- Adjusting your PATH environment Dialog
-		- Radio button recommendation:
-			- Run Git and included Unix tools from the Windows Command Prompt
-			(If you don't want that option, then select: "Run Git from the Windows Command Prompt")
-	- Configuring the line ending conversions Dialog
-		- Radio button recommendation:
-			- Checkout as-is, commit Unix-style line endings
+- Git-1.9.x (See a helpful configuration below for as you install it) =>
+  you can grab this from: [msysgit.github.io](https://git-for-windows.github.io/)
+  - Select Components Dialog
+    - Additional Icons (if you want them)
+      - Windows Explorer integration (simple, check all)
+      - Otherwise stick with the defaults
+  - Adjusting your PATH environment Dialog
+    - Radio button recommendation:
+      - Run Git and included Unix tools from the Windows Command Prompt
+        (If you don't want that option, then select: "Run Git from the Windows Command Prompt")
+  - Configuring the line ending conversions Dialog
+    - Radio button recommendation:
+      - Checkout as-is, commit Unix-style line endings
 
 Configure the following environment variables:
 
 |||
 |-----------|-------------------|
-|http_proxy |(if you need one)|
+|http_proxy |(if you need one)  |
 |path       |make sure that you include these (ymmv): `C:\Program Files\Windows Installer XML v3.5\bin` (if 64bit, use: `C:\Program Files (x86)\...`) as well as `C:\Windows\Microsoft.NET\Framework\v4.0.30319`
 
 For a nice alternative graphical git tool,
 
-|||
-|----------|---------------------|
-|Sourcetree| www.sourcetreeap.com, unfortunately not available for Linux yet :( |
-|giteye    | www.collab.net/giteyeapp|
-|Smartgit  | www.syntevo.com/smartgithg/|
+- [Sourcetree](www.sourcetreeap.com) - unfortunately not available for Linux yet :(
+- [giteye](www.collab.net/giteyeapp)
+- [Smartgit](www.syntevo.com/smartgithg/)
 
 Some other helpful developer editing, or troubleshooting tools:
 
-|||
-|------------------|-------------------------------------|
-|Notepad++         |(for source code editing, see: notepad-plus-plus.org) |
-|JetBrains dotPeek |(for decompiling .NET assemblies, see: www.jetbrains.com/decompiler)|
-|Process Explorer  |(for looking at which dlls are loaded, and for looking at which files are opened or loaded, see: technet.microsoft.com/en-ca/sysinternals/bb896653.aspx, or just DuckDuckGo for it.) |
-|depends           | (for troubleshooting system errors in loading and executing modules, see: dependencywalker.com)|
+- [Notepad++](notepad-plus-plus.org) - for source code editing
+- [JetBrains dotPeek](www.jetbrains.com/decompiler) - for decompiling .NET assemblies
+- [Process Explorer](technet.microsoft.com/en-ca/sysinternals/bb896653.aspx) -
+  for looking at which dlls are loaded, and for looking at which files are opened or loaded
+- [depends](dependencywalker.com) - for troubleshooting system errors in loading and executing modules
 
 To build for installer, just type in the windows command prompt:
 
