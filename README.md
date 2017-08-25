@@ -1,4 +1,8 @@
-# Readme for Developers
+# Readme
+
+Installers can be found on the [product website](http://software.sil.org/wesay/).
+
+## Readme for Developers
 
 This file contains information that may be useful to anyone wanting to work on
 WeSay development.  Much of this information is Linux specific, but some of it
@@ -7,19 +11,19 @@ applies to both Linux and Windows development.
 In this document, $wesay refers to the directory of the wesay repository (e.g.
 ~/src/wesay).
 
-## UBUNTU DISTRIBUTION PACKAGES NEEDED
+### UBUNTU DISTRIBUTION PACKAGES NEEDED
 
 You will need a few system packages installed.
 
 	sudo apt-get install libicu-dev curl
 
-## OBTAINING WESAY SOURCES
+### OBTAINING WESAY SOURCES
 
 The basic WeSay repository is at github, and can be cloned as follows:
 
 	git clone git://github.com/sillsdev/wesay.git
 
-## SIL LINUX PACKAGES NEEDED
+### SIL LINUX PACKAGES NEEDED
 
 SIL has Linux (Ubuntu/Debian) package repositories that are used to distribute
 software that are either original with us or specialized for our use.  There
@@ -42,7 +46,7 @@ precise-experimental to match your actual distribution.  If you are running
 debian instead of ubuntu, then substitute accordingly.  (In that case, I don't
 think there's a distinction of -experimental.)
 
-## NEED A PATCHED LINUX MONO
+### NEED A PATCHED LINUX MONO
 
 Unfortunately the stock Mono has a number of bugs that we have found and fixed
 over the years.  Many of these fixes appear in newer versions of Mono. (Indeed,
@@ -91,7 +95,7 @@ the following packages from PSO (or PSO-experimental as the case may be):
 These packages install everything into the same place, /opt/mono-sil.  I
 haven't actually tested whether installing works as well as building.
 
-## BUILDING WESAY
+### BUILDING WESAY
 
 Before you can build wesay, a number of dependencies must be downloaded from
 the internet.
@@ -130,7 +134,7 @@ On Linux, if you are using Monodevelop instead of running the first build
 on the command line, you need to unzip lib/common/Mercurial-i686.zip or
 lib/common/Mercurial-x86_64.zip in each of the output folders.
 
-## USING MONODEVELOP ON LINUX
+### USING MONODEVELOP ON LINUX
 
 In Windows, WeSay can be debugged using Visual Studio Community 2015.
 For Linux, debugging requires using MonoDevelop, the standard Mono IDE.
@@ -168,7 +172,7 @@ of MonoDevelop's aggravating "features" is that clicking OK does not by itself
 save the most recent edit.  But losing focus to elsewhere in the same dialog
 does save the edit.  But enough editorializing...
 
-## RUNNING UNIT TESTS
+### RUNNING UNIT TESTS
 
 People have had varying success in running unit tests from inside MonoDevelop.
 Someone who has had success will have to describe how they did it and the rest
@@ -190,7 +194,7 @@ For Linux, it would be similar (adjust the setting for MONO_ENVIRON):
 	cd build
 	/opt/mono-sil/bin/xbuild /t:LocalTest /p:RootDir=.. /p:Configuration=Release build.mono.proj
 
-## OTHER LINUX PACKAGES NEEDED
+### OTHER LINUX PACKAGES NEEDED
 
 For developers, there are a few dependencies that may need to be installed
 manually.  (These should be installed automatically for users by the Linux
@@ -199,7 +203,7 @@ format):
 
 	sudo apt-get install chmsee
 
-## TESTING IN VAGRANT VIRTUAL MACHINE
+### TESTING IN VAGRANT VIRTUAL MACHINE
 
 Vagrant is a tool to "Create and configure lightweight, reproducible, and portable
 development environments."  There are pre-packaged base images for Precise64 and Wasta64
@@ -242,7 +246,7 @@ command-line of the host machine:
 Run 'vagrant -h' from the command-line for other commands to halt, suspend, resume, etc or
 refer to the documentation at http://vagrantup.com
 
-### WINDOWS HOST WITH LINUX VAGRANT VM
+#### WINDOWS HOST WITH LINUX VAGRANT VM
 
 If the host and VM have different line endings (e.g. Windows host and Ubuntu Precise VM),
 then the mapped drive within the VM will have files with non-native line endings.  To work
@@ -258,7 +262,7 @@ Run these commands from the command-line inside the VM:
 	. environ
 	mono output/Release/WeSay.App.exe
 
-### TESTING TEAMCITY CONFIGURATIONS
+#### TESTING TEAMCITY CONFIGURATIONS
 
 To test changes in TeamCity configuration and build/buildupdate.*.sh, it is best to use a clean
 environment.  There is a script in the $wesay/vagrant directory to install buildupdate to enable
@@ -275,7 +279,7 @@ Run these commands from the command-line inside the VM:
 	. environ
 	mono output/Release/WeSay.App.exe
 
-## BUILDING FOR WINDOWS INSTALLER
+### BUILDING FOR WINDOWS INSTALLER
 
 To set up a windows box for developing WeSay you need to install the following tools:
 
