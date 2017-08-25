@@ -59,7 +59,6 @@ Enchant.Net.dll*
 Ionic.Zip.dll
 taglib-sharp.dll
 common/*.po
-package/lucid/rules
 src/packages/
 build/NuGet.exe
 Downloads
@@ -67,3 +66,4 @@ External
 MercurialExtensions
 xulrunner
 WeSay_Helps.chm
+.idea/
