@@ -496,7 +496,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense.Clone());
 				LexEntryRepository.SaveItem(entry);
-				Logger.WriteEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), firstGloss );
+				Logger.WriteEvent("WordList-Adding new word '{0}'and giving the sense '{1}'", entry.GetSimpleFormForLogging(), firstGloss );
 			}
 			else
 			{
