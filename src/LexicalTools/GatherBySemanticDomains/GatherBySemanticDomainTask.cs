@@ -745,12 +745,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				{
 					// need to change LexEntry.GetOrCreateSenseWithMeaning in libpalaso to have a version that
 					// can take a bool to indicate if gloss or def is meaning field
-					sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
+					sense = entry.GetOrCreateSenseWithMeaning(new MultiText(), false);
 					sense.Gloss.SetAlternative(DefinitionWritingSystem.Id, meaning);
 				}
 				else
 				{
-					sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
+					sense = entry.GetOrCreateSenseWithMeaning(new MultiText(), true);
 					sense.Definition.SetAlternative(DefinitionWritingSystem.Id, meaning);
 				}
 			}
