@@ -1,3 +1,9 @@
+wesay (1.6.0) stable; urgency=medium
+
+  * Package version 1.6 
+
+ -- Eberhard Beilharz <eb1@sil.org>  Fri, 25 Aug 2017 17:23:21 +0200
+
 wesay (1.5.38) stable; urgency=medium
 
   * Release build

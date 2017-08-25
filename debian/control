@@ -1,13 +1,16 @@
 Source: wesay
 Section: editors
 Priority: optional
-Maintainer: Cambell Prince <cambell_prince@sil.org>
-Build-Depends: debhelper (>=7),
+Maintainer: Eberhard Beilharz <eb1@sil.org>
+Standards-Version: 3.9.7
+Homepage: https://software.sil.org/wesay/
+Vcs-Git: https://github.com/sillsdev/wesay.git
+Vcs-Browser: https://github.com/sillsdev/wesay
+Build-Depends: debhelper (>=9.0.0),
   mono-sil (>=3.4), mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil, cli-common-dev (>= 0.8~),
   unzip,
   libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev,
   geckofx29
-Standards-Version: 3.9.4
 
 Package: wesay
 Architecture: any
