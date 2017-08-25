@@ -141,8 +141,12 @@ namespace WeSay.LexicalTools
 			var sense = (LexSense) sendingLayouter.PdoToLayout;
 			IConfirmDelete confirmation = _confirmDeleteFactory();
 			var deletionStringToLocalize = StringCatalog.Get("This will permanently remove the meaning");
+			var meaningText = (GlossMeaningField ?
+				sense.Gloss.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Gloss).Id) :
+				sense.Definition.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition).Id)
+				);
 			confirmation.Message = String.Format("{0} {1}.", deletionStringToLocalize,
-				sense.Definition.GetBestAlternative(ActiveViewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition).Id));
+				meaningText);
 			if (!confirmation.DeleteConfirmed)
 			{
 				return;

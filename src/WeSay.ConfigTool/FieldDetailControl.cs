@@ -81,7 +81,8 @@ namespace WeSay.ConfigTool
 				FillDataTypeCombo();
 				_writingSystemsControl.CurrentField = value;
 
-				possibleMeaningField.Visible = (_field.FieldName == "definition" || _field.FieldName == "gloss") ? true : false;
+				possibleMeaningField.Visible = (_field.FieldName == LexSense.WellKnownProperties.Definition) ||
+					(_field.FieldName == LexSense.WellKnownProperties.Gloss) ? true : false;
 
 				UpdateDisplay();
 				_displayName.SelectAll();

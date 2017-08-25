@@ -24,6 +24,15 @@ namespace WeSay.LexicalTools
 		{
 		}
 
+		private Control MeaningFieldControl(Field field, MultiText meaningText)
+		{
+			if (field != null && field.GetDoShow(meaningText, this.ShowNormallyHiddenFields))
+			{
+				return MakeBoundControl(meaningText, field);
+			}
+			return null;
+		}
+
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			LexSense sense = (LexSense) wsdo;
@@ -32,17 +41,27 @@ namespace WeSay.LexicalTools
 			DetailList.SuspendLayout();
 			try
 			{
-#if GlossMeaning
-				Field field = ActiveViewTemplate.GetField(Field.FieldNames.SenseGloss.ToString());
-				if (field != null && field.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
+				Field field = null;
+				Control meaningControl = null;
+				if (GlossMeaningField)
 				{
-					Control meaningControl = MakeBoundControl(sense.Gloss, field);
-#else
-				Field field = ActiveViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
-				if (field != null && field.GetDoShow(sense.Definition, ShowNormallyHiddenFields))
+					field = ActiveViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+					if (field != null && field.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
+					{
+						meaningControl = MakeBoundControl(sense.Gloss, field);
+					}
+				}
+				else
 				{
-					Control meaningControl = MakeBoundControl(sense.Definition, field);
-#endif
+					field = ActiveViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+					if (field != null && field.GetDoShow(sense.Definition, this.ShowNormallyHiddenFields))
+					{
+						meaningControl = MakeBoundControl(sense.Definition, field);
+					}
+				}
+
+				if (meaningControl != null)
+				{
 					//NB: http://jira.palaso.org/issues/browse/WS-33937 describes how this makes it hard to change this in English (but not other languages)
 					string label = StringCatalog.Get("~Meaning");
 					LexEntry entry = sense.Parent as LexEntry;
@@ -112,23 +131,32 @@ namespace WeSay.LexicalTools
 		public int AddGhost(PalasoDataObject parent, IList<LexSense> list, bool isHeading, int insertAtRow)
 		{
 			string label = GetLabelForMeaning(list.Count);
-#if GlossMeaning
-			return MakeGhostWidget<LexSense>(list, insertAtRow, Field.FieldNames.SenseGloss.ToString(), label, "Gloss", isHeading, insertAtRow);
-#else
-			return MakeGhostWidget<LexSense>(parent,
-											list,
-											LexSense.WellKnownProperties.Definition,
-											label,
-											"Definition",
-											isHeading,
-											insertAtRow);
-#endif
+			if (GlossMeaningField)
+			{
+				return MakeGhostWidget<LexSense>(parent,
+												list,
+												LexSense.WellKnownProperties.Gloss,
+												label,
+												"Gloss",
+												isHeading,
+												insertAtRow);
+			}
+			else
+			{
+				return MakeGhostWidget<LexSense>(parent,
+												list,
+												LexSense.WellKnownProperties.Definition,
+												label,
+												"Definition",
+												isHeading,
+												insertAtRow);
+			}
 		}
 
 		private static string GetLabelForMeaning(int itemCount)
 		{
 			string label = StringCatalog.Get("~Meaning",
-											 "This label is shown once, but has two roles.  1) it labels the defintion field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
+											 "This label is shown once, but has two roles.  1) it labels the gloss/definition field, and 2) marks the beginning of the set of fields which make up a sense. So, in english, if we labelled this 'definition', it would describe the field well but wouldn't label the section well.");
 			if (itemCount > 0)
 			{
 				label += " " + (itemCount + 1);
@@ -211,6 +239,7 @@ namespace WeSay.LexicalTools
 
 		public string SearchString
 		{
+			//WDG : What about this?
 			get { return _sense.Definition.GetFirstAlternative(); }//review
 		}
 	}
