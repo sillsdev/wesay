@@ -1027,7 +1027,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(0,
 							GetCurrentEntry().Senses[0].ExampleSentences.Count,
 							"this test assumes a sense w/ no example");
-			MultiTextControl editControl = GetEditControl("Meaning 1");
+			MultiTextControl editControl = GetEditControl("Definition"); // edit control is associated with minor label of Meaning 1
 			editControl.TextBoxes[0].Focus();
 		}
 

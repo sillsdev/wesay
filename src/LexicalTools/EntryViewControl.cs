@@ -32,6 +32,7 @@ namespace WeSay.LexicalTools
 		private LexEntryRepository _lexEntryRepository;
 		private bool _showNormallyHiddenFields;
 		private bool _senseDeletionEnabled;
+		private bool _showMinorMeaningLabel = false;
 		private ConfirmDeleteFactory _confirmDeleteFactory;
 
 
@@ -235,6 +236,19 @@ namespace WeSay.LexicalTools
 			}
 		}
 
+		public bool ShowMinorMeaningLabel
+		{
+			get { return _showMinorMeaningLabel; }
+			set
+			{
+				if (_showMinorMeaningLabel != value)
+				{
+					_showMinorMeaningLabel = value;
+					RefreshEntryDetail();
+				}
+			}
+		}
+
 		public void SetMemory(IUserInterfaceMemory memory)
 		{
 			_splitter.SetMemory(memory.CreateNewSection("previewSplitter"));
@@ -401,7 +415,8 @@ namespace WeSay.LexicalTools
 						WeSayWordsProject.Project.ServiceLocator,
 						_record,
 						_senseDeletionEnabled,
-						_confirmDeleteFactory
+						_confirmDeleteFactory,
+						_showMinorMeaningLabel
 					) {ShowNormallyHiddenFields = ShowNormallyHiddenFields};
 					_layout.AddWidgets(_record, 0);
 				}

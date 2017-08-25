@@ -104,6 +104,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			this._entryViewControl.Name = "_entryViewControl";
 			this._entryViewControl.ShowNormallyHiddenFields = false;
 			this._entryViewControl.TabIndex = 0;
+			this._entryViewControl.ShowMinorMeaningLabel = true;
 
 			//TODO: remove these, move to ctor
 			Control_EntryDetailPanel.ViewTemplate = _viewTemplate;

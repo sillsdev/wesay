@@ -47,6 +47,11 @@ namespace WeSay.LexicalTools
 		private bool? _glossMeaningField;
 
 		/// <summary>
+		/// true if the minor meaning field label (gloss or definition) should be shown
+		/// </summary>
+		private bool _showMinorMeaningLabel;
+
+		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -141,6 +146,11 @@ namespace WeSay.LexicalTools
 			set { _glossMeaningField = value; }
 		}
 
+		public bool ShowMinorMeaningLabel
+		{
+			get { return _showMinorMeaningLabel; }
+			set { _showMinorMeaningLabel = value; }
+		}
 
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest

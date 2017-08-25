@@ -24,15 +24,6 @@ namespace WeSay.LexicalTools
 		{
 		}
 
-		private Control MeaningFieldControl(Field field, MultiText meaningText)
-		{
-			if (field != null && field.GetDoShow(meaningText, this.ShowNormallyHiddenFields))
-			{
-				return MakeBoundControl(meaningText, field);
-			}
-			return null;
-		}
-
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
 			LexSense sense = (LexSense) wsdo;
@@ -43,8 +34,10 @@ namespace WeSay.LexicalTools
 			{
 				Field field = null;
 				Control meaningControl = null;
+				string minorLabel;
 				if (GlossMeaningField)
 				{
+					minorLabel = StringCatalog.Get("~Gloss");
 					field = ActiveViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
 					if (field != null && field.GetDoShow(sense.Gloss, this.ShowNormallyHiddenFields))
 					{
@@ -53,6 +46,7 @@ namespace WeSay.LexicalTools
 				}
 				else
 				{
+					minorLabel = StringCatalog.Get("~Definition");
 					field = ActiveViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
 					if (field != null && field.GetDoShow(sense.Definition, this.ShowNormallyHiddenFields))
 					{
@@ -69,8 +63,17 @@ namespace WeSay.LexicalTools
 					{
 						label += " " + (entry.Senses.IndexOf(sense) + 1);
 					}
-					DetailList.AddWidgetRow(label, true, meaningControl, insertAtRow, false);
-					rowCount++;
+					if (ShowMinorMeaningLabel)
+					{
+						string[] labels = new string[] { label, minorLabel };
+						DetailList.AddWidgetRow(labels, true, meaningControl, insertAtRow, false);
+						rowCount += 2;
+					}
+					else
+					{
+						DetailList.AddWidgetRow(label, true, meaningControl, insertAtRow, false);
+						rowCount++;
+					}
 				}
 
 				rowCount += AddCustomFields(sense, insertAtRow + rowCount);
@@ -97,8 +100,12 @@ namespace WeSay.LexicalTools
 					AddExampleSentenceGhost(sense, insertAtRow + rowCount);
 					rowCount++;
 				}
-				LastRow = insertAtRow + rowCount - 1;	// want index of last row owned, not a limit
-				FixDeleteButtonPosition();
+				LastRow = insertAtRow + rowCount - 1;   // want index of last row owned, not a limit
+
+				// FixDeleteButtonPosition
+				var position = DetailList.GetCellPosition(_deleteButton);
+				if (position.Row != FirstRow + (ShowMinorMeaningLabel ? 1 : 0))
+					DetailList.SetCellPosition(_deleteButton, new TableLayoutPanelCellPosition(2, FirstRow + (ShowMinorMeaningLabel ? 1 : 0)));
 			}
 			catch (ConfigurationException e)
 			{
@@ -106,13 +113,6 @@ namespace WeSay.LexicalTools
 			}
 			DetailList.ResumeLayout(false);
 			return rowCount;
-		}
-
-		private void FixDeleteButtonPosition()
-		{
-			var position = DetailList.GetCellPosition(_deleteButton);
-			if (position.Row != FirstRow)
-				DetailList.SetCellPosition(_deleteButton, new TableLayoutPanelCellPosition(2, FirstRow));
 		}
 
 		private void AddExampleSentenceGhost(LexSense sense, int insertAtRow)
