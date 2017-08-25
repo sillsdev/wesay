@@ -1,26 +1,29 @@
+# Readme
+
+Installers can be found on the [product website](http://software.sil.org/wesay/).
+
+## Readme for Developers
+
 This file contains information that may be useful to anyone wanting to work on
 WeSay development.  Much of this information is Linux specific, but some of it
 applies to both Linux and Windows development.
 
-In this document, `$wesay` refers to the directory of the wesay repository 
+In this document, `$wesay` refers to the directory of the wesay repository
 (e.g. `~/src/wesay`).
 
-
-0. UBUNTU DISTRIBUTION PACKAGES NEEDED
+### UBUNTU DISTRIBUTION PACKAGES NEEDED
 
 You will need a few system packages installed.
 
 	sudo apt-get install libicu-dev curl
 
-
-1. OBTAINING WESAY SOURCES
+### OBTAINING WESAY SOURCES
 
 The basic WeSay repository is at github, and can be cloned as follows:
 
 	git clone git://github.com/sillsdev/wesay.git
 
-
-2. SIL LINUX PACKAGES NEEDED
+### SIL LINUX PACKAGES NEEDED
 
 SIL has Linux (Ubuntu/Debian) package repositories that are used to distribute
 software that are either original with us or specialized for our use.  There
@@ -43,8 +46,7 @@ precise-experimental to match your actual distribution.  If you are running
 debian instead of ubuntu, then substitute accordingly.  (In that case, I don't
 think there's a distinction of -experimental.)
 
-
-3. NEED A PATCHED LINUX MONO
+### NEED A PATCHED LINUX MONO
 
 Unfortunately the stock Mono has a number of bugs that we have found and fixed
 over the years.  Many of these fixes appear in newer versions of Mono. (Indeed,
@@ -93,64 +95,7 @@ the following packages from PSO (or PSO-experimental as the case may be):
 These packages install everything into the same place, /opt/mono-sil.  I
 haven't actually tested whether installing works as well as building.
 
-
-4. FIX LOCAL REPO FOR GERRIT CODE REVIEW
-
-Here are some instructions to get us all on the same page about pushing and
-reviews.  This applies to both Windows and Linux.  (SOME OF THE DETAILS MAY
-CHANGE SOON.)  The various commands and scripts should be executed in a git
-bash window for Windows.  On Linux, any normal terminal window will do.
-
-Make sure you have a Gerrit account. For details on getting a Gerrit account,
-see
-
-	https://github.com/sillsdev/FwDocumentation/wiki/Getting-Started-for-Core-Developers
-
-Even though the explanation involves FieldWorks, steps 1-3 (Register, Request,
-Upload) apply to WeSay developers as well. Make a note of your gerrit username,
-which is referred to as $username below. You can find it in the Profile tab of
-your settings on the gerrit site (gerrit.lsdev.sil.org).
-
-Clone the repository with helpful scripts for setting up gerrit code reviews:
-
-	git clone git://github.com/sillsdev/gerrit-support.git
-
-Move to the wesay repository and execute a script in the gerrit-support repo
-something like this (use a git bash window in Windows).  Note that $wesay here
-and below is shorthand for wherever the wesay repository is located.
-
-	cd $wesay
-	../gerrit-support/configure-for-gerrit ssh://$username@gerrit.lsdev.sil.org:59418/wesay.git
-
-(This assumes that the wesay and gerrit-support repositories are installed
-side-by-side with their default names.)  After this has executed, when you've
-made one or more commits on the develop branch, you can just push them:
-
-	git push
-
-These will show up as a review item in the gerrit web UI. We all need to be
-checking gerrit frequently so we can review other people's changes. However,
-for faster service you can use the UI to add a specific person as reviewer to
-your changes, and they will get an email requesting a review. Once approved,
-changes can be merged onto develop by pressing the "Submit" button in the web
-UI.
-
-If you're working on something major, you can use a feature branch to keep your
-work separate from develop. This allows you to switch back temporarily to a
-"vanilla" develop branch if you need to test or fix something, and then resume
-work on your feature afterwards. You'll likely end up with a sequence of
-several commits that implement the feature. It would be nice to mark these
-commits as being related, and this is done with extended "magic branch" syntax:
-
-	git push origin feature/whizbang:refs/for/develop/feature/whizbang
-
-The part before the colon is the local branch name, and the part after the
-colon is the remote branch it will be pushed to. If there are several new
-commits on the local branch, they will all show up in gerrit, as separate
-review items all sharing the same "topic".
-
-
-5. BUILDING WESAY
+### BUILDING WESAY
 
 Before you can build wesay, a number of dependencies must be downloaded from
 the internet.
@@ -181,15 +126,21 @@ result in $wesay/output/Release.  If you prefer a Debug build, then add Debug
 as a command line argument to TestBuild.bat or TestBuild.sh.  The result would
 then appear in $wesay/output/Debug.
 
+On Windows, if you are using Visual Studio instead of running the first build
+on the command line, you need to unzip lib/Release/Mercurial.zip in each of the
+output folders.
 
-6. USING MONODEVELOP ON LINUX
+On Linux, if you are using Monodevelop instead of running the first build
+on the command line, you need to unzip lib/common/Mercurial-i686.zip or
+lib/common/Mercurial-x86_64.zip in each of the output folders.
 
-In Windows, WeSay can be debugged using Visual Studio 2010, and probably Visual
-Studio Express 2010.  For Linux, debugging requires using MonoDevelop, the
-standard Mono IDE.  You have a choice of using the standard MonoDevelop that
-comes with the system, which for Ubuntu/Precise was version 2.8, or using a
-newer version installed into /opt.  The newer version can be installed as
-follows:
+### USING MONODEVELOP ON LINUX
+
+In Windows, WeSay can be debugged using Visual Studio Community 2015.
+For Linux, debugging requires using MonoDevelop, the standard Mono IDE.
+You have a choice of using the standard MonoDevelop that comes with the
+system, which for Ubuntu/Precise was version 2.8, or using a newer version
+installed into /opt.  The newer version can be installed as follows:
 
 	sudo add-apt-repository ppa:ermshiperete/monodevelop
 	sudo apt-get update
@@ -221,8 +172,7 @@ of MonoDevelop's aggravating "features" is that clicking OK does not by itself
 save the most recent edit.  But losing focus to elsewhere in the same dialog
 does save the edit.  But enough editorializing...
 
-
-7. RUNNING UNIT TESTS
+### RUNNING UNIT TESTS
 
 People have had varying success in running unit tests from inside MonoDevelop.
 Someone who has had success will have to describe how they did it and the rest
@@ -244,8 +194,7 @@ For Linux, it would be similar (adjust the setting for MONO_ENVIRON):
 	cd build
 	/opt/mono-sil/bin/xbuild /t:LocalTest /p:RootDir=.. /p:Configuration=Release build.mono.proj
 
-
-8. OTHER LINUX PACKAGES NEEDED
+### OTHER LINUX PACKAGES NEEDED
 
 For developers, there are a few dependencies that may need to be installed
 manually.  (These should be installed automatically for users by the Linux
@@ -254,7 +203,7 @@ format):
 
 	sudo apt-get install chmsee
 
-9. TESTING IN VAGRANT VIRTUAL MACHINE
+### TESTING IN VAGRANT VIRTUAL MACHINE
 
 Vagrant is a tool to "Create and configure lightweight, reproducible, and portable
 development environments."  There are pre-packaged base images for Precise64 and Wasta64
@@ -297,7 +246,7 @@ command-line of the host machine:
 Run 'vagrant -h' from the command-line for other commands to halt, suspend, resume, etc or
 refer to the documentation at http://vagrantup.com
 
-9.1 WINDOWS HOST WITH LINUX VAGRANT VM
+#### WINDOWS HOST WITH LINUX VAGRANT VM
 
 If the host and VM have different line endings (e.g. Windows host and Ubuntu Precise VM),
 then the mapped drive within the VM will have files with non-native line endings.  To work
@@ -313,7 +262,7 @@ Run these commands from the command-line inside the VM:
 	. environ
 	mono output/Release/WeSay.App.exe
 
-9.2 TESTING TEAMCITY CONFIGURATIONS
+#### TESTING TEAMCITY CONFIGURATIONS
 
 To test changes in TeamCity configuration and build/buildupdate.*.sh, it is best to use a clean
 environment.  There is a script in the $wesay/vagrant directory to install buildupdate to enable
@@ -330,50 +279,58 @@ Run these commands from the command-line inside the VM:
 	. environ
 	mono output/Release/WeSay.App.exe
 
-10.0 BUILDING FOR WINDOWS INSTALLER
+### BUILDING FOR WINDOWS INSTALLER
 
 To set up a windows box for developing WeSay you need to install the following tools:
 
-	VS 2010, (Express works OK)
-	WIX 3.5  (Works fine)
-	Git-1.9.x (See a helpful configuration below for as you install it)
-		=> you can grab this from: http://msysgit.github.io
-		- Select Components Dialog =>
-			Additional Icons (if you want them)
-			Windows Explorer integration (simple, check all)
-			Otherwise stick with the defaults
-		- Adjusting your PATH environment Dialog =>
-			Radio button recommendation:
-				Run Git and included Unix tools from the Windows Command Prompt
-				(If you don't want that option, then select: "Run Git from the Windows Command Prompt")
-		- Configuring the line ending conversions Dialog =>
-			Radio button recommendation:
-				Checkout as-is, commit Unix-style line endings
+- VS 2010, (Express works OK)
+- WIX 3.5  (Works fine)
+- Git-1.9.x (See a helpful configuration below for as you install it) => you can grab this from: http://msysgit.github.io
+
+	- Select Components Dialog
+		- Additional Icons (if you want them)
+		- Windows Explorer integration (simple, check all)
+		- Otherwise stick with the defaults
+	- Adjusting your PATH environment Dialog
+		- Radio button recommendation:
+			- Run Git and included Unix tools from the Windows Command Prompt
+			(If you don't want that option, then select: "Run Git from the Windows Command Prompt")
+	- Configuring the line ending conversions Dialog
+		- Radio button recommendation:
+			- Checkout as-is, commit Unix-style line endings
 
 Configure the following environment variables:
 
-	http_proxy	(if you need one)
-	path		make sure that you include these (ymmv):
-				C:\Program Files\Windows Installer XML v3.5\bin
-					(If 64bit, use: C:\Program Files (x86)\...)
-				C:\Windows\Microsoft.NET\Framework\v4.0.30319
+|||
+|-----------|-------------------|
+|http_proxy |(if you need one)|
+|path       |make sure that you include these (ymmv): `C:\Program Files\Windows Installer XML v3.5\bin` (if 64bit, use: `C:\Program Files (x86)\...`) as well as `C:\Windows\Microsoft.NET\Framework\v4.0.30319`
 
 For a nice alternative graphical git tool,
-	Sourcetree at: www.sourcetreeap.com, unfortunately not available for Linux yet :(
-	giteye at: www.collab.net/giteyeapp
-	Smartgit at: www.syntevo.com/smartgithg/
+
+|||
+|----------|---------------------|
+|Sourcetree| www.sourcetreeap.com, unfortunately not available for Linux yet :( |
+|giteye    | www.collab.net/giteyeapp|
+|Smartgit  | www.syntevo.com/smartgithg/|
 
 Some other helpful developer editing, or troubleshooting tools:
 
-	Notepad++			(for source code editing, see: notepad-plus-plus.org)
-	JetBrains dotPeek   (for decompiling .NET assemblies, see: www.jetbrains.com/decompiler)
-	Process Explorer	(for looking at which dlls are loaded, and for looking at which files are opened or loaded,
-						see: technet.microsoft.com/en-ca/sysinternals/bb896653.aspx, or just DuckDuckGo for it.)
-	depends				(for troubleshooting system errors in loading and executing modules, see: dependencywalker.com)
+|||
+|------------------|-------------------------------------|
+|Notepad++         |(for source code editing, see: notepad-plus-plus.org) |
+|JetBrains dotPeek |(for decompiling .NET assemblies, see: www.jetbrains.com/decompiler)|
+|Process Explorer  |(for looking at which dlls are loaded, and for looking at which files are opened or loaded, see: technet.microsoft.com/en-ca/sysinternals/bb896653.aspx, or just DuckDuckGo for it.) |
+|depends           | (for troubleshooting system errors in loading and executing modules, see: dependencywalker.com)|
 
 To build for installer, just type in the windows command prompt:
-	`buildupdate.win.sh -f`				(to do a "full" update the libraries needed to build WeSay)
-										- If you have set up your bash commands not to work within
-										the windows command prompt as above, you will need to
-										execute this command in a bash window.)
-	`TestBuild.bat Release Installer`	(to build an Release version of Installer)
+
+	buildupdate.win.sh -f
+	TestBuild.bat Release Installer
+
+`buildupdate.win.sh` does a "full" update the libraries needed to
+ build WeSay. `TestBuild.bat` builds a Release version of the Installer.
+
+**NOTE:** If you have set up your bash commands not to work within
+the windows command prompt as above, you will need to
+execute `buildupdate.win.sh` command in a bash window.
