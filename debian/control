@@ -9,6 +9,7 @@ Vcs-Browser: https://github.com/sillsdev/wesay
 Build-Depends: debhelper (>=9.0.0),
   mono-sil (>=3.4), mono-basic-sil, gtk-sharp2-sil, libgdiplus-sil, cli-common-dev (>= 0.8~),
   unzip,
+  curl,
   libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev,
   geckofx29
 
