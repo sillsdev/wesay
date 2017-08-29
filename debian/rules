@@ -13,7 +13,9 @@ export MONO_PREFIX=/opt/mono-sil
 override_dh_auto_configure:
 
 override_dh_auto_build:
-	cd build && ./TestBuild.sh $(CONFIGURATION)
+	cd build && \
+	./buildupdate.mono.sh && \
+	./TestBuild.sh $(CONFIGURATION)
 	rm -f output$(CONFIGURATION)/[Gg]ecko*
 
 override_dh_auto_test:
