@@ -49,7 +49,7 @@ override_dh_clideps:
 		--exclude-moduleref=icu.net --exclude-moduleref=libdl.so \
 		--exclude-moduleref=xul --exclude-moduleref=mozglue \
 		--exclude-moduleref=libgeckofix.so --exclude-moduleref=irrKlang.NET4.dll \
-		--exclude-moduleref=MSVCR100.dll \
+		--exclude-moduleref=MSVCR100.dll --exclude-moduleref=__Internal \
 		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
