@@ -3,6 +3,7 @@
 
 #export CONFIGURATION=Release
 export CONFIGURATION=Debug
+export XDG_CONFIG_HOME=$HOME/.config
 
 export MONO_PREFIX=/opt/mono-sil
 
