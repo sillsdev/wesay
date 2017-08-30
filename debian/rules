@@ -32,9 +32,11 @@ override_dh_makeclilibs:
 override_dh_shlibdeps:
 	dh_shlibdeps -l$(MONO_PREFIX)/lib
 
-# Include mono-sil in cli dirs searched
+# Include mono-sil in cli dirs searched. Rename irrKlang.NET4 prior to running
+# dh_clideps - that searches for an empty moduleref.
 override_dh_clideps:
 	mkdir -p debian/tmp/usr && ln -s $(MONO_PREFIX)/* debian/tmp/usr/ && \
+	mv debian/wesay/usr/lib/wesay/irrKlang.NET4.dll debian/wesay/usr/lib/wesay/irrKlang.NET4.dll.ignore && \
 	PATH=$(MONO_PREFIX)/bin:$(PATH) \
 	dh_clideps internal-mono -l$(MONO_PREFIX)/lib \
 		--exclude-moduleref=security.dll \
@@ -47,10 +49,11 @@ override_dh_clideps:
 		--exclude-moduleref=icuuc48.dll --exclude-moduleref=icuin48.dll \
 		--exclude-moduleref=libicuuc.so --exclude-moduleref=libicui18n.so \
 		--exclude-moduleref=icu.net --exclude-moduleref=libdl.so \
-		--exclude-moduleref=xul --exclude-moduleref=mozglue \
-		--exclude-moduleref=libgeckofix.so --exclude-moduleref=irrKlang.NET4.dll \
-		--exclude-moduleref=MSVCR100.dll --exclude-moduleref=__Internal \
-		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus
+		--exclude-moduleref=xul --exclude-moduleref=libxul.so \
+		--exclude-moduleref=mozjs --exclude-moduleref=mozglue \
+		--exclude-moduleref=libgeckofix.so --exclude-moduleref=Geckofx-Core.dll \
+		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus && \
+	mv debian/wesay/usr/lib/wesay/irrKlang.NET4.dll.ignore debian/wesay/usr/lib/wesay/irrKlang.NET4.dll
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
