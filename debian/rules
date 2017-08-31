@@ -36,8 +36,7 @@ override_dh_auto_install:
 	. ./environ && \
 	cd build && \
 	xbuild /target:Install /p:Configuration=$(CONFIGURATION) /p:InstallDir=$(DESTDIR)/usr build.mono.proj
-	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8
-	config, and it also has
+	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
 	# wrong line endings, so we re-create the entire file
 	echo "$$MERCURIAL_INI" > $(DESTDIR)$(LIB)/Mercurial/mercurial.ini
 
