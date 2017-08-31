@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,6 +35,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -101,6 +103,10 @@
       <ExecutableExtension>.exe</ExecutableExtension>
       <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
     </Reference>
+    <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
+      <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
@@ -121,11 +127,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
     </Reference>
-	<Reference Condition="'$(OS)'=='Windows_NT'" Include="Interop.WIA.dll, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Interop.WIA.dll, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Interop.WIA.dll</HintPath>
     </Reference>
-	<Reference Condition="'$(OS)'=='Windows_NT'" Include="IrrKlang.NET4.dll, Culture=neutral, PublicKeyToken=null">
+    <Reference Condition="'$(OS)'=='Windows_NT'" Include="IrrKlang.NET4.dll, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\irrKlang.NET4.dll</HintPath>
     </Reference>
@@ -141,12 +147,12 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-	
     <Reference Include="Vulcan.Uczniowie.HelpProvider">
       <HintPath>..\..\lib\common\Vulcan.Uczniowie.HelpProvider.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core"/>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms"/>
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
+    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
+    <None Include="packages.config" />
     <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -157,13 +163,6 @@
       <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <None Include="..\..\lib\$(Configuration)\Geckofx-Core.dll.config" Condition="'$(OS)'=='Windows_NT'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\NDesk.DBus.dll</HintPath>
-    </Reference>
-    <None Condition="'$(OS)'!='Windows_NT'" Include="..\..\lib\$(Configuration)\NDesk.DBus.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -288,6 +287,13 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets" Condition="Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

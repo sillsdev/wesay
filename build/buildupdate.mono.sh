@@ -84,7 +84,7 @@ cd -
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=ChorusLinux64v25Cont
 #     clean: false
 #     revision: latest.lastSuccessful
-#     paths: {"Chorus.exe"=>"lib/Release", "Chorus.exe.mdb"=>"lib/Release", "ChorusHub.exe"=>"lib/Release", "ChorusHub.exe.mdb"=>"lib/Release", "ChorusHubApp.exe"=>"lib/Release", "ChorusHubApp.exe.mdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.exe.mdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.dll.mdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.dll.mdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "NDesk.DBus.dll"=>"lib/Release", "NDesk.DBus.dll.config"=>"lib/Release", "debug/**"=>"lib/Debug", "Mercurial-i686.zip"=>"lib/common", "MercurialExtensions/**"=>"MercurialExtensions", "Mercurial-x86_64.zip"=>"lib/common"}
+#     paths: {"Chorus.exe"=>"lib/Release", "Chorus.exe.mdb"=>"lib/Release", "ChorusHub.exe"=>"lib/Release", "ChorusHub.exe.mdb"=>"lib/Release", "ChorusHubApp.exe"=>"lib/Release", "ChorusHubApp.exe.mdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.exe.mdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.dll.mdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.dll.mdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "debug/**"=>"lib/Debug", "Mercurial-i686.zip"=>"lib/common", "MercurialExtensions/**"=>"MercurialExtensions", "Mercurial-x86_64.zip"=>"lib/common"}
 #     VCS: https://github.com/sillsdev/chorus.git [chorus-2.5]
 # [2] build: L10NSharp Version2.0 Mono continuous (bt271)
 #     project: L10NSharp
@@ -145,8 +145,6 @@ copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v2
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/LibChorus.TestUtilities.dll?branch=%3Cdefault%3E ../lib/Release/LibChorus.TestUtilities.dll
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/LibChorus.TestUtilities.dll.mdb?branch=%3Cdefault%3E ../lib/Release/LibChorus.TestUtilities.dll.mdb
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/Autofac.dll?branch=%3Cdefault%3E ../lib/Release/Autofac.dll
-copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/NDesk.DBus.dll?branch=%3Cdefault%3E ../lib/Release/NDesk.DBus.dll
-copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/NDesk.DBus.dll.config?branch=%3Cdefault%3E ../lib/Release/NDesk.DBus.dll.config
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/Autofac.dll?branch=%3Cdefault%3E ../lib/Debug/Autofac.dll
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/Chorus.exe?branch=%3Cdefault%3E ../lib/Debug/Chorus.exe
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/Chorus.exe.mdb?branch=%3Cdefault%3E ../lib/Debug/Chorus.exe.mdb
@@ -158,8 +156,6 @@ copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v2
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/LibChorus.TestUtilities.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/LibChorus.TestUtilities.dll.mdb
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/LibChorus.dll?branch=%3Cdefault%3E ../lib/Debug/LibChorus.dll
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/LibChorus.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/LibChorus.dll.mdb
-copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/NDesk.DBus.dll?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll
-copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/debug/NDesk.DBus.dll.config?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll.config
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/Mercurial-i686.zip?branch=%3Cdefault%3E ../lib/common/Mercurial-i686.zip
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/MercurialExtensions/.guidsForInstaller.xml?branch=%3Cdefault%3E ../MercurialExtensions/.guidsForInstaller.xml
 copy_auto https://build.palaso.org/guestAuth/repository/download/ChorusLinux64v25Cont/latest.lastSuccessful/MercurialExtensions/Dummy.txt?branch=%3Cdefault%3E ../MercurialExtensions/Dummy.txt
@@ -235,8 +231,6 @@ copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v2
 copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/Enchant.Net.dll.config?branch=%3Cdefault%3E ../lib/Debug/Enchant.Net.dll.config
 copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/Ionic.Zip.dll?branch=%3Cdefault%3E ../lib/Debug/Ionic.Zip.dll
 copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/L10NSharp.dll?branch=%3Cdefault%3E ../lib/Debug/L10NSharp.dll
-copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/NDesk.DBus.dll?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll
-copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/NDesk.DBus.dll.config?branch=%3Cdefault%3E ../lib/Debug/NDesk.DBus.dll.config
 copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/Palaso.BuildTasks.dll?branch=%3Cdefault%3E ../lib/Debug/Palaso.BuildTasks.dll
 copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/Palaso.DictionaryServices.dll?branch=%3Cdefault%3E ../lib/Debug/Palaso.DictionaryServices.dll
 copy_auto https://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/Palaso.DictionaryServices.dll.mdb?branch=%3Cdefault%3E ../lib/Debug/Palaso.DictionaryServices.dll.mdb
