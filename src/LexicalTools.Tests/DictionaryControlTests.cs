@@ -25,6 +25,7 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture, RequiresSTA]
 	public class DictionaryControlTests: NUnitFormTest
 	{
+		private WeSayWordsProject _project;
 		private TemporaryFolder _tempFolder;
 		private DictionaryTask _task;
 		private LexEntryRepository _lexEntryRepository;
@@ -43,12 +44,13 @@ namespace WeSay.LexicalTools.Tests
 		public void SetupFixture()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
-			WeSayProjectTestHelper.InitializeForTests();
+			_project = WeSayProjectTestHelper.InitializeForTests();
 		}
 
 		[TestFixtureTearDown]
 		public void TearDownFixture()
 		{
+			_project.Dispose();
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 		}
 
@@ -152,7 +154,7 @@ namespace WeSay.LexicalTools.Tests
 
 			DictionaryControl.Factory dictControlFactory = (memory => new DictionaryControl(_entryViewFactory, _lexEntryRepository, viewTemplate, memory, new StringLogger()));
 
-			_task = new DictionaryTask(dictControlFactory, DictionaryBrowseAndEditConfiguration.CreateForTests(), _lexEntryRepository,  new TaskMemoryRepository());//, new UserSettingsForTask());
+			_task = new DictionaryTask(dictControlFactory, DictionaryBrowseAndEditConfiguration.CreateForTests("definition"), _lexEntryRepository,  new TaskMemoryRepository());//, new UserSettingsForTask());
 			_detailTaskPage = new TabPage();
 			ActivateTask();
 

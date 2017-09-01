@@ -11,7 +11,7 @@ namespace WeSay.Project
 	public class ConfigurationFileTooNewException: ApplicationException
 	{
 		public ConfigurationFileTooNewException(int currentCodeVersion, int fileVersion)
-			: base(string.Format("This configuration file is version {0}, but this version of WeSay can only handle version {1}. Please download a newer version of wesay from wesay.org", fileVersion,currentCodeVersion))
+			: base(string.Format("This configuration file is version {0}, but this version of WeSay can only handle version {1}. Please download a newer version of wesay from http://software.sil.org/wesay/download/", fileVersion,currentCodeVersion))
 		{
 
 		}
@@ -20,7 +20,7 @@ namespace WeSay.Project
 
 	public class ConfigFile
 	{
-		public const int LatestVersion = 8;
+		public const int LatestVersion = 9;
 		private readonly XmlDocument _xmlDocument = new XmlDocument();
 
 		private string _configFilePath;

@@ -11,6 +11,7 @@ using WeSay.Project;
 using WeSay.UI;
 using WeSay.LexicalModel;
 using SIL.DictionaryServices.Model;
+using SIL.Reporting;
 using SIL.TestUtilities;
 using WeSay.TestUtilities;
 
@@ -58,24 +59,32 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
+		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
+		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void LexEntry_Unassigned_Focused_Throws()
 		{
 			_lexEntryRepository = null;
 			Assert.Throws<ArgumentNullException>(() => HtmlRenderer.ToHtml(_entry, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen));
 		}
 		[Test]
+		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, mono when run after DictionaryControlTests")]
+		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void NullEntryReturnsEmptyString()
 		{
 			String html = HtmlRenderer.ToHtml(null, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen);
 			Assert.IsEmpty(html);
 		}
 		[Test]
+		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
+		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void ConversionTest()
 		{
 			String html = HtmlRenderer.ToHtml(_entry, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen);
 			Assert.IsTrue(html.Contains("contentEditable='false'"));
 		}
 		[Test]
+		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
+		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void HomographEntryTest()
 		{
 			String html = HtmlRenderer.ToHtml(anotherApple, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen);
@@ -84,9 +93,9 @@ namespace WeSay.LexicalTools.Tests
 
 		private void SetupTestData()
 		{
+			ErrorReport.IsOkToInteractWithUser = false;
 			_tempFolder = new TemporaryFolder();
 			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			_currentItem = null;
 			string lexicalForm = "test";

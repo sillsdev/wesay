@@ -3,11 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Chorus.FileTypeHanders.lift;
+using Chorus.FileTypeHandlers.lift;
 using Chorus.sync;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
 using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project

@@ -81,6 +81,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
     </Reference>
+    <Reference Include="SIL.DictionaryServices, Version=3.1.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\Debug\SIL.DictionaryServices.dll</HintPath>
+    </Reference>
     <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\Spart.dll</HintPath>
@@ -90,7 +93,6 @@
       <HintPath>..\..\lib\$(Configuration)\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="SIL.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\SIL.DictionaryServices.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
@@ -132,7 +134,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />    
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -171,6 +173,10 @@
       <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
       <Name>LexicalModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
+      <Project>{87af0b02-2983-486d-857f-d1859535c234}</Project>
+      <Name>LexicalTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
       <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
       <Name>WeSay.Data</Name>
@@ -203,9 +209,12 @@
       <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-    Other similar extension points exist, see Microsoft.Common.targets.
+	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">

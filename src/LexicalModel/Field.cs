@@ -23,6 +23,7 @@ namespace WeSay.LexicalModel
 		private string _dataTypeName;
 		private bool _enabled;
 		private bool _isSpellCheckingEnabled;
+		private bool _isMeaningField;
 		//private string _configurationName;
 
 		private bool _enabledNotSet = true;
@@ -303,7 +304,7 @@ namespace WeSay.LexicalModel
 			get
 			{
 				if (_fieldName == FieldNames.EntryLexicalForm.ToString() ||
-					_fieldName == LexSense.WellKnownProperties.Definition ||
+					IsMeaningField ||
 					_fieldName == FieldNames.ExampleSentence.ToString())
 				{
 					return false;
@@ -549,6 +550,14 @@ namespace WeSay.LexicalModel
 			get { return "newField"; }
 		}
 
+		[Description("This setting is changed in the Dictionary Browse and Edit configuration.")]
+		[ReflectorProperty("meaningField", Required = false)]
+		public bool IsMeaningField
+		{
+			get { return _isMeaningField; }
+			set { _isMeaningField = value; }
+		}
+
 		public bool CanOmitFromMainViewTemplate
 		{
 			get
@@ -558,16 +567,10 @@ namespace WeSay.LexicalModel
 					return false;
 				}
 
-#if GlossMeaning
-				if(_fieldName == FieldNames.SenseGloss.ToString())
-					return false;
-#else
-				if (_fieldName == LexSense.WellKnownProperties.Definition)
+				if (IsMeaningField)
 				{
 					return false;
 				}
-#endif
-
 				return true;
 			}
 		}

@@ -1,6 +1,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<RootDir>$(teamcity_build_checkoutDir)</RootDir>
+		<RootDir Condition="'$(teamcity_build_checkoutDir)' == '' And '$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
+		<RootDir Condition="'$(teamcity_build_checkoutDir)' != ''">$(teamcity_build_checkoutDir)</RootDir>
 	</PropertyGroup>
 
 	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
@@ -10,21 +11,22 @@
 	<UsingTask TaskName="MakePot" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="DNZip" AssemblyFile="$(RootDir)/build/MSBuild.ExtensionPack.dll" />
 	<UsingTask TaskName="File" AssemblyFile="$(RootDir)/build/MSBuild.ExtensionPack.dll" />
-	<UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll" />
 	<UsingTask TaskName="MsBuild.Community.Tasks.WebDownload" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
-	<UsingTask TaskName="NUnit" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
 
 	<PropertyGroup>
-		<Solution>WeSay.sln</Solution>
+		<Solution>WeSay VS2010.sln</Solution>
 		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
+		<!-- NB: the folder name may be set to lower case, so we have to define it again for rsync  -->
+		<ApplicationServerFolderName>wesay</ApplicationServerFolderName>
 		<Configuration>Release</Configuration>
-		<RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
+		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
 	<Import Project="$(RootDir)/build/NuGet.targets"/>
-	
+
 	<PropertyGroup>
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
 	</PropertyGroup>
@@ -42,7 +44,7 @@
 			Exclude="$(RootDir)\**\*Tests\**;$(RootDir)\**\WeSay.ConfigTool\**" />
 		<XmlFiles Include="$(RootDir)\common\**\*.WeSayConfig"/>
 	</ItemGroup>
-	
+
 	<Target Name="DownloadDistFiles">
 		<MakeDir Directories= "$(RootDir)\External"/>
 		<WebDownload FileUri="https://dl.dropboxusercontent.com/s/599lb0od6shtqqa/WeSay_Helps.chm?dl=1" FileName="$(RootDir)\External\WeSay_Helps.chm"></WebDownload>
@@ -99,40 +101,11 @@
 		<CallTarget Condition="'$(action)' == 'test'" Targets="RunTests"/>
 	</Target>
 
-	<Target Name="LocalTest" DependsOnTargets="Compile">
-		<CallTarget Targets="RunTests"/>
-	</Target>
-
-	<PropertyGroup>
-		<NUNIT_LOCATION Condition="'$(NUNIT_LOCATION)'==''">C:\Program Files (x86)\NUnit 2.6.4\bin</NUNIT_LOCATION>
-	</PropertyGroup>
-
-	<Target Name="RunTests"><!-- dependencies implied by calling targets -->
-		<CreateItem
-			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll" >
-			<Output ItemName="TestAssemblies" TaskParameter="Include" />
-		</CreateItem>
-		<NUnit
-			ToolPath="$(NUNIT_LOCATION)"
-			Assemblies="@(TestAssemblies)"
-			ExcludeCategory="SkipOnTeamCity"
-			OutputXmlFile="$(RootDir)/output/$(Configuration)/WeSay.nunit-output.xml"
-			Force32Bit="true"
-			Timeout="4500000"/>
-	</Target>
-
 	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
-		<CreateItem
-			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll" >
-			<Output ItemName="TestAssemblies" TaskParameter="Include" />
-		</CreateItem>
-		<NUnitTeamCity
-			Assemblies="@(TestAssemblies)"
-			ExcludeCategory="SkipOnTeamCity;SkipOnBuildServer"
-			NUnitVersion="NUnit-2.5.5" />
+		<CallTarget Targets="TestOnly"/>
 	</Target>
+
+	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
 
 	<Target Name="UnzipMercurial" DependsOnTargets="">
 		<!-- Extract a zip file-->
@@ -190,7 +163,7 @@
 			<Output TaskParameter="OutputFilePath" ItemName="Compile" />
 		</MakeWixForDirTree>
 	</Target>
-	
+
 	<Target Name="MakeWixForXulrunner">
 		<MakeWixForDirTree
 			DirectoryReferenceId="XulrunnerFiles"
@@ -243,30 +216,17 @@
 
 	<!-- Upload -->
 	<Target Name="MakeDownloadPointers" DependsOnTargets="VersionNumbers" >
-
-		<Message Text="Variables:" Importance="high"/>
-		<Message Text="LifeCycleStage: $(LifeCycleStage)" Importance="high"/>
-		<Message Text="ReleaseString: $(ReleaseString)" Importance="high"/>
-		<Message Text="ReleaseLabel: $(ReleaseLabel)" Importance="high"/>
-		<Message Text="RootDir: $(RootDir)" Importance="high"/>
-		<Message Text="Version: $(Version)" Importance="high"/>
-
-		<!-- copy it so we aren't modifying the original, which then is a pain on dev machines -->
-		<Copy
-			SourceFiles ="$(RootDir)\src\Installer\DownloadPointers.htm"
-			DestinationFolder ="$(RootDir)\output\installer" />
-
-		<!-- replace some parts of the file with the version number & date -->
-		<FileUpdate
-			File="$(RootDir)\output\installer\DownloadPointers.htm"
-			DatePlaceholder='DEV_RELEASE_DATE'
-			Regex='DEV_VERSION_NUMBER'
-			ReplacementText = "$(Version)$(ReleaseString)" />
-
-		<FileUpdate
-			File="$(RootDir)\output\installer\DownloadPointers.htm"
-			Regex='LIFE_CYCLE_STAGE'
-			ReplacementText = "$(ReleaseLabel)" />
+		<PropertyGroup>
+			<DownloadInfoPath>../output/installer/$(ApplicationName)Installer.$(Version).download_info</DownloadInfoPath>
+		</PropertyGroup>
+		<!-- For use on software.sil.org download page -->
+		<Copy SourceFiles ="$(teamcity_build_checkoutDir)\src\Installer\template.download_info"        DestinationFiles ="$(DownloadInfoPath)"/>
+		<FileUpdate File="$(DownloadInfoPath)" DatePlaceHolder='_DATE_' DateFormat='yyyy-MM-dd' Regex='_VERSION_'        ReplacementText ="$(Version)" />
+		<!--<FileUpdate File="$(DownloadInfoPath)" Regex='_BUILD_'        ReplacementText ="$(BUILD_NUMBER)" />-->
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="Release" />
+		<!--  push up to software.sil.org download page -->
+		<Message Text="Attempting rsync of $(DownloadInfoPath) to software.sil.org" Importance="high"/>
+		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "$(DownloadInfoPath)" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
 	</Target>
 
 	<Target Name="Sign" DependsOnTargets="Installer" >
@@ -274,16 +234,10 @@
 		<Exec Command='sign /d "WeSay Installer" /du "http://wesay.palaso.org/downloads/"  "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
-	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign; MakeDownloadPointers" >
-		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
-		<Exec
-			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\WeSayInstaller.$(version)$(ReleaseString).msi" bob@wesay.org:/var/www/downloads/WeSayInstaller.$(version)$(ReleaseString).msi'
-			WorkingDirectory="$(RootDir)" />
-
-		<Message Text="Attempting rsync of DownloadPointers.htm" Importance="high"/>
-		<Exec
-			Command='"c:\program files\cwRsync\bin\rsync.exe" -vz -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=C:\BuildAgent\conf\bob.key -l bob" "output\installer\DownloadPointers.htm" bob@wesay.org:/var/www/downloads/DownloadPointers$(ReleaseString).htm'
-			WorkingDirectory="$(RootDir)" />
+	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign" >
+		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi to software.sil.org" Importance="high"/>
+		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "../output/installer/WeSayInstaller.$(version)$(ReleaseString).msi" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
+		<CallTarget Targets ='MakeDownloadPointers'/>
 
 	</Target>
 

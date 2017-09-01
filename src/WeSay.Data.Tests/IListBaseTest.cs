@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
-	public class IListBaseTest<T>
+	public abstract class IListBaseTest<T>
 	{
 		protected IList _list;
 		protected T _firstItem;
@@ -325,7 +325,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IListVariableSizeReadOnlyBaseTest<T>: IListBaseTest<T>
+	public abstract class IListVariableSizeReadOnlyBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
@@ -382,7 +382,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IListFixedSizeReadWriteBaseTest<T>: IListBaseTest<T>
+	public abstract class IListFixedSizeReadWriteBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
@@ -445,7 +445,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public class IListFixedSizeReadOnlyBaseTest<T>: IListBaseTest<T>
+	public abstract class IListFixedSizeReadOnlyBaseTest<T>: IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()

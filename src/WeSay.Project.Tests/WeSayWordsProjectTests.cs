@@ -15,6 +15,8 @@ using SIL.Reporting;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
 using WeSay.LexicalModel;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
+using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.Tests.ConfigMigration.WritingSystem;
 using WeSay.TestUtilities;
@@ -764,7 +766,9 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ProjectCreation_WritingSystemLdml_IsLatestVersion()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
+			{
+				using (var project = projdir.CreateLoadedProject())
 			{
 				var wsFolderPath = WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(project.ProjectDirectoryPath);
 				var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
@@ -774,16 +778,20 @@ namespace WeSay.Project.Tests
 				Assert.That(LdmlDataMapper.CurrentLdmlVersion, Is.EqualTo(versionReader.GetFileVersion(pathToQaa)));
 			}
 		}
+		}
 
 		[Test]
 		//This test was formerly part of the LdmlInFolderWritingSystemCollectionTests TA 4/19/2011
 		[Category("For review")]
 		public void ProjectCreation_WritingSystemCollection_HasUnknownVernacular()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
+			{
+				using (var project = projdir.CreateLoadedProject())
 			{
 				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.OtherIdForTest));
 			}
+		}
 		}
 
 		[Test]
@@ -791,10 +799,13 @@ namespace WeSay.Project.Tests
 		[Category("For review")]
 		public void WritingSystemCollection_HasUnknownAnalysis()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
+			{
+				using (var project = projdir.CreateLoadedProject())
 			{
 				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.AnalysisIdForTest));
 			}
+		}
 		}
 
 		[Test]
@@ -925,7 +936,7 @@ namespace WeSay.Project.Tests
 				Directory.CreateDirectory(writingSystemFolderPath);
 
 				// Set SLDR to offline
-				Sldr.OfflineMode = true;
+				Sldr.Initialize(true);
 
 				//Now populate the input system repo with an "en" input system and a "qaa-x-changedWs" input system as well as
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
@@ -1008,39 +1019,51 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void IsWritingSystemInUse_LiftFileContainsWritingSystem_ReturnsTrue()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
+			{
+				using (var project = projdir.CreateLoadedProject())
 			{
 				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
 				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
 			}
+		}
 		}
 
 		[Test]
 		public void IsWritingSystemInUse_WritingSystemIsNotUsed_ReturnsFalse()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
+			{
+				using (var project = projdir.CreateLoadedProject())
 			{
 				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
 			}
+		}
 		}
 
 		[Test]
 		public void IsWritingSystemInUseInLift_LiftFileContainsWritingSystem_ReturnsTrue()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
+			{
+				using (var project = projdir.CreateLoadedProject())
 			{
 				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
 				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
 			}
 		}
+		}
 
 		[Test]
 		public void IsWritingSystemInUseInLift_WritingSystemIsNotUsed_ReturnsFalse()
 		{
-			using (var project = new ProjectDirectorySetupForTesting("").CreateLoadedProject())
+			using (var projdir = new ProjectDirectorySetupForTesting(""))
+			{
+				using (var project = projdir.CreateLoadedProject())
 			{
 				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
 			}
+		}
 		}
 
 		[Test]
@@ -1088,6 +1111,134 @@ namespace WeSay.Project.Tests
 				var project = new WeSayWordsProject();
 				project.LoadFromLiftLexiconPath(e.PathToLiftFile);
 				Assert.That(project.PathToLiftFile, Is.EqualTo(e.PathToLiftFile));
+			}
+		}
+
+		private void OnProject_MeaningFieldChanged(object sender, WeSayWordsProject.StringPair pair)
+		{
+			var project = sender as WeSayWordsProject;
+			foreach (var task in project.TaskConfigurations.OfType<ICareThatMeaningFieldChanged>())
+			{
+				task.OnMeaningFieldChanged(pair.from, pair.to);
+			}
+		}
+
+		private void VerifyTasks(IEnumerable<ITaskConfiguration> taskconfigs, string meaningField)
+		{
+			// want to assert the following changes
+			// dictionary task meaningfield
+			// MissingInfo tasks have changed
+			bool dict = false, meanings = false, pos = false, exsent = false;
+			Assert.NotNull(taskconfigs);
+			foreach (object task in taskconfigs)
+			{
+				Assert.NotNull(task);
+
+				DictionaryBrowseAndEditConfiguration dbe = task as DictionaryBrowseAndEditConfiguration;
+				if (dbe != null)
+				{
+					Assert.AreEqual(meaningField, dbe.MeaningField);
+					dict = true;
+				}
+
+				MissingInfoConfiguration missinginfo = task as MissingInfoConfiguration;
+				if (missinginfo != null)
+				{
+					switch (missinginfo.Label)
+					{
+						case "Meanings":
+							Assert.AreEqual(meaningField, missinginfo.MissingInfoFieldName);
+							Assert.AreEqual(true, missinginfo.IncludesField(meaningField));
+							meanings = true;
+							break;
+						case "Parts of Speech":
+							Assert.AreEqual(true, missinginfo.IncludesReadOnlyField(meaningField));
+							pos = true;
+							break;
+						case "Example Sentences":
+							Assert.AreEqual(true, missinginfo.IncludesReadOnlyField(meaningField));
+							exsent = true;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			Assert.IsTrue(dict);
+			Assert.IsTrue(meanings);
+			Assert.IsTrue(pos);
+			Assert.IsTrue(exsent);
+		}
+
+		[Test]
+		public void ChangeMeaningFieldToGloss()
+		{
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				project.LoadTasksFromConfigFile();
+				WeSayWordsProject.Project.MeaningFieldChanged += OnProject_MeaningFieldChanged;
+				project.MakeMeaningFieldChange("definition", "gloss");
+
+				// want to assert the following changes
+
+				// field and gloss field configs have changed
+				// field:meaningField exists
+				ViewTemplate template = project.DefaultViewTemplate;
+				Assert.IsNotNull(template);
+
+				Field def = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+				Field gloss = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+
+				Assert.AreEqual("Definition", def.DisplayName);
+				Assert.AreEqual(false, def.IsMeaningField);
+				Assert.AreEqual(false, def.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.NormallyHidden, def.Visibility);
+
+				Assert.AreEqual("Gloss (Meaning)", gloss.DisplayName);
+				Assert.AreEqual(true, gloss.IsMeaningField);
+				Assert.AreEqual(true, gloss.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, gloss.Visibility);
+
+				VerifyTasks(project.TaskConfigurations, "gloss");
+			}
+		}
+
+		[Test]
+		public void ChangeMeaningFieldToGlossAndBackToDefinition()
+		{
+
+			using (var e = new ProjectDirectorySetupForTesting(""))
+			{
+				var project = new WeSayWordsProject();
+				project.LoadFromProjectDirectoryPath(e.PathToDirectory);
+				project.LoadTasksFromConfigFile();
+				WeSayWordsProject.Project.MeaningFieldChanged += OnProject_MeaningFieldChanged;
+				project.MakeMeaningFieldChange("definition", "gloss");
+				project.MakeMeaningFieldChange("gloss", "definition");
+
+				// want to assert the following changes
+
+				// field and gloss field configs have changed
+				// field:meaningField exists
+				ViewTemplate template = project.DefaultViewTemplate;
+				Assert.IsNotNull(template);
+
+				Field def = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+				Field gloss = project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+
+				Assert.AreEqual("Definition (Meaning)", def.DisplayName);
+				Assert.AreEqual(true, def.IsMeaningField);
+				Assert.AreEqual(true, def.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.Visible, def.Visibility);
+
+				Assert.AreEqual("Gloss", gloss.DisplayName);
+				Assert.AreEqual(false, gloss.IsMeaningField);
+				Assert.AreEqual(false, gloss.Enabled);
+				Assert.AreEqual(CommonEnumerations.VisibilitySetting.NormallyHidden, gloss.Visibility);
+
+				VerifyTasks(project.TaskConfigurations, "definition");
 			}
 		}
 	}

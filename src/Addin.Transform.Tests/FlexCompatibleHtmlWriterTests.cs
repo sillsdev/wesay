@@ -27,7 +27,7 @@ namespace Addin.Transform.Tests
         [SetUp]
         public void Setup()
         {
-			Sldr.OfflineMode = true;
+			Sldr.Initialize(true);
 			_projectDir = new ProjectDirectorySetupForTesting("");
 			_project = _projectDir.CreateLoadedProject();
 			var ws = _project.WritingSystems.Get("en");

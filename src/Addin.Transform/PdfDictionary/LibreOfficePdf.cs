@@ -103,6 +103,9 @@ namespace Addin.Transform.PdfDictionary
 					// look for words[0] = ProductMajor
 					// version number is words[1], check is >= 340
 
+					// DG - Mar2017 at some point libreoffice removed ProductMajor
+					// so default ProductMajor to 400 unless find it in versionrc
+
 					Process loffice = new Process();
 					loffice.StartInfo.Arguments = "libreoffice";
 					loffice.StartInfo.RedirectStandardOutput = true;
@@ -122,6 +125,7 @@ namespace Addin.Transform.PdfDictionary
 						rcpath = Path.Combine (rcpath, "versionrc");
 						if (File.Exists(rcpath))
 						{
+							ProductMajor = 400; // default unless find otherwise
 							StreamReader rcfile = File.OpenText(rcpath);
 							string rcline;
 							rcline = rcfile.ReadLine();
@@ -131,18 +135,16 @@ namespace Addin.Transform.PdfDictionary
 								if (words[0] == "ProductMajor")
 								{
 									ProductMajor = Convert.ToInt32(words[1]);
-									int minver = 340;
-									if (ProductMajor >= minver)
-									{
-										_isAvailable = availStatus.Available;
-										retval = true;
-									}
 									break;
 								}
-
 								rcline = rcfile.ReadLine();
 							}
-
+							int minver = 340;
+							if (ProductMajor >= minver)
+							{
+								_isAvailable = availStatus.Available;
+								retval = true;
+							}
 						}
 					}
 #endif

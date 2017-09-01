@@ -16,7 +16,7 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Chorus;
-using Chorus.FileTypeHanders.lift;
+using Chorus.FileTypeHandlers.lift;
 using Chorus.UI.Notes;
 using Chorus.sync;
 using Chorus.UI.Notes.Bar;
@@ -52,6 +52,7 @@ namespace WeSay.Project
 	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
 		private IList<ITask> _tasks;
+		private IEnumerable<ITaskConfiguration> _taskconfigurations;
 		private ViewTemplate _defaultViewTemplate;
 		private IList<ViewTemplate> _viewTemplates;
 		private readonly Dictionary<string, OptionsList> _optionLists;
@@ -84,6 +85,8 @@ namespace WeSay.Project
 		public event EventHandler<StringPair> WritingSystemChanged;
 		public event EventHandler<WritingSystemDeletedEventArgs> WritingSystemDeleted;
 
+		public event EventHandler<StringPair> MeaningFieldChanged;
+
 		public WeSayWordsProject()
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
@@ -96,6 +99,12 @@ namespace WeSay.Project
 		{
 			get { return _tasks; }
 			set { _tasks = value; }
+		}
+
+		internal IEnumerable<ITaskConfiguration> TaskConfigurations
+		{
+			get { return _taskconfigurations; }
+			set { _taskconfigurations = value; }
 		}
 
 		public static bool ProjectExists
@@ -1716,6 +1725,21 @@ namespace WeSay.Project
 			}
 		}
 
+		public void MakeMeaningFieldChange(string oldId, string newId)
+		{
+			//change meaning field in template
+			DefaultViewTemplate.OnMeaningFieldChange(newId);
+
+			// lets tasks know that meaning field has changed
+			if (MeaningFieldChanged != null)
+			{
+				StringPair p = new StringPair();
+				p.from = oldId;
+				p.to = newId;
+				MeaningFieldChanged(this, p);
+			}
+		}
+
 		private void ChangeIdInLoadedOptionListIfNecassary(string oldId, string newId, OptionsList optionlist)
 		{
 
@@ -1933,7 +1957,8 @@ namespace WeSay.Project
 		public void LoadTasksFromConfigFile()
 		{
 			ConfigFileReader configReader = _container.Resolve<ConfigFileReader>();
-			Tasks = ConfigFileTaskBuilder.CreateTasks(_container, configReader.GetTasksConfigurations(_container));
+			TaskConfigurations = configReader.GetTasksConfigurations(_container);
+			Tasks = ConfigFileTaskBuilder.CreateTasks(_container, TaskConfigurations);
 		}
 
 		public delegate void ContainerAdder(ContainerBuilder b);

@@ -16,7 +16,7 @@ namespace WeSay.TestUtilities
 		/// </summary>
 		public static WeSayWordsProject InitializeForTests()
 		{
-			Sldr.OfflineMode = true;
+			Sldr.Initialize(true);
 			WeSayWordsProject project = new WeSayWordsProject();
 
 			try

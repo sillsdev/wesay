@@ -22,14 +22,14 @@ namespace WeSay.ConfigTool.Tests
 
 		public override void Setup()
 		{
-			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
-			Sldr.OfflineMode = true;
+			Sldr.Initialize(true);
 
 			_projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 		}
@@ -37,6 +37,7 @@ namespace WeSay.ConfigTool.Tests
 		public override void TearDown()
 		{
 			_mainWindowTester.Close();
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 			base.TearDown();
 			if (BasilProject.IsInitialized)
 			{
@@ -230,15 +231,19 @@ namespace WeSay.ConfigTool.Tests
 		public void OpenProject_OpenedWithDirNameWhichDoesNotMatchProjectName_Opens()
 		{
 			using (var projectDir = new ProjectDirectorySetupForTesting(""))
-			using(var window = new ConfigurationWindow(new string[] {}))
 			{
-				Assert.AreNotEqual(
-					Path.GetFileNameWithoutExtension(projectDir.PathToLiftFile),
-					Path.GetFileName(projectDir.PathToDirectory));
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+				using (var window = new ConfigurationWindow(new string[] { }))
+				{
+					Assert.AreNotEqual(
+						Path.GetFileNameWithoutExtension(projectDir.PathToLiftFile),
+						Path.GetFileName(projectDir.PathToDirectory));
 
-				window.DisableBackupAndChorusStuffForTests();
-				window.Show();
-			   Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
+					window.DisableBackupAndChorusStuffForTests();
+					window.Show();
+					Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
+				}
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 			}
 		}
 	}

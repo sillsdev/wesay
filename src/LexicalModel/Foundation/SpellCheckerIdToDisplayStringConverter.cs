@@ -76,7 +76,17 @@ namespace WeSay.LexicalModel.Foundation
 					{
 						string id = valueAsString.Replace('_', '-');
 						CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag(id);
-						display = valueAsString + " (" + cultureInfo.NativeName + ")";
+						// Windows 10 doesn't throw an exception if id is unknown but instead makes
+						// the NativeName be of the form "Unknown Locale (id)" where id is in form xx-YY
+						// The "Unknown locale" message may be localised so look for the lower cased id
+						if (cultureInfo.NativeName.ToLower().Contains(id.ToLower()))
+						{
+							display = valueAsString;
+						}
+						else
+						{
+							display = valueAsString + " (" + cultureInfo.NativeName + ")";
+						}
 					}
 					catch
 					{

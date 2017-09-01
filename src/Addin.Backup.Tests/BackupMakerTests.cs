@@ -135,6 +135,7 @@ namespace Addin.Backup.Tests
 						Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new[] {fileToBackUp.Path}
 					)
 				);
+				liftFileStreamForLocking.Close();
 			}
 		}
 

@@ -161,7 +161,16 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void SetupPickerControlWritingSystems()
 		{
 			RegisterFieldWithPicker(Field.FieldNames.EntryLexicalForm.ToString());
-			RegisterFieldWithPicker(LexSense.WellKnownProperties.Gloss); //Reversal
+			// show definition instead of gloss if it is meaningfield
+			Field defn = _viewTemplate.GetField(LexSense.WellKnownProperties.Definition);
+			if ((defn == null) || defn.IsMeaningField == true)
+			{
+				RegisterFieldWithPicker(LexSense.WellKnownProperties.Definition); //Reversal
+			}
+			else
+			{
+				RegisterFieldWithPicker(LexSense.WellKnownProperties.Gloss); //Reversal
+			}
 		}
 
 

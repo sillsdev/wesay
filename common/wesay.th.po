@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # palaso_admin <admin@palaso.org>, 2011
 # Greg Blok <greg_blok@sil.org>, 2011

@@ -68,6 +68,15 @@ namespace WeSay.ConfigTool
 
 		}
 
+		public void RefreshFieldDisplayNames()
+		{
+			foreach (ListViewItem item in _fieldsListBox.Items)
+			{
+				Field field = (Field) item.Tag;
+				item.Text = field.DisplayName;
+			}
+		}
+
 		/// <summary>
 		/// Construct the list of fields to show.
 		/// </summary>

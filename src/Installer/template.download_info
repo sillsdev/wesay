@@ -1,0 +1,13 @@
+{
+  "name": "WeSay",
+  "version": "_VERSION_",
+  "date": "_DATE_",
+  "platform": "win",
+  "platform_version": "",
+  "architecture": "",
+  "stability": "_CHANNEL_",
+  "file": "WeSayInstaller._VERSION_.msi",
+  "md5": "",
+  "type": "msi",
+  "build": ""
+}

@@ -40,6 +40,13 @@ namespace WeSay.LexicalTools
 		private bool _deletable;
 
 		/// <summary>
+		/// true if the gloss is the meaning field
+		/// false if the defninition is the meaning field
+		/// null if it hasn't been checked yet
+		/// </summary>
+		private bool? _glossMeaningField;
+
+		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -110,6 +117,32 @@ namespace WeSay.LexicalTools
 		}
 
 		/// <summary>
+		/// true if the gloss is the meaning field
+		/// false if the defninition is the meaning field
+		/// </summary>
+		protected bool GlossMeaningField
+		{
+			get
+			{
+				if (_glossMeaningField == null)
+				{
+					Field field = ActiveViewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+					if (field != null && field.IsMeaningField)
+					{
+						_glossMeaningField = true;
+					}
+					else
+					{
+						_glossMeaningField = false;
+					}
+				}
+				return (bool) _glossMeaningField;
+			}
+			set { _glossMeaningField = value; }
+		}
+
+
+		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
 		protected LexEntryRepository RecordListManager
@@ -165,6 +198,7 @@ namespace WeSay.LexicalTools
 			DetailList.MouseEnteredBounds += OnMouseEnteredBounds;
 			DetailList.MouseLeftBounds += OnMouseLeftBounds;
 			ChildLayouts = new List<Layouter>();
+			_glossMeaningField = null;
 		}
 		public void Dispose()
 		{
@@ -388,13 +422,14 @@ namespace WeSay.LexicalTools
 			int rowCount = 0;
 			foreach (Field customField in ActiveViewTemplate.GetCustomFields(target.GetType().Name))
 			{
-#if GlossMeaning
-#else
-				if (customField.FieldName == LexSense.WellKnownProperties.Definition)
+				if (!GlossMeaningField && customField.FieldName == LexSense.WellKnownProperties.Definition)
 				{
 					continue; //already put this in next to "Meaning"
 				}
-#endif
+				else if (GlossMeaningField && customField.FieldName == LexSense.WellKnownProperties.Gloss)
+				{
+					continue; //already put this in next to "Meaning"
+				}
 				rowCount = AddOneCustomField(target,
 											 customField,
 											 insertAtRow + rowCount /*changed feb 2008*/,

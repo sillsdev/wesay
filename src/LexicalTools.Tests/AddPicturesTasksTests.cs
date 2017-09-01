@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Configuration;
+using NUnit.Framework;
 using SIL.IO;
-using SIL.Reporting;
 using SIL.TestUtilities;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddPictures;

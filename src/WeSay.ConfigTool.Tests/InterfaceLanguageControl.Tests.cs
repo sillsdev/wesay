@@ -19,6 +19,7 @@ namespace WeSay.ConfigTool.Tests
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 
 			//           _window.OpenProject(BasilProject.GetPretendProjectDirectory());
 		}
@@ -38,7 +39,10 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[TearDown]
-		public void TearDown() {}
+		public void TearDown()
+		{
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+		}
 
 		[Test]
 		public void NewProject_LanguageChooser_ShowsEnglish()

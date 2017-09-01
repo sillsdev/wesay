@@ -1,3 +1,6 @@
+*.cache
+*.pdb
+.guidsForInstaller.xml
 output/
 Thumbs.db
 .bzr/
@@ -28,3 +31,7 @@ xulrunner/
 package/
 src/packages/
 build/NuGet.exe
+External/
+WeSay_Helps.chm
+.idea/
+icu4c.readme.txt

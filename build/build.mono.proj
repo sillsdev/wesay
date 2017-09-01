@@ -1,17 +1,16 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<RootDir>$(teamcity_build_checkoutDir)</RootDir>
+		<RootDir Condition="'$(teamcity_build_checkoutDir)' == '' And '$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
+		<RootDir Condition="'$(teamcity_build_checkoutDir)' != ''">$(teamcity_build_checkoutDir)</RootDir>
 	</PropertyGroup>
 
 	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<!-- <UsingTask TaskName="MakeWixForDirTree" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" /> -->
 	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="NUnitTeamCity" AssemblyFile="$(agent_home_dir)/plugins/dotnetPlugin/bin/JetBrains.BuildServer.MSBuildLoggers.dll" />
 
 	<PropertyGroup>
-		<Solution>WeSay.sln</Solution>
+		<Solution>WeSay VS2010.sln</Solution>
 		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
 		<ApplicationNameLC>wesay</ApplicationNameLC>
@@ -34,13 +33,6 @@
 		<Message Text="Build Complete"/>
 	</Target>
 
-	<Target Name="LocalTest">
-		<Exec
-			Command="$(MONO_PREFIX)/bin/mono --debug $(MONO_PREFIX)/lib/mono/4.5/nunit-console.exe -noshadow [!P]*.Tests.dll -xml=WeSay.nunit-output.xml -exclude=&quot;SkipOnTeamCity&quot;"
-			WorkingDirectory="$(RootDir)/output/$(Configuration)"
-			Timeout="4500000"/>
-	</Target>
-
 	<ItemGroup>
 		<ExistingObjectFiles
 			Include="$(RootDir)/output/$(Configuration)/**/*"
@@ -52,7 +44,7 @@
 		<Delete Files="@(ExistingObjectFiles)" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="RestorePackages;UnzipMercurial;CopyFiles;CopyIcuLibs">
+	<Target Name="Compile" DependsOnTargets="RestorePackages;UnzipMercurial;CopyFiles">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
@@ -69,23 +61,11 @@
 		<Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
 	</Target>
 
-	<Target Name="Test" DependsOnTargets="Build">
-		<CreateItem
-			Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-			Exclude="$(RootDir)/output/$(Configuration)/Palaso*.dll">
-			<Output ItemName="TestAssemblies" TaskParameter="Include" />
-		</CreateItem>
-		<NUnitTeamCity
-			Assemblies="@(TestAssemblies)"
-			ExcludeCategory="SkipOnBuildServer;SkipOnTeamCity;KnownMonoIssue;NUnit Windows Forms"
-			NUnitVersion="NUnit-2.5.5" />
+	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
+		<CallTarget Targets="TestOnly"/>
 	</Target>
 
-	<Target Name="CopyIcuLibs">
-		<!-- $(icu-config ...) is passed to shell to exec. -->
-		<!-- Escape the $ (%24) to ensure it is sent to the shell. -->
-		<Exec Command="cp -p $(RootDir)/lib/$(Configuration)/icu%24(icu-config --version|tr -d .|cut -c -2)/icu.net.dll* $(RootDir)/lib/$(Configuration)" />
-	</Target>
+	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
 
 	<ItemGroup>
 		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
@@ -97,114 +77,12 @@
 		<Exec Command="chmod 755 $(OutputDir)/chorusmerge" />
 	</Target>
 
-	<!-- Source Package -->
-	<ItemGroup>
-		<ExistingPackageFiles Include="$(OutputDir)/wesay*.tar.gz" />
-		<ExistingPackageBuildFiles Include="$(OutputDir)/Package/**/*" />
-		<ExistingPackageBuildFiles Include="$(OutputDir)/Package/**" />
-	</ItemGroup>
-	<Target Name="PackageClean">
-		<Delete Files="@(ExistingPackageFiles)" />
-		<Delete Files="@(ExistingPackageBuildFiles)" />
-	</Target>
-	<ItemGroup>
-		<Source Include="$(RootDir)/src/**/*" />
-		<Source Include="$(RootDir)/lib/Debug/**" Exclude="$(RootDir)/lib/Debug/*Palaso*;$(RootDir)/lib/Debug/*Chorus*;$(RootDir)/lib/Debug/SIL.*;$(RootDir)/lib/Debug/icu.net.*" />
-		<Source Include="$(RootDir)/lib/Release/**" Exclude="$(RootDir)/lib/Release/*Palaso*;$(RootDir)/lib/Release/*Chorus*;$(RootDir)/lib/Release/SIL.*;$(RootDir)/lib/Release/icu.net.*" />
-		<Source Include="$(RootDir)/lib/**/icu48/*" />
-		<Source Include="$(RootDir)/lib/**/icu52/*" />
-		<Source Include="$(RootDir)/lib/common/**" />
-		<Source Include="$(RootDir)/artwork/**" />
-		<Source Include="$(RootDir)/build/*.proj" />
-		<Source Include="$(RootDir)/build/NuGet.targets" />
-		<Source Include="$(RootDir)/build/mono/*" />
-		<Source Include="$(RootDir)/common/**/*" />
-		<Source Include="$(RootDir)/doc/**/*" />
-		<Source Include="$(RootDir)/SampleProjects/**" />
-		<Source Include="$(RootDir)/test/*" />
-		<Source Include="$(RootDir)/templates/**/*" />
-		<Source Include="$(RootDir)/externals/*" />
-		<Source Include="$(RootDir)/environ*" />
-	</ItemGroup>
-	<Target Name="SourcePackage" DependsOnTargets="Clean;PackageClean;SetAssemblyVersion">
-		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version).tar.gz">
-			<Output TaskParameter="Value" PropertyName="SourcePackageFileName" />
-		</CreateProperty>
-		<CreateProperty Value="$(OutputDir)/$(ApplicationNameLC)-$(Version)">
-			<Output TaskParameter="Value" PropertyName="TarBaseDir" />
-		</CreateProperty>
-		<Message Text="Archive source to '$(SourcePackageFileName)'" />
-		<MakeDir Directories="$(OutputDir)" />
-		<Archive
-			Command="Tar"
-			InputFilePaths="@(Source)"
-			OutputFileName="$(SourcePackageFileName)"
-			BasePath="$(RootDir)"
-			WorkingDir="$(RootDir)"
-		/>
-		<MakeDir Directories="$(TarBaseDir)" />
-		<Exec
-			Command="tar -xzf $(SourcePackageFileName)"
-			WorkingDirectory="$(TarBaseDir)"
-		/>
-		<Exec
-			Command="tar -czf $(SourcePackageFileName) $(ApplicationNameLC)-$(Version)"
-			WorkingDirectory="$(OutputDir)"
-		/>
-	</Target>
-
-	<!-- Installer (Packaging) -->
-	<ItemGroup>
-		<DebianControlFiles Include="$(RootDir)/package/lucid/**/*" />
-	</ItemGroup>
-	<Target Name="Installer" DependsOnTargets="SourcePackage">
-		<CreateProperty Value="$(OutputDir)/Package/$(ApplicationNameLC)-$(Version)">
-			<Output TaskParameter="Value" PropertyName="InstallerBaseDir" />
-		</CreateProperty>
-		<CreateItem Include="$(InstallerBaseDir)/**/*;$(InstallerBaseDir)/**">
-			<Output TaskParameter="Include" ItemName="OldInstallerFiles" />
-		</CreateItem>
-		<CreateItem Include="@(OldInstallerFiles->'%(RootDir)%(Directory)')">
-			<Output TaskParameter="Include" ItemName="FoldersToDelete" />
-		</CreateItem>
-		<Delete Files="@(OldInstallerFiles)" />
-		<RemoveDir Directories="$(FoldersToDelete)" />
-		<MakeDir Directories="$(OutputDir)/Package" />
-		<Copy SourceFiles="$(SourcePackageFileName)" DestinationFiles="$(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz" />
-		<Exec
-			Command="tar -xzf $(OutputDir)/Package/$(ApplicationNameLC)_$(Version).orig.tar.gz"
-			WorkingDirectory="$(OutputDir)/Package"
-		/>
-		<MakeDir Directories="$(InstallerBaseDir)/debian" />
-		<Copy SourceFiles="@(DebianControlFiles)" DestinationFolder="$(InstallerBaseDir)/debian/%(RecursiveDir)" />
-		<Exec
-			Command='dch -v $(Version)-1palaso1 "Auto Build"'
-			WorkingDirectory="$(InstallerBaseDir)"
-		/>
-		<Exec
-			Command='dch -r ""'
-			WorkingDirectory="$(InstallerBaseDir)"
-		/>
-		<Message Text="debuild -S -nc -sa" />
-		<Exec
-			Command="debuild -S -nc -sa"
-			WorkingDirectory="$(InstallerBaseDir)"
-		/>
-	</Target>
-
-	<Target Name="Upload" DependsOnTargets="Installer">
-		<Message Text="Starting dput -- $(Dist) i386" />
-		<Exec
-			Command='dput LINGNET-$(Dist) /home/bob/pbuilder/results/$(Dist)/$(ApplicationNameLC)_$(Version)-1palaso1_i386.changes'
-			WorkingDirectory="$(InstallerBaseDir)"
-		/>
-	</Target>
-
 	<!-- Install -->
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
 		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*Test.dll.*;$(OutputDir)/*Tests.dll.*;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll;$(OutputDir)/SIL.Archiving*;$(OutputDir)/LibChorus.TestUtilities.*" />
 		<Mercurial Include="$(RootDir)/Mercurial/**/*" Exclude="$(RootDir)/Mercurial/**/*.pyc" />
+		<MercurialExtensions Include="$(RootDir)/MercurialExtensions/**/*" Exclude="$(RootDir)/MercurialExtensions/**/*.pyc;$(RootDir)/MercurialExtensions/Dummy.txt;$(MercurialExtensions)/MercurialExtensions/**/.guidsForInstaller.xml" />
 		<CommonFiles Include="$(RootDir)/common/**/*" Exclude="$(RootDir)/common/Chorus_Help.chm" />
 		<!-- HACK: Chorus looks for its help file in the InstallApp directory instead of InstallData directory.  JasonNaylor told me not to change that. Sigh... Chris Hubbard-->
 		<ChorusHelpFiles Include="$(RootDir)/common/Chorus_Help.chm" />
@@ -217,6 +95,7 @@
 		<InstallUsrBin>$(InstallDir)/bin</InstallUsrBin>
 		<InstallApp>$(InstallDir)/lib/$(ApplicationNameLC)</InstallApp>
 		<InstallMercurial>$(InstallDir)/lib/$(ApplicationNameLC)/Mercurial</InstallMercurial>
+		<InstallMercurialExtensions>$(InstallDir)/lib/$(ApplicationNameLC)/MercurialExtensions</InstallMercurialExtensions>
 		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
 		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
 		<InstallMenu>$(InstallDir)/share/applications</InstallMenu>
@@ -233,6 +112,10 @@
 		<Copy
 			SourceFiles="@(Mercurial)"
 			DestinationFolder="$(InstallMercurial)/%(RecursiveDir)"
+		/>
+		<Copy
+			SourceFiles="@(MercurialExtensions)"
+			DestinationFolder="$(InstallMercurialExtensions)/%(RecursiveDir)"
 		/>
 		<Copy
 			SourceFiles="@(CommonFiles)"
