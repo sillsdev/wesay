@@ -12,7 +12,6 @@ LIB=/usr/lib/wesay
 
 define MERCURIAL_INI
 [extensions]
-eol=
 hgext.graphlog=
 convert=
 fixutf8=$(LIB)/MercurialExtensions/fixutf8/fixutf8.py
