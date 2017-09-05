@@ -100,7 +100,10 @@ namespace WeSay.LexicalTools.Tests
 			v.Add(lexicalFormField);
 			v.Add(semanticDomainField);
 
-			v.Add(new Field(LexSense.WellKnownProperties.Definition,"LexSense", new string[]{"en"}));
+			Field defnField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", new string[] { "en" });
+			defnField.IsMeaningField = true;
+
+			v.Add(defnField);
 
 			if(!v.WritingSystems.Contains("en"))
 			{

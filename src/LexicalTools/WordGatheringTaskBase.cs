@@ -14,6 +14,7 @@ namespace WeSay.LexicalTools
 	{
 		private readonly IWritingSystemDefinition _lexicalFormWritingSystem;
 		private readonly ViewTemplate _viewTemplate;
+		protected bool _glossMeaningField;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,
 										LexEntryRepository lexEntryRepository,
@@ -30,6 +31,16 @@ namespace WeSay.LexicalTools
 			_viewTemplate = viewTemplate;
 			_lexicalFormWritingSystem =
 				 viewTemplate.GetDefaultWritingSystemForField(Field.FieldNames.EntryLexicalForm.ToString());
+
+			var glossField = _viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+			if (glossField == null)
+			{
+				_glossMeaningField = false;
+			}
+			else
+			{
+				_glossMeaningField = glossField.IsMeaningField;
+			}
 		}
 
 		protected IWritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
@@ -74,7 +85,14 @@ namespace WeSay.LexicalTools
 			get
 			{
 				VerifyTaskActivated();
-				return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition);
+				if (_glossMeaningField)
+				{
+					return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Gloss);
+				}
+				else
+				{
+					return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition);
+				}
 			}
 
 		}

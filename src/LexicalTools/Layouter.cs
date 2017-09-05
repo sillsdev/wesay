@@ -62,8 +62,6 @@ namespace WeSay.LexicalTools
 		/// See WS-23 for more info.
 		private MultiTextControl _previouslyGhostedControlToReuse;
 
-		private bool _showNormallyHiddenFields;
-
 		protected readonly DeleteButton _deleteButton = new DeleteButton();
 
 		public EventHandler DeleteClicked;
@@ -141,6 +139,10 @@ namespace WeSay.LexicalTools
 			set { _glossMeaningField = value; }
 		}
 
+		/// <summary>
+		/// true if the minor meaning field label (gloss or definition) should be shown
+		/// </summary>
+		public bool ShowMinorMeaningLabel { get; set; }
 
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
@@ -150,11 +152,7 @@ namespace WeSay.LexicalTools
 			get { return _lexEntryRepository; }
 		}
 
-		public bool ShowNormallyHiddenFields
-		{
-			get { return _showNormallyHiddenFields; }
-			set { _showNormallyHiddenFields = value; }
-		}
+		public bool ShowNormallyHiddenFields { get; set; }
 
 		public Layouter ParentLayouter { get; internal set; }
 

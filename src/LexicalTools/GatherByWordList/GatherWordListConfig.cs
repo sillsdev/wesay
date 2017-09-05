@@ -110,7 +110,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 
 
-		public bool IsOptional
+		public override bool IsOptional
 		{
 			get { return true; }
 		}

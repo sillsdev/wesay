@@ -31,6 +31,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private readonly IWritingSystemDefinition _lexicalUnitWritingSystem;
 		private IList<string> _definitionWritingSystemIds;
 		private IList<string> _glossWritingSystemIds;
+		private IList<string> _meaningWritingSystemIds;
 		private bool _usingLiftFile;
 		public string LoadFailureMessage;
 
@@ -66,8 +67,18 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				_glossWritingSystemIds = new List<string>();
 			}
-			if (_definitionWritingSystemIds.Count > 0)
-				_preferredPromptingWritingSystemId = _definitionWritingSystemIds[0];
+			if (f != null && f.IsMeaningField)
+			{
+				_glossMeaningField = true;
+				_meaningWritingSystemIds = _glossWritingSystemIds;
+			}
+			else
+			{
+				_meaningWritingSystemIds = _definitionWritingSystemIds;
+
+			}
+			if (_meaningWritingSystemIds.Count > 0)
+				_preferredPromptingWritingSystemId = _meaningWritingSystemIds[0];
 		}
 
 		public IWritingSystemDefinition PromptingWritingSystem
@@ -76,7 +87,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				if (!_viewTemplate.WritingSystems.Contains(_preferredPromptingWritingSystemId))
 				{
-					return _viewTemplate.GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Definition);//shouldn't ever happen
+					return _viewTemplate.GetDefaultWritingSystemForField(_glossMeaningField ? LexSense.WellKnownProperties.Gloss :  LexSense.WellKnownProperties.Definition);//shouldn't ever happen
 				}
 				return _viewTemplate.WritingSystems.Get(_preferredPromptingWritingSystemId);
 			}
@@ -235,7 +246,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				//note, we choose to skip this word if it doesn't have any of the same languages as our
 				//current definition field.  But we don't skip it just because it doesn't have our
 				//preferred (first) one.
-				var preferred = new string[]{_definitionWritingSystemIds.First()};
+				var preferred = new string[]{_meaningWritingSystemIds.First()};
 				var sense = CurrentTemplateSense;
 				LanguageForm lf=null;
 				if (sense != null)
@@ -245,9 +256,9 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 				//ok, if we didn't get the best one, how about any others in the def field?
 				if (lf == null)
-					lf = CurrentTemplateLexicalEntry.LexicalForm.GetBestAlternative(_definitionWritingSystemIds);
+					lf = CurrentTemplateLexicalEntry.LexicalForm.GetBestAlternative(_meaningWritingSystemIds);
 				if (lf == null && sense != null)
-					lf = sense.Gloss.GetBestAlternative(_definitionWritingSystemIds);
+					lf = sense.Gloss.GetBestAlternative(_meaningWritingSystemIds);
 				if (lf == null && sense != null)
 					lf = sense.Definition.GetBestAlternative(preferred);
 
@@ -309,7 +320,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private bool GetWordHasElligibleWritingSystem(LexEntry entry)
 		{
 			var sense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
-			foreach (var id in _definitionWritingSystemIds)
+			foreach (var id in _meaningWritingSystemIds)
 			{
 				if ((entry.LexicalForm!=null && entry.LexicalForm.ContainsAlternative(id))
 					|| (sense!=null && sense.Gloss!=null && sense.Gloss.ContainsAlternative(id))
@@ -467,7 +478,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				{
 					//this check makes sure we don't introduce a form form a lang we allow for def, but not gloss
 					if (_glossWritingSystemIds.Contains(form.WritingSystemId))
-					gloss.SetAlternative(form.WritingSystemId, form.Form);
+						gloss.SetAlternative(form.WritingSystemId, form.Form);
 				}
 			}
 
@@ -485,7 +496,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense.Clone());
 				LexEntryRepository.SaveItem(entry);
-				Logger.WriteEvent("WordList-Adding new word '{0}'and givin the sense '{1}'", entry.GetSimpleFormForLogging(), firstGloss );
+				Logger.WriteEvent("WordList-Adding new word '{0}'and giving the sense '{1}'", entry.GetSimpleFormForLogging(), firstGloss );
 			}
 			else
 			{
@@ -595,7 +606,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 					}
 					s = s.Trim(new char[] {' ', ','});
 					LoadFailureMessage = string.Format(
-						"To use this word pack, set your first definition field to one of ({0}).", s);
+						"To use this word pack, set your first meaning field to one of ({0}).", s);
 					Palaso.Reporting.ErrorReport.NotifyUserOfProblem(LoadFailureMessage);
 				}
 			}
