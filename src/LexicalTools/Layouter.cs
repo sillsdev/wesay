@@ -47,11 +47,6 @@ namespace WeSay.LexicalTools
 		private bool? _glossMeaningField;
 
 		/// <summary>
-		/// true if the minor meaning field label (gloss or definition) should be shown
-		/// </summary>
-		private bool _showMinorMeaningLabel;
-
-		/// <summary>
 		/// Use for establishing relations been this entry and the rest
 		/// </summary>
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -66,8 +61,6 @@ namespace WeSay.LexicalTools
 		/// Keyman, since switching focus to a new, "real" box clears Keymans history of your typing.
 		/// See WS-23 for more info.
 		private MultiTextControl _previouslyGhostedControlToReuse;
-
-		private bool _showNormallyHiddenFields;
 
 		protected readonly DeleteButton _deleteButton = new DeleteButton();
 
@@ -146,11 +139,10 @@ namespace WeSay.LexicalTools
 			set { _glossMeaningField = value; }
 		}
 
-		public bool ShowMinorMeaningLabel
-		{
-			get { return _showMinorMeaningLabel; }
-			set { _showMinorMeaningLabel = value; }
-		}
+		/// <summary>
+		/// true if the minor meaning field label (gloss or definition) should be shown
+		/// </summary>
+		public bool ShowMinorMeaningLabel { get; set; }
 
 		/// <summary>
 		/// Use for establishing relations been this entry and the rest
@@ -160,11 +152,7 @@ namespace WeSay.LexicalTools
 			get { return _lexEntryRepository; }
 		}
 
-		public bool ShowNormallyHiddenFields
-		{
-			get { return _showNormallyHiddenFields; }
-			set { _showNormallyHiddenFields = value; }
-		}
+		public bool ShowNormallyHiddenFields { get; set; }
 
 		public Layouter ParentLayouter { get; internal set; }
 

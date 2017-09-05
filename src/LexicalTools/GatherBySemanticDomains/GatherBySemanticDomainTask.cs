@@ -540,16 +540,16 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		/// </summary>
 		private bool HasMatchingSense(LexEntry entry, string gloss)
 		{
+			bool sensecontains;
 			if (_glossMeaningField)
 			{
-				return (entry.Senses.Any(s => s.Gloss.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
-						   || (_savedSensesDuringMoveToEditArea != null && entry.Senses.Intersect(_savedSensesDuringMoveToEditArea).Any()));
+				sensecontains = entry.Senses.Any(s => s.Gloss.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
 			}
 			else
 			{
-				return (entry.Senses.Any(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id))
-						   || (_savedSensesDuringMoveToEditArea != null && entry.Senses.Intersect(_savedSensesDuringMoveToEditArea).Any()));
+				sensecontains = entry.Senses.Any(s => s.Definition.ContainsEqualForm(gloss, DefinitionWritingSystem.Id));
 			}
+			return sensecontains || (_savedSensesDuringMoveToEditArea != null && entry.Senses.Intersect(_savedSensesDuringMoveToEditArea).Any());
 		}
 
 

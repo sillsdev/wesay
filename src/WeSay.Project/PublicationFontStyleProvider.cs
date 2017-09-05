@@ -41,7 +41,7 @@ namespace WeSay.Project
 			else
 			{
 				//if there are two meaning field writing systems, make the second one italic
-				var meaningField = FindFieldWithFieldName(LexSense.WellKnownProperties.Gloss);
+				Field meaningField = FindFieldWithFieldName(LexSense.WellKnownProperties.Gloss);
 
 				if ((meaningField == null) || (!meaningField.IsMeaningField))
 				{
