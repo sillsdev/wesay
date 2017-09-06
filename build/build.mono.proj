@@ -8,12 +8,13 @@
 	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="RegexReplace" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
 
 	<PropertyGroup>
 		<Solution>WeSay VS2010.sln</Solution>
 		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
-		<ApplicationNameLC>wesay</ApplicationNameLC>
+		<ApplicationNameLC Condition="'$(ApplicationNameLC)' == ''">wesay</ApplicationNameLC>
 		<Configuration>Debug</Configuration>
 		<MONO_PREFIX Condition="'$(MONO_PREFIX)'==''">/usr</MONO_PREFIX>
 	</PropertyGroup>
@@ -80,16 +81,14 @@
 	<!-- Install -->
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
-		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/build/mono/chorusmerge;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*Test.dll.*;$(OutputDir)/*Tests.dll.*;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll;$(OutputDir)/SIL.Archiving*;$(OutputDir)/LibChorus.TestUtilities.*" />
+		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*Test.dll.*;$(OutputDir)/*Tests.dll.*;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll;$(OutputDir)/SIL.Archiving*;$(OutputDir)/LibChorus.TestUtilities.*" />
 		<Mercurial Include="$(RootDir)/Mercurial/**/*" Exclude="$(RootDir)/Mercurial/**/*.pyc" />
 		<MercurialExtensions Include="$(RootDir)/MercurialExtensions/**/*" Exclude="$(RootDir)/MercurialExtensions/**/*.pyc;$(RootDir)/MercurialExtensions/Dummy.txt;$(MercurialExtensions)/MercurialExtensions/**/.guidsForInstaller.xml" />
 		<CommonFiles Include="$(RootDir)/common/**/*" Exclude="$(RootDir)/common/Chorus_Help.chm" />
 		<!-- HACK: Chorus looks for its help file in the InstallApp directory instead of InstallData directory.  JasonNaylor told me not to change that. Sigh... Chris Hubbard-->
 		<ChorusHelpFiles Include="$(RootDir)/common/Chorus_Help.chm" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
-		<IconFiles Include="$(RootDir)/src/Installer_Linux/icons/**/*" />
-		<MenuFiles Include="$(RootDir)/src/Installer_Linux/*.desktop" />
-		<WrapperFiles Include="$(RootDir)/build/mono/*" Exclude="$(RootDir)/build/mono/chorusmerge" />
+		<IconFiles Include="$(IconPath)/**/*" />
 	</ItemGroup>
 	<PropertyGroup>
 		<InstallUsrBin>$(InstallDir)/bin</InstallUsrBin>
@@ -98,7 +97,7 @@
 		<InstallMercurialExtensions>$(InstallDir)/lib/$(ApplicationNameLC)/MercurialExtensions</InstallMercurialExtensions>
 		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
 		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
-		<InstallMenu>$(InstallDir)/share/applications</InstallMenu>
+		<IconPath>$(RootDir)/src/Installer_Linux/icons/</IconPath>
 	</PropertyGroup>
 	<Target Name="Install">
 		<Copy
@@ -125,25 +124,15 @@
 			SourceFiles="@(TemplateFiles)"
 			DestinationFolder="$(InstallData)/templates/%(RecursiveDir)"
 		/>
+		<!-- Copy (and rename) icon files -->
+		<RegexReplace Input="@(IconFiles->'%(RecursiveDir)/%(FileName)%(Extension)')" Expression="wesay" Replacement="$(ApplicationNameLC)">
+			<Output TaskParameter="Output" ItemName="NewIconFiles"/>
+		</RegexReplace>
 		<Copy
 			SourceFiles="@(IconFiles)"
-			DestinationFolder="$(InstallIcon)/%(RecursiveDir)"
-		/>
-		<Copy
-			DestinationFolder="$(InstallMenu)"
-			SourceFiles="@(MenuFiles)"
-		/>
-		<Copy
-			DestinationFolder="$(InstallUsrBin)"
-			SourceFiles="@(WrapperFiles)"
-		/>
-		<Exec
-			Command="chmod 755 $(InstallUsrBin)/wesay $(InstallUsrBin)/wesay-config $(InstallUsrBin)/chorus"
-		/>
-		<Exec
-			Command="chmod 755 $(InstallApp)/chorusmerge"
+			DestinationFiles="@(NewIconFiles->'$(InstallIcon)/%(RecursiveDir)/%(FileName)%(Extension)')"
+			SkipUnchangedFiles="true"
 		/>
 	</Target>
-
 
 </Project>
