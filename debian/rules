@@ -7,8 +7,10 @@ export XDG_CONFIG_HOME=$HOME/.config
 
 export MONO_PREFIX=/opt/mono-sil
 
-DESTDIR=debian/wesay
-LIB=/usr/lib/wesay
+PACKAGENAME=wesay
+APPEND=
+DESTDIR=debian/$(PACKAGENAME)
+LIB=/usr/lib/$(PACKAGENAME)
 
 define MERCURIAL_INI
 [extensions]
@@ -32,9 +34,29 @@ override_dh_auto_build:
 override_dh_auto_test:
 
 override_dh_auto_install:
+	# install the wrapper scripts
+	install -d $(DESTDIR)/usr/bin/
+	install -d $(DESTDIR)$(LIB)
+	install -m 755 build/mono/wesay $(DESTDIR)/usr/bin/$(PACKAGENAME)
+	install -m 755 build/mono/wesay-config $(DESTDIR)/usr/bin/$(PACKAGENAME)-config
+	install -m 755 build/mono/chorus $(DESTDIR)/usr/bin/
+	install -m 755 build/mono/chorusmerge $(DESTDIR)$(LIB)
+	# adjust the paths inside the wrapper scripts
+	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)
+	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)-config
+	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/chorus
+	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)$(LIB)/chorusmerge
+	# Install menu items
+	install -d $(DESTDIR)/usr/share/applications
+	install -m 644 src/Installer_Linux/sil-wesay.desktop $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME).desktop
+	install -m 644 src/Installer_Linux/sil-wesay-config.desktop $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME)-config.desktop
+	# Update the name of the Executable and Icons
+	sed -e "s/\(Icon=sil-\).*/\1$(PACKAGENAME)/" -e "s/Exec=[^ ]*\(.*\)/Exec=$PACKAGENAME\1/" -i $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME).desktop
+	sed -e "s/\(Icon=sil-\).*/\1$(PACKAGENAME)-config/" -e "s/Exec=[^ ]*\(.*\)/Exec=$(PACKAGENAME)-config\1/" -i $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME)-config.desktop
+	# install the binaries
 	. ./environ && \
 	cd build && \
-	xbuild /target:Install /p:Configuration=$(CONFIGURATION) /p:InstallDir=../$(DESTDIR)/usr build.mono.proj
+	xbuild /target:Install /p:Configuration=$(CONFIGURATION) /p:InstallDir=../$(DESTDIR)/usr /p:ApplicationNameLC=$(PACKAGENAME) build.mono.proj
 	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
 	# wrong line endings, so we re-create the entire file
 	echo "$$MERCURIAL_INI" > $(DESTDIR)$(LIB)/Mercurial/mercurial.ini
@@ -50,7 +72,7 @@ override_dh_shlibdeps:
 # dh_clideps - that searches for an empty moduleref.
 override_dh_clideps:
 	mkdir -p debian/tmp/usr && ln -s $(MONO_PREFIX)/* debian/tmp/usr/ && \
-	mv debian/wesay/usr/lib/wesay/irrKlang.NET4.dll debian/wesay/usr/lib/wesay/irrKlang.NET4.dll.ignore && \
+	mv $(DESTDIR)$(LIB)/irrKlang.NET4.dll $(DESTDIR)$(LIB)/irrKlang.NET4.dll.ignore && \
 	PATH=$(MONO_PREFIX)/bin:$(PATH) \
 	dh_clideps internal-mono -l$(MONO_PREFIX)/lib \
 		--exclude-moduleref=security.dll \
@@ -67,7 +89,7 @@ override_dh_clideps:
 		--exclude-moduleref=mozjs --exclude-moduleref=mozglue \
 		--exclude-moduleref=libgeckofix.so --exclude-moduleref=Geckofx-Core.dll \
 		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus && \
-	mv debian/wesay/usr/lib/wesay/irrKlang.NET4.dll.ignore debian/wesay/usr/lib/wesay/irrKlang.NET4.dll
+	mv $(DESTDIR)$(LIB)/irrKlang.NET4.dll.ignore $(DESTDIR)$(LIB)/irrKlang.NET4.dll
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
