@@ -223,7 +223,7 @@
 		<Copy SourceFiles ="$(teamcity_build_checkoutDir)\src\Installer\template.download_info"        DestinationFiles ="$(DownloadInfoPath)"/>
 		<FileUpdate File="$(DownloadInfoPath)" DatePlaceHolder='_DATE_' DateFormat='yyyy-MM-dd' Regex='_VERSION_'        ReplacementText ="$(Version)" />
 		<!--<FileUpdate File="$(DownloadInfoPath)" Regex='_BUILD_'        ReplacementText ="$(BUILD_NUMBER)" />-->
-		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="Release" />
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="beta" />
 		<!--  push up to software.sil.org download page -->
 		<Message Text="Attempting rsync of $(DownloadInfoPath) to software.sil.org" Importance="high"/>
 		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "$(DownloadInfoPath)" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
