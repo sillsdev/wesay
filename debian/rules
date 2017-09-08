@@ -88,6 +88,8 @@ override_dh_clideps:
 		--exclude-moduleref=xul --exclude-moduleref=libxul.so \
 		--exclude-moduleref=mozjs --exclude-moduleref=mozglue \
 		--exclude-moduleref=libgeckofix.so --exclude-moduleref=Geckofx-Core.dll \
+		--exclude-moduleref=libgobject-2.0.so --exclude-moduleref=libgio-2.0.so \
+		--exclude-moduleref=libglib-2.0.so --exclude-moduleref=libxklavier \
 		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus && \
 	mv $(DESTDIR)$(LIB)/irrKlang.NET4.dll.ignore $(DESTDIR)$(LIB)/irrKlang.NET4.dll
 
