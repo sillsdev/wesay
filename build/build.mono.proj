@@ -82,7 +82,8 @@
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
 		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*Test.dll.*;$(OutputDir)/*Tests.dll.*;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll;$(OutputDir)/SIL.Archiving*;$(OutputDir)/LibChorus.TestUtilities.*" />
-		<Mercurial Include="$(RootDir)/Mercurial/**/*" Exclude="$(RootDir)/Mercurial/**/*.pyc" />
+		<Mercurial Include="$(RootDir)/Mercurial/**/*"
+			Exclude="$(RootDir)/Mercurial/**/*.pyc;$(RootDir)/Mercurial/doc/**/*" />
 		<MercurialExtensions Include="$(RootDir)/MercurialExtensions/**/*" Exclude="$(RootDir)/MercurialExtensions/**/*.pyc;$(RootDir)/MercurialExtensions/Dummy.txt;$(MercurialExtensions)/MercurialExtensions/**/.guidsForInstaller.xml" />
 		<CommonFiles Include="$(RootDir)/common/**/*" Exclude="$(RootDir)/common/Chorus_Help.chm" />
 		<!-- HACK: Chorus looks for its help file in the InstallApp directory instead of InstallData directory.  JasonNaylor told me not to change that. Sigh... Chris Hubbard-->
