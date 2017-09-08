@@ -3,7 +3,7 @@
 
 #export CONFIGURATION=Release
 export CONFIGURATION=Debug
-export XDG_CONFIG_HOME=$HOME/.config
+export XDG_CONFIG_HOME=/tmp/.config
 
 export MONO_PREFIX=/opt/mono-sil
 
@@ -39,12 +39,12 @@ override_dh_auto_install:
 	install -d $(DESTDIR)$(LIB)
 	install -m 755 build/mono/wesay $(DESTDIR)/usr/bin/$(PACKAGENAME)
 	install -m 755 build/mono/wesay-config $(DESTDIR)/usr/bin/$(PACKAGENAME)-config
-	install -m 755 build/mono/chorus $(DESTDIR)/usr/bin/
+	install -m 755 build/mono/chorus $(DESTDIR)/usr/bin/chorus$(APPEND)
 	install -m 755 build/mono/chorusmerge $(DESTDIR)$(LIB)
 	# adjust the paths inside the wrapper scripts
 	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)
 	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)-config
-	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/chorus
+	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/chorus$(APPEND)
 	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)$(LIB)/chorusmerge
 	# Install menu items
 	install -d $(DESTDIR)/usr/share/applications
@@ -88,6 +88,8 @@ override_dh_clideps:
 		--exclude-moduleref=xul --exclude-moduleref=libxul.so \
 		--exclude-moduleref=mozjs --exclude-moduleref=mozglue \
 		--exclude-moduleref=libgeckofix.so --exclude-moduleref=Geckofx-Core.dll \
+		--exclude-moduleref=libgobject-2.0.so --exclude-moduleref=libgio-2.0.so \
+		--exclude-moduleref=libglib-2.0.so --exclude-moduleref=libxklavier \
 		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus && \
 	mv $(DESTDIR)$(LIB)/irrKlang.NET4.dll.ignore $(DESTDIR)$(LIB)/irrKlang.NET4.dll
 
