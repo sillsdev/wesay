@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
+using Palaso.IO;
 using Palaso.Lift.Validation;
 using WeSay.AddinLib;
 using WeSay.Project;
@@ -256,12 +257,18 @@ namespace Addin.Transform.Tests
 		{
 			ProjectInfo info = WeSayWordsProject.Project.GetProjectInfoForAddin();
 			string path = info.LocateFile("lift2sfm.xsl");
+			TempFile t = null;
 			if (!string.IsNullOrEmpty(path))
 			{
+				t = TempFile.CopyOf(path);
 				File.Delete(path);
 			}
 			Stream stream = LiftTransformer.GetXsltStream(info, "lift2sfm.xsl");
 			Assert.IsNotNull(stream);
+			if (t != null)
+			{
+				File.Copy(t.Path, path);
+			}
 		}
 
 		private string LaunchWithConversionString(string conversions)
