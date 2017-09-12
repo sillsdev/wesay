@@ -77,6 +77,7 @@ namespace WeSay.UI.Tests
 
 		[Test]
 		[Platform(Exclude="Unix")]
+		[Ignore("FLAKY test - sometimes fails in tc installer build release tests")]
 		public void TextReflectsKeystrokes()
 		{
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
