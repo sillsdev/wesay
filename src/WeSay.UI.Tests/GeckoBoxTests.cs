@@ -59,6 +59,7 @@ namespace WeSay.UI.Tests
 			Assert.AreSame(ws, textBox.WritingSystem);
 		}
 		[Test]
+		[Ignore("FLAKY - somtimes fails in tc continuous build.")]
 		public void KeyboardInputTest()
 		{
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
@@ -80,6 +81,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Ignore("FLAKY - somtimes fails in tc continuous build.")]
 		public void KeyboardInputAfterInitialValueTest()
 		{
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
