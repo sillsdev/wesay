@@ -11,3 +11,4 @@ tar-ignore=.gitattributes
 tar-ignore=.gitignore
 tar-ignore=.gitmodules
 tar-ignore=.hg
+tar-ignore=.vscode
