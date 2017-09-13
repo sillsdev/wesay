@@ -11,7 +11,7 @@ PACKAGENAME=wesay
 APPEND=
 DESTDIR=debian/$(PACKAGENAME)
 LIB=/usr/lib/$(PACKAGENAME)
-PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version|cut -d '~' -f1 - | tr '+' '.'`
+PACKAGE_VERSION:=`dpkg-parsechangelog --show-field Version|cut -d '~' -f1 - | tr '+' '.'`
 
 define MERCURIAL_INI
 [extensions]
