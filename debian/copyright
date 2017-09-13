@@ -12,7 +12,7 @@ License: GPL-2+
 
 Files: Mercurial/mercurial/httpclient/_readers.py Mercurial/mercurial/httpclient/__init__.py Mercurial/mercurial/httpclient/socketutil.py
 Copyright: 2010/2011, Google Inc
-License: BSD (3 clause)
+License: BSD-3clause
 
 Files: Mercurial/hgext/zeroconf/Zeroconf.py
 Copyright: 2003, Paul Scott-Murphy
@@ -40,11 +40,11 @@ License: GPL-2+
 
 Files: lib/src/nunitforms/ComponentFinder.cs lib/src/nunitforms/ComponentTester.cs
 Copyright: 2003-2005, Bart De Boeck
-License: BSD (3 clause)
+License: BSD-3clause
 
 Files: lib/src/nunitforms/*
 Copyright: 2003-2006, Luke T. Maxon
-License: BSD (3 clause)
+License: BSD-3clause
 
 Files: *
 Copyright: 2008-2017 SIL International
@@ -73,7 +73,7 @@ License: MIT
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 
-License: BSD (3 clause)
+License: BSD-3clause
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are
  met:
