@@ -20,7 +20,9 @@ Depends: ${misc:Depends}, ${cli:Depends},
  geckofx29,
  chmsee, udisks | udisks2
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
-Conflicts: wesay-stable
+Conflicts: wesay-stable, wesay-app
+Provides: wesay-app
+Replaces: wesay-app
 Description: A dictionary creation tool
  WeSay helps people build a dictionary in their own language. It has
  various ways to help native speakers to think of words in their
