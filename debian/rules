@@ -28,7 +28,6 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	cd build && \
-	./buildupdate.mono.sh && \
 	./TestBuild.sh $(CONFIGURATION) Build $(PACKAGE_VERSION)
 	rm -f output$(CONFIGURATION)/[Gg]ecko*
 
