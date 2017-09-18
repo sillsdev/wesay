@@ -25,7 +25,7 @@ case "$1" in
   configure)
     db_get wesay/welcome
     if [ "$RET" = "true" ]; then
-        /usr/bin/xdg-open /usr/share/doc/wesay/Welcome.htm &
+        /usr/bin/xdg-open /usr/share/doc/$(DPKG_MAINTSCRIPT_PACKAGE)/Welcome.htm &
     fi
   ;;
 
