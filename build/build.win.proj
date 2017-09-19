@@ -217,12 +217,13 @@
 	<!-- Upload -->
 	<Target Name="MakeDownloadPointers" DependsOnTargets="VersionNumbers">
 		<PropertyGroup>
-			<DownloadInfoPath>../output/installer/$(ApplicationName)Installer.$(Version).download_info</DownloadInfoPath>
+			<DownloadInfoPath>../output/installer/$(ApplicationName)Installer.$(Version)$(ReleaseString).download_info</DownloadInfoPath>
 		</PropertyGroup>
 		<!-- For use on software.sil.org download page -->
 		<Copy SourceFiles ="$(teamcity_build_checkoutDir)\src\Installer\template.download_info"        DestinationFiles ="$(DownloadInfoPath)"/>
 		<FileUpdate File="$(DownloadInfoPath)" DatePlaceHolder='_DATE_' DateFormat='yyyy-MM-dd' Regex='_VERSION_'        ReplacementText ="$(Version)" />
 		<!--<FileUpdate File="$(DownloadInfoPath)" Regex='_BUILD_'        ReplacementText ="$(BUILD_NUMBER)" />-->
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_STABILITY_'        ReplacementText ="$(ReleaseString)" />
 		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="beta" />
 		<!--  push up to software.sil.org download page -->
 		<Message Text="Attempting rsync of $(DownloadInfoPath) to software.sil.org" Importance="high"/>
