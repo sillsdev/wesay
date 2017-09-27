@@ -196,7 +196,7 @@
 		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
 	</PropertyGroup>
 
-	<Target Name="Installer" DependsOnTargets="CleanInstaller; VersionNumbers; MakeWixForDistFiles; Build ">
+	<Target Name="Installer" DependsOnTargets="Clean; VersionNumbers; MakeWixForDistFiles; Build ">
 		<!-- set the version number in the installer configuration program.  Perhaps there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
 
@@ -232,7 +232,7 @@
 		<Exec Command='sign "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
-	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign" >
+	<Target Name="Upload" DependsOnTargets="VersionNumbers" Condition="Exists('../output/installer/WeSayInstaller.$(version)$(ReleaseString).msi')">
 		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi to software.sil.org" Importance="high"/>
 		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "../output/installer/WeSayInstaller.$(version)$(ReleaseString).msi" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
 		<CallTarget Targets ='MakeDownloadPointers'/>
@@ -240,6 +240,10 @@
 		<!--  push downloadinfo up to software.sil.org download page -->
 		<Message Text="Attempting rsync of $(DownloadInfoPath) to software.sil.org" Importance="high"/>
 		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "../output/installer/WeSayInstaller.$(Version)$(ReleaseString).download_info" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
+		<Message Text="Upload complete" Importance="high" />
+	</Target>
+
+	<Target Name="UploadBuild" DependsOnTargets="Sign; Upload" >
 	</Target>
 
 </Project>
