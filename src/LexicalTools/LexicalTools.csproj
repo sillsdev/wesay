@@ -86,10 +86,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Addins, Version=0.3.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+      <HintPath>..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
     </Reference>
     <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
       <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>

@@ -113,9 +113,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Addins, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\common\Mono.Addins.dll</HintPath>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <HintPath>..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
     </Reference>
     <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
     <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
