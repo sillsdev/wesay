@@ -4,11 +4,14 @@
 		<RootDir Condition="'$(teamcity_build_checkoutDir)' != ''">$(teamcity_build_checkoutDir)</RootDir>
 	</PropertyGroup>
 
+	<Import Project="$(RootDir)/build/build.common.proj" />
+	<Import Project="$(RootDir)/build/NuGet.targets"/>
+
 	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
 	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="RegexReplace" AssemblyFile="$(RootDir)/build/MSBuild.Community.Tasks.dll" />
+	<UsingTask TaskName="RegexReplace" AssemblyFile="$(RootDir)/src/packages/MSBuildTasks.1.5.0.235/tools/MSBuild.Community.Tasks.dll" />
 
 	<PropertyGroup>
 		<Solution>WeSay VS2010.sln</Solution>
@@ -18,9 +21,6 @@
 		<Configuration>Debug</Configuration>
 		<MONO_PREFIX Condition="'$(MONO_PREFIX)'==''">/usr</MONO_PREFIX>
 	</PropertyGroup>
-
-	<Import Project="$(RootDir)/build/build.common.proj" />
-	<Import Project="$(RootDir)/build/NuGet.targets"/>
 
 	<PropertyGroup>
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
