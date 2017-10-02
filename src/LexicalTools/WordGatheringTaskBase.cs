@@ -11,8 +11,8 @@ namespace WeSay.LexicalTools
 {
 	public abstract class WordGatheringTaskBase: TaskBase
 	{
-		private readonly WritingSystemDefinition _lexicalFormWritingSystem;
-		private readonly ViewTemplate _viewTemplate;
+		protected WritingSystemDefinition _lexicalFormWritingSystem;
+		protected readonly ViewTemplate _viewTemplate;
 		protected bool _glossMeaningField;
 
 		protected WordGatheringTaskBase(ITaskConfiguration config,

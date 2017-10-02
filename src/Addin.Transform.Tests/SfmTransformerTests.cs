@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using NUnit.Framework;
-using SIL.Code.IO;
+using SIL.IO;
 using SIL.Lift.Validation;
 using WeSay.AddinLib;
 using WeSay.Project;

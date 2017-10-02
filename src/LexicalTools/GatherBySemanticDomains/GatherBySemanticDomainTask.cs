@@ -77,7 +77,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			_words = null;
 
 			_semanticDomainField = viewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4);
-			IWritingSystemDefinition writingSystemForDefinition;	
+			WritingSystemDefinition writingSystemForDefinition;
 			if (_glossMeaningField)
 			{
 				writingSystemForDefinition = viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(LexSense.WellKnownProperties.Gloss);
@@ -606,7 +606,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						entry.Senses.
 							Where(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
 								FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
-														&& (_glossMeaningField ? s.Gloss.GetBestAlternative(new[] { DefinitionWritingSystem.LanguageTag }) : 
+														&& (_glossMeaningField ? s.Gloss.GetBestAlternative(new[] { DefinitionWritingSystem.LanguageTag }) :
 														s.Definition.GetBestAlternative(new[] { DefinitionWritingSystem.LanguageTag })) == wordDisplay.Meaning);
 					if (firstSenseMatchingSemDomAndMeaning != null)
 					{
@@ -746,12 +746,16 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				{
 					// need to change LexEntry.GetOrCreateSenseWithMeaning in libpalaso to have a version that
 					// can take a bool to indicate if gloss or def is meaning field
-					sense = entry.GetOrCreateSenseWithMeaning(new MultiText(), false);
+					// TEMP MERGE TODO, merge libpalaso-2.6 into master to get the 2 parameter version
+					//sense = entry.GetOrCreateSenseWithMeaning(new MultiText(), false);
+					sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
 					sense.Gloss.SetAlternative(DefinitionWritingSystem.LanguageTag, meaning);
 				}
 				else
 				{
-					sense = entry.GetOrCreateSenseWithMeaning(new MultiText(), true);
+					// TEMP MERGE TODO, merge libpalaso-2.6 into master to get the 2 parameter version
+					//sense = entry.GetOrCreateSenseWithMeaning(new MultiText(), true);
+					sense = entry.GetOrCreateSenseWithMeaning(new MultiText());
 					sense.Definition.SetAlternative(DefinitionWritingSystem.LanguageTag, meaning);
 				}
 			}
