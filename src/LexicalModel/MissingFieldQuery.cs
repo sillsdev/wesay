@@ -185,7 +185,9 @@ namespace WeSay.LexicalModel
 						}
 					}
 					if (entry.Senses.Count == 0 &&
-						(Field.FieldName == LexSense.WellKnownProperties.Definition) &&
+						Field.IsMeaningField &&
+						((Field.FieldName == LexSense.WellKnownProperties.Definition) ||
+							(Field.FieldName == LexSense.WellKnownProperties.Gloss)) &&
 								_writingSystemsWhichAreRequired.Length == 0)
 					{
 						//ghost field

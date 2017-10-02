@@ -176,9 +176,25 @@ namespace WeSay.UI
 								  Padding.Bottom);
 		}
 
+		public Control AddWidgetRow(string[] labels, bool isHeader, Control control)
+		{
+			return AddWidgetRow(labels, isHeader, control, RowCount, false);
+		}
+
 		public Control AddWidgetRow(string label, bool isHeader, Control control)
 		{
-			return AddWidgetRow(label, isHeader, control, RowCount, false);
+			string[] labels = new string[] { label };
+			return AddWidgetRow(labels, isHeader, control, RowCount, false);
+		}
+
+		public Control AddWidgetRow(string label,
+							bool isHeader,
+							Control control,
+							int insertAtRow,
+							bool isGhostField)
+		{
+			string[] labels = new string[] { label };
+			return AddWidgetRow(labels, isHeader, control, insertAtRow, isGhostField);
 		}
 
 		public Control FocussedImmediateChild
@@ -229,7 +245,7 @@ namespace WeSay.UI
 			OnLabelsChanged(this, e);
 		}
 
-		public Control AddWidgetRow(string fieldLabel,
+		public Control AddWidgetRow(string[] fieldLabels,
 									bool isHeader,
 									Control editWidget,
 									int insertAtRow,
@@ -237,9 +253,11 @@ namespace WeSay.UI
 		{
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
+			int numrows = (fieldLabels.Length > 1) ? 2 : 1;
+
 			if (insertAtRow >= RowCount)
 			{
-				RowCount = insertAtRow + 1;
+				RowCount = insertAtRow + numrows;
 			}
 			else
 			{
@@ -254,7 +272,7 @@ namespace WeSay.UI
 					{
 						for (int col = 0;col < ColumnCount;col++)
 						{
-							Control c = GetControlFromPosition(col, row - 1);
+							Control c = GetControlFromPosition(col, row - numrows);
 							if (c != null)
 							{
 								SetCellPosition(c, new TableLayoutPanelCellPosition(col, row));
@@ -263,7 +281,7 @@ namespace WeSay.UI
 						}
 					}
 				}
-				RowCount++;
+				RowCount += numrows;
 			}
 
 			Label label = new Label();
@@ -275,7 +293,7 @@ namespace WeSay.UI
 			{
 				label.Font = (Font)StringCatalog.LabelFont.Clone();
 			}
-			label.Text = fieldLabel;
+			label.Text = fieldLabels.First();
 			label.AutoSize = true;
 
 			int beforeHeadingPadding = (isHeader && insertAtRow != 0) ? 18 : 0;
@@ -291,8 +309,39 @@ namespace WeSay.UI
 			}
 
 			Controls.Add(label, _indexOfLabel, insertAtRow);
-			OnLabelsChanged(this, new EventArgs());
 			label.SizeChanged += OnLabelSizeChanged;
+
+			if (fieldLabels.Length > 1)
+			{
+				// added meaning label in separate row before field label and control
+				insertAtRow++;
+
+				// label that specifies gloss or definition
+				Label minorLabel = new Label();
+				// label font size in libpalaso is in points
+				minorLabel.Font = new Font(StringCatalog.LabelFont.FontFamily, StringCatalog.LabelFont.Size - 2,
+					StringCatalog.LabelFont.Style, StringCatalog.LabelFont.Unit);
+
+				minorLabel.Text = fieldLabels.Last();
+				minorLabel.AutoSize = true;
+
+				//        label.Top = 3 + beforeHeadingPadding;
+				minorLabel.Margin = new Padding(minorLabel.Margin.Left,
+										   0,
+										   minorLabel.Margin.Right,
+										   minorLabel.Margin.Bottom);
+				minorLabel.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+				if (isGhostField)
+				{
+					minorLabel.ForeColor = Color.Gray;
+				}
+
+				Controls.Add(minorLabel, _indexOfLabel, insertAtRow);
+				minorLabel.SizeChanged += OnLabelSizeChanged;
+			}
+
+			OnLabelsChanged(this, new EventArgs());
+
 
 			// AnchorStyle overrides DockStyle and on Linux must anchor to Top.
 			editWidget.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
@@ -306,7 +355,7 @@ namespace WeSay.UI
 			editWidget.TabIndex = insertAtRow;
 
 			editWidget.Margin = new Padding(editWidget.Margin.Left,
-											beforeHeadingPadding,
+											(fieldLabels.Length > 1) ? 0 : beforeHeadingPadding,
 											editWidget.Margin.Right,
 											editWidget.Margin.Bottom);
 

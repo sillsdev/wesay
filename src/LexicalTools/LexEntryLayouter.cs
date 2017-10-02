@@ -31,10 +31,12 @@ namespace WeSay.LexicalTools
 								IServiceLocator serviceLocator,
 								LexEntry entry,
 								bool sensesAreDeletable,
-								ConfirmDeleteFactory confirmDeleteFactory)
+								ConfirmDeleteFactory confirmDeleteFactory,
+								bool showMinorMeaningLabel)
 			: base(parentDetailList, parentRow, viewTemplate, lexEntryRepository, CreateLayoutInfoServiceProvider(serviceLocator, entry), entry)
 		{
 			Entry = entry;
+			ShowMinorMeaningLabel = showMinorMeaningLabel;
 			_sensesAreDeletable = sensesAreDeletable;
 			_confirmDeleteFactory = confirmDeleteFactory;
 			DetailList.LabelsChanged += OnLabelsChanged;
@@ -115,6 +117,7 @@ namespace WeSay.LexicalTools
 				{
 					ShowNormallyHiddenFields = ShowNormallyHiddenFields,
 					Deletable = _sensesAreDeletable,
+					ShowMinorMeaningLabel = ShowMinorMeaningLabel,
 					ParentLayouter = this
 				};
 				layouter.DeleteClicked += OnSenseDeleteClicked;

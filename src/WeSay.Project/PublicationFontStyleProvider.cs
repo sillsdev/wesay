@@ -40,10 +40,15 @@ namespace WeSay.Project
 			}
 			else
 			{
-				//if there are two definition writing systems, make the second one italic
+				//if there are two meaning field writing systems, make the second one italic
+				Field meaningField = FindFieldWithFieldName(LexSense.WellKnownProperties.Gloss);
 
-				var defField = FindFieldWithFieldName(LexSense.WellKnownProperties.Definition);
-				if (defField.WritingSystemIds.Count > 1 && defField.WritingSystemIds[1] == ws.Id)
+				if ((meaningField == null) || (!meaningField.IsMeaningField))
+				{
+					meaningField = FindFieldWithFieldName(LexSense.WellKnownProperties.Definition);
+				}
+
+				if (meaningField.WritingSystemIds.Count > 1 && meaningField.WritingSystemIds[1] == ws.Id)
 				{
 //                    if(family != default(FontFamily))
 //                    {

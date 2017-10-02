@@ -134,6 +134,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Ignore("FLAKY - test sometimes fails first time run in all tests in VS. System.AccessViolationException : Attempted to read or write protected memory. This is often an indication that other memory is corrupt.")]
 		public void BackupNow_ExistingRepository_AddsInvalidNewFileToBackupDir()
 		{
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?
@@ -148,6 +149,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
+		[Ignore("FLAKY - test sometimes fails first time run in all tests in VS. System.AccessViolationException : Attempted to read or write protected memory. This is often an indication that other memory is corrupt.")]
 		public void BackupNow_ExistingRepository_AddsNewFileToBackupDir()
 		{
 			// Test causes a crash in WrapShellCall.exe - is there an updated version?

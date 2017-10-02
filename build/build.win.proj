@@ -196,7 +196,7 @@
 		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
 	</PropertyGroup>
 
-	<Target Name="Installer" DependsOnTargets="CleanInstaller; VersionNumbers; MakeWixForDistFiles; Build ">
+	<Target Name="Installer" DependsOnTargets="Clean; VersionNumbers; MakeWixForDistFiles; Build ">
 		<!-- set the version number in the installer configuration program.  Perhaps there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
 
@@ -217,16 +217,14 @@
 	<!-- Upload -->
 	<Target Name="MakeDownloadPointers" DependsOnTargets="VersionNumbers" >
 		<PropertyGroup>
-			<DownloadInfoPath>../output/installer/$(ApplicationName)Installer.$(Version).download_info</DownloadInfoPath>
+			<DownloadInfoPath>../output/installer/$(ApplicationName)Installer.$(Version)$(ReleaseString).download_info</DownloadInfoPath>
 		</PropertyGroup>
 		<!-- For use on software.sil.org download page -->
 		<Copy SourceFiles ="$(teamcity_build_checkoutDir)\src\Installer\template.download_info"        DestinationFiles ="$(DownloadInfoPath)"/>
 		<FileUpdate File="$(DownloadInfoPath)" DatePlaceHolder='_DATE_' DateFormat='yyyy-MM-dd' Regex='_VERSION_'        ReplacementText ="$(Version)" />
 		<!--<FileUpdate File="$(DownloadInfoPath)" Regex='_BUILD_'        ReplacementText ="$(BUILD_NUMBER)" />-->
-		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="Release" />
-		<!--  push up to software.sil.org download page -->
-		<Message Text="Attempting rsync of $(DownloadInfoPath) to software.sil.org" Importance="high"/>
-		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "$(DownloadInfoPath)" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_STABILITY_'        ReplacementText ="$(ReleaseString)" />
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="beta" />
 	</Target>
 
 	<Target Name="Sign" DependsOnTargets="Installer" >
@@ -234,11 +232,23 @@
 		<Exec Command='sign /d "WeSay Installer" /du "http://wesay.palaso.org/downloads/"  "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
-	<Target Name="Upload" DependsOnTargets="VersionNumbers; Sign" >
+	<Target Name="Upload" DependsOnTargets="VersionNumbers">
+		<Error Condition="!Exists('../output/installer/WeSayInstaller.$(version)$(ReleaseString).msi')" Text="Installer ../output/installer/WeSayInstaller.$(version)$(ReleaseString).msi not found to publish."/>
+		<CallTarget Targets = 'UploadSSO' />
+	</Target>
+
+	<Target Name="UploadSSO" DependsOnTargets="VersionNumbers" Condition="Exists('../output/installer/WeSayInstaller.$(version)$(ReleaseString).msi')">
 		<Message Text="Attempting rsync of WeSayInstaller.$(Version)$(ReleaseString).msi to software.sil.org" Importance="high"/>
 		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "../output/installer/WeSayInstaller.$(version)$(ReleaseString).msi" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
 		<CallTarget Targets ='MakeDownloadPointers'/>
 
+		<!--  push downloadinfo up to software.sil.org download page -->
+		<Message Text="Attempting rsync of $(DownloadInfoPath) to software.sil.org" Importance="high"/>
+		<Exec Command ='"c:\program files\cwRsync\bin\rsync.exe" -vzlt --chmod=Dug=rwx,Fu=rw,go=r --stats --rsync-path="sudo -u vu2004 rsync" -e"\"c:\program files\cwRsync\bin\ssh\" -oUserKnownHostsFile=C:\BuildAgent\conf\known_hosts -oIdentityFile=/cygdrive/c/BuildAgent/conf/bob.key -l root"  "../output/installer/WeSayInstaller.$(Version)$(ReleaseString).download_info" root@software.sil.org:/var/www/virtual/software.sil.org/htdocs/downloads/r/$(ApplicationServerFolderName)/' />
+		<Message Text="Upload complete" Importance="high" />
+	</Target>
+
+	<Target Name="UploadBuild" DependsOnTargets="Sign; Upload" >
 	</Target>
 
 </Project>

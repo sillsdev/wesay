@@ -104,12 +104,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			}
 
 			// if read-only contains the old meaning field then change it
-			if (_fieldsReadOnly.Contains(from))
+			int index = _fieldsReadOnly.IndexOf(from);
+			if (index != -1)
 			{
-				if (!_fieldsReadOnly.Contains(to))
-					_fieldsReadOnly.Add(to);
-				if (_fieldsReadOnly.Contains(from))
-					_fieldsReadOnly.Remove(from);
+				_fieldsReadOnly[index] = to;
 			}
 		}
 

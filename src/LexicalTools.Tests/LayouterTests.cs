@@ -58,7 +58,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void Create_NullBuilder_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(null, 0, new ViewTemplate(), null, Context, new LexEntry(), false, () => new TestConfirmDelete()));
+			Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(null, 0, new ViewTemplate(), null, Context, new LexEntry(), false, () => new TestConfirmDelete(), false));
 		}
 
 		[Test]
@@ -66,16 +66,25 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (DetailList detailList = new DetailList())
 			{
-				Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(detailList, 0, null, null, Context, new LexEntry(), false, () => new TestConfirmDelete()));
+				Assert.Throws<ArgumentNullException>(() => new LexEntryLayouter(detailList, 0, null, null, Context, new LexEntry(), false, () => new TestConfirmDelete(), false));
 			}
 		}
 
 		[Test]
 		public void RightNumberOfRows()
 		{
-			using (MakeDetailList(false, MakeViewTemplate()))
+			using (MakeDetailList(false, false, MakeViewTemplate()))
 			{
 				Assert.AreEqual(14, _rowCount);
+			}
+		}
+
+		[Test]
+		public void RightNumberOfRowsWithMinorLabel()
+		{
+			using (MakeDetailList(false, true, MakeViewTemplate()))
+			{
+				Assert.AreEqual(16, _rowCount);
 			}
 		}
 
@@ -86,25 +95,55 @@ namespace WeSay.LexicalTools.Tests
 		{
 			var template = MakeViewTemplate();
 			template.DoWantGhosts = false;
-			using (MakeDetailList(false, template))
+			using (MakeDetailList(false, false, template))
 			{
 				Assert.AreEqual(13, _rowCount);
 			}
 		}
 
 		[Test]
+		public void DoWantGhosts_False_RightNumberOfRows_WithMinorMeaningLabel()
+		{
+			var template = MakeViewTemplate();
+			template.DoWantGhosts = false;
+			using (MakeDetailList(false, true, template))
+			{
+				Assert.AreEqual(15, _rowCount);
+			}
+		}
+
+		[Test]
 		public void RightNumberOfRowsWithShowAll()
 		{
-			using (MakeDetailList(true, MakeViewTemplate()))
+			using (MakeDetailList(true, false, MakeViewTemplate()))
 			{
 				Assert.AreEqual(16, _rowCount); //12 + 2 *(1 ghost example + 1 rare multitext)
 			}
 		}
 
 		[Test]
+		public void RightNumberOfRowsWithShowAllWithMinorMeaningLabel()
+		{
+			using (MakeDetailList(true, true, MakeViewTemplate()))
+			{
+				Assert.AreEqual(18, _rowCount); //12 + 2 *(1 minor label + 1 ghost example + 1 rare multitext)
+			}
+		}
+
+		[Test]
 		public void RowsInRightPlace()
 		{
-			using (DetailList dl = MakeDetailList(false, MakeViewTemplate()))
+			using (DetailList dl = MakeDetailList(false, false, MakeViewTemplate()))
+			{
+				Label l = dl.GetLabelControlFromRow(0);
+				Assert.AreEqual("Word", l.Text);
+			}
+		}
+
+		[Test]
+		public void RowsInRightPlaceWithMinorMeaningLabel()
+		{
+			using (DetailList dl = MakeDetailList(false, true, MakeViewTemplate()))
 			{
 				Label l = dl.GetLabelControlFromRow(0);
 				Assert.AreEqual("Word", l.Text);
@@ -114,9 +153,19 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void WordShownInVernacular()
 		{
-			using (DetailList dl = MakeDetailList(false, MakeViewTemplate()))
+			using (DetailList dl = MakeDetailList(false, false, MakeViewTemplate()))
 			{
 				MultiTextControl box = (MultiTextControl) dl.GetEditControlFromRow(0);
+				Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
+			}
+		}
+
+		[Test]
+		public void WordShownInVernacularWithMinorMeaningLabel()
+		{
+			using (DetailList dl = MakeDetailList(false, true, MakeViewTemplate()))
+			{
+				MultiTextControl box = (MultiTextControl)dl.GetEditControlFromRow(0);
 				Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
 			}
 		}
@@ -128,11 +177,25 @@ namespace WeSay.LexicalTools.Tests
 
 			using (DetailList dl = new DetailList())
 			{
-				LexEntryLayouter layout = new LexEntryLayouter(dl, 0, new ViewTemplate(), null, Context, entry, false, () => new TestConfirmDelete());
+				LexEntryLayouter layout = new LexEntryLayouter(dl, 0, new ViewTemplate(), null, Context, entry, false, () => new TestConfirmDelete(), false);
 				layout.AddWidgets();
 				Assert.AreEqual(0, dl.RowCount);
 			}
 		}
+
+		[Test]
+		public void EmptyViewTemplateWithMinorLabel()
+		{
+			LexEntry entry = GetNewEntry();
+
+			using (DetailList dl = new DetailList())
+			{
+				LexEntryLayouter layout = new LexEntryLayouter(dl, 0, new ViewTemplate(), null, Context, entry, false, () => new TestConfirmDelete(), true);
+				layout.AddWidgets();
+				Assert.AreEqual(0, dl.RowCount);
+			}
+		}
+
 
 		private static LexEntry GetNewEntry()
 		{
@@ -146,7 +209,7 @@ namespace WeSay.LexicalTools.Tests
 			return entry;
 		}
 
-		private DetailList MakeDetailList(bool showNormallyHiddenFields, ViewTemplate template)
+		private DetailList MakeDetailList(bool showNormallyHiddenFields, bool showMinorMeaningLabel, ViewTemplate template)
 		{
 			//TODO need tests for other data types when made optional
 			//TODO need tests for showing non-empty optional tests in non-show-all mode
@@ -154,7 +217,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry entry = GetNewEntry();
 
 			DetailList dl = new DetailList();
-			LexEntryLayouter layout = new LexEntryLayouter(dl, 0, template, null, Context, entry, false, () => new TestConfirmDelete());
+			LexEntryLayouter layout = new LexEntryLayouter(dl, 0, template, null, Context, entry, false, () => new TestConfirmDelete(), showMinorMeaningLabel);
 			layout.ShowNormallyHiddenFields = showNormallyHiddenFields;
 			layout.AddWidgets();
 			_rowCount = dl.RowCount;

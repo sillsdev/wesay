@@ -15,7 +15,7 @@
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
 
-		<Split Input="$(BUILD_NUMBER)" Delimiter=".~-+" OutputSubString="2">
+		<Split Input="$(BUILD_NUMBER)" Delimiter=".~-+" OutputSubString="3">
 			<Output TaskParameter="ReturnValue" PropertyName="BuildCounter" />
 		</Split>
 
@@ -30,10 +30,10 @@
 		<CreateProperty Value="1.6">
 			<Output PropertyName="VersionBase" TaskParameter="Value"/>
 		</CreateProperty>
-		<CreateProperty Value="$(VersionBase).$(VersionSuffix)">
+		<CreateProperty Value="$(VersionBase).$(VersionSuffix).$(BuildCounter)">
 			<Output PropertyName="Version" TaskParameter="Value"/>
 		</CreateProperty>
-		<CreateProperty Value="$(VersionBase).$(BuildCounter)">
+		<CreateProperty Value="$(VersionBase).$(VersionSuffix).$(BuildCounter)">
 			<Output PropertyName="AssemblyVersion" TaskParameter="Value"/>
 		</CreateProperty>
 

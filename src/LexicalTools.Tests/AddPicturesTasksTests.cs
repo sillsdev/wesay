@@ -11,6 +11,7 @@ namespace WeSay.LexicalTools.Tests
 	public class AddPicturesTasksAbnormalSetupTests
 	{
 		[Test]
+		[Ignore("FLAKY - sometimes fails first time run all tests in VS.")]
 		public void Activate_IndexNotFound_GivesUserMessage()
 		{
 				using (var repoFile = new TempLiftFile(""))

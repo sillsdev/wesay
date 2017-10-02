@@ -1,0 +1,6 @@
+Template: wesay/welcome
+Type: boolean
+Default: true
+Description: Show Welcome web page after WeSay upgrade?
+ Choose whether to show the WeSay Welcome web page after
+ the package is installed or upgraded.

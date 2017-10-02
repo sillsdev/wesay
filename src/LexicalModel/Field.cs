@@ -107,6 +107,7 @@ namespace WeSay.LexicalModel
 			DataTypeName = field.DataTypeName;
 			OptionsListFile = field.OptionsListFile;
 			Enabled = field.Enabled;
+			IsMeaningField = field.IsMeaningField;
 		}
 
 		/// <summary>
