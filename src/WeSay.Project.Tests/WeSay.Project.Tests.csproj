@@ -79,7 +79,7 @@
     </Reference>
     <Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\common\NetReflector.dll</HintPath>
+      <HintPath>../packages/NetReflector.1.1.2009/lib/net20/NetReflector.dll</HintPath>
     </Reference>
     <Reference Include="SIL.DictionaryServices, Version=3.1.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\lib\Debug\SIL.DictionaryServices.dll</HintPath>

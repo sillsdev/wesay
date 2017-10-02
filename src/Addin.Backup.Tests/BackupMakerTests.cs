@@ -130,7 +130,7 @@ namespace Addin.Backup.Tests
 					fileToBackUp.Path, FileMode.Open, FileAccess.Read, FileShare.None
 				);
 
-				Assert.Throws<ZipException>(
+				Assert.Throws<System.IO.IOException>(
 					() => BackupMaker.BackupToExternal(
 						Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new[] {fileToBackUp.Path}
 					)
