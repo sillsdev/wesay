@@ -143,9 +143,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="WeSayConfigurationTool.pdb" Guid="{FA331270-82EF-4BB8-878C-724442249466}">
 					<File Id="WeSayConfigurationTool.pdb" Name="WeSay.ConfigTool.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.ConfigTool.pdb" />
 				  </Component>
-				  <Component Id="Castle.DynamicProxy.dll" Guid="{871D566A-F864-4946-AA65-6A7E07D24E1B}">
-					<File Id="Castle.DynamicProxy.dll" Name="Castle.DynamicProxy.dll" KeyPath="yes" Source="..\..\output\release\Castle.DynamicProxy.dll" />
-				  </Component>
 
 				  <Component Id="Enchant.Net.dll" Guid="{95F22469-1C72-4f90-99D8-D5FDFBA0DDF9}">
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
@@ -223,9 +220,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  </Component>
 				  <Component Id="LexicalTools.pdb" Guid="{DB30AF44-2E65-49AB-84E4-969CB6605CCA}">
 					<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.pdb" />
-				  </Component>
-				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
-					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
 				  </Component>
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
@@ -311,23 +305,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="Addin.Backup.pdb" Guid="{10714F3D-2A20-41FD-9350-C0A81EF364F0}">
 					<File Id="Addin.Backup.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Backup.pdb" />
 				</Component>
-				<Component Id="Addin.Backup.Tests.dll" Guid="{9B5BF1C3-1139-4476-96DB-16A8B7ABF3FF}">
-					<File Id="Addin.Backup.Tests.dll" KeyPath="yes" Source="..\..\output\release\Addin.Backup.Tests.dll" />
-				</Component>
-				<Component Id="Addin.Backup.Tests.pdb" Guid="{10EB2CAA-35A5-4097-894B-AB6052FDAA1E}">
-					<File Id="Addin.Backup.Tests.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Backup.Tests.pdb" />
-				</Component>
 				<Component Id="Addin.Transform.dll.config" Guid="{BD2F7AC3-B17A-4E08-ACEE-D6537C527138}">
 					<File Id="Addin.Transform.dll.config" KeyPath="yes" Source="..\..\output\release\Addin.Transform.dll.config" />
 				</Component>
 				<Component Id="Addin.Transform.pdb" Guid="{24BDA882-8A90-4C0B-8749-0D191D13781B}">
 					<File Id="Addin.Transform.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Transform.pdb" />
-				</Component>
-				<Component Id="Addin.Transform.Tests.dll" Guid="{6B44252E-34C9-48F8-BC97-0AC8B0D01404}">
-					<File Id="Addin.Transform.Tests.dll" KeyPath="yes" Source="..\..\output\release\Addin.Transform.Tests.dll" />
-				</Component>
-				<Component Id="Addin.Transform.Tests.pdb" Guid="{D8CB34BE-7AD8-488B-810F-B2901D3B1E43}">
-					<File Id="Addin.Transform.Tests.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Transform.Tests.pdb" />
 				</Component>
 				<Component Id="Chorus.pdb" Guid="{7A747756-5AEB-4BEE-9B8A-A7CC4FC28688}">
 					<File Id="Chorus.pdb" KeyPath="yes" Source="..\..\output\release\Chorus.pdb" />
@@ -356,38 +338,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="L10NSharp.pdb" Guid="{EB990ACB-7E5F-4E92-AB78-6D24B6E94636}">
 					<File Id="L10NSharp.pdb" KeyPath="yes" Source="..\..\output\release\L10NSharp.pdb" />
 				</Component>
-				<Component Id="LexicalModel.Tests.dll" Guid="{584164A9-16E5-4487-AAE0-24C755DC9750}">
-					<File Id="LexicalModel.Tests.dll" KeyPath="yes" Source="..\..\output\release\LexicalModel.Tests.dll" />
-				</Component>
-				<Component Id="LexicalModel.Tests.pdb" Guid="{6F2C07C9-7D16-4BBD-8558-21093B33D229}">
-					<File Id="LexicalModel.Tests.pdb" KeyPath="yes" Source="..\..\output\release\LexicalModel.Tests.pdb" />
-				</Component>
-				<Component Id="LexicalTools.Tests.dll" Guid="{319C7C97-D878-4270-87B9-30D47B6906CF}">
-					<File Id="LexicalTools.Tests.dll" KeyPath="yes" Source="..\..\output\release\LexicalTools.Tests.dll" />
-				</Component>
-				<Component Id="LexicalTools.Tests.dll.config" Guid="{593BBFAB-A047-438D-8B0E-A67FB25E1E83}">
-					<File Id="LexicalTools.Tests.dll.config" KeyPath="yes" Source="..\..\output\release\LexicalTools.Tests.dll.config" />
-				</Component>
-				<Component Id="LexicalTools.Tests.pdb" Guid="{1B897585-DB8F-451B-9F70-682D42031D38}">
-					<File Id="LexicalTools.Tests.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.Tests.pdb" />
-				</Component>
 				<Component Id="LibChorus.pdb" Guid="{C8F30B83-1D51-4631-B6E2-C867B5D7D17B}">
 					<File Id="LibChorus.pdb" KeyPath="yes" Source="..\..\output\release\LibChorus.pdb" />
 				</Component>
 				<Component Id="lift2sfm.xsl" Guid="{3768D3EA-C6D3-46F6-80C3-55641DE586D3}">
 					<File Id="lift2sfm.xsl" KeyPath="yes" Source="..\..\output\release\lift2sfm.xsl" />
-				</Component>
-				<Component Id="nunit.framework.dll" Guid="{32FA47DB-4EB2-4035-B1E0-6F4E039B0BE2}">
-					<File Id="nunit.framework.dll" KeyPath="yes" Source="..\..\output\release\nunit.framework.dll" />
-				</Component>
-				<Component Id="nunit.framework.xml" Guid="{43F1B1DB-8C96-4F37-BE34-534925AEC098}">
-					<File Id="nunit.framework.xml" KeyPath="yes" Source="..\..\output\release\nunit.framework.xml" />
-				</Component>
-				<Component Id="NUnitForms.dll" Guid="{3651A09A-7986-4A5E-AFE3-141C249C66E7}">
-					<File Id="NUnitForms.dll" KeyPath="yes" Source="..\..\output\release\NUnitForms.dll" />
-				</Component>
-				<Component Id="NUnitForms.xml" Guid="{E682B6C1-6CBF-40B0-9E6F-B61DC8E267E7}">
-					<File Id="NUnitForms.xml" KeyPath="yes" Source="..\..\output\release\NUnitForms.xml" />
 				</Component>
 				<Component Id="SIL.DictionaryServices.pdb" Guid="{8469CFC4-D014-4D7E-ACEB-509D3EDDA890}">
 					<File Id="SIL.DictionaryServices.pdb" KeyPath="yes" Source="..\..\output\release\SIL.DictionaryServices.pdb" />
@@ -398,20 +353,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="SIL.Media.pdb" Guid="{5F493C7F-CA10-4D07-91F9-A028AF7C17DB}">
 					<File Id="SIL.Media.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Media.pdb" />
 				</Component>
-				<Component Id="SIL.TestUtilities.dll" Guid="{27843475-345D-4FD6-9838-38C4D90A5C52}">
-					<File Id="SIL.TestUtilities.dll" KeyPath="yes" Source="..\..\output\release\SIL.TestUtilities.dll" />
-				</Component>
-				<Component Id="SIL.TestUtilities.pdb" Guid="{60C94294-28ED-4DB0-9884-19EDE026B3E7}">
-					<File Id="SIL.TestUtilities.pdb" KeyPath="yes" Source="..\..\output\release\SIL.TestUtilities.pdb" />
-				</Component>
 				<Component Id="SIL.Core.pdb" Guid="{DC1A18EB-6BFE-45FF-833E-C4D71B767B48}">
 					<File Id="SIL.Core.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Core.pdb" />
-				</Component>
-				<Component Id="SIL.Core.Tests.dll" Guid="{255A718A-9FF5-4139-8987-CA4C8E28B2A3}">
-					<File Id="SIL.Core.Tests.dll" KeyPath="yes" Source="..\..\output\release\SIL.Core.Tests.dll" />
-				</Component>
-				<Component Id="SIL.Core.Tests.pdb" Guid="{AF1E1AA2-948F-4AEF-9D1A-BFC99F8A2274}">
-					<File Id="SIL.Core.Tests.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Core.Tests.pdb" />
 				</Component>
 				<Component Id="SIL.Lexicon.dll" Guid="{E412BCD0-E014-4D2D-85F6-0D7A7B4A2B53}">
 					<File Id="SIL.Lexicon.dll" KeyPath="yes" Source="..\..\output\release\SIL.Lexicon.dll" />
@@ -446,12 +389,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="SIL.WritingSystems.pdb" Guid="{218EC407-D7A9-43A4-A1DF-D418C6A57464}">
 					<File Id="SIL.WritingSystems.pdb" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.pdb" />
 				</Component>
-				<Component Id="SIL.WritingSystems.Tests.dll" Guid="{D8D8E918-740A-44B7-A74D-88AAD6A8092B}">
-					<File Id="SIL.WritingSystems.Tests.dll" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.Tests.dll" />
-				</Component>
-				<Component Id="SIL.WritingSystems.Tests.pdb" Guid="{799A35B1-D52B-4710-91AB-D351D438778F}">
-					<File Id="SIL.WritingSystems.Tests.pdb" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.Tests.pdb" />
-				</Component>
 				<Component Id="plift2html.xsl" Guid="{2D29595E-8F1F-42A5-BC92-5D83979685E0}">
 					<File Id="plift2html.xsl" KeyPath="yes" Source="..\..\output\release\plift2html.xsl" />
 				</Component>
@@ -463,42 +400,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				</Component>
 				<Component Id="WeSay.AddinLib.pdb" Guid="{94AA939C-B22F-41C8-8545-A860963E803E}">
 					<File Id="WeSay.AddinLib.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.pdb" />
-				</Component>
-				<Component Id="WeSay.AddinLib.Tests.dll" Guid="{C816C0D2-2418-4D04-96A9-364E40CE7408}">
-					<File Id="WeSay.AddinLib.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.Tests.dll" />
-				</Component>
-				<Component Id="WeSay.AddinLib.Tests.pdb" Guid="{445D472C-B55B-4BDE-9850-7FDA5CE3E7D2}">
-					<File Id="WeSay.AddinLib.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.AddinLib.Tests.pdb" />
-				</Component>
-				<Component Id="WeSay.App.Tests.dll" Guid="{D5B62E3F-6EA7-4A65-905B-A9A70D14B7C2}">
-					<File Id="WeSay.App.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.App.Tests.dll" />
-				</Component>
-				<Component Id="WeSay.App.Tests.pdb" Guid="{3D89FC12-BC99-48AC-8EE9-2275F1994211}">
-					<File Id="WeSay.App.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.App.Tests.pdb" />
-				</Component>
-				<Component Id="WeSay.Data.Tests.dll" Guid="{F83FB33F-B1D8-40B7-BF96-6C62FBA85230}">
-					<File Id="WeSay.Data.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Data.Tests.dll" />
-				</Component>
-				<Component Id="WeSay.Data.Tests.pdb" Guid="{395D52CB-4F04-4D4D-BC92-1CEA4EE59A5D}">
-					<File Id="WeSay.Data.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Data.Tests.pdb" />
-				</Component>
-				<Component Id="WeSay.Project.Tests.dll" Guid="{401480D4-C6BE-4E87-8B92-AC08D061E257}">
-					<File Id="WeSay.Project.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.Project.Tests.dll" />
-				</Component>
-				<Component Id="WeSay.Project.Tests.pdb" Guid="{5B98A049-BB64-4BEF-8B4C-0900948A7EF9}">
-					<File Id="WeSay.Project.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.Project.Tests.pdb" />
-				</Component>
-				<Component Id="WeSay.TestUtilities.dll" Guid="{8F5466E7-CAC5-4A4B-8563-5A954A88AB1C}">
-					<File Id="WeSay.TestUtilities.dll" KeyPath="yes" Source="..\..\output\release\WeSay.TestUtilities.dll" />
-				</Component>
-				<Component Id="WeSay.TestUtilities.pdb" Guid="{4F509A71-B93C-4012-ADB0-6FCDB04BFC6A}">
-					<File Id="WeSay.TestUtilities.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.TestUtilities.pdb" />
-				</Component>
-				<Component Id="WeSay.UI.Tests.dll" Guid="{3F38E043-9493-49E2-8CF6-B7E37C845F0E}">
-					<File Id="WeSay.UI.Tests.dll" KeyPath="yes" Source="..\..\output\release\WeSay.UI.Tests.dll" />
-				</Component>
-				<Component Id="WeSay.UI.Tests.pdb" Guid="{B62FD0E7-BFC2-4678-92B0-9B4C7B7535DA}">
-					<File Id="WeSay.UI.Tests.pdb" KeyPath="yes" Source="..\..\output\release\WeSay.UI.Tests.pdb" />
 				</Component>
 				  
 				</Directory>
@@ -519,8 +420,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="WeSayConfigurationTool.exe.config" />
 			  <ComponentRef Id="WeSayConfigurationTool.pdb" />
 
-			  <ComponentRef Id="Castle.DynamicProxy.dll" />
-
 			  <ComponentRef Id="Enchant.Net.dll"/>
 
 			  <ComponentRef Id="irrKlang.NET4.dll"/>
@@ -534,7 +433,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalModel.pdb" />
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
-			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="SIL.DictionaryServices.dll" />
 			  <ComponentRef Id="SIL.Media.dll" />
@@ -563,12 +461,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  
 			  <!-- all the other essential ComponentRefs needed in the new install -->
 			  	<ComponentRef Id="Addin.Backup.pdb"/>
-				<ComponentRef Id="Addin.Backup.Tests.dll"/>
-				<ComponentRef Id="Addin.Backup.Tests.pdb"/>
 				<ComponentRef Id="Addin.Transform.dll.config"/>
 				<ComponentRef Id="Addin.Transform.pdb"/>
-				<ComponentRef Id="Addin.Transform.Tests.dll"/>
-				<ComponentRef Id="Addin.Transform.Tests.pdb"/>
 				<ComponentRef Id="Chorus.pdb"/>
 				<ComponentRef Id="ChorusMerge.pdb"/>
 				<ComponentRef Id="Enchant.Net.dll.config"/>
@@ -578,17 +472,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="Geckofx_Winforms.pdb"/>
 				<ComponentRef Id="L10NSharp.dll"/>
 				<ComponentRef Id="L10NSharp.pdb"/>
-				<ComponentRef Id="LexicalModel.Tests.dll"/>
-				<ComponentRef Id="LexicalModel.Tests.pdb"/>
-				<ComponentRef Id="LexicalTools.Tests.dll"/>
-				<ComponentRef Id="LexicalTools.Tests.dll.config"/>
-				<ComponentRef Id="LexicalTools.Tests.pdb"/>
 				<ComponentRef Id="LibChorus.pdb"/>
 				<ComponentRef Id="lift2sfm.xsl"/>
-				<ComponentRef Id="nunit.framework.dll"/>
-				<ComponentRef Id="nunit.framework.xml"/>
-				<ComponentRef Id="NUnitForms.dll"/>
-				<ComponentRef Id="NUnitForms.xml"/>
 				<ComponentRef Id="SIL.DictionaryServices.pdb"/>
 				<ComponentRef Id="SIL.Lift.pdb"/>
 				<ComponentRef Id="SIL.Media.pdb"/>
@@ -614,18 +499,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="SampleDataProcessor.exe"/>
 				<ComponentRef Id="SampleDataProcessor.pdb"/>
 				<ComponentRef Id="WeSay.AddinLib.pdb"/>
-				<ComponentRef Id="WeSay.AddinLib.Tests.dll"/>
-				<ComponentRef Id="WeSay.AddinLib.Tests.pdb"/>
-				<ComponentRef Id="WeSay.App.Tests.dll"/>
-				<ComponentRef Id="WeSay.App.Tests.pdb"/>
-				<ComponentRef Id="WeSay.Data.Tests.dll"/>
-				<ComponentRef Id="WeSay.Data.Tests.pdb"/>
-				<ComponentRef Id="WeSay.Project.Tests.dll"/>
-				<ComponentRef Id="WeSay.Project.Tests.pdb"/>
-				<ComponentRef Id="WeSay.TestUtilities.dll"/>
-				<ComponentRef Id="WeSay.TestUtilities.pdb"/>
-				<ComponentRef Id="WeSay.UI.Tests.dll"/>
-				<ComponentRef Id="WeSay.UI.Tests.pdb"/>
 
 				<ComponentGroupRef Id ="defaultFiles"/>
 				<ComponentGroupRef Id ="ddpStuff"/>
