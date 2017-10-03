@@ -68,7 +68,7 @@ cd -
 
 # *** Results ***
 # build: wesay1.6-win32-continuous (bt170)
-# project: WeSay1.5
+# project: WeSay
 # URL: http://build.palaso.org/viewType.html?buildTypeId=bt170
 # VCS: https://github.com/sillsdev/wesay.git [refs/heads/master]
 # dependencies:
@@ -76,7 +76,7 @@ cd -
 #     project: Chorus
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=ChorusWin32v25nostrongCont
 #     clean: false
-#     revision: latest.lastSuccessful
+#     revision: wesay-1.6.1.tcbuildtag
 #     paths: {"Chorus.exe"=>"lib/Release", "Chorus.pdb"=>"lib/Release", "ChorusMerge.exe"=>"lib/Release", "ChorusMerge.pdb"=>"lib/Release", "LibChorus.dll"=>"lib/Release", "LibChorus.pdb"=>"lib/Release", "LibChorus.TestUtilities.dll"=>"lib/Release", "LibChorus.TestUtilities.pdb"=>"lib/Release", "Autofac.dll"=>"lib/Release", "Mercurial.zip"=>"lib/Release", "debug/**"=>"lib/Debug", "MercurialExtensions/**"=>"MercurialExtensions", "ChorusMergeModule.msm"=>"lib"}
 #     VCS: https://github.com/sillsdev/chorus.git [chorus-2.5]
 # [1] build: geckofx29-win32-continuous (bt399)
@@ -99,20 +99,20 @@ cd -
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"xulrunner-29.0.1.en-US.win32.zip!**"=>""}
-# [4] build: L10NSharp continuous (bt196)
+# [4] build: L10NSharp Version2.0 continuous (bt196)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt196
 #     clean: false
 #     revision: l10nsharp-2.0.tcbuildtag
 #     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.pdb"=>"lib/Debug"}
-#     VCS: https://github.com/sillsdev/l10nsharp [master]
-# [5] build: L10NSharp continuous (bt196)
+#     VCS: https://github.com/sillsdev/l10nsharp [Version2.0]
+# [5] build: L10NSharp Version2.0 continuous (bt196)
 #     project: L10NSharp
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt196
 #     clean: false
 #     revision: l10nsharp-2.0.tcbuildtag
 #     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.pdb"=>"lib/Release"}
-#     VCS: https://github.com/sillsdev/l10nsharp [master]
+#     VCS: https://github.com/sillsdev/l10nsharp [Version2.0]
 # [6] build: wesay-doc-default (bt184)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
@@ -131,7 +131,7 @@ cd -
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=PalasoWin32v26nostrongCont
 #     clean: false
-#     revision: latest.lastSuccessful
+#     revision: wesay-1.6.1.tcbuildtag
 #     paths: {"Palaso.dll"=>"lib/Release", "Palaso.pdb"=>"lib/Release", "Palaso.DictionaryServices.dll"=>"lib/Release", "Palaso.DictionaryServices.pdb"=>"lib/Release", "Palaso.Lift.dll"=>"lib/Release", "Palaso.Lift.pdb"=>"lib/Release", "Palaso.Media.dll"=>"lib/Release", "Palaso.Media.pdb"=>"lib/Release", "Palaso.Tests.dll"=>"lib/Release", "Palaso.Tests.pdb"=>"lib/Release", "Palaso.TestUtilities.dll"=>"lib/Release", "Palaso.TestUtilities.pdb"=>"lib/Release", "PalasoUIWindowsForms.dll"=>"lib/Release", "PalasoUIWindowsForms.pdb"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.dll"=>"lib/Release", "PalasoUIWindowsForms.GeckoBrowserAdapter.pdb"=>"lib/Release", "Interop.WIA.dll"=>"lib/Release", "taglib-sharp.dll"=>"lib/Release", "debug/**"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/libpalaso.git []
 
@@ -147,46 +147,46 @@ mkdir -p ../lib/Debug
 mkdir -p ../lib/Release
 
 # download artifact dependencies
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/Chorus.exe ../lib/Release/Chorus.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/Chorus.pdb ../lib/Release/Chorus.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/ChorusMerge.exe ../lib/Release/ChorusMerge.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/ChorusMerge.pdb ../lib/Release/ChorusMerge.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/LibChorus.dll ../lib/Release/LibChorus.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/LibChorus.pdb ../lib/Release/LibChorus.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/LibChorus.TestUtilities.dll ../lib/Release/LibChorus.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/LibChorus.TestUtilities.pdb ../lib/Release/LibChorus.TestUtilities.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/Autofac.dll ../lib/Release/Autofac.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/Mercurial.zip ../lib/Release/Mercurial.zip
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/Autofac.dll ../lib/Debug/Autofac.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/Chorus.exe ../lib/Debug/Chorus.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/Chorus.pdb ../lib/Debug/Chorus.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/ChorusHub.exe ../lib/Debug/ChorusHub.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/ChorusHub.pdb ../lib/Debug/ChorusHub.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/ChorusMerge.exe ../lib/Debug/ChorusMerge.exe
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/ChorusMerge.pdb ../lib/Debug/ChorusMerge.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/LibChorus.TestUtilities.dll ../lib/Debug/LibChorus.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/LibChorus.TestUtilities.pdb ../lib/Debug/LibChorus.TestUtilities.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/LibChorus.dll ../lib/Debug/LibChorus.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/debug/LibChorus.pdb ../lib/Debug/LibChorus.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/.guidsForInstaller.xml ../MercurialExtensions/.guidsForInstaller.xml
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/Dummy.txt ../MercurialExtensions/Dummy.txt
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/.gitignore ../MercurialExtensions/fixutf8/.gitignore
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/.guidsForInstaller.xml ../MercurialExtensions/fixutf8/.guidsForInstaller.xml
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/.hg_archival.txt ../MercurialExtensions/fixutf8/.hg_archival.txt
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/.hgignore ../MercurialExtensions/fixutf8/.hgignore
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/README. ../MercurialExtensions/fixutf8/README.
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/buildcpmap.py ../MercurialExtensions/fixutf8/buildcpmap.py
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/cpmap.pyc ../MercurialExtensions/fixutf8/cpmap.pyc
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/fixutf8.py ../MercurialExtensions/fixutf8/fixutf8.py
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/fixutf8.pyc ../MercurialExtensions/fixutf8/fixutf8.pyc
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/fixutf8.pyo ../MercurialExtensions/fixutf8/fixutf8.pyo
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/osutil.py ../MercurialExtensions/fixutf8/osutil.py
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/osutil.pyc ../MercurialExtensions/fixutf8/osutil.pyc
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/osutil.pyo ../MercurialExtensions/fixutf8/osutil.pyo
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.py ../MercurialExtensions/fixutf8/win32helper.py
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.pyc ../MercurialExtensions/fixutf8/win32helper.pyc
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/MercurialExtensions/fixutf8/win32helper.pyo ../MercurialExtensions/fixutf8/win32helper.pyo
-copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/latest.lastSuccessful/ChorusMergeModule.msm ../lib/ChorusMergeModule.msm
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/Chorus.exe ../lib/Release/Chorus.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/Chorus.pdb ../lib/Release/Chorus.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/ChorusMerge.exe ../lib/Release/ChorusMerge.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/ChorusMerge.pdb ../lib/Release/ChorusMerge.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/LibChorus.dll ../lib/Release/LibChorus.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/LibChorus.pdb ../lib/Release/LibChorus.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/LibChorus.TestUtilities.dll ../lib/Release/LibChorus.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/LibChorus.TestUtilities.pdb ../lib/Release/LibChorus.TestUtilities.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/Autofac.dll ../lib/Release/Autofac.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/Mercurial.zip ../lib/Release/Mercurial.zip
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/Autofac.dll ../lib/Debug/Autofac.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/Chorus.exe ../lib/Debug/Chorus.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/Chorus.pdb ../lib/Debug/Chorus.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/ChorusHub.exe ../lib/Debug/ChorusHub.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/ChorusHub.pdb ../lib/Debug/ChorusHub.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/ChorusMerge.exe ../lib/Debug/ChorusMerge.exe
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/ChorusMerge.pdb ../lib/Debug/ChorusMerge.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/LibChorus.TestUtilities.dll ../lib/Debug/LibChorus.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/LibChorus.TestUtilities.pdb ../lib/Debug/LibChorus.TestUtilities.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/LibChorus.dll ../lib/Debug/LibChorus.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/debug/LibChorus.pdb ../lib/Debug/LibChorus.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/.guidsForInstaller.xml ../MercurialExtensions/.guidsForInstaller.xml
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/Dummy.txt ../MercurialExtensions/Dummy.txt
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/.gitignore ../MercurialExtensions/fixutf8/.gitignore
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/.guidsForInstaller.xml ../MercurialExtensions/fixutf8/.guidsForInstaller.xml
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/.hg_archival.txt ../MercurialExtensions/fixutf8/.hg_archival.txt
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/.hgignore ../MercurialExtensions/fixutf8/.hgignore
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/README. ../MercurialExtensions/fixutf8/README.
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/buildcpmap.py ../MercurialExtensions/fixutf8/buildcpmap.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/cpmap.pyc ../MercurialExtensions/fixutf8/cpmap.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/fixutf8.py ../MercurialExtensions/fixutf8/fixutf8.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/fixutf8.pyc ../MercurialExtensions/fixutf8/fixutf8.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/fixutf8.pyo ../MercurialExtensions/fixutf8/fixutf8.pyo
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/osutil.py ../MercurialExtensions/fixutf8/osutil.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/osutil.pyc ../MercurialExtensions/fixutf8/osutil.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/osutil.pyo ../MercurialExtensions/fixutf8/osutil.pyo
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/win32helper.py ../MercurialExtensions/fixutf8/win32helper.py
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/win32helper.pyc ../MercurialExtensions/fixutf8/win32helper.pyc
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/MercurialExtensions/fixutf8/win32helper.pyo ../MercurialExtensions/fixutf8/win32helper.pyo
+copy_auto http://build.palaso.org/guestAuth/repository/download/ChorusWin32v25nostrongCont/wesay-1.6.1.tcbuildtag/ChorusMergeModule.msm ../lib/ChorusMergeModule.msm
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll ../lib/Release/Geckofx-Core.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Core.dll.config ../lib/Release/Geckofx-Core.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt399/latest.lastSuccessful/Geckofx-Winforms.dll ../lib/Release/Geckofx-Winforms.dll
@@ -225,55 +225,47 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.last
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.vi.po ../common/wesay.vi.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_CN.po ../common/wesay.zh_CN.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_TW.po ../common/wesay.zh_TW.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.dll ../lib/Release/Palaso.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.pdb ../lib/Release/Palaso.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.DictionaryServices.dll ../lib/Release/Palaso.DictionaryServices.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.DictionaryServices.pdb ../lib/Release/Palaso.DictionaryServices.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.Lift.dll ../lib/Release/Palaso.Lift.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.Lift.pdb ../lib/Release/Palaso.Lift.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.Media.dll ../lib/Release/Palaso.Media.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.Media.pdb ../lib/Release/Palaso.Media.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.Tests.dll ../lib/Release/Palaso.Tests.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.Tests.pdb ../lib/Release/Palaso.Tests.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.TestUtilities.dll ../lib/Release/Palaso.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Palaso.TestUtilities.pdb ../lib/Release/Palaso.TestUtilities.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/PalasoUIWindowsForms.dll ../lib/Release/PalasoUIWindowsForms.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/PalasoUIWindowsForms.pdb ../lib/Release/PalasoUIWindowsForms.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/PalasoUIWindowsForms.GeckoBrowserAdapter.dll ../lib/Release/PalasoUIWindowsForms.GeckoBrowserAdapter.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb ../lib/Release/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/Interop.WIA.dll ../lib/Release/Interop.WIA.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/taglib-sharp.dll ../lib/Release/taglib-sharp.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Commons.Xml.Relaxng.dll ../lib/Debug/Commons.Xml.Relaxng.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Interop.WIA.dll ../lib/Debug/Interop.WIA.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Ionic.Zip.dll ../lib/Debug/Ionic.Zip.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/L10NSharp.dll ../lib/Debug/L10NSharp.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/L10NSharp.pdb ../lib/Debug/L10NSharp.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.BuildTasks.dll ../lib/Debug/Palaso.BuildTasks.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.BuildTasks.pdb ../lib/Debug/Palaso.BuildTasks.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.DictionaryServices.dll ../lib/Debug/Palaso.DictionaryServices.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.DictionaryServices.pdb ../lib/Debug/Palaso.DictionaryServices.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.Lift.dll ../lib/Debug/Palaso.Lift.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.Lift.pdb ../lib/Debug/Palaso.Lift.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.Media.dll ../lib/Debug/Palaso.Media.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.Media.pdb ../lib/Debug/Palaso.Media.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.TestUtilities.dll ../lib/Debug/Palaso.TestUtilities.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.TestUtilities.pdb ../lib/Debug/Palaso.TestUtilities.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.Tests.dll ../lib/Debug/Palaso.Tests.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.Tests.pdb ../lib/Debug/Palaso.Tests.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.dll ../lib/Debug/Palaso.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/Palaso.pdb ../lib/Debug/Palaso.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/PalasoUIWindowsForms.GeckoBrowserAdapter.dll ../lib/Debug/PalasoUIWindowsForms.GeckoBrowserAdapter.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb ../lib/Debug/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/PalasoUIWindowsForms.dll ../lib/Debug/PalasoUIWindowsForms.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/PalasoUIWindowsForms.pdb ../lib/Debug/PalasoUIWindowsForms.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/SIL.Archiving.dll ../lib/Debug/SIL.Archiving.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/SIL.Archiving.pdb ../lib/Debug/SIL.Archiving.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/SIL.ScriptureControls.Tests.dll ../lib/Debug/SIL.ScriptureControls.Tests.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/SIL.ScriptureControls.Tests.pdb ../lib/Debug/SIL.ScriptureControls.Tests.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/SIL.ScriptureControls.dll ../lib/Debug/SIL.ScriptureControls.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/SIL.ScriptureControls.pdb ../lib/Debug/SIL.ScriptureControls.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/irrKlang.NET4.dll ../lib/Debug/irrKlang.NET4.dll
-copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/latest.lastSuccessful/debug/taglib-sharp.dll ../lib/Debug/taglib-sharp.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.dll ../lib/Release/Palaso.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.pdb ../lib/Release/Palaso.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.DictionaryServices.dll ../lib/Release/Palaso.DictionaryServices.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.DictionaryServices.pdb ../lib/Release/Palaso.DictionaryServices.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.Lift.dll ../lib/Release/Palaso.Lift.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.Lift.pdb ../lib/Release/Palaso.Lift.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.Media.dll ../lib/Release/Palaso.Media.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.Media.pdb ../lib/Release/Palaso.Media.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.Tests.dll ../lib/Release/Palaso.Tests.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.Tests.pdb ../lib/Release/Palaso.Tests.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.TestUtilities.dll ../lib/Release/Palaso.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Palaso.TestUtilities.pdb ../lib/Release/Palaso.TestUtilities.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/PalasoUIWindowsForms.dll ../lib/Release/PalasoUIWindowsForms.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/PalasoUIWindowsForms.pdb ../lib/Release/PalasoUIWindowsForms.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/PalasoUIWindowsForms.GeckoBrowserAdapter.dll ../lib/Release/PalasoUIWindowsForms.GeckoBrowserAdapter.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb ../lib/Release/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/Interop.WIA.dll ../lib/Release/Interop.WIA.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/taglib-sharp.dll ../lib/Release/taglib-sharp.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Commons.Xml.Relaxng.dll ../lib/Debug/Commons.Xml.Relaxng.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Interop.WIA.dll ../lib/Debug/Interop.WIA.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/L10NSharp.dll ../lib/Debug/L10NSharp.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/L10NSharp.pdb ../lib/Debug/L10NSharp.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.BuildTasks.dll ../lib/Debug/Palaso.BuildTasks.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.BuildTasks.pdb ../lib/Debug/Palaso.BuildTasks.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.DictionaryServices.dll ../lib/Debug/Palaso.DictionaryServices.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.DictionaryServices.pdb ../lib/Debug/Palaso.DictionaryServices.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.Lift.dll ../lib/Debug/Palaso.Lift.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.Lift.pdb ../lib/Debug/Palaso.Lift.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.Media.dll ../lib/Debug/Palaso.Media.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.Media.pdb ../lib/Debug/Palaso.Media.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.TestUtilities.dll ../lib/Debug/Palaso.TestUtilities.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.TestUtilities.pdb ../lib/Debug/Palaso.TestUtilities.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.Tests.dll ../lib/Debug/Palaso.Tests.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.Tests.pdb ../lib/Debug/Palaso.Tests.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.dll ../lib/Debug/Palaso.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/Palaso.pdb ../lib/Debug/Palaso.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/PalasoUIWindowsForms.GeckoBrowserAdapter.dll ../lib/Debug/PalasoUIWindowsForms.GeckoBrowserAdapter.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb ../lib/Debug/PalasoUIWindowsForms.GeckoBrowserAdapter.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/PalasoUIWindowsForms.dll ../lib/Debug/PalasoUIWindowsForms.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/PalasoUIWindowsForms.pdb ../lib/Debug/PalasoUIWindowsForms.pdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.1.tcbuildtag/debug/taglib-sharp.dll ../lib/Debug/taglib-sharp.dll
 # extract downloaded zip files
 unzip -uqo ../Downloads/xulrunner-29.0.1.en-US.win32.zip -d ../
 # End of script
