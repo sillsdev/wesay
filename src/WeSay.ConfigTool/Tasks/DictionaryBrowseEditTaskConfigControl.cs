@@ -6,9 +6,11 @@ namespace WeSay.ConfigTool.Tasks
 {
 	public partial class DictionaryBrowseEditTaskConfigControl : DefaultTaskConfigurationControl
 	{
+		private bool _initialising;
 		public DictionaryBrowseEditTaskConfigControl(ITaskConfiguration config)
 			: base(config, true)
 		{
+			_initialising = true;
 			InitializeComponent();
 			switch (Configuration.MeaningField)
 			{
@@ -19,6 +21,7 @@ namespace WeSay.ConfigTool.Tasks
 					_gloss.Checked = true;
 					break;
 			}
+			_initialising = false;
 		}
 
 		private DictionaryBrowseAndEditConfiguration Configuration
@@ -31,15 +34,20 @@ namespace WeSay.ConfigTool.Tasks
 
 		private void OnGloss_RadioClicked(object sender, EventArgs e)
 		{
-			Configuration.MeaningField = "gloss";
-			WeSayWordsProject.Project.MakeMeaningFieldChange("definition", "gloss");
+			if (!_initialising)
+			{
+				Configuration.MeaningField = "gloss";
+				WeSayWordsProject.Project.MakeMeaningFieldChange("definition", "gloss");
+			}
 		}
 
 		private void OnDefinition_RadioClicked(object sender, EventArgs e)
 		{
-			Configuration.MeaningField = "definition";
-			WeSayWordsProject.Project.MakeMeaningFieldChange("gloss", "definition");
+			if (!_initialising)
+			{
+				Configuration.MeaningField = "definition";
+				WeSayWordsProject.Project.MakeMeaningFieldChange("gloss", "definition");
+			}
 		}
-
 	}
 }
