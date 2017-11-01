@@ -45,7 +45,15 @@ namespace Addin.Transform.PdfDictionary
 			}
 				if(!p.Convert(htmlPath, pdfPath))
 				{
-					throw new ApplicationException(File.ReadAllText(log.Path));
+					string errorString = File.ReadAllText(log.Path);
+					if (errorString.Contains("error: can't open output file: Permission denied"))
+					{
+						Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Could not create the PDF file. Please check if you have the file open already or if you have permission to create the file in the export directory.");
+					}
+					else
+					{
+						throw new ApplicationException(errorString);
+					}
 				}
 			}
 		}
