@@ -13,8 +13,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
 using Chorus;
 using Chorus.FileTypeHanders.lift;
 using Chorus.UI.Notes;
@@ -26,7 +24,6 @@ using Palaso.DictionaryServices.Model;
 using Palaso.IO;
 using Palaso.Lift;
 using Palaso.Lift.Options;
-using Palaso.Lift.Validation;
 using Palaso.Progress;
 using Palaso.Reporting;
 using Palaso.UI.WindowsForms.Progress;
@@ -434,6 +431,34 @@ namespace WeSay.Project
 			// I (CP) don't think this is needed
 			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
+			// start registering ViewTemplate related things before LiftDataMapper
+			var catalog = new TaskTypeCatalog();
+			catalog.RegisterAllTypes(builder);
+
+			builder.RegisterInstance<TaskTypeCatalog>(catalog).SingleInstance();
+
+			//this is a bit weird, did it to get around a strange problem where it was left open,
+			//never found out by whom.  But note, it does affect behavior.  It means that
+			//the first time the reader is asked for, it will be reading the value as it was
+			//back when we did this assignment.
+			string configFileText = File.ReadAllText(PathToConfigFile);
+
+			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
+
+			builder.Register(c => new ConfigFileReader(configFileText, defaultXmlConfigText, catalog)).SingleInstance();
+
+			builder.RegisterType<TaskCollection>().SingleInstance();
+
+			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
+			bool glossMeaningField = false;
+			foreach (var viewTemplate in viewTemplates)
+			{
+				//todo: this isn't going to work if we start using multiple tempates.
+				//will have to go to a naming system.
+				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
+				glossMeaningField = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss).IsMeaningField;
+			}
+
 			builder.Register<LiftDataMapper>(c =>
 												 {
 													 try
@@ -449,7 +474,8 @@ namespace WeSay.Project
 																									   semanticDomains,
 																									   GetIdsOfSingleOptionFields
 																										   (),
-																									   progressState
+																									   progressState,
+																									   glossMeaningField
 																									   );
 
 																								   return mapper;
@@ -473,32 +499,7 @@ namespace WeSay.Project
 			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
 
 
-
-			var catalog = new TaskTypeCatalog();
-			catalog.RegisterAllTypes(builder);
-
-			builder.RegisterInstance<TaskTypeCatalog>(catalog).SingleInstance();
-
-			//this is a bit weird, did it to get around a strange problem where it was left open,
-			//never found out by whom.  But note, it does affect behavior.  It means that
-			//the first time the reader is asked for, it will be reading the value as it was
-			//back when we did this assignment.
-			string configFileText = File.ReadAllText(PathToConfigFile);
-
-			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
-
-			builder.Register(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingleInstance();
-
-			builder.RegisterType<TaskCollection>().SingleInstance();
-
-			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
-			foreach (var viewTemplate in viewTemplates)
-			{
-				//todo: this isn't going to work if we start using multiple tempates.
-				//will have to go to a naming system.
-				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
-			}
-
+			//finish registering ViewTemplate related things
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate").SingleInstance();
 			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned().SingleInstance();
 
