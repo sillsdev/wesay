@@ -6,24 +6,8 @@ using WeSay.Project;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public class DashboardConfiguration: TaskConfigurationBase, ITaskConfiguration
+	public class DashboardConfiguration: ITaskConfiguration
 	{
-		public bool TouchAllEntriesCompleted { get; set; }
-
-		public DashboardConfiguration(string xml)
-			:base(xml)
-		{
-			TouchAllEntriesCompleted = bool.Parse(GetStringFromConfigNode("touchAllEntriesCompleted", "false"));
-		}
-
-		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave
-		{
-			get
-			{
-				yield return new KeyValuePair<string, string>("touchAllEntriesCompleted", TouchAllEntriesCompleted.ToString());
-			}
-		}
-
 		public override string ToString()
 		{
 			return "Dashboard";
@@ -72,6 +56,14 @@ namespace WeSay.LexicalTools.Dashboard
 		public virtual bool IsOptional
 		{
 			get { return false; }
+		}
+
+		public void Write(XmlWriter writer)
+		{
+			writer.WriteStartElement("task");
+			writer.WriteAttributeString("taskName", TaskName);
+			writer.WriteAttributeString("visible", IsVisible ? "true" : "false");
+			writer.WriteEndElement();
 		}
 
 		public bool AreEquivalent(ITaskConfiguration taskConfiguration)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<configuration version="10">
+<configuration version="9">
   <components>
 	<viewTemplate>
 	  <fields>
@@ -220,9 +220,8 @@
 	</viewTemplate>
   </components>
   <tasks>
-	<task taskName="Dashboard" visible="true">
-	  <touchAllEntriesCompleted>False</touchAllEntriesCompleted>
-	</task>	<task taskName="Dictionary" visible="true">
+	<task taskName="Dashboard" visible="true" />
+	<task taskName="Dictionary" visible="true">
 	  <meaningField>definition</meaningField>
 	</task>
 	<task taskName="AddMissingInfo" visible="false">
