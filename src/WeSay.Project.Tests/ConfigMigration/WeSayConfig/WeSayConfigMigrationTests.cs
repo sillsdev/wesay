@@ -507,6 +507,26 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 		}
 
 		[Test]
+		public void V10File_TouchAllEntriesCompletedAddedToDashboardTask()
+		{
+			File.WriteAllText(
+				_pathToInputConfig,
+				@"<?xml version='1.0' encoding='utf-8'?>
+				<configuration version='8'>
+					<components>
+						<viewTemplate></viewTemplate>
+					</components>
+					<tasks>
+						<task taskName='Dashboard' visible='true'></task>
+						<task taskName='Dictionary' visible='true'></task>
+					</tasks>
+				</configuration>"
+			);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
+			AssertHasAtLeastOneMatch("//task[@taskName='Dashboard']/touchAllEntriesCompleted[text()='False']", _outputPath);
+		}
+
+		[Test]
 		public void DoesNotTouchCurrentFile()
 		{
 			File.WriteAllText(
