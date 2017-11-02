@@ -62,9 +62,11 @@ namespace WeSay.LexicalModel
 			#if DEBUG
 			_constructionStackTrace = new StackTrace();
 			#endif
-			_decoratedDataMapper = new LiftDataMapper(
+			LiftDataMapper mapper = new LiftDataMapper(
 				path, null, new string[] {}, new ProgressState()
 			);
+			mapper.Init();
+			_decoratedDataMapper = mapper;
 			_disposed = false;
 		}
 
