@@ -8,7 +8,7 @@
 		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
 
 	<PropertyGroup>
-		<LifeCycleStage>BETA</LifeCycleStage>
+		<LifeCycleStage>CANDIDATE</LifeCycleStage>
 	</PropertyGroup>
 
 	<Target Name="VersionNumbers">

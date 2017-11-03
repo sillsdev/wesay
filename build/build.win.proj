@@ -224,7 +224,8 @@
 		<FileUpdate File="$(DownloadInfoPath)" DatePlaceHolder='_DATE_' DateFormat='yyyy-MM-dd' Regex='_VERSION_'        ReplacementText ="$(Version)" />
 		<!--<FileUpdate File="$(DownloadInfoPath)" Regex='_BUILD_'        ReplacementText ="$(BUILD_NUMBER)" />-->
 		<FileUpdate File="$(DownloadInfoPath)" Regex='_STABILITY_'        ReplacementText ="$(ReleaseString)" />
-		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="beta" />
+		<!-- Channels: alpha, beta, rc, stable -->
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="rc" />
 	</Target>
 
 	<Target Name="Sign" DependsOnTargets="Installer" >
