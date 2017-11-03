@@ -5,4 +5,39 @@ RUNMODE=INSTALLED
 . ./environ
 cd $OLDPWD
 
+DEFAULT_WEB=`xdg-settings get default-web-browser`
+DEFAULT_FILEWEB=`xdg-settings get default-url-scheme-handler file`
+
+if [ "$DEFAULT_WEB" != "$DEFAULT_WEB" ]
+then
+	xdg-settings set default-url-scheme-handler file "$DEFAULT_WEB"
+fi
+
+
+PACKAGE_VERSION=`dpkg -s wesay | grep '^Version:'|cut -d '+' -f1 -`
+echo "Package version: [$PACKAGE_VERSION]"
+
+if [ -f ~/.config/WeSay/wesay-version ]
+then # check if version in there is same as current
+	echo "wesay-config: Checking last version"
+	LAST_VERSION=`cat ~/.config/WeSay/wesay-version`
+	echo "wesay-config: Last version: [$LAST_VERSION]"
+	if [ "$PACKAGE_VERSION" != "$LAST_VERSION" ]
+	then
+		echo "wesay-config: Last version different from current"
+		# open the welcome file
+		xdg-open "/usr/share/doc/wesay/Welcome.htm"
+		#write out the current version
+		echo "$PACKAGE_VERSION" > ~/.config/WeSay/wesay-version
+	else
+		echo "wesay-config: Last version same as current"
+	fi
+else
+	echo "wesay-config: No existing version file"
+	#open the welcome file
+	xdg-open "/usr/share/doc/wesay/Welcome.htm"
+	#write out the current version
+	echo "$PACKAGE_VERSION" > ~/.config/WeSay/wesay-version
+fi
+
 MONO_ENABLE_SHM=1 exec mono --debug /usr/lib/wesay/WeSay.App.exe "$@"
