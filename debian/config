@@ -1,8 +1,0 @@
-#!/bin/sh -e
-
-# Source debconf library.
-. /usr/share/debconf/confmodule
-
-# Show Welcome web page after WeSay upgrade?
-db_input medium wesay/welcome || true
-db_go
