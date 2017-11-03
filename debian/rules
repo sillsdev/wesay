@@ -43,6 +43,9 @@ override_dh_auto_install:
 	install -m 755 build/mono/chorusmerge $(DESTDIR)$(LIB)
 	# adjust the paths inside the wrapper scripts
 	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)
+	sed -e "s#/usr/share/doc/wesay#/usr/share/doc/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)
+	sed -e "s#wesay-version#$(PACKAGENAME)-version#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)
+	sed -e "s#dpkg -s wesay#dpkg -s $(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)
 	sed -e "s#/usr/lib/wesay#/usr/lib/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)-config
 	sed -e "s#/usr/share/doc/wesay#/usr/share/doc/$(PACKAGENAME)#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)-config
 	sed -e "s#wesay-version#$(PACKAGENAME)-version#" -i $(DESTDIR)/usr/bin/$(PACKAGENAME)-config
