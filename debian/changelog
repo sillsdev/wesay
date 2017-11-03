@@ -1,3 +1,9 @@
+wesay (1.6.1) UNRELEASED; urgency=medium
+
+  * Release candidate 1.6.1
+
+ -- Daniel Glassey <wdg@debian.org>  Fri, 03 Nov 2017 10:43:21 +0700
+
 wesay (1.6.0) stable; urgency=medium
 
   * Package version 1.6 
