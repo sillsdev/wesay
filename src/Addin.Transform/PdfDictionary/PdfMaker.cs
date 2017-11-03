@@ -151,7 +151,7 @@ namespace Addin.Transform.PdfDictionary
 
 				progressState.StatusLabel = "Converting XHTML to PDF...";
 
-				PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
+				_launchAfterTransform = PrinceXmlWrapper.CreatePdf(htmlPath, stylesheetPaths, pdfPath);
 
 				if (_launchAfterTransform)
 				{
