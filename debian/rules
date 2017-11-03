@@ -89,7 +89,7 @@ override_dh_clideps:
 		--exclude-moduleref=libgeckofix.so --exclude-moduleref=Geckofx-Core.dll \
 		--exclude-moduleref=libgobject-2.0.so --exclude-moduleref=libgio-2.0.so \
 		--exclude-moduleref=libglib-2.0.so --exclude-moduleref=libxklavier \
-		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus && \
+		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:
