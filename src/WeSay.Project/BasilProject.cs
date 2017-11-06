@@ -212,17 +212,16 @@ There are problems in:
 
 		public static string WeSaySharedDirectory
 		{
-			get
-			{
+			get {
 				string dir = "wesay";
 #if ALPHA
-				dir += "-alpha"
+				dir += "-alpha";
 #endif
 #if BETA
-				dir += "-beta"
+				dir += "-beta";
 #endif
 #if CANDIDATE
-				dir += "-rc"
+				dir += "-rc";
 #endif
 				return dir;
 			}
