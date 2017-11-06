@@ -115,7 +115,7 @@ namespace WeSay.ConfigTool
 			if (String.IsNullOrEmpty(helpFilePath))
 			{
 				string commonDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-				helpFilePath = Path.Combine(commonDataFolder, Path.Combine("wesay", "WeSay_Helps.chm"));
+				helpFilePath = Path.Combine(commonDataFolder, Path.Combine(Project.BasilProject.WeSaySharedDirectory, "WeSay_Helps.chm"));
 			}
 			if (File.Exists(helpFilePath))
 			{

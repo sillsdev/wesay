@@ -210,6 +210,24 @@ There are problems in:
 			return null;
 		}
 
+		public static string WeSaySharedDirectory
+		{
+			get
+			{
+				string dir = "wesay";
+#if ALPHA
+				dir += "-alpha"
+#endif
+#if BETA
+				dir += "-beta"
+#endif
+#if CANDIDATE
+				dir += "-rc"
+#endif
+				return dir;
+			}
+		}
+
 		public static string ApplicationCommonDirectory
 		{
 			get {
@@ -217,7 +235,7 @@ There are problems in:
 				if (!Directory.Exists(returndir))
 				{
 					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-					returndir = Path.Combine(commonpath, "wesay");
+					returndir = Path.Combine(commonpath, WeSaySharedDirectory);
 				}
 				return returndir;
 			}
@@ -240,7 +258,7 @@ There are problems in:
 				else
 						{
 					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-					shareddir = Path.Combine(commonpath, "wesay");
+					shareddir = Path.Combine(commonpath, WeSaySharedDirectory);
 				}
 				return shareddir;
 			}
@@ -368,10 +386,13 @@ There are problems in:
 			{
 				string versionString = Application.ProductVersion;
 #if ALPHA
-				versionString += " ALPHA";
+				versionString += " -ALPHA";
 #endif
 #if BETA
-				versionString += " BETA";
+				versionString += " -BETA";
+#endif
+#if CANDIDATE
+				versionString += " -RC";
 #endif
 				return versionString;
 			}
