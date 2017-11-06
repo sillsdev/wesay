@@ -19,12 +19,12 @@
 		<ApplicationName>WeSay</ApplicationName>
 		<ApplicationNameLC Condition="'$(ApplicationNameLC)' == ''">wesay</ApplicationNameLC>
 		<Configuration>Debug</Configuration>
+		<Constants>$(LifeCycleStage)</Constants>
 		<MONO_PREFIX Condition="'$(MONO_PREFIX)'==''">/usr</MONO_PREFIX>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
-
 	</PropertyGroup>
 
 	<Target Name="Build">
@@ -49,7 +49,7 @@
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
-			Properties="Configuration=$(Configuration)" />
+			Properties="Configuration=$(Configuration);Constants=$(Constants)" />
 		<Exec Condition="'$(action)' == 'test'"
 			Command="$(MONO_PREFIX)/bin/mono --debug $(MONO_PREFIX)/lib/mono/4.0/nunit-console.exe -noshadow -exclude=SkipOnTeamCity [!P]*.Tests.dll -xml=WeSay.nunit-output.xml"
 			WorkingDirectory="$(RootDir)/output/$(Configuration)"

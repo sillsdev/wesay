@@ -8,7 +8,21 @@
 		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
 
 	<PropertyGroup>
-		<LifeCycleStage>CANDIDATE</LifeCycleStage>
+		<LifeCycleStage Condition="'$(LifeCycleStage)'==''">CANDIDATE</LifeCycleStage>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'ALPHA'">-Alpha</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'BETA'">-Beta</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'CANDIDATE'">-ReleaseCandidate</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'STABLE'"></ReleaseString>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'BETA'">Beta Test</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'CANDIDATE'">Release Candidate</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
 	</PropertyGroup>
 
 	<Target Name="VersionNumbers">
