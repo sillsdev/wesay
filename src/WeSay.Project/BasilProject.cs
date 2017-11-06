@@ -216,11 +216,9 @@ There are problems in:
 				string dir = "wesay";
 #if ALPHA
 				dir += "-alpha";
-#endif
-#if BETA
+#elif BETA
 				dir += "-beta";
-#endif
-#if CANDIDATE
+#elif CANDIDATE
 				dir += "-beta";
 #endif
 				return dir;
@@ -386,11 +384,9 @@ There are problems in:
 				string versionString = Application.ProductVersion;
 #if ALPHA
 				versionString += " ALPHA";
-#endif
-#if BETA
+#elif BETA
 				versionString += " BETA";
-#endif
-#if CANDIDATE
+#elif CANDIDATE
 				versionString += " RC";
 #endif
 				return versionString;
