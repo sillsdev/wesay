@@ -221,7 +221,7 @@ There are problems in:
 				dir += "-beta";
 #endif
 #if CANDIDATE
-				dir += "-rc";
+				dir += "-beta";
 #endif
 				return dir;
 			}
@@ -385,13 +385,13 @@ There are problems in:
 			{
 				string versionString = Application.ProductVersion;
 #if ALPHA
-				versionString += " -ALPHA";
+				versionString += " ALPHA";
 #endif
 #if BETA
-				versionString += " -BETA";
+				versionString += " BETA";
 #endif
 #if CANDIDATE
-				versionString += " -RC";
+				versionString += " RC";
 #endif
 				return versionString;
 			}
