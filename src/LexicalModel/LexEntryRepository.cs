@@ -163,7 +163,7 @@ namespace WeSay.LexicalModel
 			foreach (RecordToken<LexEntry> token in all_xref)
 			{
 				LexEntry entry = token.RealObject;
-				entry.IsDirty = true;
+				entry.SomethingWasModified("confer");
 				entries.Add(entry);
 			}
 
