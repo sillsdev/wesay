@@ -138,6 +138,21 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public void TouchAndSaveAll()
+		{
+			RepositoryId[] all_items = GetAllItems();
+			IList<LexEntry> entries = new List<LexEntry>(); ;
+
+			foreach (RepositoryId id in all_items)
+			{
+				LexEntry entry = GetItem(id);
+				entry.IsDirty = true;
+				entries.Add(entry);
+			}
+
+			SaveItems(entries);
+		}
+
 		public ResultSet<LexEntry> GetItemsMatching(IQuery<LexEntry> query)
 		{
 			return _decoratedDataMapper.GetItemsMatching(query);

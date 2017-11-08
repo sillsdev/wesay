@@ -97,7 +97,7 @@ namespace WeSay.Project
 			set { _tasks = value; }
 		}
 
-		internal IEnumerable<ITaskConfiguration> TaskConfigurations
+		public IEnumerable<ITaskConfiguration> TaskConfigurations
 		{
 			get { return _taskconfigurations; }
 			set { _taskconfigurations = value; }
@@ -673,6 +673,37 @@ namespace WeSay.Project
 			{
 				if (field.DataTypeName == "Option")
 					yield return field.FieldName;
+			}
+		}
+
+		private void OnTouchAll(object sender, DoWorkEventArgs e)
+		{
+			GetLexEntryRepository().TouchAndSaveAll();
+		}
+
+		public void TouchAllIfCrossReferences()
+		{
+			ViewTemplate template = ViewTemplates.First();
+			if (template.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled == true)
+			{
+//				OnTouchAll(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+				if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
+				{
+					var dialog = new ProgressDialog();
+					var worker = new BackgroundWorker();
+					worker.DoWork += OnTouchAll;
+					worker.RunWorkerCompleted += OnWorkerCompleted;
+					dialog.BackgroundWorker = worker;
+					dialog.CanCancel = false;
+					dialog.BarStyle = ProgressBarStyle.Marquee;
+					dialog.Text = "Cross Reference migration...";
+					dialog.StatusText = "Cross Reference migration...";
+					dialog.ShowDialog();
+				}
+				else
+				{
+					OnTouchAll(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+				}
 			}
 		}
 
