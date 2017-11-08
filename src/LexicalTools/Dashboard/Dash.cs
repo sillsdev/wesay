@@ -51,8 +51,7 @@ namespace WeSay.LexicalTools.Dashboard
 			_currentWorkTaskProvider = currentWorkTaskProvider;
 			InitializeContextMenu();
 			Initialize();
-			IEnumerable<ITaskConfiguration> tasks = WeSayWordsProject.Project.TaskConfigurations;
-			foreach (ITaskConfiguration task in tasks)
+			foreach (ITaskConfiguration task in WeSayWordsProject.Project.TaskConfigurations)
 			{
 				if (task.TaskName == "Dashboard")
 				{
@@ -61,6 +60,7 @@ namespace WeSay.LexicalTools.Dashboard
 					{
 						WeSayWordsProject.Project.TouchAllIfCrossReferences();
 						dbconf.TouchAllEntriesCompleted = true;
+						WeSayWordsProject.Project.Save();
 						WeSayWordsProject.Project.BackupNow();
 					}
 				}

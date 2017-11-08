@@ -347,7 +347,7 @@ namespace WeSay.Project
 			}
 			else
 			{
-				OnDoMigration(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+				OnDoMigration(null, null);  // this ensures that migration will occur even when the dialog box isn't shown i.e. during tests
 			}
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
@@ -693,9 +693,9 @@ namespace WeSay.Project
 			}
 		}
 
-		private void OnTouchAll(object sender, DoWorkEventArgs e)
+		private void OnTouchCrossReferences(object sender, DoWorkEventArgs e)
 		{
-			GetLexEntryRepository().TouchAndSaveAll();
+			GetLexEntryRepository().TouchAndSaveCrossReferences();
 		}
 
 		public void TouchAllIfCrossReferences()
@@ -703,12 +703,14 @@ namespace WeSay.Project
 			ViewTemplate template = ViewTemplates.First();
 			if (template.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled == true)
 			{
-//				OnTouchAll(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+#if TRUE
+				OnTouchCrossReferences(null, null);
+#else // doesn't work, shows dialog but doesn't get workerended event so it hangs until you kill it 
 				if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
 				{
 					var dialog = new ProgressDialog();
 					var worker = new BackgroundWorker();
-					worker.DoWork += OnTouchAll;
+					worker.DoWork += OnTouchCrossReferences;
 					worker.RunWorkerCompleted += OnWorkerCompleted;
 					dialog.BackgroundWorker = worker;
 					dialog.CanCancel = false;
@@ -719,8 +721,9 @@ namespace WeSay.Project
 				}
 				else
 				{
-					OnTouchAll(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+					OnTouchCrossReferences(null, null);  // this ensures that migration will occur even when the dialog box isn't shown i.e. during tests
 				}
+#endif
 			}
 		}
 

@@ -138,14 +138,33 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		public void TouchAndSaveAll()
+		public void TouchAndSaveCrossReferences()
 		{
-			RepositoryId[] all_items = GetAllItems();
-			IList<LexEntry> entries = new List<LexEntry>(); ;
+			//RepositoryId[] all_items = GetAllItems();
+			DelegateQuery<LexEntry> xrefQuery = new DelegateQuery<LexEntry>(
+				delegate (LexEntry entryToQuery)
+				{
+					IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 
-			foreach (RepositoryId id in all_items)
+					LexRelationCollection relations = entryToQuery.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
+					if (relations == null)
+					{
+						return new IDictionary<string, object>[0];
+					}
+					else
+					{
+						tokenFieldsAndValues.Add("Relation", relations.Relations);
+						return new[] { tokenFieldsAndValues };
+					}
+
+				});
+			ResultSet<LexEntry> all_xref = GetItemsMatching(xrefQuery);
+
+			IList<LexEntry> entries = new List<LexEntry>(); ;
+			foreach (RecordToken<LexEntry> token in all_xref)
 			{
-				LexEntry entry = GetItem(id);
+				LexEntry entry = token.RealObject;
+				//LexEntry entry = GetItem(id);
 				entry.IsDirty = true;
 				entries.Add(entry);
 			}
