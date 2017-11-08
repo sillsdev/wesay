@@ -17,7 +17,6 @@ namespace WeSay.ConfigTool.Tasks
 		{
 			_diContainer = diContainer;
 
-
 			InitializeComponent();
 			splitContainer1.Resize += splitContainer1_Resize;
 		}
@@ -58,6 +57,20 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				_taskList.SelectedIndex = 0;
 			}
+
+			foreach (ITaskConfiguration task in Model.Tasks)
+			{
+				if (task.TaskName == "Dashboard")
+				{
+					LexicalTools.Dashboard.DashboardConfiguration dbconf = (LexicalTools.Dashboard.DashboardConfiguration)task;
+					if (!dbconf.TouchAllEntriesCompleted)
+					{
+						WeSayWordsProject.Project.TouchAllIfCrossReferences();
+						dbconf.TouchAllEntriesCompleted = true;
+					}
+				}
+			}
+
 		}
 
 		private void _taskList_SelectedIndexChanged(object sender, EventArgs e)

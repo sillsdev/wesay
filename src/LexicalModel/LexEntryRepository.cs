@@ -140,7 +140,6 @@ namespace WeSay.LexicalModel
 
 		public void TouchAndSaveCrossReferences()
 		{
-			//RepositoryId[] all_items = GetAllItems();
 			DelegateQuery<LexEntry> xrefQuery = new DelegateQuery<LexEntry>(
 				delegate (LexEntry entryToQuery)
 				{
@@ -164,7 +163,6 @@ namespace WeSay.LexicalModel
 			foreach (RecordToken<LexEntry> token in all_xref)
 			{
 				LexEntry entry = token.RealObject;
-				//LexEntry entry = GetItem(id);
 				entry.IsDirty = true;
 				entries.Add(entry);
 			}
