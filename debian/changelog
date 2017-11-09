@@ -1,4 +1,10 @@
-wesay (1.6.1) UNRELEASED; urgency=medium
+wesay (1.6.4) UNRELEASED; urgency=medium
+
+  * Release candidate 1.6.4 to be in sync with Windows version
+
+ -- Daniel Glassey <wdg@debian.org>  Thu, 09 Nov 2017 16:37:05 +0700
+
+wesay (1.6.1) xenial; urgency=medium
 
   * Release candidate 1.6.1
 
