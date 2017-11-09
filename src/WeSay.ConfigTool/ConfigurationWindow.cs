@@ -52,7 +52,7 @@ namespace WeSay.ConfigTool
 
 			if (args.Length > 0)
 			{
-				OpenProject(args[0].Trim(new[] {'"'}));
+				OpenProject(args[0].Trim(new[] {'"'}), false);
 			}
 
 			if (!DesignMode)
@@ -104,7 +104,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 			SaveAndDisposeProject();
-			OnOpenProject(dlg.FileName);
+			OnOpenProject(dlg.FileName, false);
 		}
 
 		private static string GetInitialDirectory()
@@ -133,7 +133,7 @@ namespace WeSay.ConfigTool
 			return initialDirectory;
 		}
 
-		public void OnOpenProject(string path)
+		public void OnOpenProject(string path, bool newClone)
 		{
 			if (!File.Exists(path) && !Directory.Exists(path))
 			{
@@ -143,7 +143,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			OpenProject(path);
+			OpenProject(path, newClone);
 		}
 
 		private void OnCreateProject(object sender, EventArgs e)
@@ -185,7 +185,7 @@ namespace WeSay.ConfigTool
 
 			if (ProjectFromRawFLExLiftFilesCreator.Create(dlg.PathToNewProjectDirectory, dlg.PathToLift))
 			{
-				if (OpenProject(dlg.PathToNewProjectDirectory))
+				if (OpenProject(dlg.PathToNewProjectDirectory, true))
 				{
 					using (var info = new NewProjectInformationDialog(dlg.PathToNewProjectDirectory))
 					{
@@ -213,7 +213,7 @@ namespace WeSay.ConfigTool
 			}
 
 			CreateNewProject(directoryPath);
-			OpenProject(directoryPath);
+			OpenProject(directoryPath, false);
 
 			if (!Project.WritingSystems.Contains(languageTag))
 			{
@@ -276,11 +276,25 @@ namespace WeSay.ConfigTool
 			}
 		}
 
+		private bool AskAboutGlossMeaning(bool newClone, string newlycreatedfromFLExPath, string liftPath)
+		{
+			if (newClone && Project.CreatedByFLEx(liftPath) && !File.Exists(newlycreatedfromFLExPath))
+			{
+				DialogResult dialogResult = MessageBox.Show("This project has been created by FLEx and has just been received. Do you want to use gloss as the meaning field (it is recommended for a mew project from FLEx)?", "Created by FLEx", MessageBoxButtons.YesNo);
+				if (dialogResult == DialogResult.Yes)
+				{
+					File.Create(newlycreatedfromFLExPath);
+				}
+				return true;
+			}
+			return false;
+		}
+
 		/// <summary>
 		///
 		/// </summary>
 		/// <returns>true if the project was sucessfully opend</returns>
-		public bool OpenProject(string path)
+		public bool OpenProject(string path, bool newClone)
 		{
 			Logger.WriteEvent("OpenProject("+path+")");
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
@@ -298,10 +312,14 @@ namespace WeSay.ConfigTool
 
 				//just open the accompanying lift file.
 				path = path.Replace(".WeSayConfig", ".lift");
+				string newlycreatedfromFLExPath = Path.Combine(Path.GetFullPath(path), ".newlycreatedfromFLEx");
 
 				if (path.Contains(".lift"))
 				{
 					path = Project.UpdateFileStructure(path);
+
+					AskAboutGlossMeaning(newClone, newlycreatedfromFLExPath, path);
+
 					if (!Project.LoadFromLiftLexiconPath(path))
 					{
 						Project = null;
@@ -314,6 +332,11 @@ namespace WeSay.ConfigTool
 						//                }
 				else if (Directory.Exists(path))
 				{
+					foreach (string file in Directory.EnumerateFiles(path, "*.lift"))
+					{
+						AskAboutGlossMeaning(newClone, newlycreatedfromFLExPath, file);
+						continue;
+					}
 					Project.LoadFromProjectDirectoryPath(path);
 					if (_project.Container == null)
 					{
@@ -348,6 +371,13 @@ namespace WeSay.ConfigTool
 			}
 
 			SetupProjectControls(BuildInnerContainerForThisProject());
+			if (File.Exists(Path.Combine(_project.ProjectDirectoryPath, ".newlycreatedfromFLEx")))
+			{
+				_project.MakeMeaningFieldChange("definition", "gloss");
+				_project.Save();
+				SetupProjectControls(BuildInnerContainerForThisProject()); // reload to get meaning field change in gui
+				File.Delete(Path.Combine(_project.ProjectDirectoryPath, ".newlycreatedfromFLEx"));
+			}
 			Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			return true;
 		}

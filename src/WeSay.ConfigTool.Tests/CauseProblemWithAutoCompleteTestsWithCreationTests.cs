@@ -34,7 +34,7 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterOpeningPretendProject()
 		{
-			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
+			_window.OpenProject(BasilProject.GetPretendProjectDirectory(), false);
 			File.Copy(
 					Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory,
 								 "PRETEND.WeSayConfig"),

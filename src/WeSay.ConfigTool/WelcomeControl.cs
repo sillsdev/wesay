@@ -16,7 +16,7 @@ namespace WeSay.ConfigTool
 	{
 		public event EventHandler NewProjectClicked;
 		public event EventHandler NewProjectFromFlexClicked;
-		public Action<string> OpenSpecifiedProject;
+		public Action<string, bool> OpenSpecifiedProject;
 		public event EventHandler ChooseProjectClicked;
 
 		public WelcomeControl()
@@ -131,7 +131,7 @@ namespace WeSay.ConfigTool
 			{
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
-				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
+				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder, true);
 				if (Project.WeSayWordsProject.ProjectExists)
 					Project.WeSayWordsProject.Project.SetupUserForChorus();
 			}
@@ -157,7 +157,7 @@ namespace WeSay.ConfigTool
 				dlg.Model.ProjectFilter = dir => GetLooksLikeLiftChorusFolder(dir);
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
-				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
+				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder, true);
 			}
 		}
 
@@ -188,7 +188,7 @@ namespace WeSay.ConfigTool
 			{
 				if (DialogResult.Cancel == dlg.ShowDialog())
 					return;
-				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder);
+				OpenSpecifiedProject(dlg.PathToNewlyClonedFolder, true);
 				if (Project.WeSayWordsProject.ProjectExists)
 					Project.WeSayWordsProject.Project.SetupUserForChorus();
 			}
@@ -219,7 +219,7 @@ namespace WeSay.ConfigTool
 		{
 			if (OpenSpecifiedProject != null)
 			{
-				OpenSpecifiedProject.Invoke(((Button) sender).Tag as string);
+				OpenSpecifiedProject.Invoke(((Button) sender).Tag as string, false);
 			}
 		}
 

@@ -34,6 +34,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
 
+				File.Create(Path.Combine(pathToNewDirectory, ".newlycreatedfromFLEx"));
+
 				//The config file is created on project open when all of the orphaned writing systems have been identified.
 
 				Logger.WriteEvent(@"Finished Importing");

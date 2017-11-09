@@ -108,7 +108,7 @@ namespace WeSay.ConfigTool.Tests
 			_window.Show();
 			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
-			_window.OpenProject(path);
+			_window.OpenProject(path, false);
 		}
 
 	}

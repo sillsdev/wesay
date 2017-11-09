@@ -51,7 +51,7 @@ namespace WeSay.ConfigTool.Tests
 		[Test]
 		public void ProjectFilesTouched()
 		{
-			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
+			_window.OpenProject(BasilProject.GetPretendProjectDirectory(), false);
 			string p = WeSayWordsProject.Project.PathToConfigFile;
 			DateTime before = File.GetLastWriteTime(p);
 			_mainWindowTester.Close();
@@ -90,7 +90,7 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterOpeningPretendProject()
 		{
-			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
+			_window.OpenProject(BasilProject.GetPretendProjectDirectory(), false);
 			//create or overwrite the tasks with our stored resource
 			//            File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
 			//            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
@@ -108,7 +108,7 @@ namespace WeSay.ConfigTool.Tests
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
 			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
-				() => _window.OnOpenProject(@"C:\notreallythere.WeSayConfig")
+				() => _window.OnOpenProject(@"C:\notreallythere.WeSayConfig", false)
 			);
 		}
 
@@ -242,7 +242,7 @@ namespace WeSay.ConfigTool.Tests
 
 					window.DisableBackupAndChorusStuffForTests();
 					window.Show();
-					Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory));
+					Assert.IsTrue(window.OpenProject(projectDir.PathToDirectory, false));
 				}
 				Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
 			}
