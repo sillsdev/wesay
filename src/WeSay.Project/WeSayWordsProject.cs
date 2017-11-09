@@ -277,6 +277,10 @@ namespace WeSay.Project
 
 		public bool CreatedByFLEx(string liftPath)
 		{
+			if (liftPath == "")
+			{
+				return false;
+			}
 			var reader = XmlReader.Create(liftPath);
 			reader.MoveToContent();
 			while (reader.NodeType != XmlNodeType.Element && reader.Name != "lift")

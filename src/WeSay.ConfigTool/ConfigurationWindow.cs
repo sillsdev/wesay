@@ -306,19 +306,32 @@ namespace WeSay.ConfigTool
 				path = path.Substring(0, path.Length - 1);
 			}
 
+			string fullPath = Path.GetFullPath(path);
+			// file to indicate to WeSayWordsProject not to do copy from gloss to definition WS-472
+			string newlycreatedfromFLExPath = Path.Combine(fullPath, ".newlycreatedfromFLEx");
+
 			try
 			{
 				Project = new WeSayWordsProject();
 
+				// if there is no .WeSayConfig file and it is new from chorus and the lift file was produced by FLEx
+				// then the project is new from FLEx and should be gloss meaning field by default
+				if (newClone && !path.Contains(".WeSayConfig"))
+				{
+					string[] liftPaths = Directory.GetFiles(fullPath, "*.lift");
+					string liftPath = liftPaths != null && liftPaths.Length > 0 ? liftPaths.First() : "";
+					if (Directory.GetFiles(fullPath, "*.WeSayConfig").Length == 0 && Project.CreatedByFLEx(liftPath))
+					{
+						File.Create(newlycreatedfromFLExPath).Dispose();
+					}
+				}
+
 				//just open the accompanying lift file.
 				path = path.Replace(".WeSayConfig", ".lift");
-				string newlycreatedfromFLExPath = Path.Combine(Path.GetFullPath(path), ".newlycreatedfromFLEx");
 
 				if (path.Contains(".lift"))
 				{
 					path = Project.UpdateFileStructure(path);
-
-					AskAboutGlossMeaning(newClone, newlycreatedfromFLExPath, path);
 
 					if (!Project.LoadFromLiftLexiconPath(path))
 					{
@@ -332,11 +345,6 @@ namespace WeSay.ConfigTool
 						//                }
 				else if (Directory.Exists(path))
 				{
-					foreach (string file in Directory.EnumerateFiles(path, "*.lift"))
-					{
-						AskAboutGlossMeaning(newClone, newlycreatedfromFLExPath, file);
-						continue;
-					}
 					Project.LoadFromProjectDirectoryPath(path);
 					if (_project.Container == null)
 					{
@@ -371,12 +379,12 @@ namespace WeSay.ConfigTool
 			}
 
 			SetupProjectControls(BuildInnerContainerForThisProject());
-			if (File.Exists(Path.Combine(_project.ProjectDirectoryPath, ".newlycreatedfromFLEx")))
+			if (File.Exists(newlycreatedfromFLExPath))
 			{
 				_project.MakeMeaningFieldChange("definition", "gloss");
 				_project.Save();
 				SetupProjectControls(BuildInnerContainerForThisProject()); // reload to get meaning field change in gui
-				File.Delete(Path.Combine(_project.ProjectDirectoryPath, ".newlycreatedfromFLEx"));
+				File.Delete(newlycreatedfromFLExPath);
 			}
 			Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			return true;
