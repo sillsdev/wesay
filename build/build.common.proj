@@ -63,6 +63,7 @@
 	</Target>
 
 	<Target Name="RunNUnitTC" Condition="'$(teamcity_version)' != ''">
+		<Message Text="RunNUnitTeamCity tc_version $(teamcity_version)" Importance="high"/>
 		<ItemGroup>
 			<TestAssemblies
 				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
@@ -76,6 +77,7 @@
 	</Target>
 
 	<Target Name="RunNUnit" Condition="'$(teamcity_version)' == ''">
+		<Message Text="RunNUnit: tc_version $(teamcity_version)" Importance="high"/>
 		<ItemGroup>
 			<TestAssemblies
 				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
