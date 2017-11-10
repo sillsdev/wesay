@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<!-- don't do anything to other versions -->
 	<xsl:template match="configuration[@version='9']">
-		<configuration version="10">
+		<configuration version="9">
 			<xsl:apply-templates mode ="Migrate9To10"/>
 		</configuration>
 	</xsl:template>
