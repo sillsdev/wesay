@@ -704,8 +704,16 @@ namespace WeSay.Project
 			if (template.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled == true)
 			{
 #if TRUE
-				OnTouchCrossReferences(null, null);
-#else // doesn't work, shows dialog but doesn't get workerended event so it hangs until you kill it 
+				if (GetLexEntryRepository().CountAllItems() > 10000)
+				{
+					OnTouchCrossReferences(null, null);
+				}
+				else using (Palaso.UI.WindowsForms.SimpleMessageDialog msgdialog = new Palaso.UI.WindowsForms.SimpleMessageDialog("Migrating cross references.", "Cross reference migration"))
+				{
+					msgdialog.Show();
+					OnTouchCrossReferences(null, null);
+				}
+#else // doesn't work, shows dialog but doesn't get workerended event so it hangs until you kill it
 				if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
 				{
 					var dialog = new ProgressDialog();
