@@ -277,19 +277,20 @@ namespace WeSay.Project
 
 		public bool CreatedByFLEx(string liftPath)
 		{
+			string producerNode;
 			if (liftPath == "")
 			{
 				return false;
 			}
-			var reader = XmlReader.Create(liftPath);
-			reader.MoveToContent();
-			while (reader.NodeType != XmlNodeType.Element && reader.Name != "lift")
+			using (XmlReader reader = XmlReader.Create(liftPath))
 			{
-				reader.Read();
+				reader.MoveToContent();
+				while (reader.NodeType != XmlNodeType.Element && reader.Name != "lift")
+				{
+					reader.Read();
+				}
+				producerNode = reader.GetAttribute("producer");
 			}
-
-			string producerNode = reader.GetAttribute("producer");
-			reader.Close();
 			return producerNode.Contains("SIL.FLEx");
 		}
 
@@ -1500,8 +1501,10 @@ namespace WeSay.Project
 			var str = new StringReader(WritingSystems.LocalKeyboardSettings);
 			var settings = new XmlReaderSettings();
 			settings.IgnoreWhitespace = true;
-			var reader = XmlReader.Create(str, settings);
-			writer.WriteNode(reader, false);
+			using (XmlReader reader = XmlReader.Create(str, settings))
+			{
+				writer.WriteNode(reader, false);
+			}
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)

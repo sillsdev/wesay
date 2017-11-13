@@ -52,7 +52,7 @@ namespace WeSay.ConfigTool
 
 			if (args.Length > 0)
 			{
-				OpenProject(args[0].Trim(new[] {'"'}), false);
+				OpenProject(args[0].Trim(new[] {'"'}));
 			}
 
 			if (!DesignMode)
@@ -104,7 +104,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 			SaveAndDisposeProject();
-			OnOpenProject(dlg.FileName, false);
+			OnOpenProject(dlg.FileName);
 		}
 
 		private static string GetInitialDirectory()
@@ -213,7 +213,7 @@ namespace WeSay.ConfigTool
 			}
 
 			CreateNewProject(directoryPath);
-			OpenProject(directoryPath, false);
+			OpenProject(directoryPath);
 
 			if (!Project.WritingSystems.Contains(languageTag))
 			{
@@ -294,7 +294,7 @@ namespace WeSay.ConfigTool
 		///
 		/// </summary>
 		/// <returns>true if the project was sucessfully opend</returns>
-		public bool OpenProject(string path, bool newClone)
+		public bool OpenProject(string path, bool newClone = false)
 		{
 			Logger.WriteEvent("OpenProject("+path+")");
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;

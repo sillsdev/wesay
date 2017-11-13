@@ -240,7 +240,7 @@ namespace WeSay.ConfigTool.Tests
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
-			_window.OpenProject(path, false);
+			_window.OpenProject(path);
 		}
 	}
 }
