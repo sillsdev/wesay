@@ -104,7 +104,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 			SaveAndDisposeProject();
-			OnOpenProject(dlg.FileName);
+			OnOpenProject(dlg.FileName, false);
 		}
 
 		private static string GetInitialDirectory()

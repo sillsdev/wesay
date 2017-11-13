@@ -90,7 +90,7 @@ namespace WeSay.ConfigTool.Tests
 		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
 		public void WalkTabsAfterOpeningPretendProject()
 		{
-			_window.OpenProject(BasilProject.GetPretendProjectDirectory();
+			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
 			//create or overwrite the tasks with our stored resource
 			//            File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
 			//            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
