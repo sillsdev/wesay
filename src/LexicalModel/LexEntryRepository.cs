@@ -138,6 +138,22 @@ namespace WeSay.LexicalModel
 			}
 		}
 
+		public void TouchAndSaveEntriesFromQuery(DelegateQuery<LexEntry> xrefQuery, string propertyModified)
+		{
+			ResultSet<LexEntry> all_xref = GetItemsMatching(xrefQuery);
+
+			IList<LexEntry> entries = new List<LexEntry>(); ;
+			foreach (RecordToken<LexEntry> token in all_xref)
+			{
+				LexEntry entry = token.RealObject;
+				entry.SomethingWasModified(propertyModified);
+				entries.Add(entry);
+			}
+
+			SaveItems(entries);
+
+		}
+
 		public void TouchAndSaveCrossReferences()
 		{
 			DelegateQuery<LexEntry> xrefQuery = new DelegateQuery<LexEntry>(
@@ -155,19 +171,8 @@ namespace WeSay.LexicalModel
 						tokenFieldsAndValues.Add("Relation", relations.Relations);
 						return new[] { tokenFieldsAndValues };
 					}
-
 				});
-			ResultSet<LexEntry> all_xref = GetItemsMatching(xrefQuery);
-
-			IList<LexEntry> entries = new List<LexEntry>(); ;
-			foreach (RecordToken<LexEntry> token in all_xref)
-			{
-				LexEntry entry = token.RealObject;
-				entry.SomethingWasModified("confer");
-				entries.Add(entry);
-			}
-
-			SaveItems(entries);
+			TouchAndSaveEntriesFromQuery(xrefQuery, "confer");
 		}
 
 		public ResultSet<LexEntry> GetItemsMatching(IQuery<LexEntry> query)
