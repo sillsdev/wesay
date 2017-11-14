@@ -275,6 +275,25 @@ namespace WeSay.Project
 			return dirHoldingLift == "wesay" && Directory.Exists(commonDir);
 		}
 
+		public bool CreatedByFLEx(string liftPath)
+		{
+			string producerNode;
+			if (liftPath == "")
+			{
+				return false;
+			}
+			using (XmlReader reader = XmlReader.Create(liftPath))
+			{
+				reader.MoveToContent();
+				while (reader.NodeType != XmlNodeType.Element && reader.Name != "lift")
+				{
+					reader.Read();
+				}
+				producerNode = reader.GetAttribute("producer");
+			}
+			return producerNode.Contains("SIL.FLEx");
+		}
+
 		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
@@ -457,6 +476,11 @@ namespace WeSay.Project
 				//will have to go to a naming system.
 				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
 				glossMeaningField = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss).IsMeaningField;
+			}
+
+			if (File.Exists(Path.Combine(ProjectDirectoryPath, ".newlycreatedfromFLEx")))
+			{
+				glossMeaningField = true;
 			}
 
 			builder.Register<LiftDataMapper>(c =>
@@ -1477,8 +1501,10 @@ namespace WeSay.Project
 			var str = new StringReader(WritingSystems.LocalKeyboardSettings);
 			var settings = new XmlReaderSettings();
 			settings.IgnoreWhitespace = true;
-			var reader = XmlReader.Create(str, settings);
-			writer.WriteNode(reader, false);
+			using (XmlReader reader = XmlReader.Create(str, settings))
+			{
+				writer.WriteNode(reader, false);
+			}
 		}
 
 		public Field GetFieldFromDefaultViewTemplate(string fieldName)
