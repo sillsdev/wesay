@@ -378,13 +378,19 @@ namespace WeSay.ConfigTool
 				return false;
 			}
 
-			SetupProjectControls(BuildInnerContainerForThisProject());
 			if (File.Exists(newlycreatedfromFLExPath))
 			{
+				Hide();
+				SetupProjectControls(BuildInnerContainerForThisProject());
 				_project.MakeMeaningFieldChange("definition", "gloss");
 				_project.Save();
 				SetupProjectControls(BuildInnerContainerForThisProject()); // reload to get meaning field change in gui
 				File.Delete(newlycreatedfromFLExPath);
+				Show();
+			}
+			else
+			{
+				SetupProjectControls(BuildInnerContainerForThisProject());
 			}
 			Settings.Default.MruConfigFilePaths.AddNewPath(Project.PathToConfigFile);
 			return true;
