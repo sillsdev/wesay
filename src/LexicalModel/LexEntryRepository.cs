@@ -15,6 +15,7 @@ using WeSay.LexicalModel.Foundation;
 
 //#if __MonoCS__
 using Palaso.Linq;
+using System.IO;
 //#else
 
 //#endif
@@ -152,27 +153,6 @@ namespace WeSay.LexicalModel
 
 			SaveItems(entries);
 
-		}
-
-		public void TouchAndSaveCrossReferences()
-		{
-			DelegateQuery<LexEntry> xrefQuery = new DelegateQuery<LexEntry>(
-				delegate (LexEntry entryToQuery)
-				{
-					IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-
-					LexRelationCollection relations = entryToQuery.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
-					if (relations == null)
-					{
-						return new IDictionary<string, object>[0];
-					}
-					else
-					{
-						tokenFieldsAndValues.Add("Relation", relations.Relations);
-						return new[] { tokenFieldsAndValues };
-					}
-				});
-			TouchAndSaveEntriesFromQuery(xrefQuery, "confer");
 		}
 
 		public ResultSet<LexEntry> GetItemsMatching(IQuery<LexEntry> query)
