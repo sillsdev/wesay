@@ -469,19 +469,13 @@ namespace WeSay.Project
 			builder.RegisterType<TaskCollection>().SingleInstance();
 
 			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
-			bool glossMeaningField = false;
 			foreach (var viewTemplate in viewTemplates)
 			{
 				//todo: this isn't going to work if we start using multiple tempates.
 				//will have to go to a naming system.
 				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
-				glossMeaningField = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss).IsMeaningField;
 			}
 
-			if (File.Exists(Path.Combine(ProjectDirectoryPath, ".newlycreatedfromFLEx")))
-			{
-				glossMeaningField = true;
-			}
 
 			builder.Register<LiftDataMapper>(c =>
 												 {
@@ -498,8 +492,7 @@ namespace WeSay.Project
 																									   semanticDomains,
 																									   GetIdsOfSingleOptionFields
 																										   (),
-																									   progressState,
-																									   glossMeaningField
+																									   progressState
 																									   );
 
 																								   return mapper;
