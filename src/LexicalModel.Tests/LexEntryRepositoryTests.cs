@@ -1030,8 +1030,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			IWritingSystemDefinition writingSystem = WritingSystemDefinition.Parse("en");
 			Assert.Throws<ArgumentNullException>(() =>
-					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-							null, writingSystem));
+					_lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
+							null, writingSystem, false));
 		}
 
 		[Test]
@@ -1039,8 +1039,8 @@ namespace WeSay.LexicalModel.Tests
 		{
 			LanguageForm glossLanguageForm = new LanguageForm("en", "en Gloss", new MultiText());
 			Assert.Throws<ArgumentNullException>(() =>
-					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-							glossLanguageForm, null));
+					_lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
+							glossLanguageForm, null, false));
 		}
 
 		[Test]
@@ -1052,8 +1052,8 @@ namespace WeSay.LexicalModel.Tests
 			LanguageForm glossLanguageForm = new LanguageForm("en", glossToFind, new MultiText());
 			IWritingSystemDefinition writingSystem = WritingSystemDefinition.Parse("en");
 			ResultSet<LexEntry> list =
-					_lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-							glossLanguageForm, writingSystem);
+					_lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
+							glossLanguageForm, writingSystem, true);
 			Assert.AreEqual(1, list.Count);
 			Assert.AreSame(glossToFind, list[0].RealObject.Senses[0].Gloss["en"]);
 		}
@@ -1063,7 +1063,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("en");
 			LanguageForm glossThatDoesNotExist = new LanguageForm("en", "I don't exist!", new MultiText());
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossThatDoesNotExist, ws);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossThatDoesNotExist, ws, false);
 			Assert.AreEqual(0, matches.Count);
 		}
 
@@ -1074,7 +1074,7 @@ namespace WeSay.LexicalModel.Tests
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm1");
 			IWritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("en");
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem, true);
 			Assert.AreEqual("en LexicalForm1", matches[0]["Form"]);
 			Assert.AreEqual("en LexicalForm2", matches[1]["Form"]);
 		}
@@ -1094,7 +1094,7 @@ namespace WeSay.LexicalModel.Tests
 			LanguageForm glossToMatch = new LanguageForm("de", "de Gloss", new MultiText());
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
 			IWritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("fr");
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem, true);
 			Assert.AreEqual(null, matches[0]["Form"]);
 		}
 
@@ -1111,7 +1111,7 @@ namespace WeSay.LexicalModel.Tests
 			entryWithGlossAndLexicalForm.Senses[1].Gloss.SetAlternative(identicalGloss.WritingSystemId, identicalGloss.Form);
 
 			IWritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("en");
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(identicalGloss, lexicalFormWritingSystem);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(identicalGloss, lexicalFormWritingSystem, true);
 			Assert.AreEqual(2, matches.Count);
 			Assert.AreEqual("en Word1", matches[0]["Form"]);
 			Assert.AreEqual("en Word1", matches[1]["Form"]);

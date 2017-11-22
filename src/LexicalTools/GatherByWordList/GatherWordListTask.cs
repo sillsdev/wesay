@@ -172,6 +172,34 @@ namespace WeSay.LexicalTools.GatherByWordList
 				reader.Read(path, m);
 				_words.AddRange(from RepositoryId repositoryId in m.GetAllItems() select m.GetItem(repositoryId));
 			}
+			foreach (var word in _words)
+			{
+				foreach (var sense in word.Senses)
+				{
+					if (_glossMeaningField)
+					{
+						// copy all definition forms to gloss then delete definition form
+						foreach (var form in sense.Definition.Forms)
+						{
+							//this check makes sure we don't introduce a form form a lang we allow for def, but not gloss
+							if (_glossWritingSystemIds.Contains(form.WritingSystemId))
+								sense.Gloss.SetAlternative(form.WritingSystemId, form.Form);
+							sense.Definition.SetAlternative(form.WritingSystemId, null);
+						}
+					}
+					else
+					{
+						// copy all gloss forms to definition then delete gloss form
+						foreach (var form in sense.Gloss.Forms)
+						{
+							//this check makes sure we don't introduce a form form a lang we allow for gloss, but not def
+							if (_definitionWritingSystemIds.Contains(form.WritingSystemId))
+								sense.Definition.SetAlternative(form.WritingSystemId, form.Form);
+							sense.Gloss.SetAlternative(form.WritingSystemId, null);
+						}
+					}
+				}
+			}
 		}
 
 		private void LoadSimpleList(string path)
@@ -541,7 +569,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				atLeatOneWordHadTheNeededWritingSystem = true;
 
 				//skip words we already have elicited
-				if (GetRecordsWithMatchingGloss().Count > 0)
+				if (GetRecordsWithMatchingMeaning().Count > 0)
 				{
 					++CurrentIndexIntoWordlist;
 					continue;
@@ -600,14 +628,15 @@ namespace WeSay.LexicalTools.GatherByWordList
 //                            _lexicalUnitWritingSystem);
 //        }
 
-		public ResultSet<LexEntry> GetRecordsWithMatchingGloss()
+		public ResultSet<LexEntry> GetRecordsWithMatchingMeaning()
 		{
 			//var form = CurrentWordAsMultiText.GetBestAlternative(new string[]{_preferredPromptingWritingSystemId});
 			var form = CurrentPromptingLanguageForm;
 			return
-						LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+						LexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
 								form,
-								_lexicalUnitWritingSystem);
+								_lexicalUnitWritingSystem,
+								_glossMeaningField);
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)

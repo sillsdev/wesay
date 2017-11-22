@@ -168,7 +168,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		{
 			_listViewOfWordsMatchingCurrentItem.Clear();
 			string longestWord = string.Empty;
-			foreach (RecordToken<LexEntry> recordToken in _task.GetRecordsWithMatchingGloss())
+			foreach (RecordToken<LexEntry> recordToken in _task.GetRecordsWithMatchingMeaning())
 			{
 				var recordTokenToStringAdapter = new RecordTokenToStringAdapter<LexEntry>("Form", recordToken);
 				string word = recordTokenToStringAdapter.ToString();
