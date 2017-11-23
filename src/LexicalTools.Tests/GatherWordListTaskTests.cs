@@ -325,7 +325,7 @@ namespace WeSay.LexicalTools.Tests
 			//this is an attempt to get a failure that I was able to get at one time in the
 			//app itself, but which I haven't got to fail under tests.  I believe I've
 			//fixed the bug, but alas this never really demonstrated it.
-			Assert.AreEqual(1, Task.GetRecordsWithMatchingGloss().Count);
+			Assert.AreEqual(1, Task.GetRecordsWithMatchingMeaning().Count);
 			Task.Deactivate();
 		}
 
@@ -345,7 +345,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigateNext();
 			Task.WordCollected(word);
 
-			ResultSet<LexEntry> matchingLexicalForms = Task.GetRecordsWithMatchingGloss();
+			ResultSet<LexEntry> matchingLexicalForms = Task.GetRecordsWithMatchingMeaning();
 			Assert.AreEqual(1, matchingLexicalForms.Count);
 			Task.Deactivate();
 		}
@@ -392,8 +392,8 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWordASecondTime_DoesNothing()
 		{
-			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
-			RecordToken<LexEntry> token2 = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneMeaning();
+			RecordToken<LexEntry> token2 = PrepareEntryWithOneMeaning();
 			LexEntry entry = token.RealObject;
 			LexEntry entry2 = token2.RealObject;
 			Assert.AreSame(entry, entry2);
@@ -407,7 +407,7 @@ namespace WeSay.LexicalTools.Tests
 			LexEntry e = _lexEntryRepository.CreateItem();
 			LexSense sense = new LexSense();
 			e.Senses.Add(sense);
-			sense.Gloss[_glossingLanguageWSId] = gloss;
+			sense.Definition[_glossingLanguageWSId] = gloss;
 			_lexEntryRepository.SaveItem(e);
 		}
 
@@ -429,7 +429,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemovingGlossFromEmptyEntry_RemovesEntry()
 		{
-			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneMeaning();
 
 			//now simulate removing it, as when the user wants to correct spelling
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
@@ -445,7 +445,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemovingGlossFromEntryWithOtherSenses_OnlyRemovesGloss()
 		{
-			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneMeaning();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
 			LexSense leaveAloneSense = new LexSense();
@@ -468,12 +468,12 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void RemovingAssociationWith_OnlyRemovesGloss()
 		{
-			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneMeaning();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
 			LexSense leaveAloneSense = new LexSense();
 			entry.Senses.Add(leaveAloneSense);
-			leaveAloneSense.Gloss.SetAlternative(_glossingLanguageWSId, "single");
+			leaveAloneSense.Definition.SetAlternative(_glossingLanguageWSId, "single");
 			Assert.AreEqual(2, entry.Senses.Count);
 
 			//now simulate removing it, as when the user wants to correct spelling
@@ -491,7 +491,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void TryToRemoveAssociationWithListWordFromEntry_SenseHasExample_DoesNothing()
 		{
-			RecordToken<LexEntry> token = PrepareEntryWithOneGloss();
+			RecordToken<LexEntry> token = PrepareEntryWithOneMeaning();
 			//now tweak the entry
 			LexEntry entry = token.RealObject;
 			LexSense sense = entry.Senses[0];
@@ -506,12 +506,12 @@ namespace WeSay.LexicalTools.Tests
 									Count);
 			Assert.AreEqual(1, entry.Senses.Count);
 			Assert.AreEqual("one",
-							sense.Gloss.GetExactAlternative(_glossingLanguageWSId),
+							sense.Definition.GetExactAlternative(_glossingLanguageWSId),
 							"should not remove the gloss");
 			Task.Deactivate();
 		}
 
-		private RecordToken<LexEntry> PrepareEntryWithOneGloss()
+		private RecordToken<LexEntry> PrepareEntryWithOneMeaning()
 		{
 			Task.NavigateAbsoluteFirst();
 			MultiText word = new MultiText();
@@ -831,10 +831,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.NavigateAbsoluteFirst();
 			Task.WordCollected(GetMultiText("test"));
-			var resultSet = Task.GetRecordsWithMatchingGloss();
-			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			var resultSet = Task.GetRecordsWithMatchingMeaning();
+			Assert.That(Task.GetRecordsWithMatchingMeaning().Count, Is.EqualTo(1));
 			Task.TryToRemoveAssociationWithListWordFromEntry(resultSet[0]);
-			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(0));
+			Assert.That(Task.GetRecordsWithMatchingMeaning().Count, Is.EqualTo(0));
 			Task.Deactivate();
 		}
 
@@ -843,12 +843,12 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Task.NavigateAbsoluteFirst();
 			Task.WordCollected(GetMultiText("test"));
-			var token = Task.GetRecordsWithMatchingGloss()[0];
+			var token = Task.GetRecordsWithMatchingMeaning()[0];
 			var senseToModify = token.RealObject.Senses[(int) token["SenseNumber"]];
 			senseToModify.GetOrCreateProperty<MultiText>("ExtraProperty");
-			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Assert.That(Task.GetRecordsWithMatchingMeaning().Count, Is.EqualTo(1));
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
-			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Assert.That(Task.GetRecordsWithMatchingMeaning().Count, Is.EqualTo(1));
 			Task.Deactivate();
 		}
 
@@ -859,10 +859,10 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigateAbsoluteFirst();
 			Task.WordCollected(GetMultiText("test"));
 			Task.CurrentTemplateSense.GetOrCreateProperty<MultiText>("ExtraProperty");
-			var token = Task.GetRecordsWithMatchingGloss()[0];
-			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			var token = Task.GetRecordsWithMatchingMeaning()[0];
+			Assert.That(Task.GetRecordsWithMatchingMeaning().Count, Is.EqualTo(1));
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
-			Assert.That(Task.GetRecordsWithMatchingGloss().Count, Is.EqualTo(1));
+			Assert.That(Task.GetRecordsWithMatchingMeaning().Count, Is.EqualTo(1));
 			Task.Deactivate();
 		}
 
@@ -874,7 +874,7 @@ namespace WeSay.LexicalTools.Tests
 			);
 			task.NavigateFirstToShow();
 			task.WordCollected( GetMultiText("apun"));
-			var entries = task.GetRecordsWithMatchingGloss();
+			var entries = task.GetRecordsWithMatchingMeaning();
 			Assert.AreEqual(1, entries.Count);
 
 			return entries[0].RealObject.Senses[0];
