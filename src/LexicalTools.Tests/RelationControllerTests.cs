@@ -64,8 +64,14 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void Teardown()
 		{
-			_lexEntryRepository.Dispose();
-			_tempFolder.Delete();
+			if (_lexEntryRepository != null)
+			{
+				_lexEntryRepository.Dispose();
+			}
+			if (_tempFolder != null)
+			{
+				_tempFolder.Delete();
+			}
 		}
 
 		[Test]

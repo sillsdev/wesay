@@ -115,12 +115,18 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			if (_task.IsActive)
+			if (_task != null && _task.IsActive)
 			{
 				_task.Deactivate(); //needed for disposal of controls
 			}
-			_lexEntryRepository.Dispose();
-			_tempFolder.Delete();
+			if (_lexEntryRepository != null)
+			{
+				_lexEntryRepository.Dispose();
+			}
+			if (_tempFolder != null)
+			{
+				_tempFolder.Delete();
+			}
 		}
 
 		private GatherBySemanticDomainTask Task

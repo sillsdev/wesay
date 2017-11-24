@@ -25,7 +25,7 @@ namespace Addin.Transform.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			if (File.Exists(_addin.PathToOutput))
+			if (_addin != null && File.Exists(_addin.PathToOutput))
 			{
 				File.Delete(_addin.PathToOutput);
 			}
