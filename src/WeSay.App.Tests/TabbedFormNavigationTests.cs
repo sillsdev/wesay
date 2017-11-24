@@ -45,6 +45,7 @@ namespace WeSay.App.Tests
 		{
 			_tabbedForm.Dispose();
 			_projectDirectory.Dispose();
+			Sldr.Cleanup();
 		}
 
 		[Test]

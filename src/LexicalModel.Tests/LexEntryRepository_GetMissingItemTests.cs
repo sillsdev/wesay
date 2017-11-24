@@ -24,6 +24,7 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Sldr.Initialize(true);
 			_temporaryFolder = new TemporaryFolder();
 			string filePath = _temporaryFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(filePath);
@@ -34,6 +35,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_lexEntryRepository.Dispose();
 			_temporaryFolder.Delete();
+			Sldr.Cleanup();
 		}
 
 		private void CreateLexentryWithOnlyCitationForm(string citationForm, string writingSystemId)

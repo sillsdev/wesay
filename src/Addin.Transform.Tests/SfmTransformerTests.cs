@@ -29,6 +29,7 @@ namespace Addin.Transform.Tests
 			{
 				File.Delete(_addin.PathToOutput);
 			}
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]

@@ -45,7 +45,7 @@ namespace Addin.Transform.Tests
             _entry = _repo.CreateItem();
             _entry.LexicalForm.SetAlternative("qaa", "apple");
 
-          
+
             _project.DefaultPrintingTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds.Add("fr");
             _project.DefaultPrintingTemplate.GetField(LexExampleSentence.WellKnownProperties.Translation).WritingSystemIds.Add("fr");
 
@@ -58,6 +58,7 @@ namespace Addin.Transform.Tests
             _project.Dispose();
             _projectDir.Dispose();
             _repo.Dispose();
+			Sldr.Cleanup();
         }
 
         [Test]
@@ -158,7 +159,7 @@ namespace Addin.Transform.Tests
             pict.Caption.SetAlternative("en", "test caption");
             pict.Value = "pretend.png";
         }
-        
+
         private void AddSenseWithTwoExamples()
         {
             var sense = new LexSense(_entry);
@@ -210,7 +211,7 @@ namespace Addin.Transform.Tests
             var pear = _repo.CreateItem();
             entries.Add(pear);
 			pear.LexicalForm.SetAlternative("qaa", "pear");
-            
+
             var contents = GetXhtmlContents(entries);
 
             //should only be two sections, not three
@@ -233,7 +234,7 @@ namespace Addin.Transform.Tests
             Assert.AreEqual(System.Globalization.UnicodeCategory.PrivateUse, char.GetUnicodeCategory(('')));
 
             var entries = new List<LexEntry>();
- 
+
             var word = _repo.CreateItem();
             entries.Add(word);
 			word.LexicalForm.SetAlternative("qaa", "ee");
@@ -339,7 +340,7 @@ namespace Addin.Transform.Tests
             using (var w = new StringWriter(builder))
             {
                 var x = new FLExCompatibleXhtmlWriter();
-          
+
               //  try
                 {
                     x.Write(new StringReader(pliftbuilder.ToString()), w);
@@ -358,7 +359,7 @@ namespace Addin.Transform.Tests
             IList<LexEntry> entries = new List<LexEntry>(new[] {_entry});
             AssertHasAtLeastOneMatch(GetXhtmlContents(entries), "html/body/" + string.Format(xpath,args));
         }
-    
+
 
         private static void AssertHasAtLeastOneMatch(string xml, string xpath)
         {

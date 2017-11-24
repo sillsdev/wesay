@@ -55,6 +55,12 @@ namespace WeSay.LexicalTools.Tests
 			Context =   new WeSay.Project.ServiceLocatorAdapter(b.Build());
 		}
 
+		[TearDown]
+		public void TearDown()
+		{
+			WeSayProjectTestHelper.CleanupForTests();
+		}
+
 		[Test]
 		public void Create_NullBuilder_Throws()
 		{

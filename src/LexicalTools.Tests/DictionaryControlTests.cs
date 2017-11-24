@@ -52,6 +52,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			_project.Dispose();
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		public override void Setup()

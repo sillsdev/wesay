@@ -974,6 +974,7 @@ namespace WeSay.Project.Tests
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(wsRepo, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
+				Sldr.Cleanup();
 			}
 		}
 

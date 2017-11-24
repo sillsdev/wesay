@@ -27,6 +27,7 @@ namespace WeSay.Project.Tests
 			string newFileContent = File.ReadAllText(pathToConfigFile);
 			Assert.IsFalse(newFileContent.Contains("hi-u"));
 			Assert.IsTrue(newFileContent.Contains("hi-Zxxx-x-audio"));
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]
@@ -40,6 +41,7 @@ namespace WeSay.Project.Tests
 			configFile.ReplaceWritingSystemId("hi-up", "hi-Zxxx-x-audio");
 			string newFileContent = File.ReadAllText(pathToConfigFile);
 			Assert.IsFalse(newFileContent.Contains("hi-Zxxx-x-audio"));
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]
@@ -52,6 +54,7 @@ namespace WeSay.Project.Tests
 			var configFile = new ConfigFile(pathToConfigFile);
 			configFile.MigrateIfNecassary();
 			Assert.That(configFile.Version, Is.EqualTo(ConfigFile.LatestVersion));
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]

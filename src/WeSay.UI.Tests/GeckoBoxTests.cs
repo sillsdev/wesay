@@ -40,6 +40,7 @@ namespace WeSay.UI.Tests
 		public override void Setup()
 		{
 			base.Setup();
+			Sldr.Initialize();
 			_window = new Form();
 			_window.Size = new Size(500, 500);
 		}
@@ -48,6 +49,7 @@ namespace WeSay.UI.Tests
 		public override void TearDown()
 		{
 			_window.Dispose();
+			Sldr.Cleanup();
 			base.TearDown();
 		}
 		[Test]

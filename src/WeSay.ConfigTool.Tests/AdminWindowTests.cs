@@ -45,6 +45,7 @@ namespace WeSay.ConfigTool.Tests
 			}
 
 			SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
+			Sldr.Cleanup();
 		}
 
 		[Test]

@@ -33,6 +33,7 @@ namespace Addin.Backup.Tests
 			{
 				File.Delete(_destinationZip);
 			}
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]

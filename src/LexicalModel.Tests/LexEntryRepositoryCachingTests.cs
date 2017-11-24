@@ -19,6 +19,7 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Sldr.Initialize(true);
 			_tempfolder = new TemporaryFolder();
 			string persistedFilePath = _tempfolder.GetTemporaryFile();
 			_repository = new LexEntryRepository(persistedFilePath);
@@ -28,6 +29,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			_repository.Dispose();
+			Sldr.Cleanup();
 		}
 
 		[Test]

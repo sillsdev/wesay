@@ -143,6 +143,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				_tempFolder.Delete();
 			}
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]

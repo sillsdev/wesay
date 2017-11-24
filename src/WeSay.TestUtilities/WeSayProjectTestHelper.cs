@@ -72,6 +72,11 @@ namespace WeSay.TestUtilities
 			return project;
 		}
 
+		public static void CleanupForTests()
+		{
+			Sldr.Cleanup();
+		}
+
 		private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
 		{
 			throw new ApplicationException("Unexpected WritingSystem load problem in test.");

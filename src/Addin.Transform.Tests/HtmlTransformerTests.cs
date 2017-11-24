@@ -40,6 +40,7 @@ namespace Addin.Transform.Tests
 			}
 			File.Delete(_filePath);
 			File.Delete(_liftFilePath);
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]

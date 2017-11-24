@@ -71,8 +71,12 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			_lexEntryRepository.Dispose();
+			if (_lexEntryRepository != null)
+			{
+				_lexEntryRepository.Dispose();
+			}
 			File.Delete(_filePath);
+			WeSayProjectTestHelper.CleanupForTests();
 		}
 
 		[Test]
