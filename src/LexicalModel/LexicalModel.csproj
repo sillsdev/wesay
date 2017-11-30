@@ -109,7 +109,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\ChorusMerge.exe</HintPath>
     </Reference>
-    <Reference Include="irrKlang.NET4, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a854741bd80517c7">
+    <Reference Condition="'$(OS)' == 'Windows_NT'" Include="irrKlang.NET4, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a854741bd80517c7">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\irrKlang.NET4.dll</HintPath>
     </Reference>
