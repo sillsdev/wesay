@@ -113,13 +113,13 @@ cd -
 #     revision: l10nsharp-2.0.tcbuildtag
 #     paths: {"L10NSharp.dll"=>"lib/Release", "L10NSharp.pdb"=>"lib/Release"}
 #     VCS: https://github.com/sillsdev/l10nsharp [Version2.0]
-# [6] build: wesay-doc-default (bt184)
-#     project: WeSay1.4
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
+# [6] build: wesay-doc-default (WeSay15_WesayDocDefault)
+#     project: WeSay
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=WeSay15_WesayDocDefault
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"WeSay_Helps.chm"=>"External", "wesay.helpmap"=>"External"}
-#     VCS: http://hg.palaso.org/wesay-doc []
+#     VCS: https://github.com/sillsdev/wesay-doc.git [refs/heads/master]
 # [7] build: wesay-localize-dev Update Pot and Po (bt52)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt52
@@ -198,8 +198,8 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/l10nsharp-
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/l10nsharp-2.0.tcbuildtag/L10NSharp.pdb ../lib/Debug/L10NSharp.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/l10nsharp-2.0.tcbuildtag/L10NSharp.dll ../lib/Release/L10NSharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/l10nsharp-2.0.tcbuildtag/L10NSharp.pdb ../lib/Release/L10NSharp.pdb
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/WeSay_Helps.chm ../External/WeSay_Helps.chm
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt184/latest.lastSuccessful/wesay.helpmap ../External/wesay.helpmap
+copy_auto http://build.palaso.org/guestAuth/repository/download/WeSay15_WesayDocDefault/latest.lastSuccessful/WeSay_Helps.chm ../External/WeSay_Helps.chm
+copy_auto http://build.palaso.org/guestAuth/repository/download/WeSay15_WesayDocDefault/latest.lastSuccessful/wesay.helpmap ../External/wesay.helpmap
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.az.po ../common/wesay.az.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.da.po ../common/wesay.da.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.es.po ../common/wesay.es.po
