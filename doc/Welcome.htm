@@ -13,12 +13,14 @@
 		H3.ctl { font-family: "Padauk" }
 		H2 { color: #0084d1 }
 		H2.ctl { font-family: "Padauk" }
+		NOTICE { font-size: 1.25em;
+				font-weight: bold;}
 	-->
 	</STYLE>
 
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
-<H1>Welcome to WeSay <FONT COLOR="#c0504d">1.6 Release Candidate</FONT></H1>
+<H1>Welcome to WeSay <FONT COLOR="#c0504d">1.6.5 Release Candidate</FONT></H1>
 <HR>
 
 <p>You have installed a <em>release candidate version</em> of WeSay.&#160; Fixes appear in the release candidate versions, but new bugs might appear too! Let us know of any problems. If no major problems are found with the release candidate then it will become the stable version.</p>
@@ -27,7 +29,7 @@
 
 <p>WeSay comes in two flavors: 'stable' and 'beta'.&#160;&#160; Once a version is 'stable", it will only receive critical bug fixes, but not new features or anything risky.</p>
 
-<p>1.6 includes a configuration change so if you open a project in 1.6 then you will not be able to open it again in 1.5. If you Send/Receive with 1.6 then colleagues using 1.5 will not be able to open the project.</p>
+<p><NOTICE>1.6 includes a configuration change so if you open a project in 1.6 then you will not be able to open it again in 1.5. If you Send/Receive with 1.6 then colleagues using 1.5 will not be able to open the project.</NOTICE></p>
 
 <p>If crashes or other bugs would be a major problem for you, please uninstall this version and get our most recent <a href="http://wesay.org/downloads">stable one</a> (one without the 'beta' tag).&#160; If you are helping us advance WeSay, are evaluating WeSay's capabilities, or are just willing to risk the occasional bug, this is the version for you.&#160; This is where we are currently adding new abilities in response to your requests, and we need people to help ensure that it can become stable, too.
   If you report a bug via <a href="mailto:issues@wesay.org">issues@wesay.org</a>, we can oftentimes fix it and provide a new release within hours.&#160; So let us know if you're in a hurry for a fix.</p>
@@ -37,17 +39,20 @@
 <p>If you change the option it will not change existing data in WeSay. You can use the Bulk Edit feature of FLEx to copy or move data between Definition and Gloss.</p>
 
 <h3>Common improvements</h3>
-<p>Upgraded Chorus to the same version that is used by FLEx 8.3.9 which should improve Send/Receive</p>
+<p>Upgraded Chorus to the same version that is used by FLEx 8.3.10 which should improve Send/Receive</p>
 
 <h3>Known issues in the beta on Windows</h3>
 <p>Sound input systems do not work on some computers.</p>
 <p>Spell checking will only work if you install <a href="http://downloads.sil.org/legacy/wesay/Enchant.1.4.2.1.msi">Enchant</a>. In the future we hope to add this to the WeSay installer.
 
 <h3>Fixes</h3>
+<p>WS-238 and WS-260: Do not show macrolanguages in language selection</p>
 <p>WS-356: SFM export from WeSay could not handle diacritics in cross references</p>
+<p>WS-458: Crash if keyboard not found on Linux</p>
 <p>WS-464: Send-Receive PDF file not found via link in Create new project from a set of plain LIFT files</p>
 <p>WS-467: WeSay loses changes to the non-meaning field</p>
 <p>WS-471: Handle "cannot write to PDF" if it is already open more gracefully</p>
+<p>WS-472: Default to Gloss if project is received from a FLEx repository</p>
 
 <h2>Ready to go deeper?</h2>
 
