@@ -694,41 +694,15 @@ namespace WeSay.Project
 			}
 		}
 
-		private bool GrepMemoryStream(MemoryStream inMemoryCopy, string pattern)
-		{
-			//MemoryCopy.
-			Regex regex = new Regex(pattern, RegexOptions.Compiled);
-
-			/*ile (!reader.EndOfStream)
-			{
-				if (regex.IsMatch(reader.ReadLine()))
-				{
-					return true;
-				}
-			}
-			reader.Close();
-			return false; */
-			return true;
-		}
-
 		private void OnTouchCrossReferences(object sender, DoWorkEventArgs e)
 		{
-			//GetLexEntryRepository().TouchAndSaveCrossReferences();
-
-
-			MemoryStream inMemoryCopy = new MemoryStream();
-			using (FileStream fs = File.OpenRead(_pathToLiftFile))
-			{
-				fs.CopyTo(inMemoryCopy);
-			}
-
 			DelegateQuery<LexEntry> xrefQuery = new DelegateQuery<LexEntry>(
 				delegate (LexEntry entryToQuery)
 				{
 					IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 
 					LexRelationCollection relations = entryToQuery.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
-					if (relations == null || !GrepMemoryStream(inMemoryCopy, "test"))
+					if (relations == null)
 					{
 						return new IDictionary<string, object>[0];
 					}
