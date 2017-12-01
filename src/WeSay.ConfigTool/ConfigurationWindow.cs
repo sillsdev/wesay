@@ -364,10 +364,6 @@ namespace WeSay.ConfigTool
 				{
 					_project.BackupMaker = null;
 				}
-				if (Project != null)
-				{
-					Project.TouchAllIfCrossReferences();
-				}
 			}
 			catch (ConfigurationFileTooNewException e)
 			{

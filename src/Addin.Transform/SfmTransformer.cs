@@ -170,7 +170,7 @@ namespace Addin.Transform
 			}
 
 			// check that sfm file has no problem references
-			bool has_problems = Palaso.IO.FileUtils.GrepFile(output, "/lf confer = (.*)_[0-9A-F]*");
+			bool has_problems = Palaso.IO.FileUtils.GrepFile(output, @"\\lf\ confer\ =\ (.+)_([0-9a-f\-]+)");
 
 			// if it has any then touch all cross references and rerun transform
 			if (has_problems)
