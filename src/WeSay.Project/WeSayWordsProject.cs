@@ -715,12 +715,17 @@ namespace WeSay.Project
 			GetLexEntryRepository().TouchAndSaveEntriesFromQuery(xrefQuery, "confer");
 		}
 
+
+		// This is only used in Addin.Transform.SfmTransformer to fix cross references
+		// that have been save in the lift as NFD when they should be NFC - see WS-356
 		public void TouchAllIfCrossReferences()
 		{
 			ViewTemplate template = ViewTemplates.First();
+			// only touch anything if the CrossReference field is enabled, it isn't by default
 			if (template.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled == true)
 			{
 #if TRUE
+				// only show dialog if lots of entries
 				if (GetLexEntryRepository().CountAllItems() < 10000)
 				{
 					OnTouchCrossReferences(null, null);
