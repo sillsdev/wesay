@@ -163,6 +163,27 @@ namespace Addin.Transform
 			SetupPostTransformMethod(OnDoGrepWork, _settings, 10 /*has some cushion*/);
 			//LexEntryRepository repo = projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
 			string output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
+
+			if (string.IsNullOrEmpty(output))
+			{
+				return; // get this when the user cancels
+			}
+
+			// check that sfm file has no problem references - see WS-356
+			// a problem reference is the full guid for the word rather than just the word
+			// this happens if the reference in Lift is written out as NFD
+			// e.g. \lf confer = me^_d9c25d1f-d373-4995-9ffa-ae2cf650603c
+			// (me^ is not really NFD but indicates that if you look at the text in less then it will be 2 characters not 1)
+			bool has_problems = Palaso.IO.FileUtils.GrepFile(output, @"\\lf\ confer\ =\ (.+)_([0-9a-f\-]+)");
+
+			// if it has any then touch all cross references and rerun transform
+			// touching the cross reference will save it in NFC in Lift
+			if (has_problems)
+			{
+				WeSay.Project.WeSayWordsProject.Project.TouchAllIfCrossReferences();
+				output = TransformLiftToText(projectInfo, "lift2sfm.xsl", "-sfm.txt");
+			}
+
 			if (string.IsNullOrEmpty(output))
 			{
 				return; // get this when the user cancels

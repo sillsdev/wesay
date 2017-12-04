@@ -177,6 +177,48 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		public void CrossReferenceWithNFD_OutputIsNFC()
+		{
+			SfmTransformSettings settings = new SfmTransformSettings();
+			settings.SfmTagConversions = "";
+			settings.VernacularLanguageWritingSystemId = "bth";
+			settings.EnglishLanguageWritingSystemId = "en";
+			_addin.Settings = settings;
+
+			string contents =
+					string.Format(
+							@"<?xml version='1.0' encoding='utf-8'?>
+			<lift  version='{0}'>
+			  <entry id='më_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
+				guid='d9c25d1f-d373-4995-9ffa-ae2cf650603c'>
+				<lexical-unit>
+				  <form lang='bth'>
+					<text>më</text>
+				  </form>
+				</lexical-unit>
+			  </entry>
+			  <entry id='men_ebc7bf16-d322-4c3c-a4fd-3efdf8164eef'
+				guid='ebc7bf16-d322-4c3c-a4fd-3efdf8164eef'>
+				<lexical-unit>
+				  <form lang='bth'>
+					<text>men</text>
+				  </form>
+				</lexical-unit>
+				<relation
+						ref='më_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
+						type = 'confer' />
+				</entry>
+			</lift>",
+							Validator.LiftVersion);
+			ViewTemplate template = WeSayWordsProject.Project.DefaultViewTemplate;
+			template.GetField(Palaso.DictionaryServices.Model.LexEntry.WellKnownProperties.CrossReference).Enabled = true;
+			string result = GetResultFromAddin(contents);
+			Console.WriteLine(result);
+			Assert.IsTrue(result.Contains("\\lf confer = më"));
+			Assert.IsFalse(result.Contains("\\lf confer = më_d9c25d1f-d373-4995-9ffa-ae2cf650603c"));
+		}
+
+		[Test]
 		public void Relation_TargetNotFoundOutputsId()
 		{
 			SfmTransformSettings settings = new SfmTransformSettings();

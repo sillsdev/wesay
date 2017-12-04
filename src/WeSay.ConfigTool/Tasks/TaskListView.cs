@@ -17,7 +17,6 @@ namespace WeSay.ConfigTool.Tasks
 		{
 			_diContainer = diContainer;
 
-
 			InitializeComponent();
 			splitContainer1.Resize += splitContainer1_Resize;
 		}

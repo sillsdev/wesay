@@ -41,7 +41,8 @@ using WeSay.Project.Synchronize;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 using WeSay.UI.TextBoxes;
-using IContainer=Autofac.IContainer;
+using IContainer = Autofac.IContainer;
+using Palaso.Data;
 
 namespace WeSay.Project
 {
@@ -97,7 +98,7 @@ namespace WeSay.Project
 			set { _tasks = value; }
 		}
 
-		internal IEnumerable<ITaskConfiguration> TaskConfigurations
+		public IEnumerable<ITaskConfiguration> TaskConfigurations
 		{
 			get { return _taskconfigurations; }
 			set { _taskconfigurations = value; }
@@ -347,7 +348,7 @@ namespace WeSay.Project
 			}
 			else
 			{
-				OnDoMigration(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+				OnDoMigration(null, null);  // this ensures that migration will occur even when the dialog box isn't shown i.e. during tests
 			}
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
@@ -690,6 +691,69 @@ namespace WeSay.Project
 			{
 				if (field.DataTypeName == "Option")
 					yield return field.FieldName;
+			}
+		}
+
+		private void OnTouchCrossReferences(object sender, DoWorkEventArgs e)
+		{
+			DelegateQuery<LexEntry> xrefQuery = new DelegateQuery<LexEntry>(
+				delegate (LexEntry entryToQuery)
+				{
+					IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+
+					LexRelationCollection relations = entryToQuery.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
+					if (relations == null)
+					{
+						return new IDictionary<string, object>[0];
+					}
+					else
+					{
+						tokenFieldsAndValues.Add("Relation", relations.Relations);
+						return new[] { tokenFieldsAndValues };
+					}
+				});
+			GetLexEntryRepository().TouchAndSaveEntriesFromQuery(xrefQuery, "confer");
+		}
+
+
+		// This is only used in Addin.Transform.SfmTransformer to fix cross references
+		// that have been save in the lift as NFD when they should be NFC - see WS-356
+		public void TouchAllIfCrossReferences()
+		{
+			ViewTemplate template = ViewTemplates.First();
+			// only touch anything if the CrossReference field is enabled, it isn't by default
+			if (template.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled == true)
+			{
+#if TRUE
+				// only show dialog if lots of entries
+				if (GetLexEntryRepository().CountAllItems() < 10000)
+				{
+					OnTouchCrossReferences(null, null);
+				}
+				else using (Palaso.UI.WindowsForms.SimpleMessageDialog msgdialog = new Palaso.UI.WindowsForms.SimpleMessageDialog("Migrating cross references.", "Cross reference migration"))
+				{
+					msgdialog.Show();
+					OnTouchCrossReferences(null, null);
+				}
+#else // doesn't work, shows dialog but doesn't get workerended event so it hangs until you kill it
+				if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
+				{
+					var dialog = new ProgressDialog();
+					var worker = new BackgroundWorker();
+					worker.DoWork += OnTouchCrossReferences;
+					worker.RunWorkerCompleted += OnWorkerCompleted;
+					dialog.BackgroundWorker = worker;
+					dialog.CanCancel = false;
+					dialog.BarStyle = ProgressBarStyle.Marquee;
+					dialog.Text = "Cross Reference migration...";
+					dialog.StatusText = "Cross Reference migration...";
+					dialog.ShowDialog();
+				}
+				else
+				{
+					OnTouchCrossReferences(null, null);  // this ensures that migration will occur even when the dialog box isn't shown i.e. during tests
+				}
+#endif
 			}
 		}
 

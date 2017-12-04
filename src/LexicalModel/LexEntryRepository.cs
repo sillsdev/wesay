@@ -15,6 +15,7 @@ using WeSay.LexicalModel.Foundation;
 
 //#if __MonoCS__
 using Palaso.Linq;
+using System.IO;
 //#else
 
 //#endif
@@ -136,6 +137,22 @@ namespace WeSay.LexicalModel
 			{
 				item.Clean();
 			}
+		}
+
+		public void TouchAndSaveEntriesFromQuery(DelegateQuery<LexEntry> xrefQuery, string propertyModified)
+		{
+			ResultSet<LexEntry> all_xref = GetItemsMatching(xrefQuery);
+
+			IList<LexEntry> entries = new List<LexEntry>(); ;
+			foreach (RecordToken<LexEntry> token in all_xref)
+			{
+				LexEntry entry = token.RealObject;
+				entry.SomethingWasModified(propertyModified);
+				entries.Add(entry);
+			}
+
+			SaveItems(entries);
+
 		}
 
 		public ResultSet<LexEntry> GetItemsMatching(IQuery<LexEntry> query)
