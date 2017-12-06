@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<configuration version="9">
+<configuration version="10">
   <components>
+	<dataFormat>Lift</dataFormat>
 	<viewTemplate>
 	  <fields>
 		<field>

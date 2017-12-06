@@ -218,7 +218,23 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 		{
 			File.WriteAllText(_pathToInputConfig,
 			@"<?xml version='1.0' encoding='utf-8'?>
-			<configuration version='6'>
+			<configuration version='8'>
+				<components>
+					<viewTemplate></viewTemplate>
+				</components>
+				<tasks><task id='Dashboard' visible='true'></task></tasks>
+			</configuration>");
+			bool didMigrate = _migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
+			Assert.IsTrue(didMigrate);
+			AssertHasAtLeastOneMatch(_queryToCheckConfigVersion, _outputPath);
+		}
+
+		[Test]
+		public void DoesMigrateV9File()
+		{
+			File.WriteAllText(_pathToInputConfig,
+			@"<?xml version='1.0' encoding='utf-8'?>
+			<configuration version='9'>
 				<components>
 					<viewTemplate></viewTemplate>
 				</components>
@@ -505,6 +521,27 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 			AssertHasAtLeastOneMatch("//field[fieldName='gloss' and meaningField='False']", _outputPath);
 			AssertHasAtLeastOneMatch("//field[fieldName='definition' and meaningField='True']", _outputPath);
 		}
+
+		[Test]
+		public void V10File_DataFormatAddedToComponents()
+		{
+			File.WriteAllText(
+				_pathToInputConfig,
+				@"<?xml version='1.0' encoding='utf-8'?>
+				<configuration version='8'>
+					<components>
+						<viewTemplate></viewTemplate>
+					</components>
+					<tasks>
+						<task taskName='Dashboard' visible='true'></task>
+						<task taskName='Dictionary' visible='true'></task>
+					</tasks>
+				</configuration>"
+			);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
+			AssertHasAtLeastOneMatch("//components/dataFormat[text()='Lift']", _outputPath);
+		}
+
 
 		[Test]
 		public void DoesNotTouchCurrentFile()
