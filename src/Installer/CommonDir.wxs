@@ -41,6 +41,9 @@
 		<Component Id="SemDom.xml" Guid="{86fe7e64-93bc-4cfc-963d-51af04a4286c}">
 		  <File Id="SemDom.xml" Name="SemDom.xml" KeyPath="yes" Source="..\..\common\SemDom.xml" />
 		</Component>
+		<Component Id="LocalizedLists_ar.xml" Guid="{05e10c1c-ac03-4273-bf0d-ec0963a38c23}">
+		  <File Id="LocalizedLists_ar.xml" Name="LocalizedLists-ar.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ar.xml" />
+		</Component>
 		<Component Id="LocalizedLists_bn.xml" Guid="{d03b5141-daec-42a9-a679-edc258580c9c}">
 		  <File Id="LocalizedLists_bn.xml" Name="LocalizedLists-bn.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-bn.xml" />
 		</Component>
@@ -65,6 +68,9 @@
 		<Component Id="LocalizedLists_ko.xml" Guid="{063c45af-8603-4ca3-a922-abb1ccc5f7d6}">
 		  <File Id="LocalizedLists_ko.xml" Name="LocalizedLists-ko.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ko.xml" />
 		</Component>
+		<Component Id="LocalizedLists_my.xml" Guid="{5bf98d12-8a80-40ee-8534-a903403b4031}">
+		  <File Id="LocalizedLists_my.xml" Name="LocalizedLists-my.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-my.xml" />
+		</Component>
 		<Component Id="LocalizedLists_ne.xml" Guid="{f0a2c118-2fc7-4d3f-87e7-bff5c059db78}">
 		  <File Id="LocalizedLists_ne.xml" Name="LocalizedLists-ne.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ne.xml" />
 		</Component>
@@ -73,6 +79,9 @@
 		</Component>
 		<Component Id="LocalizedLists_ru.xml" Guid="{2632cb32-fd2b-4e06-ac78-691ec4d6dca3}">
 		  <File Id="LocalizedLists_ru.xml" Name="LocalizedLists-ru.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-ru.xml" />
+		</Component>
+		<Component Id="LocalizedLists_swh.xml" Guid="{6533f063-9e39-44d8-a4f8-9f7136e2a5a2}">
+		  <File Id="LocalizedLists_swh.xml" Name="LocalizedLists-swh.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-swh.xml" />
 		</Component>
 		<Component Id="LocalizedLists_te.xml" Guid="{0d8f7d64-a5bc-41a5-b6a4-e32330dee96b}">
 		  <File Id="LocalizedLists_te.xml" Name="LocalizedLists-te.xml" KeyPath="yes" Source="..\..\common\LocalizedLists-te.xml" />
