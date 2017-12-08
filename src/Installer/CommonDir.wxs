@@ -125,6 +125,7 @@
 
 	<ComponentGroup Id="ddpStuff">
 	  <ComponentRef Id="SemDom.xml"/>
+	  <ComponentRef Id="LocalizedLists_ar.xml"/>
 	  <ComponentRef Id="LocalizedLists_bn.xml"/>
 	  <ComponentRef Id="LocalizedLists_es.xml"/>
 	  <ComponentRef Id="LocalizedLists_fa.xml"/>
@@ -133,9 +134,11 @@
 	  <ComponentRef Id="LocalizedLists_id.xml"/>
 	  <ComponentRef Id="LocalizedLists_km.xml"/>
 	  <ComponentRef Id="LocalizedLists_ko.xml"/>
+	  <ComponentRef Id="LocalizedLists_my.xml"/>
 	  <ComponentRef Id="LocalizedLists_ne.xml"/>
 	  <ComponentRef Id="LocalizedLists_pt.xml"/>
 	  <ComponentRef Id="LocalizedLists_ru.xml"/>
+	  <ComponentRef Id="LocalizedLists_swh.xml"/>
 	  <ComponentRef Id="LocalizedLists_te.xml"/>
 	  <ComponentRef Id="LocalizedLists_th.xml"/>
 	  <ComponentRef Id="LocalizedLists_ur.xml"/>
