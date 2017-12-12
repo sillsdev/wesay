@@ -5,7 +5,7 @@
 export CONFIGURATION=Debug
 export XDG_CONFIG_HOME=/tmp/.config
 
-export MONO_PREFIX=/opt/mono-sil
+export MONO_PREFIX=/opt/mono4-sil
 
 PACKAGENAME=wesay
 APPEND=

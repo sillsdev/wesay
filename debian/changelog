@@ -1,4 +1,10 @@
-wesay (1.6.5) UNRELEASED; urgency=medium
+wesay (1.6.6) UNRELEASED; urgency=medium
+
+  * use mono4-sil
+
+ -- Daniel Glassey <wdg@debian.org>  Tue, 12 Dec 2017 15:49:41 +0700
+
+wesay (1.6.5) xenial; urgency=medium
 
   * Release candidate 1.6.5 to be in sync with Windows version
 
