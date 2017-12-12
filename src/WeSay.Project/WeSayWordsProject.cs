@@ -46,6 +46,8 @@ using Palaso.Data;
 
 namespace WeSay.Project
 {
+	public enum WeSayDataFormat { Lift, LCM, LiftToLCM, LCMToLift };
+
 	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
 		private IList<ITask> _tasks;
@@ -89,8 +91,9 @@ namespace WeSay.Project
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
 //            BackupMaker = new ChorusBackupMaker();
-
 		}
+
+		public WeSayDataFormat DataFormat { get; internal set; } = WeSayDataFormat.Lift;
 
 		public IList<ITask> Tasks
 		{
@@ -468,6 +471,8 @@ namespace WeSay.Project
 			builder.Register(c => new ConfigFileReader(configFileText, defaultXmlConfigText, catalog)).SingleInstance();
 
 			builder.RegisterType<TaskCollection>().SingleInstance();
+
+			DataFormat = ConfigFileReader.GetDataFormat(configFileText);
 
 			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
 			foreach (var viewTemplate in viewTemplates)
@@ -1443,7 +1448,9 @@ namespace WeSay.Project
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", ConfigFile.LatestVersion.ToString());
 
+
 			writer.WriteStartElement("components");
+			writer.WriteElementString("dataFormat", DataFormat.ToString());
 			foreach (ViewTemplate template in ViewTemplates)
 			{
 				template.Write(writer);
