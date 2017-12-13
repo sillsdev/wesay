@@ -90,10 +90,11 @@ namespace WeSay.Project
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
+			DataFormat = WeSayDataFormat.Lift;
 //            BackupMaker = new ChorusBackupMaker();
 		}
 
-		public WeSayDataFormat DataFormat { get; internal set; } = WeSayDataFormat.Lift;
+		public WeSayDataFormat DataFormat { get; internal set; }
 
 		public IList<ITask> Tasks
 		{
