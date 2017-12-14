@@ -94,4 +94,27 @@
 			Timeout="4500000"
 			OutputXmlFile="$(OutputDir)/TestResults.xml"/>
 	</Target>
+
+        <Target Name="UnzipMercurial" DependsOnTargets="UnzipMercurial-Windows;UnzipMercurial-Linux"/>
+
+        <Target Name="UnzipMercurial-Windows" Condition="'$(OS)'=='Windows_NT'">
+                <!-- Extract a zip file-->
+                <DNZip TaskAction="Extract" ExtractPath="$(RootDir)" ZipFileName="$(RootDir)/lib/Release/Mercurial.zip"/>
+        </Target>
+
+        <Target Name="UnzipMercurial-Linux" Condition="'$(OS)'!='Windows_NT'">
+                <!-- Remember, Unix/Linux commands return 0 for success ("true") -->
+                <Exec Command="/usr/bin/test `arch` = x86_64" ContinueOnError="true" IgnoreExitCode="true">
+                        <Output TaskParameter="ExitCode" PropertyName="ZeroIf64BitCpu"/>
+                </Exec>
+                <Exec Command="/usr/bin/test `arch` = i686" ContinueOnError="true" IgnoreExitCode="true">
+                        <Output TaskParameter="ExitCode" PropertyName="ZeroIf32BitCpu"/>
+                </Exec>
+                <!-- Extract the appropriate zip file. -->
+                <Exec Condition="'$(ZeroIf64BitCpu)'=='0'" Command="/usr/bin/unzip -uqo $(RootDir)/lib/common/Mercurial-x86_64.zip -d $(RootDir)" />
+                <Exec Condition="'$(ZeroIf32BitCpu)'=='0'" Command="/usr/bin/unzip -uqo $(RootDir)/lib/common/Mercurial-i686.zip -d $(RootDir)" />
+                <!-- Zip doesn't seem to retain the permission bits we need. -->
+                <Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
+        </Target>
+
 </Project>

@@ -56,16 +56,6 @@
 			Timeout="4500000"/>
 	</Target>
 
-	<Target Name="UnzipMercurial">
-		<Exec Command="unzip -uqo $(RootDir)/lib/common/Mercurial-$(uname -m).zip -d $(RootDir)" ContinueOnError="true" />
-		<!-- Zip doesn't seem to retain the permission bits we need. -->
-		<Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
-	</Target>
-
-	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
-		<CallTarget Targets="TestOnly"/>
-	</Target>
-
 	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
 
 	<ItemGroup>
