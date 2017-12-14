@@ -56,6 +56,10 @@
 			Timeout="4500000"/>
 	</Target>
 
+	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
+		<CallTarget Targets="TestOnly"/>
+	</Target>
+
 	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
 
 	<ItemGroup>
