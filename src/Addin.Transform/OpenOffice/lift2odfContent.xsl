@@ -185,6 +185,7 @@ something like n log n rather than n^2-->
 
 <xsl:template match="example">
 <xsl:text> </xsl:text>
+<text:span text:style-name="example"><xsl:value-of select="@value"/></text:span>
 <xsl:apply-templates/>
 </xsl:template>
 
@@ -242,7 +243,14 @@ something like n log n rather than n^2-->
 -->
 </xsl:template>
 
-<xsl:template match="field"></xsl:template>
+<xsl:template match="field">
+<xsl:if test="@type='etymology'">
+<xsl:text> </xsl:text>
+<text:span text:style-name="etymology-label">Etymology </text:span>
+<text:span text:style-name="etymology"><xsl:value-of select="@value"/></text:span>
+<xsl:apply-templates/>
+</xsl:if>
+</xsl:template>
 
 <xsl:template match="span">
 <xsl:message terminate="no">Span element attributes are currently ignored. They will need to be flattened in the ODF if support is required.</xsl:message>
