@@ -392,7 +392,10 @@ etymology
 							 style:family="text">
 					<style:text-properties style:font-name="Times New Roman"
 										   style:font-name-asian="Tahoma"
-										   style:font-name-complex="Tahoma"/>
+										   style:font-name-complex="Tahoma"
+										   fo:font-weight="bold"
+										   style:font-weight-asian="bold"
+										   style:font-weight-complex="bold"/>
 				</style:style>
 				<xsl:text>
 			 </xsl:text>
@@ -417,6 +420,19 @@ etymology
 					<style:text-properties style:font-name="Times New Roman"
 										   style:font-name-asian="Tahoma"
 										   style:font-name-complex="Tahoma"/>
+				</style:style>
+				<style:style style:name="etymology-label"
+							 style:display-name="etymology-label"
+							 style:family="text">
+					<style:text-properties style:font-name="Times New Roman"
+										   style:font-name-asian="Tahoma"
+										   style:font-name-complex="Tahoma"
+										   fo:font-size="10pt"
+										   style:font-size-asian="10pt"
+										   style:font-size-complex="10pt"
+										   fo:font-style="italic"
+										   style:font-style-asian="italic"
+										   style:font-style-complex="italic"/>
 				</style:style>
 				<xsl:text>
 			 </xsl:text>
