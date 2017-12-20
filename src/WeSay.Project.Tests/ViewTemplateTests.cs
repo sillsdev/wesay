@@ -16,12 +16,16 @@ namespace WeSay.Project.Tests
 		[SetUp]
 		public override void SetUp()
 		{
+			Sldr.Initialize(true);
 			_enumerable = new ViewTemplate();
 			_itemCount = 0;
 		}
 
 		[TearDown]
-		public void TearDown() {}
+		public void TearDown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[Test]
 		public void Create()

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
+using SIL.WritingSystems;
 using WeSay.Foundation;
 using WeSay.Project;
 using WeSay.UI;
@@ -175,6 +176,7 @@ namespace WeSay.App.Tests
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
+			Sldr.Initialize(true);
 			_project = new WeSayWordsProject();
 			_project.UiOptions.Language = "en";
 			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
@@ -205,6 +207,7 @@ namespace WeSay.App.Tests
 		public void TestFixtureTearDown()
 		{
 			_project.Dispose();
+			Sldr.Cleanup();
 		}
 
 		[Test]

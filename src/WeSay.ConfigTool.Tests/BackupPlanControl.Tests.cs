@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -16,6 +17,7 @@ namespace WeSay.ConfigTool.Tests
 		public void Setup()
 		{
 			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+			Sldr.Initialize(true);
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
@@ -37,6 +39,7 @@ namespace WeSay.ConfigTool.Tests
 		public void TearDown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+			Sldr.Cleanup();
 		}
 
 

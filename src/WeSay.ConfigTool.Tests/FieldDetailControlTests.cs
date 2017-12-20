@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -13,6 +14,7 @@ namespace WeSay.ConfigTool.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Sldr.Initialize(true);
 			BasilProjectTestHelper.InitializeForTests();
 			_control = new FieldDetailControl();
 
@@ -24,6 +26,7 @@ namespace WeSay.ConfigTool.Tests
 		public void TearDown()
 		{
 			_control.Dispose();
+			Sldr.Cleanup();
 		}
 
 		[Test]

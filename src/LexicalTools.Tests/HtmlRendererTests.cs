@@ -56,6 +56,7 @@ namespace WeSay.LexicalTools.Tests
 				_lexEntryRepository.Dispose();
 			}
 			_tempFolder.Delete();
+			Sldr.Cleanup();
 		}
 
 		[Test]
@@ -159,6 +160,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 		public static WeSayWordsProject InitializeForTests()
 		{
+			Sldr.Initialize(true);
 			WeSayWordsProject project = new WeSayWordsProject();
 
 			try

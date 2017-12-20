@@ -32,6 +32,7 @@ namespace WeSay.Project.Tests
 
 			public EnvironmentForTest()
 			{
+				Sldr.Initialize(true);
 				_projectDir = new ProjectDirectorySetupForTesting("");
 				var project = _projectDir.CreateLoadedProject();
 				_outputFile = new TempFile();
@@ -97,6 +98,7 @@ namespace WeSay.Project.Tests
 				Repo.Dispose();
 				_projectDir.Dispose();
 				_outputFile.Dispose();
+				Sldr.Cleanup();
 			}
 
 			public void AssertHasAtLeastOneMatch(string xpath)

@@ -6,6 +6,7 @@ using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using SIL.TestUtilities;
 using SIL.Progress;
+using SIL.WritingSystems;
 using SIL.Xml;
 
 namespace WeSay.Project.Tests
@@ -22,6 +23,7 @@ namespace WeSay.Project.Tests
 			public BackupScenario(string testName)
 			{
 				SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
+				Sldr.Initialize(true);
 				_projDir = new ProjectDirectorySetupForTesting("");
 
 				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
@@ -50,6 +52,7 @@ namespace WeSay.Project.Tests
 			{
 				_projDir.Dispose();
 				_backupDir.Dispose();
+				Sldr.Cleanup();
 			}
 
 			public void BackupNow()

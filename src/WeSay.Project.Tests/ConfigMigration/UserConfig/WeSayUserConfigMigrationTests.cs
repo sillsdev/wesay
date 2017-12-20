@@ -15,6 +15,17 @@ namespace WeSay.Project.Tests.ConfigMigration.UserConfig
 	[TestFixture]
 	public class WeSayUserConfigMigrationTests
 	{
+		[SetUp]
+		public void Setup()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[TearDown]
+		public void TearDown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[Test]
 		public void Migrate_1To2_MigratesToVersion2WithChangedLanguage()

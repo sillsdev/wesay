@@ -29,6 +29,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public TestEnvironment()
 			{
+				Sldr.Initialize(true);
 				_testFolder = new TemporaryFolder("WritingSystemsMigratorTests");
 				_wsPrefsFilePath = Path.Combine(_testFolder.Path, "WritingSystemPrefs.xml");
 				_writingSystemsPath = Path.Combine(_testFolder.Path, "WritingSystems");
@@ -94,6 +95,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public void Dispose()
 			{
+				Sldr.Cleanup();
 				if (Directory.Exists(WritingSystemsPath))
 				{
 					foreach (var ldmlFile in Directory.GetFiles(WritingSystemsPath))

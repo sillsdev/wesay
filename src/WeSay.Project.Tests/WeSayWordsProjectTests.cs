@@ -32,11 +32,13 @@ namespace WeSay.Project.Tests
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
 			WeSayWordsProject.PreventBackupForTests = true;
+			Sldr.Initialize(true);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
+			Sldr.Cleanup();
 		}
 
 
@@ -920,6 +922,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LoadFromLiftLexiconPath_LiftConfigFileAndOptionListContainVariousNonConformantAndOrOrphanedWritingSystems_WritingSystemsAreMigrated()
 		{
+			Sldr.Cleanup();
 			// Set test directory and clear SLDR cache
 			using (var projectDirectory = new TemporaryFolder("OrphanWritingSystemsTest"))
 			using (var folderContainingSldrCache = new TemporaryFolder("SldrCache"))

@@ -29,7 +29,6 @@ namespace WeSay.ConfigTool.Tests
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_mainWindowTester = new FormTester(_window.Name, _window);
-			Sldr.Initialize(true);
 
 			_projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 		}

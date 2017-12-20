@@ -16,8 +16,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
+			Sldr.Initialize(true);
 			BasilProjectTestHelper.InitializeForTests();
-			Sldr.Initialize();
 		}
 
 		[TearDown]

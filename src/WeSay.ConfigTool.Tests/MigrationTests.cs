@@ -17,6 +17,7 @@ namespace WeSay.ConfigTool.Tests
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
 				WeSayWordsProject.PreventBackupForTests = true;
+				Sldr.Initialize(true);
 			}
 
 			public void CreateDefaultProject()
@@ -36,6 +37,12 @@ namespace WeSay.ConfigTool.Tests
 			public void WriteUserConfig(string s)
 			{
 				File.WriteAllText(GetUserConfigFilePath(), s);
+			}
+
+			public new void Dispose()
+			{
+				base.Dispose();
+				Sldr.Cleanup();
 			}
 
 		}

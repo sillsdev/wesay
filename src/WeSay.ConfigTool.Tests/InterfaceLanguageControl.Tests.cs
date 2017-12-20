@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SIL.IO;
 using SIL.Reporting;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -19,6 +20,7 @@ namespace WeSay.ConfigTool.Tests
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
+			Sldr.Initialize(true);
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 
 			//           _window.OpenProject(BasilProject.GetPretendProjectDirectory());
@@ -42,6 +44,7 @@ namespace WeSay.ConfigTool.Tests
 		public void TearDown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+			Sldr.Cleanup();
 		}
 
 		[Test]

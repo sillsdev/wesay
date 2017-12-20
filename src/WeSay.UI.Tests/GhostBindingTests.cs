@@ -93,8 +93,8 @@ namespace WeSay.UI.Tests
 		[SetUp]
 		public void Setup()
 		{
-			BasilProjectTestHelper.InitializeForTests();
 			Sldr.Initialize(true);
+			BasilProjectTestHelper.InitializeForTests();
 			_writingSystemId = WritingSystemsIdsForTests.AnalysisIdForTest;
 
 			WritingSystemDefinition writingSystem = new WritingSystemDefinition(_writingSystemId) {DefaultFont = new FontDefinition("Arial")};

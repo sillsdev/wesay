@@ -3,6 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using SIL.Reporting;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
 using Addin.Transform.PdfDictionary;
 using WeSay.Project;
 using WeSay.Project.Tests;
@@ -25,6 +26,7 @@ namespace Addin.Transform.Tests
 			public EnvironmentForTest()
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
+				Sldr.Initialize(true);
 				const string xmlOfEntries = @" <entry id='foo1'>
 						<lexical-unit><form lang='qaa'><text>hello</text></form></lexical-unit>
 					</entry>";
@@ -71,6 +73,7 @@ namespace Addin.Transform.Tests
 			{
 				_project.Dispose();
 				_testProject.Dispose();
+				Sldr.Cleanup();
 				TestUtilities.DeleteFolderThatMayBeInUse(OutputTemplateDir);
 			}
 

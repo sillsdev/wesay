@@ -16,15 +16,16 @@ namespace WeSay.LexicalModel.Tests
 	{
 		private TemporaryFolder _temporaryFolder;
 		private LexEntryRepository _lexEntryRepository;
-		private readonly WritingSystemDefinition _lexicalFormWritingSystem =  new WritingSystemDefinition("de")
-		{
-			DefaultCollation = new IcuRulesCollationDefinition("standard")
-		};
+		private WritingSystemDefinition _lexicalFormWritingSystem;
 
 		[SetUp]
 		public void Setup()
 		{
 			Sldr.Initialize(true);
+			_lexicalFormWritingSystem = new WritingSystemDefinition("de")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			};
 			_temporaryFolder = new TemporaryFolder();
 			string filePath = _temporaryFolder.GetTemporaryFile();
 			_lexEntryRepository = new LexEntryRepository(filePath);

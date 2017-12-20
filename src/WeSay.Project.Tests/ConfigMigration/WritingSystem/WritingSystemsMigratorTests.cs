@@ -24,7 +24,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			public TestEnvironment()
 			{
 				_folder = new TemporaryFolder("WritingSystemsMigratorTests");
-
+				Sldr.Initialize(true);
 				_namespaceManager = new XmlNamespaceManager(new NameTable());
 				_namespaceManager.AddNamespace("palaso", "urn://palaso.org/ldmlExtensions/v1");
 				var pathToConfigFile = Path.Combine(_folder.Path, "test.WeSayConfig");
@@ -118,6 +118,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 			public void Dispose()
 			{
+				Sldr.Cleanup();
 				_configFile.Dispose();
 				_folder.Dispose();
 			}

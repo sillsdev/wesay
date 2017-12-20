@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SIL.DictionaryServices.Lift;
 using SIL.Reporting;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.Project;
 
 namespace Addin.Transform.Tests
@@ -17,6 +18,7 @@ namespace Addin.Transform.Tests
 		{
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			ErrorReport.IsOkToInteractWithUser = false;
+			Sldr.Initialize(true);
 		}
 
 		[Test]
@@ -68,6 +70,7 @@ namespace Addin.Transform.Tests
 		[TearDown]
 		public void TearDown()
 		{
+			Sldr.Cleanup();
 			if (File.Exists(_outputPath))
 			{
 				File.Delete(_outputPath);

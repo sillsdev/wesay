@@ -21,6 +21,7 @@ namespace WeSay.Project.Tests
 			public TestEnvironment()
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
+				Sldr.Initialize(true);
 				_folder = new TemporaryFolder("ProjectFromLiftFolderCreatorTests");
 			}
 
@@ -53,6 +54,7 @@ namespace WeSay.Project.Tests
 					_liftFile.Dispose();
 				}
 				_folder.Dispose();
+				Sldr.Cleanup();
 			}
 
 			public void CreateLiftFile(string content, string version)
