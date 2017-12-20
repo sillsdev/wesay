@@ -24,6 +24,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
 			base.Setup();
+			Sldr.Initialize(true);
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
@@ -204,6 +205,7 @@ namespace WeSay.ConfigTool.Tests
 		public void RunAndExitWithoutOpening()
 		{
 			_mainWindowTester.Close();
+			Sldr.Cleanup();
 			WeSayProjectTestHelper.InitializeForTests(); // for Teardown
 		}
 

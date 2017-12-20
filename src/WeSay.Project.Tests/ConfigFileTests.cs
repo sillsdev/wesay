@@ -339,6 +339,7 @@ namespace WeSay.Project.Tests
 
 			public TestEnvironment(string configFileContent)
 			{
+				Sldr.Initialize(true);
 				_folder = new TemporaryFolder("WritingSystemsFromConfigFileCreator");
 				var configFilePath = Path.Combine(_folder.Path, "test1.WeSayConfig");
 				_configFile = new TempFile(configFileContent);
@@ -365,6 +366,7 @@ namespace WeSay.Project.Tests
 				_sharedSettingsFolder.Dispose();
 				_writingSystemsFolder.Dispose();
 				_folder.Dispose();
+				Sldr.Cleanup();
 			}
 
 			public IWritingSystemRepository WritingSystems
