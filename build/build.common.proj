@@ -53,7 +53,7 @@
 		<ItemGroup>
 			<TestAssemblies
 				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
+				Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll"/>
 		</ItemGroup>
 
 		<NUnitTeamCity
@@ -66,7 +66,7 @@
 		<ItemGroup>
 			<TestAssemblies
 				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
+				Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll"/>
 		</ItemGroup>
 
 		<NUnit
