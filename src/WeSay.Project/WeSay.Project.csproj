@@ -88,8 +88,13 @@
     </Reference>
     <Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>../packages/NetReflector.1.1.2009/lib/net20/NetReflector.dll</HintPath>
+      <HintPath>..\packages\NetReflector.1.1.2009\lib\net20\NetReflector.dll</HintPath>
     </Reference>
+    <Reference Include="Commons.Xml.Relaxng, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
+    </Reference>
+
     <Reference Include="SIL.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\SIL.Core.dll</HintPath>
