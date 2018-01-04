@@ -26,19 +26,23 @@ namespace WeSay.Project.Tests
 	[TestFixture]
 	public class WeSayWordsProjectTests
 	{
+		private OfflineSldr _offlineSldr;
 
 		[SetUp]
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
 			WeSayWordsProject.PreventBackupForTests = true;
-			Sldr.Initialize(true);
+			_offlineSldr = new OfflineSldr();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			Sldr.Cleanup();
+			if (!_offlineSldr.IsDisposed)
+			{
+				_offlineSldr.Dispose();
+			}
 		}
 
 
@@ -922,10 +926,10 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void LoadFromLiftLexiconPath_LiftConfigFileAndOptionListContainVariousNonConformantAndOrOrphanedWritingSystems_WritingSystemsAreMigrated()
 		{
-			Sldr.Cleanup();
+			_offlineSldr.Dispose();
 			// Set test directory and clear SLDR cache
 			using (var projectDirectory = new TemporaryFolder("OrphanWritingSystemsTest"))
-			using (var folderContainingSldrCache = new TemporaryFolder("SldrCache"))
+			using (var offlineSldr = new OfflineSldr())
 			{
 				//Create Config, Lift and OptionList files as well as a writing system folder.
 				//These files contain various orphans
@@ -937,9 +941,6 @@ namespace WeSay.Project.Tests
 					));
 				string writingSystemFolderPath = Path.Combine(projectDirectory.Path, "WritingSystems");
 				Directory.CreateDirectory(writingSystemFolderPath);
-
-				// Set SLDR to offline
-				Sldr.Initialize(true);
 
 				//Now populate the input system repo with an "en" input system and a "qaa-x-changedWs" input system as well as
 				//a changelog that  indicates that "x-changedWs" got changed to "qaa-x-changedWs"
@@ -962,14 +963,13 @@ namespace WeSay.Project.Tests
 				Assert.That(project.WritingSystems.Contains("qaa-x-config"));
 				Assert.That(project.WritingSystems.Contains("de"));
 				Assert.That(project.WritingSystems.Contains("qaa-x-option"));
-				// Latn is suppressed script
-				Assert.That(project.WritingSystems.Contains("fr-US-x-CHANGED"));
+				Assert.That(project.WritingSystems.Contains("fr-Latn-US-x-CHANGED"));
 
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "en.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-config.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "de.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-option.ldml")));
-				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-US-x-CHANGED.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-Latn-US-x-CHANGED.ldml")));
 
 				var configFile = new ConfigFile(configFilePath);
 				Assert.That(configFile.WritingSystemsInUse.Count(), Is.EqualTo(3));
@@ -977,11 +977,10 @@ namespace WeSay.Project.Tests
 				var liftFileHelper = new WritingSystemsInLiftFileHelper(wsRepo, liftFilePath);
 				Assert.That(liftFileHelper.WritingSystemsInUse.Count(), Is.EqualTo(2));
 				Assert.That(liftFileHelper.WritingSystemsInUse.All(wsId => wsId.Equals("qaa-x-option") || wsId.Equals("de")));
-				Sldr.Cleanup();
 			}
 		}
 
-		private void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+	private void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
 		{
 			throw new NotImplementedException();
 		}
