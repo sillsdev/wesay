@@ -477,11 +477,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="SIL.DictionaryServices.pdb"/>
 				<ComponentRef Id="SIL.Lift.pdb"/>
 				<ComponentRef Id="SIL.Media.pdb"/>
-				<ComponentRef Id="SIL.TestUtilities.dll"/>
-				<ComponentRef Id="SIL.TestUtilities.pdb"/>
 				<ComponentRef Id="SIL.Core.pdb"/>
-				<ComponentRef Id="SIL.Core.Tests.dll"/>
-				<ComponentRef Id="SIL.Core.Tests.pdb"/>
 				<ComponentRef Id="SIL.Lexicon.dll"/>
 				<ComponentRef Id="SIL.Lexicon.pdb"/>
 				<ComponentRef Id="SIL.Windows.Forms.pdb"/>
@@ -493,8 +489,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="SIL.Windows.Forms.WritingSystems.pdb"/>
 				<ComponentRef Id="SIL.WritingSystems.dll"/>
 				<ComponentRef Id="SIL.WritingSystems.pdb"/>
-				<ComponentRef Id="SIL.WritingSystems.Tests.dll"/>
-				<ComponentRef Id="SIL.WritingSystems.Tests.pdb"/>
 				<ComponentRef Id="plift2html.xsl"/>
 				<ComponentRef Id="SampleDataProcessor.exe"/>
 				<ComponentRef Id="SampleDataProcessor.pdb"/>
