@@ -13,8 +13,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
 using Chorus;
 using Chorus.FileTypeHandlers.lift;
 using Chorus.UI.Notes;
@@ -45,10 +43,13 @@ using WeSay.Project.Synchronize;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 using WeSay.UI.TextBoxes;
-using IContainer=Autofac.IContainer;
+using IContainer = Autofac.IContainer;
+using Palaso.Data;
 
 namespace WeSay.Project
 {
+	public enum WeSayDataFormat { Lift, LCM, LiftToLCM, LCMToLift };
+
 	public class WeSayWordsProject : BasilProject, IFileLocator
 	{
 		private IList<ITask> _tasks;
@@ -91,9 +92,11 @@ namespace WeSay.Project
 		{
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
+			DataFormat = WeSayDataFormat.Lift;
 //            BackupMaker = new ChorusBackupMaker();
-
 		}
+
+		public WeSayDataFormat DataFormat { get; internal set; }
 
 		public IList<ITask> Tasks
 		{
@@ -101,7 +104,7 @@ namespace WeSay.Project
 			set { _tasks = value; }
 		}
 
-		internal IEnumerable<ITaskConfiguration> TaskConfigurations
+		public IEnumerable<ITaskConfiguration> TaskConfigurations
 		{
 			get { return _taskconfigurations; }
 			set { _taskconfigurations = value; }
@@ -279,6 +282,25 @@ namespace WeSay.Project
 			return dirHoldingLift == "wesay" && Directory.Exists(commonDir);
 		}
 
+		public bool CreatedByFLEx(string liftPath)
+		{
+			string producerNode;
+			if (liftPath == "")
+			{
+				return false;
+			}
+			using (XmlReader reader = XmlReader.Create(liftPath))
+			{
+				reader.MoveToContent();
+				while (reader.NodeType != XmlNodeType.Element && reader.Name != "lift")
+				{
+					reader.Read();
+				}
+				producerNode = reader.GetAttribute("producer");
+			}
+			return producerNode.Contains("SIL.FLEx");
+		}
+
 		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath)
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
@@ -332,7 +354,7 @@ namespace WeSay.Project
 			}
 			else
 			{
-				OnDoMigration(null, null);  // this ensures that migration will occur even when the dilog box isn't shown i.e. during tests
+				OnDoMigration(null, null);  // this ensures that migration will occur even when the dialog box isn't shown i.e. during tests
 			}
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
@@ -451,6 +473,35 @@ namespace WeSay.Project
 			// I (CP) don't think this is needed
 			builder.Register<IEnumerable<string>>(c => GetIdsOfSingleOptionFields()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any IEnumerable<string>
 
+			// start registering ViewTemplate related things before LiftDataMapper
+			var catalog = new TaskTypeCatalog();
+			catalog.RegisterAllTypes(builder);
+
+			builder.RegisterInstance<TaskTypeCatalog>(catalog).SingleInstance();
+
+			//this is a bit weird, did it to get around a strange problem where it was left open,
+			//never found out by whom.  But note, it does affect behavior.  It means that
+			//the first time the reader is asked for, it will be reading the value as it was
+			//back when we did this assignment.
+			string configFileText = File.ReadAllText(PathToConfigFile);
+
+			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
+
+			builder.Register(c => new ConfigFileReader(configFileText, defaultXmlConfigText, catalog)).SingleInstance();
+
+			builder.RegisterType<TaskCollection>().SingleInstance();
+
+			DataFormat = ConfigFileReader.GetDataFormat(configFileText);
+
+			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
+			foreach (var viewTemplate in viewTemplates)
+			{
+				//todo: this isn't going to work if we start using multiple tempates.
+				//will have to go to a naming system.
+				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
+			}
+
+
 			builder.Register<LiftDataMapper>(c =>
 												 {
 													 try
@@ -490,32 +541,7 @@ namespace WeSay.Project
 			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
 
 
-
-			var catalog = new TaskTypeCatalog();
-			catalog.RegisterAllTypes(builder);
-
-			builder.RegisterInstance<TaskTypeCatalog>(catalog).SingleInstance();
-
-			//this is a bit weird, did it to get around a strange problem where it was left open,
-			//never found out by whom.  But note, it does affect behavior.  It means that
-			//the first time the reader is asked for, it will be reading the value as it was
-			//back when we did this assignment.
-			string configFileText = File.ReadAllText(PathToConfigFile);
-
-			string defaultXmlConfigText = File.ReadAllText(PathToDefaultConfig);
-
-			builder.Register(c => new ConfigFileReader(configFileText, defaultXmlConfigText,  catalog)).SingleInstance();
-
-			builder.RegisterType<TaskCollection>().SingleInstance();
-
-			var viewTemplates = ConfigFileReader.CreateViewTemplates(configFileText, WritingSystems);
-			foreach (var viewTemplate in viewTemplates)
-			{
-				//todo: this isn't going to work if we start using multiple tempates.
-				//will have to go to a naming system.
-				builder.RegisterInstance<ViewTemplate>(viewTemplate).SingleInstance();
-			}
-
+			//finish registering ViewTemplate related things
 			builder.Register<ViewTemplate>(c => DefaultPrintingTemplate).Named<ViewTemplate>("PrintingTemplate").SingleInstance();
 			builder.Register<IWritingSystemRepository>(c => DefaultViewTemplate.WritingSystems).ExternallyOwned().SingleInstance();
 
@@ -689,6 +715,69 @@ namespace WeSay.Project
 			{
 				if (field.DataTypeName == "Option")
 					yield return field.FieldName;
+			}
+		}
+
+		private void OnTouchCrossReferences(object sender, DoWorkEventArgs e)
+		{
+			DelegateQuery<LexEntry> xrefQuery = new DelegateQuery<LexEntry>(
+				delegate (LexEntry entryToQuery)
+				{
+					IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
+
+					LexRelationCollection relations = entryToQuery.GetProperty<LexRelationCollection>(LexEntry.WellKnownProperties.CrossReference);
+					if (relations == null)
+					{
+						return new IDictionary<string, object>[0];
+					}
+					else
+					{
+						tokenFieldsAndValues.Add("Relation", relations.Relations);
+						return new[] { tokenFieldsAndValues };
+					}
+				});
+			GetLexEntryRepository().TouchAndSaveEntriesFromQuery(xrefQuery, "confer");
+		}
+
+
+		// This is only used in Addin.Transform.SfmTransformer to fix cross references
+		// that have been save in the lift as NFD when they should be NFC - see WS-356
+		public void TouchAllIfCrossReferences()
+		{
+			ViewTemplate template = ViewTemplates.First();
+			// only touch anything if the CrossReference field is enabled, it isn't by default
+			if (template.GetField(LexEntry.WellKnownProperties.CrossReference).Enabled == true)
+			{
+#if TRUE
+				// only show dialog if lots of entries
+				if (GetLexEntryRepository().CountAllItems() < 10000)
+				{
+					OnTouchCrossReferences(null, null);
+				}
+				else using (Palaso.UI.WindowsForms.SimpleMessageDialog msgdialog = new Palaso.UI.WindowsForms.SimpleMessageDialog("Migrating cross references.", "Cross reference migration"))
+				{
+					msgdialog.Show();
+					OnTouchCrossReferences(null, null);
+				}
+#else // doesn't work, shows dialog but doesn't get workerended event so it hangs until you kill it
+				if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
+				{
+					var dialog = new ProgressDialog();
+					var worker = new BackgroundWorker();
+					worker.DoWork += OnTouchCrossReferences;
+					worker.RunWorkerCompleted += OnWorkerCompleted;
+					dialog.BackgroundWorker = worker;
+					dialog.CanCancel = false;
+					dialog.BarStyle = ProgressBarStyle.Marquee;
+					dialog.Text = "Cross Reference migration...";
+					dialog.StatusText = "Cross Reference migration...";
+					dialog.ShowDialog();
+				}
+				else
+				{
+					OnTouchCrossReferences(null, null);  // this ensures that migration will occur even when the dialog box isn't shown i.e. during tests
+				}
+#endif
 			}
 		}
 
@@ -1386,7 +1475,9 @@ namespace WeSay.Project
 			writer.WriteStartElement("configuration");
 			writer.WriteAttributeString("version", ConfigFile.LatestVersion.ToString());
 
+
 			writer.WriteStartElement("components");
+			writer.WriteElementString("dataFormat", DataFormat.ToString());
 			foreach (ViewTemplate template in ViewTemplates)
 			{
 				template.Write(writer);

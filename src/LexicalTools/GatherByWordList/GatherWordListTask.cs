@@ -172,6 +172,34 @@ namespace WeSay.LexicalTools.GatherByWordList
 				reader.Read(path, m);
 				_words.AddRange(from RepositoryId repositoryId in m.GetAllItems() select m.GetItem(repositoryId));
 			}
+			foreach (var word in _words)
+			{
+				foreach (var sense in word.Senses)
+				{
+					if (_glossMeaningField)
+					{
+						// copy all definition forms to gloss then delete definition form
+						foreach (var form in sense.Definition.Forms)
+						{
+							//this check makes sure we don't introduce a form form a lang we allow for def, but not gloss
+							if (_glossWritingSystemIds.Contains(form.WritingSystemId))
+								sense.Gloss.SetAlternative(form.WritingSystemId, form.Form);
+							sense.Definition.SetAlternative(form.WritingSystemId, null);
+						}
+					}
+					else
+					{
+						// copy all gloss forms to definition then delete gloss form
+						foreach (var form in sense.Gloss.Forms)
+						{
+							//this check makes sure we don't introduce a form form a lang we allow for gloss, but not def
+							if (_definitionWritingSystemIds.Contains(form.WritingSystemId))
+								sense.Definition.SetAlternative(form.WritingSystemId, form.Form);
+							sense.Gloss.SetAlternative(form.WritingSystemId, null);
+						}
+					}
+				}
+			}
 		}
 
 		private void LoadSimpleList(string path)
@@ -192,7 +220,14 @@ namespace WeSay.LexicalTools.GatherByWordList
 						var entry = new LexEntry();
 						entry.LexicalForm.SetAlternative(_preferredPromptingWritingSystemId, s);
 						var sense = new LexSense(entry);
-						sense.Gloss.SetAlternative(_preferredPromptingWritingSystemId, s);
+						if (_glossMeaningField)
+						{
+							sense.Gloss.SetAlternative(_preferredPromptingWritingSystemId, s);
+						}
+						else
+						{
+							sense.Definition.SetAlternative(_preferredPromptingWritingSystemId, s);
+						}
 						entry.Senses.Add(sense);
 						_words.Add(entry);
 					}
@@ -244,23 +279,23 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get
 			{
 				//note, we choose to skip this word if it doesn't have any of the same languages as our
-				//current definition field.  But we don't skip it just because it doesn't have our
+				//current meaning field.  But we don't skip it just because it doesn't have our
 				//preferred (first) one.
 				var preferred = new string[]{_meaningWritingSystemIds.First()};
 				var sense = CurrentTemplateSense;
 				LanguageForm lf=null;
 				if (sense != null)
-					lf = sense.Gloss.GetBestAlternative(preferred);
+					lf = _glossMeaningField ? sense.Gloss.GetBestAlternative(preferred) : sense.Definition.GetBestAlternative(preferred);
 				if(lf==null && sense!=null)
-					lf = sense.Definition.GetBestAlternative(preferred);
+					lf = _glossMeaningField ? sense.Definition.GetBestAlternative(preferred) : sense.Gloss.GetBestAlternative(preferred);
 
 				//ok, if we didn't get the best one, how about any others in the def field?
 				if (lf == null)
 					lf = CurrentTemplateLexicalEntry.LexicalForm.GetBestAlternative(_meaningWritingSystemIds);
 				if (lf == null && sense != null)
-					lf = sense.Gloss.GetBestAlternative(_meaningWritingSystemIds);
+					lf = _glossMeaningField ? sense.Gloss.GetBestAlternative(_meaningWritingSystemIds) : sense.Definition.GetBestAlternative(_meaningWritingSystemIds);
 				if (lf == null && sense != null)
-					lf = sense.Definition.GetBestAlternative(preferred);
+					lf = _glossMeaningField ? sense.Definition.GetBestAlternative(_meaningWritingSystemIds) : sense.Gloss.GetBestAlternative(_meaningWritingSystemIds);
 
 				return lf;
 			}
@@ -400,40 +435,6 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public void WordCollected(MultiText newVernacularWord)
 		{
-//            var sense = new LexSense();
-//            sense.Definition.MergeIn(CurrentWordAsMultiText);
-//            sense.Gloss.MergeIn(CurrentWordAsMultiText);
-
-//            var templateSense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
-//            if(templateSense !=null)
-//            {
-//                foreach (var optionProperty in templateSense.Properties.Where(p => p.Value.GetType() == typeof(OptionRefCollection)))
-//                {
-//                    var templateRefs = templateSense.GetProperty<OptionRefCollection>(optionProperty.Key);
-//                    var destinationOptionRefs =
-//                        sense.GetOrCreateProperty<OptionRefCollection>(optionProperty.Key);
-//                    destinationOptionRefs.AddRange(templateRefs.Keys);
-//                }
-//
-//                foreach (var optionProperty in templateSense.Properties.Where(p => p.Value.GetType() == typeof(OptionRef)))
-//                {
-//                    var optionRef = templateSense.GetProperty<OptionRef>(optionProperty.Key);
-//                    sense.GetOrCreateProperty<OptionRef>(optionProperty.Key).Key = optionRef.Key;
-//                }
-//
-//                foreach (var textProperty in templateSense.Properties.Where(p=>p.Value.GetType()==typeof(MultiText)))
-//                {
-//                    var target = sense.GetOrCreateProperty<MultiText>(textProperty.Key);
-//                    foreach (var form in ((MultiText)textProperty.Value).Forms)
-//                    {
-//                        target.SetAlternative(form.WritingSystemId,form.Form);
-//                    }
-//                }
-//            }
-			//sens
-			//we use this for matching up, and well, it probably is a good gloss
-
-		  //  AddSenseToLexicon(newVernacularWord, sense);
 			var sense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
 			AddSenseToLexicon(newVernacularWord,sense);
 		}
@@ -460,7 +461,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 			//I don't recall why we did this, but what it is doing is populating def from gloss and vice-versa, where there are blanks
 
-			var definition = sense.Definition;
+			/* var definition = sense.Definition;
 			if(definition.Empty)
 			{
 				foreach (var form in sense.Gloss.Forms)
@@ -480,15 +481,16 @@ namespace WeSay.LexicalTools.GatherByWordList
 					if (_glossWritingSystemIds.Contains(form.WritingSystemId))
 						gloss.SetAlternative(form.WritingSystemId, form.Form);
 				}
-			}
+			} */
 
 			//review: the desired semantics of this find are unclear, if we have more than one ws
 			ResultSet<LexEntry> entriesWithSameForm =
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
 							lexemeForm[_lexicalUnitWritingSystem.LanguageTag], _lexicalUnitWritingSystem);
-			LanguageForm firstGloss = new LanguageForm("en", "-none-",null);
-			if(sense.Gloss.Forms.Length>0)
-				firstGloss = sense.Gloss.Forms[0];
+			var meaningField = _glossMeaningField ? sense.Gloss : sense.Definition;
+			LanguageForm firstMeaning = new LanguageForm("en", "-none-",null);
+			if(meaningField.Forms.Length>0)
+				firstMeaning = meaningField.Forms[0];
 
 			if (entriesWithSameForm.Count == 0)
 			{
@@ -496,7 +498,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense.Clone());
 				LexEntryRepository.SaveItem(entry);
-				Logger.WriteEvent("WordList-Adding new word '{0}'and giving the sense '{1}'", entry.GetSimpleFormForLogging(), firstGloss );
+				Logger.WriteEvent("WordList-Adding new word '{0}'and giving the sense '{1}'", entry.GetSimpleFormForLogging(), firstMeaning );
 			}
 			else
 			{
@@ -504,14 +506,15 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 				foreach (LexSense s in entry.Senses)
 				{
-					if (sense.Gloss.Forms.Length > 0)
+					if (meaningField.Forms.Length > 0)
 					{
-						LanguageForm glossWeAreAdding = firstGloss;
-						string glossInThisWritingSystem =
-								s.Gloss.GetExactAlternative(glossWeAreAdding.WritingSystemId);
-						if (glossInThisWritingSystem == glossWeAreAdding.Form)
+						LanguageForm meaningWeAreAdding = firstMeaning;
+						string meaningInThisWritingSystem = _glossMeaningField ?
+								s.Gloss.GetExactAlternative(meaningWeAreAdding.WritingSystemId) :
+								s.Definition.GetExactAlternative(meaningWeAreAdding.WritingSystemId);
+						if (meaningInThisWritingSystem == meaningWeAreAdding.Form)
 						{
-							Logger.WriteEvent("WordList '{0}' already exists in '{1}'", firstGloss, entry.GetSimpleFormForLogging());
+							Logger.WriteEvent("WordList '{0}' already exists in '{1}'", firstMeaning, entry.GetSimpleFormForLogging());
 							return; //don't add it again
 						}
 					}
@@ -524,7 +527,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				//REVIEW: June 2011, Hatton added this, because of WS-34024: if a new *meaning* was added to an existing entry,
 				//and then the user quit, this change was unsaved.
 				LexEntryRepository.SaveItem(entry);
-				Logger.WriteEvent("WordList-Added '{0}' to preexisting '{1}'", firstGloss, entry.GetSimpleFormForLogging());
+				Logger.WriteEvent("WordList-Added '{0}' to preexisting '{1}'", firstMeaning, entry.GetSimpleFormForLogging());
 
 			}
 		}
@@ -566,7 +569,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				atLeatOneWordHadTheNeededWritingSystem = true;
 
 				//skip words we already have elicited
-				if (GetRecordsWithMatchingGloss().Count > 0)
+				if (GetRecordsWithMatchingMeaning().Count > 0)
 				{
 					++CurrentIndexIntoWordlist;
 					continue;
@@ -625,14 +628,15 @@ namespace WeSay.LexicalTools.GatherByWordList
 //                            _lexicalUnitWritingSystem);
 //        }
 
-		public ResultSet<LexEntry> GetRecordsWithMatchingGloss()
+		public ResultSet<LexEntry> GetRecordsWithMatchingMeaning()
 		{
 			//var form = CurrentWordAsMultiText.GetBestAlternative(new string[]{_preferredPromptingWritingSystemId});
 			var form = CurrentPromptingLanguageForm;
 			return
-						LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+						LexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
 								form,
-								_lexicalUnitWritingSystem);
+								_lexicalUnitWritingSystem,
+								_glossMeaningField);
 		}
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)

@@ -31,13 +31,6 @@
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'BETA'">Beta Test</ReleaseLabel>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'CANDIDATE'">Release Candidate</ReleaseLabel>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<CSharpFiles
 			Include="$(RootDir)\**\*.cs"
@@ -45,16 +38,8 @@
 		<XmlFiles Include="$(RootDir)\common\**\*.WeSayConfig"/>
 	</ItemGroup>
 
-	<!-- <Target Name="DownloadDistFiles">
-		<MakeDir Directories= "$(RootDir)\External"/>
-		<WebDownload FileUri="https://dl.dropboxusercontent.com/s/599lb0od6shtqqa/WeSay_Helps.chm?dl=1" FileName="$(RootDir)\External\WeSay_Helps.chm"></WebDownload>
-		<WebDownload FileUri="https://dl.dropboxusercontent.com/s/kj91auval00jv90/wesay.helpmap?dl=1" FileName="$(RootDir)\External\wesay.helpmap"></WebDownload>
-	</Target> -->
-
 	<Target Name="Build">
 		<CallTarget Targets="Clean"/>
-		<!-- We are pulling help files from team city now -->
-		<!-- <CallTarget Targets="DownloadDistFiles" /> -->
 		<CallTarget Targets="CopyHelpFilesIntoSourceTree" />
 		<CallTarget Targets="SetAssemblyVersion"/>
 		<CallTarget Targets="Compile"/>
@@ -106,12 +91,6 @@
 	</Target>
 
 	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
-
-	<Target Name="UnzipMercurial" DependsOnTargets="">
-		<!-- Extract a zip file-->
-		<!-- This output path is different from the old wesay, but the same as chorus.  WeSay used to be output/release/mercurial -->
-		<DNZip TaskAction="Extract" ExtractPath="$(RootDir)" ZipFileName="$(RootDir)/lib/Release/Mercurial.zip"/>
-	</Target>
 
 	<!-- Installer Targets -->
 	<ItemGroup>
@@ -181,21 +160,6 @@
 		<CallTarget targets="MakeWixForXulrunner"/>
 	</Target>
 
-	<!-- LifeCycleStage is set, along with the version, in build.common.proj -->
-	<PropertyGroup>
-		<ReleaseString Condition="'$(LifeCycleStage)' == 'ALPHA'">-Alpha</ReleaseString>
-		<ReleaseString Condition="'$(LifeCycleStage)' == 'BETA'">-Beta</ReleaseString>
-		<ReleaseString Condition="'$(LifeCycleStage)' == 'CANDIDATE'">-ReleaseCandidate</ReleaseString>
-		<ReleaseString Condition="'$(LifeCycleStage)' == 'STABLE'"></ReleaseString>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'BETA'">Beta Test</ReleaseLabel>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'CANDIDATE'">Release Candidate</ReleaseLabel>
-		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
-	</PropertyGroup>
-
 	<Target Name="Installer" DependsOnTargets="Clean; VersionNumbers; MakeWixForDistFiles; Build ">
 		<!-- set the version number in the installer configuration program.  Perhaps there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
@@ -224,7 +188,8 @@
 		<FileUpdate File="$(DownloadInfoPath)" DatePlaceHolder='_DATE_' DateFormat='yyyy-MM-dd' Regex='_VERSION_'        ReplacementText ="$(Version)" />
 		<!--<FileUpdate File="$(DownloadInfoPath)" Regex='_BUILD_'        ReplacementText ="$(BUILD_NUMBER)" />-->
 		<FileUpdate File="$(DownloadInfoPath)" Regex='_STABILITY_'        ReplacementText ="$(ReleaseString)" />
-		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="beta" />
+		<!-- Channels: alpha, beta, rc, stable -->
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="rc" />
 	</Target>
 
 	<Target Name="Sign" DependsOnTargets="Installer" >

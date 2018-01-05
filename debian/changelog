@@ -4,6 +4,24 @@ wesay (1.9.0) UNRELEASED; urgency=medium
 
  -- Eberhard Beilharz <eb1@sil.org>  Fri, 08 Sep 2017 10:23:36 +0200
 
+wesay (1.6.6) UNRELEASED; urgency=medium
+
+  * use mono4-sil
+
+ -- Daniel Glassey <wdg@debian.org>  Tue, 12 Dec 2017 15:49:41 +0700
+
+wesay (1.6.5) xenial; urgency=medium
+
+  * Release candidate 1.6.5 to be in sync with Windows version
+
+ -- Daniel Glassey <wdg@debian.org>  Tue, 21 Nov 2017 15:52:15 +0700
+
+wesay (1.6.1) xenial; urgency=medium
+
+  * Release candidate 1.6.1
+
+ -- Daniel Glassey <wdg@debian.org>  Fri, 03 Nov 2017 10:43:21 +0700
+
 wesay (1.6.0) stable; urgency=medium
 
   * Package version 1.6 

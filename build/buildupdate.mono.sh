@@ -100,13 +100,13 @@ cd -
 #     revision: latest.lastSuccessful
 #     paths: {"L10NSharp.dll"=>"lib/Debug", "L10NSharp.dll.mdb"=>"lib/Debug"}
 #     VCS: https://github.com/sillsdev/l10nsharp [Version2.0]
-# [4] build: wesay-doc-default (bt184)
-#     project: WeSay1.4
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt184
+# [4] build: wesay-doc-default (WeSay15_WesayDocDefault)
+#     project: WeSay
+#     URL: http://build.palaso.org/viewType.html?buildTypeId=WeSay15_WesayDocDefault
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"WeSay_Helps.chm"=>"common"}
-#     VCS: http://hg.palaso.org/wesay-doc []
+#     VCS: https://github.com/sillsdev/wesay-doc.git [refs/heads/master]
 # [5] build: wesay-localize-dev Update Pot and Po (bt52)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt52

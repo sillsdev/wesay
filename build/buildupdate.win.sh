@@ -119,7 +119,7 @@ cd -
 #     clean: false
 #     revision: latest.lastSuccessful
 #     paths: {"WeSay_Helps.chm"=>"External", "wesay.helpmap"=>"External"}
-#     VCS: http://hg.palaso.org/wesay-doc []
+#     VCS: https://github.com/sillsdev/wesay-doc.git [refs/heads/master]
 # [7] build: wesay-localize-dev Update Pot and Po (bt52)
 #     project: WeSay1.4
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=bt52

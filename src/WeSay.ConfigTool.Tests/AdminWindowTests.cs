@@ -108,7 +108,7 @@ namespace WeSay.ConfigTool.Tests
 		public void TryingToOpenNonExistantProjectDoesntCrash()
 		{
 			Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(
-				() => _window.OnOpenProject(@"C:\notreallythere.WeSayConfig")
+				() => _window.OnOpenProject(@"C:\notreallythere.WeSayConfig", false)
 			);
 		}
 

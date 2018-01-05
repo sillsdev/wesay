@@ -143,6 +143,21 @@ namespace WeSay.Project
 			}
 		}
 
+		public static WeSayDataFormat GetDataFormat(string xmlConfiguration)
+		{
+			XPathDocument doc = new XPathDocument(new StringReader(xmlConfiguration));
+			XPathNavigator navigator = doc.CreateNavigator();
+			navigator = navigator.SelectSingleNode("//components//dataFormat");
+			if (navigator == null)
+			{
+				return WeSayDataFormat.Lift;
+			}
+			else
+			{
+				string format = navigator.Value;
+				return (WeSayDataFormat)System.Enum.Parse(typeof(WeSayDataFormat), format);
+			}
+		}
 
 	}
 }

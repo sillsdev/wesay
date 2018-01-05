@@ -63,9 +63,11 @@ namespace WeSay.LexicalModel
 			#if DEBUG
 			_constructionStackTrace = new StackTrace();
 			#endif
-			_decoratedDataMapper = new LiftDataMapper(
+			LiftDataMapper mapper = new LiftDataMapper(
 				path, null, new string[] {}, new ProgressState()
 			);
+			mapper.Init();
+			_decoratedDataMapper = mapper;
 			_disposed = false;
 		}
 
@@ -135,6 +137,22 @@ namespace WeSay.LexicalModel
 			{
 				item.Clean();
 			}
+		}
+
+		public void TouchAndSaveEntriesFromQuery(DelegateQuery<LexEntry> xrefQuery, string propertyModified)
+		{
+			ResultSet<LexEntry> all_xref = GetItemsMatching(xrefQuery);
+
+			IList<LexEntry> entries = new List<LexEntry>(); ;
+			foreach (RecordToken<LexEntry> token in all_xref)
+			{
+				LexEntry entry = token.RealObject;
+				entry.SomethingWasModified(propertyModified);
+				entries.Add(entry);
+			}
+
+			SaveItems(entries);
+
 		}
 
 		public ResultSet<LexEntry> GetItemsMatching(IQuery<LexEntry> query)
@@ -663,23 +681,23 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(WritingSystemDefinition lexicalUnitWritingSystem)
+		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 			if (lexicalUnitWritingSystem == null)
 			{
 				throw new ArgumentNullException("lexicalUnitWritingSystem");
 			}
-			string cachename = String.Format("GlossesSortedByLexicalForm_{0}", lexicalUnitWritingSystem);
+			string cachename = String.Format("MeaningsSortedByLexicalForm_{0}", lexicalUnitWritingSystem);
 			if (_caches[cachename] == null)
 			{
-				DelegateQuery<LexEntry> MatchingGlossQuery = new DelegateQuery<LexEntry>(
+				DelegateQuery<LexEntry> MatchingMeaningQuery = new DelegateQuery<LexEntry>(
 					delegate(LexEntry entry)
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
 						int senseNumber = 0;
 						foreach (LexSense sense in entry.Senses)
 						{
-							foreach (LanguageForm form in sense.Gloss.Forms)
+							foreach (LanguageForm form in glossMeaningField ? sense.Gloss.Forms : sense.Definition.Forms)
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								string lexicalForm = entry.LexicalForm[lexicalUnitWritingSystem.LanguageTag];
@@ -689,19 +707,19 @@ namespace WeSay.LexicalModel
 								}
 								tokenFieldsAndValues.Add("Form", lexicalForm);
 
-								string gloss = form.Form;
-								if (String.IsNullOrEmpty(gloss))
+								string meaning = form.Form;
+								if (String.IsNullOrEmpty(meaning))
 								{
-									gloss = null;
+									meaning = null;
 								}
-								tokenFieldsAndValues.Add("Gloss", gloss);
+								tokenFieldsAndValues.Add("Meaning", meaning);
 
-								string glossWritingSystem = form.WritingSystemId;
-								if (String.IsNullOrEmpty(glossWritingSystem))
+								string meaningWritingSystem = form.WritingSystemId;
+								if (String.IsNullOrEmpty(meaningWritingSystem))
 								{
-									glossWritingSystem = null;
+									meaningWritingSystem = null;
 								}
-								tokenFieldsAndValues.Add("GlossWritingSystem", glossWritingSystem);
+								tokenFieldsAndValues.Add("MeaningWritingSystem", meaningWritingSystem);
 								tokenFieldsAndValues.Add("SenseNumber", senseNumber);
 								fieldsandValuesForRecordTokens.Add(tokenFieldsAndValues);
 							}
@@ -710,14 +728,14 @@ namespace WeSay.LexicalModel
 						return fieldsandValuesForRecordTokens;
 					}
 					);
-				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(MatchingGlossQuery);
+				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(MatchingMeaningQuery);
 				SortDefinition[] sortDefinition = new SortDefinition[4];
-				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem.DefaultCollation.Collator);
+				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem.Collator);
 				sortDefinition[1] = new SortDefinition("Gloss", StringComparer.InvariantCulture);
 				sortDefinition[2] = new SortDefinition("GlossWritingSystem", StringComparer.InvariantCulture);
 				sortDefinition[3] = new SortDefinition("SenseNumber", Comparer<int>.Default);
 				ResultSetCache<LexEntry> cache =
-					new ResultSetCache<LexEntry>(this, sortDefinition, itemsMatchingQuery, MatchingGlossQuery);
+					new ResultSetCache<LexEntry>(this, sortDefinition, itemsMatchingQuery, MatchingMeaningQuery);
 				_caches.Add(cachename, cache);
 			}
 			return _caches[cachename].GetResultSet();
@@ -732,23 +750,23 @@ namespace WeSay.LexicalModel
 		/// <param name="lexicalUnitWritingSystem"></param>
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
-				 LanguageForm glossForm, WritingSystemDefinition lexicalUnitWritingSystem)
+				 LanguageForm glossForm, IWritingSystemDefinition lexicalUnitWritingSystem)
 		{
 
-			if (null==glossForm || string.IsNullOrEmpty(glossForm.Form))
+			if (null== meaningForm || string.IsNullOrEmpty(meaningForm.Form))
 			{
-				throw new ArgumentNullException("glossForm");
+				throw new ArgumentNullException("meaningForm");
 			}
 			if (lexicalUnitWritingSystem == null)
 			{
 				throw new ArgumentNullException("lexicalUnitWritingSystem");
 			}
-			ResultSet<LexEntry> allGlossesResultSet = GetAllEntriesWithGlossesSortedByLexicalForm(lexicalUnitWritingSystem);
+			ResultSet<LexEntry> allMeaningsResultSet = GetAllEntriesWithMeaningsSortedByLexicalForm(lexicalUnitWritingSystem, glossMeaningField);
 			List<RecordToken<LexEntry>> filteredResultSet = new List<RecordToken<LexEntry>>();
-			foreach (RecordToken<LexEntry> recordToken in allGlossesResultSet)
+			foreach (RecordToken<LexEntry> recordToken in allMeaningsResultSet)
 			{
-				if (((string) recordToken["Gloss"] == glossForm.Form)
-					&& ((string) recordToken["GlossWritingSystem"] == glossForm.WritingSystemId))
+				if (((string) recordToken["Meaning"] == meaningForm.Form)
+					&& ((string) recordToken["MeaningWritingSystem"] == meaningForm.WritingSystemId))
 				{
 					filteredResultSet.Add(recordToken);
 				}

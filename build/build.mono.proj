@@ -19,12 +19,12 @@
 		<ApplicationName>WeSay</ApplicationName>
 		<ApplicationNameLC Condition="'$(ApplicationNameLC)' == ''">wesay</ApplicationNameLC>
 		<Configuration>Debug</Configuration>
+		<Constants>$(LifeCycleStage)</Constants>
 		<MONO_PREFIX Condition="'$(MONO_PREFIX)'==''">/usr</MONO_PREFIX>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<OutputDir>$(RootDir)/output/$(Configuration)</OutputDir>
-
 	</PropertyGroup>
 
 	<Target Name="Build">
@@ -49,17 +49,11 @@
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
-			Properties="Configuration=$(Configuration)" />
+			Properties="Configuration=$(Configuration);Constants=$(Constants)" />
 		<Exec Condition="'$(action)' == 'test'"
 			Command="$(MONO_PREFIX)/bin/mono --debug $(MONO_PREFIX)/lib/mono/4.0/nunit-console.exe -noshadow -exclude=SkipOnTeamCity [!P]*.Tests.dll -xml=WeSay.nunit-output.xml"
 			WorkingDirectory="$(RootDir)/output/$(Configuration)"
 			Timeout="4500000"/>
-	</Target>
-
-	<Target Name="UnzipMercurial">
-		<Exec Command="unzip -uqo $(RootDir)/lib/common/Mercurial-$(uname -m).zip -d $(RootDir)" ContinueOnError="true" />
-		<!-- Zip doesn't seem to retain the permission bits we need. -->
-		<Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
 	</Target>
 
 	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">

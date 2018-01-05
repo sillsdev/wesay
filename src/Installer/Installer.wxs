@@ -221,6 +221,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="LexicalTools.pdb" Guid="{DB30AF44-2E65-49AB-84E4-969CB6605CCA}">
 					<File Id="LexicalTools.pdb" Name="LexicalTools.pdb" KeyPath="yes" Source="..\..\output\release\LexicalTools.pdb" />
 				  </Component>
+				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
+					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
+				  </Component>
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
@@ -433,6 +436,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalModel.pdb" />
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
+			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="SIL.DictionaryServices.dll" />
 			  <ComponentRef Id="SIL.Media.dll" />

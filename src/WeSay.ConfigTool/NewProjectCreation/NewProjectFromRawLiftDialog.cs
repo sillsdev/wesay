@@ -61,7 +61,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 		private static void OnLinkLabelClicked(object sender, EventArgs e1)
 		{
-			Process.Start("http://software.sil.org/fieldworks/wp-content/uploads/sites/38/2017/01/Technical-Notes-on-FieldWorks-Send-Receive.pdf");
+			Process.Start("http://software.sil.org/fieldworks/wp-content/uploads/sites/38/2017/07/Technical-Notes-on-FieldWorks-Send-Receive.pdf");
 		}
 
 		private void OnBrowseForLiftPathButtonClick(object sender, EventArgs e)

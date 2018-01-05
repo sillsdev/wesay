@@ -21,10 +21,11 @@ namespace Addin.Transform.PdfDictionary
 			}
 		}
 
-		public static void CreatePdf(string htmlPath,
+		public static bool CreatePdf(string htmlPath,
 									 IEnumerable<string> styleSheetPaths,
 									 string pdfPath)
 		{
+			bool retval = true;
 			string princePath = GetPrincePath();
 			Prince p;
 			if (File.Exists(princePath))
@@ -45,9 +46,19 @@ namespace Addin.Transform.PdfDictionary
 			}
 				if(!p.Convert(htmlPath, pdfPath))
 				{
-					throw new ApplicationException(File.ReadAllText(log.Path));
+					string errorString = File.ReadAllText(log.Path);
+					if (errorString.Contains("error: can't open output file: Permission denied"))
+					{
+						Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry! We couldn't generate the PDF file, probably because the old one is still open in your PDF viewer. Close the PDF and then try again. (Permission denied writing to PDF file)");
+						retval = false;
+					}
+					else
+					{
+						throw new ApplicationException(errorString);
+					}
 				}
 			}
+			return retval;
 		}
 
 		private static string GetPrincePath()

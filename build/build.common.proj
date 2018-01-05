@@ -12,6 +12,20 @@
 		<LifeCycleStage>ALPHA</LifeCycleStage>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'ALPHA'">-Alpha</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'BETA'">-Beta</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'CANDIDATE'">-ReleaseCandidate</ReleaseString>
+		<ReleaseString Condition="'$(LifeCycleStage)' == 'STABLE'"></ReleaseString>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'ALPHA'">Alpha Test</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'BETA'">Beta Test</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'CANDIDATE'">Release Candidate</ReleaseLabel>
+		<ReleaseLabel Condition="'$(LifeCycleStage)' == 'STABLE'">Stable Release</ReleaseLabel>
+	</PropertyGroup>
+
 	<Target Name="VersionNumbers">
 		<Message Text="BUILD_NUMBER: $(BUILD_NUMBER)" Importance="high"/>
 
@@ -50,6 +64,7 @@
 	</Target>
 
 	<Target Name="RunNUnitTC" Condition="'$(teamcity_version)' != ''">
+		<Message Text="RunNUnitTeamCity tc_version $(teamcity_version)" Importance="high"/>
 		<ItemGroup>
 			<TestAssemblies
 				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
@@ -63,6 +78,7 @@
 	</Target>
 
 	<Target Name="RunNUnit" Condition="'$(teamcity_version)' == ''">
+		<Message Text="RunNUnit: tc_version $(teamcity_version)" Importance="high"/>
 		<ItemGroup>
 			<TestAssemblies
 				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
@@ -79,4 +95,27 @@
 			Timeout="4500000"
 			OutputXmlFile="$(OutputDir)/TestResults.xml"/>
 	</Target>
+
+        <Target Name="UnzipMercurial" DependsOnTargets="UnzipMercurial-Windows;UnzipMercurial-Linux"/>
+
+        <Target Name="UnzipMercurial-Windows" Condition="'$(OS)'=='Windows_NT'">
+                <!-- Extract a zip file-->
+                <DNZip TaskAction="Extract" ExtractPath="$(RootDir)" ZipFileName="$(RootDir)/lib/Release/Mercurial.zip"/>
+        </Target>
+
+        <Target Name="UnzipMercurial-Linux" Condition="'$(OS)'!='Windows_NT'">
+                <!-- Remember, Unix/Linux commands return 0 for success ("true") -->
+                <Exec Command="/usr/bin/test `arch` = x86_64" ContinueOnError="true" IgnoreExitCode="true">
+                        <Output TaskParameter="ExitCode" PropertyName="ZeroIf64BitCpu"/>
+                </Exec>
+                <Exec Command="/usr/bin/test `arch` = i686" ContinueOnError="true" IgnoreExitCode="true">
+                        <Output TaskParameter="ExitCode" PropertyName="ZeroIf32BitCpu"/>
+                </Exec>
+                <!-- Extract the appropriate zip file. -->
+                <Exec Condition="'$(ZeroIf64BitCpu)'=='0'" Command="/usr/bin/unzip -uqo $(RootDir)/lib/common/Mercurial-x86_64.zip -d $(RootDir)" />
+                <Exec Condition="'$(ZeroIf32BitCpu)'=='0'" Command="/usr/bin/unzip -uqo $(RootDir)/lib/common/Mercurial-i686.zip -d $(RootDir)" />
+                <!-- Zip doesn't seem to retain the permission bits we need. -->
+                <Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
+        </Target>
+
 </Project>

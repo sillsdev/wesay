@@ -5,7 +5,7 @@
 export CONFIGURATION=Debug
 export XDG_CONFIG_HOME=/tmp/.config
 
-export MONO_PREFIX=/opt/mono-sil
+export MONO_PREFIX=/opt/mono4-sil
 
 PACKAGENAME=wesay
 APPEND=
@@ -74,11 +74,10 @@ override_dh_makeclilibs:
 override_dh_shlibdeps:
 	dh_shlibdeps -l$(MONO_PREFIX)/lib
 
-# Include mono-sil in cli dirs searched. Rename irrKlang.NET4 prior to running
+# Include mono-sil in cli dirs searched.
 # dh_clideps - that searches for an empty moduleref.
 override_dh_clideps:
 	mkdir -p debian/tmp/usr && ln -s $(MONO_PREFIX)/* debian/tmp/usr/ && \
-	mv $(DESTDIR)$(LIB)/irrKlang.NET4.dll $(DESTDIR)$(LIB)/irrKlang.NET4.dll.ignore && \
 	PATH=$(MONO_PREFIX)/bin:$(PATH) \
 	dh_clideps internal-mono -l$(MONO_PREFIX)/lib \
 		--exclude-moduleref=security.dll \
@@ -96,8 +95,7 @@ override_dh_clideps:
 		--exclude-moduleref=libgeckofix.so --exclude-moduleref=Geckofx-Core.dll \
 		--exclude-moduleref=libgobject-2.0.so --exclude-moduleref=libgio-2.0.so \
 		--exclude-moduleref=libglib-2.0.so --exclude-moduleref=libxklavier \
-		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus && \
-	mv $(DESTDIR)$(LIB)/irrKlang.NET4.dll.ignore $(DESTDIR)$(LIB)/irrKlang.NET4.dll
+		--exclude-moduleref=Autofac --exclude-moduleref=NDesk.DBus
 
 # Don't strip debug symbols -- we want them for informative crash stack traces
 override_dh_strip:

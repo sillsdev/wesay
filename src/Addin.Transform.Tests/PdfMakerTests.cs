@@ -55,7 +55,7 @@ namespace Addin.Transform.Tests
 
 		[Test]
 		[Category("SkipOnTeamCity")]
-		public void CreateAndOpen()
+		public void CreatePdfAndOpen()
 		{
 			LaunchAddin();
 			Thread.Sleep(500);
