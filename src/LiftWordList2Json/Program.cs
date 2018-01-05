@@ -8,6 +8,7 @@ using Palaso.DictionaryServices.Model;
 using Palaso.Progress;
 using WeSay.Project;
 using WeSay.Project.Tests;
+using Palaso.Text;
 
 namespace Lift2Json
 {
@@ -87,8 +88,10 @@ namespace Lift2Json
 						{
 							writer.WriteStartObject();
 
-							writer.WritePropertyName("id");
-							writer.WriteValue(word.LexicalForm.GetFirstAlternative());
+							writer.WritePropertyName("lexicalid");
+							LanguageForm idform = word.LexicalForm.Find("en");
+							string lexicalid = (idform == null ? word.LexicalForm.GetFirstAlternative() : idform.Form);
+							writer.WriteValue(lexicalid);
 
 							foreach (var sense in word.Senses)
 							{
