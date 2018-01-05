@@ -27,7 +27,7 @@
 		<Message Text="VersionSuffix: $(VersionSuffix)" Importance="high"/>
 
 		<!-- Note, after some thought, we've decided this is the best place to keep the version number (not on TeamCity, not in the assemblies).     -->
-		<CreateProperty Value="1.6">
+		<CreateProperty Value="1.9">
 			<Output PropertyName="VersionBase" TaskParameter="Value"/>
 		</CreateProperty>
 		<CreateProperty Value="$(VersionBase).$(VersionSuffix).$(BuildCounter)">
