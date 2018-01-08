@@ -1031,7 +1031,7 @@ namespace WeSay.LexicalModel.Tests
 			IWritingSystemDefinition writingSystem = WritingSystemDefinition.Parse("en");
 			Assert.Throws<ArgumentNullException>(() =>
 					_lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
-							null, writingSystem, false));
+							null, writingSystem, true));
 		}
 
 		[Test]
@@ -1040,7 +1040,7 @@ namespace WeSay.LexicalModel.Tests
 			LanguageForm glossLanguageForm = new LanguageForm("en", "en Gloss", new MultiText());
 			Assert.Throws<ArgumentNullException>(() =>
 					_lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
-							glossLanguageForm, null, false));
+							glossLanguageForm, null, true));
 		}
 
 		[Test]
@@ -1063,7 +1063,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("en");
 			LanguageForm glossThatDoesNotExist = new LanguageForm("en", "I don't exist!", new MultiText());
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossThatDoesNotExist, ws, false);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossThatDoesNotExist, ws, true);
 			Assert.AreEqual(0, matches.Count);
 		}
 
