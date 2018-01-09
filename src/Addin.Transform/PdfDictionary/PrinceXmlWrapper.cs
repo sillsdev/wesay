@@ -49,7 +49,7 @@ namespace Addin.Transform.PdfDictionary
 					string errorString = File.ReadAllText(log.Path);
 					if (errorString.Contains("error: can't open output file: Permission denied"))
 					{
-						Palaso.Reporting.ErrorReport.NotifyUserOfProblem("Sorry! We couldn't generate the PDF file, probably because the old one is still open in your PDF viewer. Close the PDF and then try again. (Permission denied writing to PDF file)");
+						SIL.Reporting.ErrorReport.NotifyUserOfProblem("Sorry! We couldn't generate the PDF file, probably because the old one is still open in your PDF viewer. Close the PDF and then try again. (Permission denied writing to PDF file)");
 						retval = false;
 					}
 					else

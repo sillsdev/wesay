@@ -212,7 +212,7 @@ namespace Addin.Transform.Tests
 			</lift>",
 							Validator.LiftVersion);
 			ViewTemplate template = WeSayWordsProject.Project.DefaultViewTemplate;
-			template.GetField(Palaso.DictionaryServices.Model.LexEntry.WellKnownProperties.CrossReference).Enabled = true;
+			template.GetField(SIL.DictionaryServices.Model.LexEntry.WellKnownProperties.CrossReference).Enabled = true;
 			string result = GetResultFromAddin(contents);
 			Console.WriteLine(result);
 			Assert.IsTrue(result.Contains("\\lf confer = më"));

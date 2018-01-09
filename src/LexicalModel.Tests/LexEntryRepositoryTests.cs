@@ -956,7 +956,7 @@ namespace WeSay.LexicalModel.Tests
 			};
 			Assert.Throws<ArgumentNullException>(() =>
 					_lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
-							null, writingSystem, false));
+							null, writingSystem, true));
 		}
 
 		[Test]
@@ -965,7 +965,7 @@ namespace WeSay.LexicalModel.Tests
 			LanguageForm glossLanguageForm = new LanguageForm("en", "en Gloss", new MultiText());
 			Assert.Throws<ArgumentNullException>(() =>
 					_lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(
-							glossLanguageForm, null, false));
+							glossLanguageForm, null, true));
 		}
 
 		[Test]
@@ -994,7 +994,7 @@ namespace WeSay.LexicalModel.Tests
 				DefaultCollation = new IcuRulesCollationDefinition("standard")
 			};
 			LanguageForm glossThatDoesNotExist = new LanguageForm("en", "I don't exist!", new MultiText());
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossThatDoesNotExist, ws, false);
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossThatDoesNotExist, ws, true);
 			Assert.AreEqual(0, matches.Count);
 		}
 
@@ -1004,8 +1004,11 @@ namespace WeSay.LexicalModel.Tests
 			LanguageForm glossToMatch = new LanguageForm("de", "de Gloss", new MultiText());
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm2");
 			CreateEntryWithLexicalFormAndGloss(glossToMatch, "en", "en LexicalForm1");
-			IWritingSystemDefinition lexicalFormWritingSystem = WritingSystemDefinition.Parse("en");
-			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem);
+			WritingSystemDefinition lexicalFormWritingSystem = new WritingSystemDefinition("en")
+			{
+				DefaultCollation = new IcuRulesCollationDefinition("standard")
+			};
+			ResultSet<LexEntry> matches = _lexEntryRepository.GetEntriesWithMatchingMeaningSortedByLexicalForm(glossToMatch, lexicalFormWritingSystem, true);
 			Assert.AreEqual("en LexicalForm1", matches[0]["Form"]);
 			Assert.AreEqual("en LexicalForm2", matches[1]["Form"]);
 		}
@@ -1017,7 +1020,7 @@ namespace WeSay.LexicalModel.Tests
 			entryWithGlossAndLexicalForm.Senses.Add(new LexSense());
 			entryWithGlossAndLexicalForm.Senses[0].Gloss.SetAlternative(glossToMatch.WritingSystemId, glossToMatch.Form);
 			entryWithGlossAndLexicalForm.LexicalForm.SetAlternative(lexicalFormWritingSystem, lexicalForm);
-		}
+		 }
 
 		[Test]
 		public void GetEntriesWithMatchingGlossSortedByLexicalForm_EntryHasNoLexicalFormInWritingSystem_ReturnsNullForThatEntry()

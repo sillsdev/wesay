@@ -66,7 +66,7 @@ namespace WeSay.LexicalModel
 			LiftDataMapper mapper = new LiftDataMapper(
 				path, null, new string[] {}, new ProgressState()
 			);
-			mapper.Init();
+			//mapper.Init();
 			_decoratedDataMapper = mapper;
 			_disposed = false;
 		}
@@ -681,7 +681,7 @@ namespace WeSay.LexicalModel
 		}
 
 
-		private ResultSet<LexEntry> GetAllEntriesWithGlossesSortedByLexicalForm(IWritingSystemDefinition lexicalUnitWritingSystem)
+		private ResultSet<LexEntry> GetAllEntriesWithMeaningsSortedByLexicalForm(WritingSystemDefinition lexicalUnitWritingSystem, bool glossMeaningField)
 		{
 			if (lexicalUnitWritingSystem == null)
 			{
@@ -730,7 +730,7 @@ namespace WeSay.LexicalModel
 					);
 				ResultSet<LexEntry> itemsMatchingQuery = GetItemsMatching(MatchingMeaningQuery);
 				SortDefinition[] sortDefinition = new SortDefinition[4];
-				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem.Collator);
+				sortDefinition[0] = new SortDefinition("Form", lexicalUnitWritingSystem.DefaultCollation.Collator);
 				sortDefinition[1] = new SortDefinition("Gloss", StringComparer.InvariantCulture);
 				sortDefinition[2] = new SortDefinition("GlossWritingSystem", StringComparer.InvariantCulture);
 				sortDefinition[3] = new SortDefinition("SenseNumber", Comparer<int>.Default);
@@ -746,11 +746,11 @@ namespace WeSay.LexicalModel
 		/// in the given writingsystem.
 		/// Use "Form" to access the lexical form and "Gloss/Form" to access the Gloss in a RecordToken.
 		/// </summary>
-		/// <param name="glossForm"></param>
+		/// <param name="meaningForm"></param>
 		/// <param name="lexicalUnitWritingSystem"></param>
 		/// <returns></returns>
-		public ResultSet<LexEntry> GetEntriesWithMatchingGlossSortedByLexicalForm(
-				 LanguageForm glossForm, IWritingSystemDefinition lexicalUnitWritingSystem)
+		public ResultSet<LexEntry> GetEntriesWithMatchingMeaningSortedByLexicalForm(
+				 LanguageForm meaningForm, WritingSystemDefinition lexicalUnitWritingSystem, bool glossMeaningField)
 		{
 
 			if (null== meaningForm || string.IsNullOrEmpty(meaningForm.Form))

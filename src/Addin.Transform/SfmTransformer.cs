@@ -174,7 +174,7 @@ namespace Addin.Transform
 			// this happens if the reference in Lift is written out as NFD
 			// e.g. \lf confer = me^_d9c25d1f-d373-4995-9ffa-ae2cf650603c
 			// (me^ is not really NFD but indicates that if you look at the text in less then it will be 2 characters not 1)
-			bool has_problems = Palaso.IO.FileUtils.GrepFile(output, @"\\lf\ confer\ =\ (.+)_([0-9a-f\-]+)");
+			bool has_problems = SIL.IO.FileUtils.GrepFile(output, @"\\lf\ confer\ =\ (.+)_([0-9a-f\-]+)");
 
 			// if it has any then touch all cross references and rerun transform
 			// touching the cross reference will save it in NFC in Lift

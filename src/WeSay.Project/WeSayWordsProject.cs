@@ -19,6 +19,7 @@ using Chorus.UI.Notes;
 using Chorus.sync;
 using Chorus.UI.Notes.Bar;
 using Microsoft.Practices.ServiceLocation;
+using SIL.Data;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
 using SIL.IO;
@@ -44,7 +45,6 @@ using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
 using WeSay.UI.TextBoxes;
 using IContainer = Autofac.IContainer;
-using Palaso.Data;
 
 namespace WeSay.Project
 {
@@ -754,7 +754,7 @@ namespace WeSay.Project
 				{
 					OnTouchCrossReferences(null, null);
 				}
-				else using (Palaso.UI.WindowsForms.SimpleMessageDialog msgdialog = new Palaso.UI.WindowsForms.SimpleMessageDialog("Migrating cross references.", "Cross reference migration"))
+				else using (SIL.Windows.Forms.SimpleMessageDialog msgdialog = new SIL.Windows.Forms.SimpleMessageDialog("Migrating cross references.", "Cross reference migration"))
 				{
 					msgdialog.Show();
 					OnTouchCrossReferences(null, null);
