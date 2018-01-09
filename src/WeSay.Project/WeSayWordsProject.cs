@@ -760,7 +760,7 @@ namespace WeSay.Project
 					OnTouchCrossReferences(null, null);
 				}
 #else // doesn't work, shows dialog but doesn't get workerended event so it hangs until you kill it
-				if (Palaso.Reporting.ErrorReport.IsOkToInteractWithUser)
+				if (SIL.Reporting.ErrorReport.IsOkToInteractWithUser)
 				{
 					var dialog = new ProgressDialog();
 					var worker = new BackgroundWorker();
