@@ -190,11 +190,11 @@ namespace Addin.Transform.Tests
 					string.Format(
 							@"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='{0}'>
-			  <entry id='m\u00EB_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
+			  <entry id='{1}'
 				guid='d9c25d1f-d373-4995-9ffa-ae2cf650603c'>
 				<lexical-unit>
 				  <form lang='bth'>
-					<text>m\u00EB</text>
+					<text>{2}</text>
 				  </form>
 				</lexical-unit>
 			  </entry>
@@ -206,11 +206,11 @@ namespace Addin.Transform.Tests
 				  </form>
 				</lexical-unit>
 				<relation
-						ref='me\u00A8_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
+						ref='{3}'
 						type = 'confer' />
 				</entry>
 			</lift>",
-							Validator.LiftVersion);
+							Validator.LiftVersion, "m\u00EB_d9c25d1f-d373-4995-9ffa-ae2cf650603c", "m\u00EB", "me\u0308_d9c25d1f-d373-4995-9ffa-ae2cf650603c");
 			Console.WriteLine(contents);
 			ViewTemplate template = WeSayWordsProject.Project.DefaultViewTemplate;
 			template.GetField(Palaso.DictionaryServices.Model.LexEntry.WellKnownProperties.CrossReference).Enabled = true;
@@ -230,7 +230,7 @@ namespace Addin.Transform.Tests
 			}
 
 			Assert.IsTrue(result.Contains("\\lf confer = m\u00EB"));
-			Assert.IsFalse(result.Contains("\\lf confer = me\u00A8_d9c25d1f-d373-4995-9ffa-ae2cf650603c"));
+			Assert.IsFalse(result.Contains("\\lf confer = me\u0308_d9c25d1f-d373-4995-9ffa-ae2cf650603c"));
 		}
 
 		[Test]
