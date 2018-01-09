@@ -6,6 +6,7 @@ using SIL.Lift.Validation;
 using WeSay.AddinLib;
 using WeSay.Project;
 using WeSay.TestUtilities;
+using System.Text.RegularExpressions;
 
 namespace Addin.Transform.Tests
 {
@@ -190,11 +191,11 @@ namespace Addin.Transform.Tests
 					string.Format(
 							@"<?xml version='1.0' encoding='utf-8'?>
 			<lift  version='{0}'>
-			  <entry id='më_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
+			  <entry id='m\u00EB_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
 				guid='d9c25d1f-d373-4995-9ffa-ae2cf650603c'>
 				<lexical-unit>
 				  <form lang='bth'>
-					<text>më</text>
+					<text>m\u00EB</text>
 				  </form>
 				</lexical-unit>
 			  </entry>
@@ -206,17 +207,31 @@ namespace Addin.Transform.Tests
 				  </form>
 				</lexical-unit>
 				<relation
-						ref='më_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
+						ref='me\u00A8_d9c25d1f-d373-4995-9ffa-ae2cf650603c'
 						type = 'confer' />
 				</entry>
 			</lift>",
 							Validator.LiftVersion);
+			Console.WriteLine(contents);
 			ViewTemplate template = WeSayWordsProject.Project.DefaultViewTemplate;
 			template.GetField(SIL.DictionaryServices.Model.LexEntry.WellKnownProperties.CrossReference).Enabled = true;
 			string result = GetResultFromAddin(contents);
 			Console.WriteLine(result);
-			Assert.IsTrue(result.Contains("\\lf confer = më"));
-			Assert.IsFalse(result.Contains("\\lf confer = më_d9c25d1f-d373-4995-9ffa-ae2cf650603c"));
+
+			Regex regex = new Regex(@"\\lf\ confer\ =\ (.+)_([0-9a-f\-]+)", RegexOptions.Compiled);
+			using (StringReader reader = new StringReader(result))
+			{
+				string line = reader.ReadLine();
+				while (line != null)
+				{
+					Assert.IsFalse(regex.IsMatch(line));
+					line = reader.ReadLine();
+				}
+				reader.Close();
+			}
+
+			Assert.IsTrue(result.Contains("\\lf confer = m\u00EB"));
+			Assert.IsFalse(result.Contains("\\lf confer = me\u00A8_d9c25d1f-d373-4995-9ffa-ae2cf650603c"));
 		}
 
 		[Test]
