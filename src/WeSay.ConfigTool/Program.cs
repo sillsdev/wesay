@@ -42,11 +42,13 @@ namespace WeSay.ConfigTool
 				{
 					// initialize Palaso keyboarding
 					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+					SIL.WritingSystems.Sldr.Initialize();
 					Application.Run(new ConfigurationWindow(args));
 				}
 				finally
 				{
 					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+					SIL.WritingSystems.Sldr.Cleanup();
 				}
 			}
 		}

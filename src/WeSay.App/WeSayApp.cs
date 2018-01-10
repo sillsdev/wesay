@@ -43,14 +43,16 @@ namespace WeSay.App
 				try
 				{
 					// initialize Palaso keyboarding
+					Sldr.Initialize();
 					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 					var app = new WeSayApp(args);
 					app.Run();
 				}
 				finally
 				{
-					SIL.Keyboarding.Keyboard.Controller.ActivateDefaultKeyboard();
+					Keyboard.Controller.ActivateDefaultKeyboard();
 					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+					Sldr.Cleanup();
 					ReleaseMutexForThisProject();
 				}
 			}
