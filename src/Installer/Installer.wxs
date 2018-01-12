@@ -224,6 +224,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="Commons.Xml.Relaxng.dll" Guid="{68959BF8-AC50-47FD-8B06-718B3E7FC6B6}">
 					<File Id="Commons.Xml.Relaxng.dll" Name="Commons.Xml.Relaxng.dll" KeyPath="yes" Source="..\..\output\release\Commons.Xml.Relaxng.dll" />
 				  </Component>
+				  <Component Id="Newtonsoft.Json.dll" Guid="{4CB44E5E-E008-49BB-BF75-5BC2A79DB8CA}">
+					<File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" KeyPath="yes" Source="..\..\output\release\Newtonsoft.Json.dll" />
+				  </Component>
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
@@ -438,6 +441,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
+			  <ComponentRef Id="Newtonsoft.Json.dll" />
 			  <ComponentRef Id="SIL.DictionaryServices.dll" />
 			  <ComponentRef Id="SIL.Media.dll" />
 			  <ComponentRef Id="Spart.dll" />
