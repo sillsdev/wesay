@@ -194,7 +194,7 @@
 
 	<Target Name="Sign" DependsOnTargets="Installer" >
 		<Message Text="Attempting to sign WeSayInstaller.$(Version)$(ReleaseString).msi" Importance="high"/>
-		<Exec Command='sign /d "WeSay Installer" /du "http://wesay.palaso.org/downloads/"  "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
+		<Exec Command='sign /d "WeSay $(Version) Installer" /du "http://software.sil.org/wesay/download/"  "$(RootDir)\output\installer\WeSayInstaller.$(version)$(ReleaseString).msi"' />
 	</Target>
 
 	<Target Name="Upload" DependsOnTargets="VersionNumbers">
