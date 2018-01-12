@@ -189,7 +189,7 @@
 		<!--<FileUpdate File="$(DownloadInfoPath)" Regex='_BUILD_'        ReplacementText ="$(BUILD_NUMBER)" />-->
 		<FileUpdate File="$(DownloadInfoPath)" Regex='_STABILITY_'        ReplacementText ="$(ReleaseString)" />
 		<!-- Channels: alpha, beta, rc, stable -->
-		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="rc" />
+		<FileUpdate File="$(DownloadInfoPath)" Regex='_CHANNEL_'        ReplacementText ="alpha" />
 	</Target>
 
 	<Target Name="Sign" DependsOnTargets="Installer" >
