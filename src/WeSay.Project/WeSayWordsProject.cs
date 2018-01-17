@@ -1464,7 +1464,9 @@ namespace WeSay.Project
 			{
 				if(field.Enabled && field.WritingSystemIds.Count == 0)
 				{
-					field.WritingSystemIds.Add(WritingSystems.AllWritingSystems.First().Id);
+					field.WritingSystemIds.Add(WritingSystems.AllWritingSystems.Any(x => x.DisplayLabel == "en")
+						? WritingSystems.AllWritingSystems.First(x => x.DisplayLabel == "en").Id
+						: WritingSystems.AllWritingSystems.First().Id);
 				}
 			}
 
