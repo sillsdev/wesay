@@ -3,7 +3,7 @@
 cd /usr/lib/wesay
 RUNMODE=INSTALLED
 . ./environ
-cd $OLDPWD
+cd "$OLDPWD"
 
 DEFAULT_WEB=`xdg-settings get default-web-browser`
 DEFAULT_FILEWEB=`xdg-settings get default-url-scheme-handler file`
