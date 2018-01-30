@@ -21,14 +21,14 @@
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(OS)'!='Windows_NT'">
-		<Exec Command="/usr/bin/test `dpkg --print-architecture` = amd64" ContinueOnError="true" IgnoreExitCode="true">
+		<Exec Condition="'$(OS)'!='Windows_NT'" Command="/usr/bin/test `dpkg --print-architecture` = amd64" ContinueOnError="true" IgnoreExitCode="true">
 			<Output TaskParameter="ExitCode" PropertyName="ZeroIfamd64"/>
 		</Exec>
-		<Exec Command="/usr/bin/test `dpkg --print-architecture` = i386" ContinueOnError="true" IgnoreExitCode="true">
+		<Exec Condition="'$(OS)'!='Windows_NT'" Command="/usr/bin/test `dpkg --print-architecture` = i386" ContinueOnError="true" IgnoreExitCode="true">
 			<Output TaskParameter="ExitCode" PropertyName="ZeroIfi386"/>
 		</Exec>
-		<DpkgArch Condition="'$(ZeroIfamd64)'=='0'">amd64</DpkgArch>
-		<DpkgArch Condition="'$(ZeroIfamd64)'!='0'">i386</DpkgArch>
+		<DpkgArch Condition="'$(OS)'!='Windows_NT' AND '$(ZeroIfamd64)'=='0'">amd64</DpkgArch>
+		<DpkgArch Condition="'$(OS)'!='Windows_NT' AND '$(ZeroIfamd64)'!='0'">i386</DpkgArch>
 	</PropertyGroup>
 
 	<PropertyGroup>
