@@ -32,6 +32,14 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<Architecture Condition="'$(DpkgArch)'=='amd64'">64</Architecture>
+		<Architecture Condition="'$(DpkgArch)'=='i386'">32</Architecture>
+		<GeckoDir Condition="'$(OS)'=='Windows_NT'">$(RootDir)/src/packages/Geckofx45.45.0.20</GeckoDir><!--yes, this version is missing the terminal .0-->
+		<GeckoDir Condition="'$(OS)'!='Windows_NT'">$(RootDir)/src/packages/Geckofx45.$(Architecture).Linux.45.0.21.0</GeckoDir>
+	</PropertyGroup>
+
+
+	<PropertyGroup>
 		<NuGetToolsPath>$(MSBuildThisFileDirectory)</NuGetToolsPath>
 		<PackagesConfigSource Condition="'$(OS)'=='Windows_NT'">$(NuGetToolsPath)packages-windows.config</PackagesConfigSource>
 		<PackagesConfigSource Condition="'$(OS)'!='Windows_NT'">$(NuGetToolsPath)packages-linux-$(DpkgArch).config</PackagesConfigSource>

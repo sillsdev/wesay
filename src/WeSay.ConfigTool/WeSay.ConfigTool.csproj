@@ -115,21 +115,12 @@
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <HintPath>..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core" />
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms" />
-    <None Include="packages.config" />
-    <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Core">
-      <HintPath>..\..\lib\$(Configuration)\Geckofx-Core.dll</HintPath>
+    <Reference Include="Geckofx-Core">
+      <HintPath>..\..\output\$(Configuration)\Geckofx-Core.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms">
-      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms.dll</HintPath>
+    <Reference Include="Geckofx-Winforms">
+      <HintPath>..\..\output\$(Configuration)\Geckofx-Winforms.dll</HintPath>
     </Reference>
-    <None Include="..\..\lib\$(Configuration)\Geckofx-Core.dll.config" Condition="'$(OS)'=='Windows_NT'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
       <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
       <Private>True</Private>
