@@ -20,29 +20,27 @@
 		<PackageSource Include="http://build.palaso.org/guestAuth/app/nuget/v1/FeedService.svc/" />
 	</ItemGroup>
 
-	<PropertyGroup Condition="'$(OS)'!='Windows_NT'">
-		<Exec Condition="'$(OS)'!='Windows_NT'" Command="/usr/bin/test `dpkg --print-architecture` = amd64" ContinueOnError="true" IgnoreExitCode="true">
+	<Target Name="SetLinuxArch" Condition="'$(OS)'!='Windows_NT'">
+		<Exec Command="/usr/bin/test `dpkg --print-architecture` = amd64" ContinueOnError="true" IgnoreExitCode="true">
 			<Output TaskParameter="ExitCode" PropertyName="ZeroIfamd64"/>
 		</Exec>
-		<Exec Condition="'$(OS)'!='Windows_NT'" Command="/usr/bin/test `dpkg --print-architecture` = i386" ContinueOnError="true" IgnoreExitCode="true">
+		<Exec Command="/usr/bin/test `dpkg --print-architecture` = i386" ContinueOnError="true" IgnoreExitCode="true">
 			<Output TaskParameter="ExitCode" PropertyName="ZeroIfi386"/>
 		</Exec>
-		<DpkgArch Condition="'$(OS)'!='Windows_NT' AND '$(ZeroIfamd64)'=='0'">amd64</DpkgArch>
-		<DpkgArch Condition="'$(OS)'!='Windows_NT' AND '$(ZeroIfamd64)'!='0'">i386</DpkgArch>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<Architecture Condition="'$(DpkgArch)'=='amd64'">64</Architecture>
-		<Architecture Condition="'$(DpkgArch)'=='i386'">32</Architecture>
-		<GeckoDir Condition="'$(OS)'=='Windows_NT'">$(RootDir)/src/packages/Geckofx45.45.0.20</GeckoDir><!--yes, this version is missing the terminal .0-->
-		<GeckoDir Condition="'$(OS)'!='Windows_NT'">$(RootDir)/src/packages/Geckofx45.$(Architecture).Linux.45.0.21.0</GeckoDir>
-	</PropertyGroup>
-
+		<PropertyGroup>
+			<DpkgArch Condition="'$(ZeroIfamd64)'=='0'">amd64</DpkgArch>
+			<DpkgArch Condition="'$(ZeroIfi386)'=='0'">i386</DpkgArch>
+			<Architecture Condition="'$(DpkgArch)'=='amd64'">64</Architecture>
+			<Architecture Condition="'$(DpkgArch)'=='i386'">32</Architecture>
+			<PackagesConfigSource>$(NuGetToolsPath)packages-linux-$(DpkgArch).config</PackagesConfigSource>
+			<GeckoDir>$(RootDir)/src/packages/Geckofx45.$(Architecture).Linux.45.0.21.0</GeckoDir>
+		</PropertyGroup>
+	</Target>
 
 	<PropertyGroup>
 		<NuGetToolsPath>$(MSBuildThisFileDirectory)</NuGetToolsPath>
 		<PackagesConfigSource Condition="'$(OS)'=='Windows_NT'">$(NuGetToolsPath)packages-windows.config</PackagesConfigSource>
-		<PackagesConfigSource Condition="'$(OS)'!='Windows_NT'">$(NuGetToolsPath)packages-linux-$(DpkgArch).config</PackagesConfigSource>
+		<GeckoDir Condition="'$(OS)'=='Windows_NT'">$(RootDir)/src/packages/Geckofx45.45.0.20</GeckoDir><!--yes, this version is missing the terminal .0-->
 		<PackagesConfig>$(ProjectDir)packages.config</PackagesConfig>
 
 		<PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
@@ -64,8 +62,8 @@
 		<RestoreCommand Condition="'$(OS)' != 'Windows_NT'">$(CoreRestoreCommand) || (sleep 2m; $(CoreRestoreCommand)) || (sleep 2m; $(CoreRestoreCommand))</RestoreCommand>
 	</PropertyGroup>
 
-	<Target Name="RestorePlatformDependentPackages" DependsOnTargets="CheckPrerequisites">
-		<Message Text="DpkgArch: $(DpkgArch)" Importance="high"/>
+	<Target Name="RestorePlatformDependentPackages" DependsOnTargets="SetLinuxArch;CheckPrerequisites">
+		<Message Condition="'$(OS)' != 'Windows_NT'" Text="DpkgArch: $(DpkgArch)" Importance="high"/>
 		<Copy SourceFiles="$(PackagesConfigSource)" DestinationFiles="$(PackagesConfig)"/>
 		<Exec Command="$(RestoreCommand)"/>
 	</Target>

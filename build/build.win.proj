@@ -84,6 +84,9 @@
 		<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
 	</ItemGroup>
 	<Target Name="CopyGeckofxFiles">
+		<Message Text="CopyGeckofxFiles"/>
+		<Error Condition="'$(GeckoDir)' == ''"
+			Text="Unable to locate Gecko directory" />
 		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />
 		<Copy SourceFiles="@(FirefoxFiles)" DestinationFolder="$(OutputDir)/Firefox" />
 	</Target>
