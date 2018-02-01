@@ -7,7 +7,7 @@ using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	public class DetailListTests
 	{
 		private readonly IWritingSystemDefinition _ws = WritingSystemDefinition.Parse("qaa-x-qaa");

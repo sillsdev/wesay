@@ -12,7 +12,7 @@ using Gecko;
 
 namespace WeSay.UI.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	[Platform(Exclude="Unix")]  // Cant initialize XULRunner in these tests on Linux.
 	class GeckoComboBoxTests : NUnitFormTest
 	{
