@@ -62,16 +62,17 @@
 
 	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
 
-	<ItemGroup>
-		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
-		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.mdb" />
-		<ExistingLibraryFiles Include="$(RootDir)/build/mono/chorusmerge" />
-		<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.dll" />
-		<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.mdb" />
-		<ExistingLibraryFiles Include="$(GeckoDir)/build/*.config" />
-		<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
-	</ItemGroup>
+
 	<Target Name="CopyFiles">
+		<ItemGroup>
+			<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
+			<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.mdb" />
+			<ExistingLibraryFiles Include="$(RootDir)/build/mono/chorusmerge" />
+			<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.dll" />
+			<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.mdb" />
+			<ExistingLibraryFiles Include="$(GeckoDir)/build/*.config" />
+			<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
+		</ItemGroup>
 		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />
 		<Copy SourceFiles="@(FirefoxFiles)" DestinationFolder="$(OutputDir)/Firefox" />
 		<Exec Command="chmod 755 $(OutputDir)/chorusmerge" />
