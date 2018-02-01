@@ -1433,12 +1433,13 @@ namespace WeSay.Project
 		{
 			_addins.InitializeIfNeeded(); // must be done before locking file for writing
 
+			var defaultWs = DefaultViewTemplate.GetMeaningField().WritingSystemIds.FirstOrDefault();
 			//this adds a writing system to any enabled fields that don't have one
 			foreach (var field in ViewTemplates.SelectMany(x=>x.Fields))
 			{
 				if(field.Enabled && field.WritingSystemIds.Count == 0)
 				{
-					field.WritingSystemIds.Add(WritingSystems.AllWritingSystems.First().Id);
+					field.WritingSystemIds.Add(defaultWs);
 				}
 			}
 
