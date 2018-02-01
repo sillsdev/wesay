@@ -157,7 +157,7 @@ namespace WeSay.UI.Tests
 					if (!librarySearchPath.Contains(xulRunnerLocation))
 						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 #else
-					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfApplicationOrSolution, "xulrunner");
+					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
 					if (!Directory.Exists(xulRunnerLocation))
 					{
 						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
