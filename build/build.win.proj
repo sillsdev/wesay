@@ -78,16 +78,16 @@
 		<Delete Files="@(ExistingInstallerFiles)" />
 	</Target>
 
-	<ItemGroup>
-		<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.dll" />
-		<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.mdb" />
-		<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
-	</ItemGroup>
 	<Target Name="CopyGeckofxFiles">
 		<Message Text="CopyGeckofxFiles"/>
 		<Error Condition="'$(GeckoDir)' == ''"
 			Text="Unable to locate Gecko directory" />
-		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />
+		<ItemGroup>
+			<GeckofxFiles Include="$(GeckoDir)/lib/net40/*.dll" />
+			<GeckofxFiles Include="$(GeckoDir)/lib/net40/*.pdb" />
+			<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(GeckofxFiles)" DestinationFolder="$(OutputDir)" />
 		<Copy SourceFiles="@(FirefoxFiles)" DestinationFolder="$(OutputDir)/Firefox" />
 	</Target>
 
