@@ -25,7 +25,7 @@ namespace WeSay.UI.Tests
 		public void FixtureCleanup()
 		{
 			// Shutting down xul runner prevents subsequent tests from running successfully
-			//			ShutDownXulRunner();
+			ShutDownXulRunner();
 		}
 
 		[TestFixtureSetUp]
