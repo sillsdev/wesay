@@ -33,7 +33,7 @@
 			<Architecture Condition="'$(DpkgArch)'=='amd64'">64</Architecture>
 			<Architecture Condition="'$(DpkgArch)'=='i386'">32</Architecture>
 			<PackagesConfigSource>$(NuGetToolsPath)packages-linux-$(DpkgArch).config</PackagesConfigSource>
-			<GeckoDir>$(RootDir)/src/packages/Geckofx45.$(Architecture).Linux.45.0.28.0</GeckoDir>
+			<GeckoDir>$(RootDir)/src/packages/Geckofx45.$(Architecture).Linux.45.0.28</GeckoDir>
 		</PropertyGroup>
 	</Target>
 
