@@ -83,8 +83,8 @@
 		<Error Condition="'$(GeckoDir)' == ''"
 			Text="Unable to locate Gecko directory" />
 		<ItemGroup>
-			<GeckofxFiles Include="$(GeckoDir)/lib/net40/*.dll" />
-			<GeckofxFiles Include="$(GeckoDir)/lib/net40/*.pdb" />
+			<GeckofxFiles Include="$(GeckoDir)/lib/net45/*.dll" />
+			<GeckofxFiles Include="$(GeckoDir)/lib/net45/*.pdb" />
 			<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
 		</ItemGroup>
 		<Copy SourceFiles="@(GeckofxFiles)" DestinationFolder="$(OutputDir)" />
