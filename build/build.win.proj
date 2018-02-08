@@ -160,7 +160,7 @@
 		<MakeWixForDirTree
 			DirectoryReferenceId="XulrunnerFiles"
 			ComponentGroupId="xulrunner"
-			RootDirectory="$(RootDir)\xulrunner"
+			RootDirectory="$(OutputDir)\Firefox"
 			OutputFilePath="$(RootDir)\src\Installer\GeneratedXulrunnerFiles.wxs"
 			MatchRegExPattern=".*" >
 			<Output TaskParameter="OutputFilePath" ItemName="Compile" />

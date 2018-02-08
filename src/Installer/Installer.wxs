@@ -58,7 +58,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 							<!-- a generated fragment from GeneratedTemplates.wxs will fill this in -->
 						</Directory>
 						
-						<Directory Id="XulrunnerFiles" Name="xulrunner">
+						<Directory Id="XulrunnerFiles" Name="Firefox">
 							<!-- a generated fragment from GeneratedXulrunnerFiles.wxs will fill this in -->
 						</Directory>
 						<Merge  Id="ChorusMergeModule" Language="1033" SourceFile="..\..\lib\ChorusMergeModule.msm" DiskId="1" />
@@ -320,11 +320,11 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="Enchant.Net.dll.config" Guid="{AB1072D4-9BA7-41DF-AF82-1352BAF7E949}">
 					<File Id="Enchant.Net.dll.config" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll.config" />
 				</Component>
-				<Component Id="geckofx_core.dll" Guid="{074F8093-9DA6-4545-B8AC-1DADE7D482D6}">
-					<File Id="geckofx_core.dll" KeyPath="yes" Source="..\..\output\release\geckofx-core.dll" />
+				<Component Id="Geckofx_Core.dll" Guid="{074F8093-9DA6-4545-B8AC-1DADE7D482D6}">
+					<File Id="Geckofx_Core.dll" KeyPath="yes" Source="..\..\output\release\Geckofx-Core.dll" />
 				</Component>
-				<Component Id="geckofx_core.dll.config" Guid="{04C658D5-A779-4F56-8786-7F1DD2A050BF}">
-					<File Id="geckofx_core.dll.config" KeyPath="yes" Source="..\..\output\release\geckofx-core.dll.config" />
+				<Component Id="Geckofx_Core.dll.pdb" Guid="{04C658D5-A779-4F56-8786-7F1DD2A050BF}">
+					<File Id="Geckofx_Core.dll.pdb" KeyPath="yes" Source="..\..\output\release\Geckofx-Core.dll.pdb" />
 				</Component>
 				<Component Id="Geckofx_Winforms.dll" Guid="{AF29040E-CC91-4655-BD0E-8C161754EA04}">
 					<File Id="Geckofx_Winforms.dll" KeyPath="yes" Source="..\..\output\release\Geckofx-Winforms.dll" />
@@ -436,8 +436,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="Chorus.pdb"/>
 				<ComponentRef Id="ChorusMerge.pdb"/>
 				<ComponentRef Id="Enchant.Net.dll.config"/>
-				<ComponentRef Id="geckofx_core.dll"/>
-				<ComponentRef Id="geckofx_core.dll.config"/>
+				<ComponentRef Id="Geckofx_Core.dll"/>
+				<ComponentRef Id="Geckofx_Core.dll.pdb"/>
 				<ComponentRef Id="Geckofx_Winforms.dll"/>
 				<ComponentRef Id="Geckofx_Winforms.pdb"/>
 				<ComponentRef Id="L10NSharp.dll"/>
