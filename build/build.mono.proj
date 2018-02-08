@@ -71,7 +71,7 @@
 			<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.dll" />
 			<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.mdb" />
 			<ExistingLibraryFiles Include="$(GeckoDir)/build/*.config" />
-			<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
+			<FirefoxFiles Include="$(GeckoDir)/content/Firefox-Linux$(Architecture)/*.*" />
 		</ItemGroup>
 		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />
 		<Copy SourceFiles="@(FirefoxFiles)" DestinationFolder="$(OutputDir)/Firefox" />
