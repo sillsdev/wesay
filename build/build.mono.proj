@@ -90,6 +90,7 @@
 		<ChorusHelpFiles Include="$(RootDir)/common/Chorus_Help.chm" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
 		<IconFiles Include="$(IconPath)/**/*" />
+		<XulRunnerFiles Include="$(OutputDir)/Firefox/*" />
 	</ItemGroup>
 	<PropertyGroup>
 		<InstallUsrBin>$(InstallDir)/bin</InstallUsrBin>
@@ -98,6 +99,7 @@
 		<InstallMercurialExtensions>$(InstallDir)/lib/$(ApplicationNameLC)/MercurialExtensions</InstallMercurialExtensions>
 		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
 		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
+		<InstallXulRunner>$(InstallDir)/lib/$(ApplicationNameLC)/Firefox</InstallIcon>
 		<IconPath>$(RootDir)/src/Installer_Linux/icons/</IconPath>
 	</PropertyGroup>
 	<Target Name="Install">
@@ -124,6 +126,10 @@
 		<Copy
 			SourceFiles="@(TemplateFiles)"
 			DestinationFolder="$(InstallData)/templates/%(RecursiveDir)"
+		/>
+		<Copy
+			SourceFiles="@(XulRunnerFiles)"
+			DestinationFolder="$(InstallXulRunner)/%(RecursiveDir)"
 		/>
 		<!-- Copy (and rename) icon files -->
 		<RegexReplace Input="@(IconFiles->'%(RecursiveDir)/%(FileName)%(Extension)')" Expression="wesay" Replacement="$(ApplicationNameLC)">
