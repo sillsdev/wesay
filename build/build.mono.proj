@@ -99,7 +99,7 @@
 		<InstallMercurialExtensions>$(InstallDir)/lib/$(ApplicationNameLC)/MercurialExtensions</InstallMercurialExtensions>
 		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
 		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
-		<InstallXulRunner>$(InstallDir)/lib/$(ApplicationNameLC)/Firefox</InstallIcon>
+		<InstallXulRunner>$(InstallDir)/lib/$(ApplicationNameLC)/Firefox</InstallXulRunner>
 		<IconPath>$(RootDir)/src/Installer_Linux/icons/</IconPath>
 	</PropertyGroup>
 	<Target Name="Install">
