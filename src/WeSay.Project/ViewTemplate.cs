@@ -117,6 +117,12 @@ namespace WeSay.Project
 			return null;
 		}
 
+		public Field GetMeaningField()
+		{
+			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
+			return gloss.IsMeaningField ? gloss :  GetField(LexSense.WellKnownProperties.Definition);
+		}
+
 		public List<Field> GetCustomFields(string className)
 		{
 			List<Field> customFields = new List<Field>();
