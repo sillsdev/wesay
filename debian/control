@@ -9,14 +9,14 @@ Vcs-Browser: https://github.com/sillsdev/wesay
 Build-Depends: debhelper (>=9.0.0),
   mono4-sil, mono-basic4-sil, gtk-sharp2-sil, libgdiplus4-sil, cli-common-dev (>= 0.8~),
   unzip,
-  curl,
+  curl, libdbus-glib-1-2,
   libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev, libasound2
 
 Package: wesay
 Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
  mono4-sil, mono-basic4-sil, gtk-sharp2-sil, libgdiplus4-sil,
- chmsee, udisks | udisks2, libasound2
+ chmsee, udisks | udisks2, libasound2, libdbus-glib-1-2
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable
 Description: A dictionary creation tool
