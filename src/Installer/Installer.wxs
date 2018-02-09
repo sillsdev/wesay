@@ -323,8 +323,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="Geckofx_Core.dll" Guid="{074F8093-9DA6-4545-B8AC-1DADE7D482D6}">
 					<File Id="Geckofx_Core.dll" KeyPath="yes" Source="..\..\output\release\Geckofx-Core.dll" />
 				</Component>
-				<Component Id="Geckofx_Core.dll.pdb" Guid="{04C658D5-A779-4F56-8786-7F1DD2A050BF}">
-					<File Id="Geckofx_Core.dll.pdb" KeyPath="yes" Source="..\..\output\release\Geckofx-Core.dll.pdb" />
+				<Component Id="Geckofx_Core.pdb" Guid="{04C658D5-A779-4F56-8786-7F1DD2A050BF}">
+					<File Id="Geckofx_Core.pdb" KeyPath="yes" Source="..\..\output\release\Geckofx-Core.pdb" />
 				</Component>
 				<Component Id="Geckofx_Winforms.dll" Guid="{AF29040E-CC91-4655-BD0E-8C161754EA04}">
 					<File Id="Geckofx_Winforms.dll" KeyPath="yes" Source="..\..\output\release\Geckofx-Winforms.dll" />
@@ -437,7 +437,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<ComponentRef Id="ChorusMerge.pdb"/>
 				<ComponentRef Id="Enchant.Net.dll.config"/>
 				<ComponentRef Id="Geckofx_Core.dll"/>
-				<ComponentRef Id="Geckofx_Core.dll.pdb"/>
+				<ComponentRef Id="Geckofx_Core.pdb"/>
 				<ComponentRef Id="Geckofx_Winforms.dll"/>
 				<ComponentRef Id="Geckofx_Winforms.pdb"/>
 				<ComponentRef Id="L10NSharp.dll"/>
