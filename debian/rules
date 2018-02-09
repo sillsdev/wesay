@@ -72,7 +72,7 @@ override_dh_makeclilibs:
 
 # Include mono-sil and firefox dir in shlib dirs searched
 override_dh_shlibdeps:
-	dh_shlibdeps -l$(MONO_PREFIX)/lib:$(DESTDIR)$(LIB)/Firefox
+	dh_shlibdeps -l$(MONO_PREFIX)/lib:$(CURDIR)/$(DESTDIR)$(LIB)/Firefox
 
 # Include mono-sil in cli dirs searched.
 # dh_clideps - that searches for an empty moduleref.
