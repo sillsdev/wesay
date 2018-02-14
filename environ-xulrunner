@@ -14,15 +14,18 @@ if [ "$RUNMODE" = "INSTALLED" ]
 then
 	XULRUNNER=/usr/lib/wesay-beta/Firefox
 	GECKOFX=/usr/lib/wesay-beta/Firefox
+	MOZ_PATH=/usr/lib/wesay-beta/Firefox
 else
 	XULRUNNER=Firefox
 	GECKOFX=Firefox
+	MOZ_PATH=FIrefox
 fi
 
 if [ ! -d ${XULRUNNER} ]; then XULRUNNER=/usr/lib/xulrunner-29; fi
 LD_LIBRARY_PATH="${XULRUNNER}:${LD_LIBRARY_PATH}"
 #GECKOFX="$(pkg-config --variable assemblies_dir Geckofx-Core)"
 LD_PRELOAD=${GECKOFX}/libgeckofix.so
+export MOZ_PATH
 
 if [ "${OLD_PKG_CONFIG_LIBDIR+set}" = set ]; then
 	export PKG_CONFIG_LIBDIR="${OLD_PKG_CONFIG_LIBDIR}"
