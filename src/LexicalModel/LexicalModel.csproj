@@ -78,7 +78,7 @@
       <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
     </Reference>
     <Reference Include="icu.net">
-      <HintPath>..\packages\icu.net.2.3.0-beta0081\lib\net451\icu.net.dll</HintPath>
+      <HintPath>..\packages\icu.net.2.3.0-beta0081\lib\net40\icu.net.dll</HintPath>
     </Reference>
     <None Include="packages.config" />
     <Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
