@@ -70,7 +70,7 @@ cd -
 # build: wesay1.6-xenial64-continuous (WeSay15_Wesay16xenial64continuous)
 # project: WeSay
 # URL: http://build.palaso.org/viewType.html?buildTypeId=WeSay15_Wesay16xenial64continuous
-# VCS: https://github.com/sillsdev/wesay.git [refs/heads/master]
+# VCS: https://github.com/sillsdev/wesay.git [release/1.6]
 # dependencies:
 # [0] build: Chorus-Documentation (bt216)
 #     project: Chorus
@@ -254,6 +254,8 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/SIL.Archiving.dll ../lib/Debug/SIL.Archiving.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/SIL.Archiving.dll.config ../lib/Debug/SIL.Archiving.dll.config
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/SIL.Archiving.dll.mdb ../lib/Debug/SIL.Archiving.dll.mdb
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/SIL.Linux.Logging.dll ../lib/Debug/SIL.Linux.Logging.dll
+copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/SIL.Linux.Logging.dll.mdb ../lib/Debug/SIL.Linux.Logging.dll.mdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/ibusdotnet.dll ../lib/Debug/ibusdotnet.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/debug/taglib-sharp.dll ../lib/Debug/taglib-sharp.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoLinux64v26Cont/latest.lastSuccessful/Ionic.Zip.dll ../lib/Release/Ionic.Zip.dll

@@ -17,6 +17,8 @@ fi
 PACKAGE_VERSION=`dpkg -s wesay | grep '^Version:'|cut -d '+' -f1 -`
 echo "Package version: [$PACKAGE_VERSION]"
 
+mkdir -p ~/.config/WeSay/
+
 if [ -f ~/.config/WeSay/wesay-version ]
 then # check if version in there is same as current
 	echo "wesay-config: Checking last version"
