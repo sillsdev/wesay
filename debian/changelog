@@ -1,11 +1,16 @@
+wesay (1.6.7) UNRELEASED; urgency=medium
+
+  * add python-minimal to deps for bionic
+  * remove geckofx package deps, now get from nuget
+  * stable version
+
+ -- Daniel Glassey <wdg@debian.org>  Fri, 02 Mar 2018 14:50:24 +0700
+
 wesay (1.6.6) UNRELEASED; urgency=medium
 
   * use mono4-sil
-  * 1.6.7
-  *  add python-minimal to deps for bionic
-  *  remove geckofx package deps, now get from nuget
 
- -- Daniel Glassey <daniel@dazedgeek.com>  Fri, 02 Mar 2018 13:56:25 +0700
+ -- Daniel Glassey <wdg@debian.org>  Fri, 02 Mar 2018 13:56:25 +0700
 
 wesay (1.6.5) xenial; urgency=medium
 
