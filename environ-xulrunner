@@ -12,9 +12,9 @@ fi
 
 if [ "$RUNMODE" = "INSTALLED" ]
 then
-	XULRUNNER=/usr/lib/wesay-beta/Firefox
-	GECKOFX=/usr/lib/wesay-beta/Firefox
-	MOZ_PATH=/usr/lib/wesay-beta/Firefox
+	XULRUNNER=/usr/lib/wesay/Firefox
+	GECKOFX=/usr/lib/wesay/Firefox
+	MOZ_PATH=/usr/lib/wesay/Firefox
 else
 	XULRUNNER=Firefox
 	GECKOFX=Firefox
