@@ -14,7 +14,7 @@ Build-Depends: debhelper (>=9.0.0),
 Package: wesay
 Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
- mono4-sil, mono-basic4-sil, gtk-sharp2-sil, libgdiplus4-sil,
+ mono4-sil, mono-basic4-sil, gtk-sharp4-sil, libgdiplus4-sil,
  chmsee, udisks | udisks2, libasound2, libdbus-glib-1-2, python-minimal
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable
