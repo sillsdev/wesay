@@ -16,9 +16,9 @@ then
 	GECKOFX=/usr/lib/wesay-beta/Firefox
 	MOZ_PATH=/usr/lib/wesay-beta/Firefox
 else
-	XULRUNNER=Firefox
-	GECKOFX=Firefox
-	MOZ_PATH=FIrefox
+	XULRUNNER=${BASE}/output/${BUILD}/Firefox
+	GECKOFX=${BASE}/output/${BUILD}/Firefox
+	MOZ_PATH=${BASE}/output/${BUILD}/Firefox
 fi
 
 if [ ! -d ${XULRUNNER} ]; then XULRUNNER=/usr/lib/xulrunner-29; fi
