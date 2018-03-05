@@ -22,6 +22,7 @@ namespace WeSay.ConfigTool
 
 			SetupErrorHandling();
 			Logger.Init();
+			Icu.Wrapper.Init();
 
 			SetUpXulRunner();
 
@@ -47,6 +48,7 @@ namespace WeSay.ConfigTool
 				finally
 				{
 					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+					Icu.Wrapper.Cleanup();
 				}
 			}
 		}

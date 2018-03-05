@@ -40,8 +40,9 @@ namespace WeSay.App
 			{
 				try
 				{
-					// initialize Palaso keyboarding
+					// initialize Palaso keyboarding and ICU
 					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Initialize();
+					Icu.Wrapper.Init();
 					var app = new WeSayApp(args);
 					app.Run();
 				}
@@ -49,6 +50,7 @@ namespace WeSay.App
 				{
 					Palaso.WritingSystems.Keyboard.Controller.ActivateDefaultKeyboard();
 					Palaso.UI.WindowsForms.Keyboarding.KeyboardController.Shutdown();
+					Icu.Wrapper.Cleanup();
 					ReleaseMutexForThisProject();
 				}
 			}
