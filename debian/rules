@@ -56,6 +56,7 @@ override_dh_auto_install:
 	install -d $(DESTDIR)/usr/share/applications
 	install -m 644 src/Installer_Linux/sil-wesay.desktop $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME).desktop
 	install -m 644 src/Installer_Linux/sil-wesay-config.desktop $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME)-config.desktop
+	install -m 644 src/Installer_Linux/sil-$(PACKAGENAME).appdata.xml $(DESTDIR)/usr/share/appdata/sil-$(PACKAGENAME).appdata.xml
 	# Update the name of the Executable and Icons
 	sed -e "s/\(Icon=sil-\).*/\1$(PACKAGENAME)/" -e "s/Exec=[^ ]*\(.*\)/Exec=$PACKAGENAME\1/" -i $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME).desktop
 	sed -e "s/\(Icon=sil-\).*/\1$(PACKAGENAME)-config/" -e "s/Exec=[^ ]*\(.*\)/Exec=$(PACKAGENAME)-config\1/" -i $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME)-config.desktop

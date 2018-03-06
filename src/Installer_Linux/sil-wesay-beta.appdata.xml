@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component>
+  <id>sil-wesay-beta.desktop</id>
+  <name>WeSay</name>
+  <summary>Create a dictionary</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <developer_name>SIL</developer_name>
+  <description>
+    <p>
+WeSay helps non-linguists build a dictionary in their own language. 
+It has various ways to help native speakers to think of words in their language and 
+enter some basic data about them (no backslash codes, just forms to fill in). 
+   <ul>
+     <li>The program is customizable and task-oriented, giving the advisor the ability to 
+turn on/off tasks as needed and as the user receives training for those tasks.</li>
+     <li>WeSay uses a standard XML format and can be automatically exchanged with our 
+linguist-oriented tool like Fieldworks Language Explorer (FLEx).</li>
+     <li>Users can collaborate via USB flash drive, email, and network connections.</li>
+   </ul>
+    </p>
+    <!-- FIXME: Probably needs another paragraph or two -->
+  </description>
+  <categories>
+    <category>Office</category>
+  </categories>
+  <icon type="stock">sil-wesay-beta</icon>
+  <mimetypes>
+    <mimetype>application/x-lift</mimetype>
+  </mimetypes>
+  <provides>
+    <binary>wesay</binary>
+  </provides>
+  <url type="homepage">http://software.sil.org/wesay/</url>
+<!-- FIXME: screenshots broken on website
+  <screenshots>
+    <screenshot type="default">
+      <image>http://upload.wikimedia.org/wikipedia/commons/f/f4/Scribus-1.3-Linux.png</image>
+    </screenshot>
+  </screenshots>
+
+-->
+  <!-- FIXME: change this to an upstream email address for spec updates
+  <update_contact>admin@scribus.net</update_contact>
+   -->
+</component>
