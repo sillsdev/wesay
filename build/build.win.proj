@@ -23,8 +23,6 @@
 		<!-- NB: the folder name may be set to lower case, so we have to define it again for rsync  -->
 		<ApplicationServerFolderName>wesay</ApplicationServerFolderName>
 		<Configuration>Release</Configuration>
-		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
-		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
 	</PropertyGroup>
 
 	<PropertyGroup>

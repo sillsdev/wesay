@@ -8,6 +8,12 @@
 		Condition=" '$(teamcity_version)' != '' And '$(OS)'!='Windows_NT'"/>
 
 	<PropertyGroup>
+		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
+		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
+		<ExtraExcludeCategories Condition="'$(teamcity_version)' != ''">SkipOnTeamCity,$(ExtraExcludeCategories)</ExtraExcludeCategories>
+	</PropertyGroup>
+
+	<PropertyGroup>
 		<LifeCycleStage Condition="'$(LifeCycleStage)'==''">CANDIDATE</LifeCycleStage>
 	</PropertyGroup>
 
