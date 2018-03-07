@@ -62,39 +62,6 @@
 	  <StampAssemblies Version="$(AssemblyVersion)" InputAssemblyPaths="@(AssemblyInfoFiles)" />
 	</Target>
 
-	<Target Name="RunNUnitTC" Condition="'$(teamcity_version)' != ''">
-		<Message Text="RunNUnitTeamCity tc_version $(teamcity_version)" Importance="high"/>
-		<ItemGroup>
-			<TestAssemblies
-				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
-		</ItemGroup>
-
-		<NUnitTeamCity
-			Assemblies="@(TestAssemblies)"
-			ExcludeCategory="SkipOnTeamCity;ByHand$(ExtraExcludeCategories)"
-			NUnitVersion="NUnit-2.6.4" />
-	</Target>
-
-	<Target Name="RunNUnit" Condition="'$(teamcity_version)' == ''">
-		<Message Text="RunNUnit: tc_version $(teamcity_version)" Importance="high"/>
-		<ItemGroup>
-			<TestAssemblies
-				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
-				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
-		</ItemGroup>
-
-		<NUnit
-			WorkingDirectory="$(OutputDir)/.."
-			Assemblies="@(TestAssemblies)"
-			ToolPath="$(RootDir)/src/packages/NUnit.Runners.Net4.2.6.4/tools"
-			TestInNewThread="false"
-			ExcludeCategory="$(excludedCategories)$(ExtraExcludeCategories)"
-			Force32Bit="$(useNUnit-x86)"
-			Timeout="4500000"
-			OutputXmlFile="$(OutputDir)/TestResults.xml"/>
-	</Target>
-
         <Target Name="UnzipMercurial" DependsOnTargets="UnzipMercurial-Windows;UnzipMercurial-Linux"/>
 
         <Target Name="UnzipMercurial-Windows" Condition="'$(OS)'=='Windows_NT'">
@@ -116,5 +83,38 @@
                 <!-- Zip doesn't seem to retain the permission bits we need. -->
                 <Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
         </Target>
+
+	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
+		<CallTarget Targets="TestOnly"/>
+	</Target>
+
+	<Target Name="TestOnly">
+		<PropertyGroup>
+			<NUnitVersion>2.6.4</NUnitVersion>
+			<NUnitRunnerPackage>$(RootDir)/src/packages/NUnit.Runners.Net4.$(NUnitVersion)</NUnitRunnerPackage>
+		</PropertyGroup>
+		<ItemGroup>
+			<TestAssemblies
+				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
+			<NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-$(NUnitVersion).*" />
+		</ItemGroup>
+
+		<MakeDir Directories="$(NUnitRunnerPackage)/tools/addins"
+			Condition="'$(teamcity_version)' != ''"/>
+		<Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(NUnitRunnerPackage)/tools/addins"
+			Condition="'$(teamcity_version)' != ''"/>
+		<NUnit Assemblies="@(TestAssemblies)"
+			ToolPath="$(NUnitRunnerPackage)/tools"
+			TestInNewThread="false"
+			ExcludeCategory="$(ExtraExcludeCategories)$(excludedCategories)"
+			WorkingDirectory="$(RootDir)/output"
+			Force32Bit="$(useNUnit-x86)"
+			Verbose="true"
+			Timeout="4500000"
+			OutputXmlFile="$(RootDir)/output/$(Configuration)/TestResults.xml"/>
+		<Message Text="##teamcity[importData type='nunit' path='$(RootDir)/output/$(Configuration)/TestResults.xml']"
+			Condition="'$(teamcity_version)' != '' and '$(OS)'!='Windows_NT'"/>
+	</Target>
 
 </Project>
