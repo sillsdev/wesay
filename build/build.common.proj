@@ -101,6 +101,8 @@
 			<NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-$(NUnitVersion).*" />
 		</ItemGroup>
 
+		<Message Text="TestOnly RootDir: $(RootDir)" Importance="high"/>
+		<Message Text="TestOnly NUnitRunnerPackage: $(NUnitRunnerPackage)" Importance="high"/>
 		<MakeDir Directories="$(NUnitRunnerPackage)/tools/addins"
 			Condition="'$(teamcity_version)' != ''"/>
 		<Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(NUnitRunnerPackage)/tools/addins"
