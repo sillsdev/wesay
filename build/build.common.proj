@@ -85,8 +85,4 @@
                 <Exec Command="/bin/chmod +x $(RootDir)/Mercurial/hg*" ContinueOnError="true"/>
         </Target>
 
-	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
-		<CallTarget Targets="TestOnly"/>
-	</Target>
-
 </Project>

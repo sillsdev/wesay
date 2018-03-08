@@ -97,6 +97,10 @@
 		<CallTarget Condition="'$(action)' == 'test'" Targets="RunTests"/>
 	</Target>
 
+	<Target Name="Test" DependsOnTargets="Build; UnzipMercurial">
+		<CallTarget Targets="TestOnly"/>
+	</Target>
+
 	<Target Name="TestOnly">
 		<PropertyGroup>
 			<NUnitVersion>2.6.4</NUnitVersion>
