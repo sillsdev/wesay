@@ -17,7 +17,8 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
     <TargetZone>LocalIntranet</TargetZone>
     <GenerateManifests>false</GenerateManifests>
     <PublishUrl>publish\</PublishUrl>
@@ -34,7 +35,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -115,21 +115,16 @@
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <HintPath>..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core"/>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms"/>
+    <Reference Include="Geckofx-Core">
+      <HintPath>..\..\output\$(Configuration)\Geckofx-Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Geckofx-Winforms">
+      <HintPath>..\..\output\$(Configuration)\Geckofx-Winforms.dll</HintPath>
+    </Reference>
+    <Reference Include="icu.net">
+      <HintPath>..\packages\icu.net.2.3.0\lib\net40\icu.net.dll</HintPath>
+    </Reference>
     <None Include="packages.config" />
-    <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Core">
-      <HintPath>..\..\lib\$(Configuration)\Geckofx-Core.dll</HintPath>
-    </Reference>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms">
-      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms.dll</HintPath>
-    </Reference>
-    <None Include="..\..\lib\$(Configuration)\Geckofx-Core.dll.config" Condition="'$(OS)'=='Windows_NT'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
       <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
       <Private>True</Private>

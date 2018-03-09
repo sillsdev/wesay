@@ -7,11 +7,11 @@
 	<Import Project="$(RootDir)/build/build.common.proj" />
 	<Import Project="$(RootDir)/build/NuGet.targets"/>
 
-	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="MakeWixForDirTree" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="MakePot" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
+	<UsingTask TaskName="MakeWixForDirTree" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
+	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
+	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
+	<UsingTask TaskName="MakePot" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
 	<UsingTask TaskName="DNZip" AssemblyFile="$(RootDir)/src/packages/MSBuild.Extension.Pack.1.9.0/tools/net40/MSBuild.ExtensionPack.dll" />
 	<UsingTask TaskName="File" AssemblyFile="$(RootDir)/src/packages/MSBuild.Extension.Pack.1.9.0/tools/net40/MSBuild.ExtensionPack.dll" />
 	<!-- <UsingTask TaskName="MsBuild.Community.Tasks.WebDownload" AssemblyFile="$(RootDir)/src/packages/MSBuildTasks.1.5.0.235/tools/MSBuild.Community.Tasks.dll" /> -->
@@ -23,8 +23,6 @@
 		<!-- NB: the folder name may be set to lower case, so we have to define it again for rsync  -->
 		<ApplicationServerFolderName>wesay</ApplicationServerFolderName>
 		<Configuration>Release</Configuration>
-		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
-		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -78,7 +76,20 @@
 		<Delete Files="@(ExistingInstallerFiles)" />
 	</Target>
 
-	<Target Name="Compile" DependsOnTargets="RestorePackages;UnzipMercurial">
+	<Target Name="CopyGeckofxFiles">
+		<Message Text="CopyGeckofxFiles"/>
+		<Error Condition="'$(GeckoDir)' == ''"
+			Text="Unable to locate Gecko directory" />
+		<ItemGroup>
+			<GeckofxFiles Include="$(GeckoDir)/lib/net45/*.dll" />
+			<GeckofxFiles Include="$(GeckoDir)/lib/net45/*.pdb" />
+			<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(GeckofxFiles)" DestinationFolder="$(OutputDir)" />
+		<Copy SourceFiles="@(FirefoxFiles)" DestinationFolder="$(OutputDir)/Firefox" />
+	</Target>
+
+	<Target Name="Compile" DependsOnTargets="RestorePackages;UnzipMercurial;CopyGeckofxFiles">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
@@ -90,7 +101,37 @@
 		<CallTarget Targets="TestOnly"/>
 	</Target>
 
-	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
+	<Target Name="TestOnly">
+		<PropertyGroup>
+			<NUnitVersion>2.6.4</NUnitVersion>
+			<NUnitRunnerPackage>$(RootDir)/src/packages/NUnit.Runners.Net4.$(NUnitVersion)</NUnitRunnerPackage>
+		</PropertyGroup>
+		<ItemGroup>
+			<TestAssemblies
+				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
+			<NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-$(NUnitVersion).*" />
+		</ItemGroup>
+
+		<Message Text="TestOnly RootDir: $(RootDir)" Importance="high"/>
+		<Message Text="TestOnly NUnitRunnerPackage: $(NUnitRunnerPackage)" Importance="high"/>
+		<MakeDir Directories="$(NUnitRunnerPackage)/tools/addins"
+			Condition="'$(teamcity_version)' != ''"/>
+		<Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(NUnitRunnerPackage)/tools/addins"
+			Condition="'$(teamcity_version)' != ''"/>
+		<NUnit Assemblies="@(TestAssemblies)"
+			ToolPath="$(NUnitRunnerPackage)/tools"
+			TestInNewThread="false"
+			ExcludeCategory="$(ExtraExcludeCategories)$(excludedCategories)"
+			WorkingDirectory="$(RootDir)/output"
+			Force32Bit="$(useNUnit-x86)"
+			Verbose="true"
+			Timeout="4500000"
+			OutputXmlFile="$(RootDir)/output/$(Configuration)/TestResults.xml"/>
+		<Message Text="##teamcity[importData type='nunit' path='$(RootDir)/output/$(Configuration)/TestResults.xml']"
+			Condition="'$(teamcity_version)' != '' and '$(OS)'!='Windows_NT'"/>
+	</Target>
+
 
 	<!-- Installer Targets -->
 	<ItemGroup>
@@ -147,7 +188,7 @@
 		<MakeWixForDirTree
 			DirectoryReferenceId="XulrunnerFiles"
 			ComponentGroupId="xulrunner"
-			RootDirectory="$(RootDir)\xulrunner"
+			RootDirectory="$(OutputDir)\Firefox"
 			OutputFilePath="$(RootDir)\src\Installer\GeneratedXulrunnerFiles.wxs"
 			MatchRegExPattern=".*" >
 			<Output TaskParameter="OutputFilePath" ItemName="Compile" />

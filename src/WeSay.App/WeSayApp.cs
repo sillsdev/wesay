@@ -42,9 +42,10 @@ namespace WeSay.App
 			{
 				try
 				{
-					// initialize Palaso keyboarding
+					// initialize Palaso keyboarding and ICU
 					Sldr.Initialize();
 					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+					Icu.Wrapper.Init();
 					var app = new WeSayApp(args);
 					app.Run();
 				}
@@ -53,6 +54,7 @@ namespace WeSay.App
 					Keyboard.Controller.ActivateDefaultKeyboard();
 					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 					Sldr.Cleanup();
+					Icu.Wrapper.Cleanup();
 					ReleaseMutexForThisProject();
 				}
 			}
@@ -118,7 +120,7 @@ namespace WeSay.App
 				// For windows, only initialize xulrunner if we are using the gecko browser control option
 				if (WeSayWordsProject.GeckoOption)
 				{
-					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfApplicationOrSolution, "xulrunner");
+					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
 					if (!Directory.Exists(xulRunnerLocation))
 					{
 						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);

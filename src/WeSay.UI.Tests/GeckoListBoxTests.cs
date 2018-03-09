@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if FALSE
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +17,7 @@ using Gecko;
 
 namespace WeSay.UI.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	[Platform(Exclude = "Unix")] // Cant initialize XULRunner in these tests on Linux.
 	internal class GeckoListBoxTests : NUnitFormTest
 	{
@@ -213,7 +215,7 @@ namespace WeSay.UI.Tests
 					if (!librarySearchPath.Contains(xulRunnerLocation))
 						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 #else
-					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfApplicationOrSolution, "xulrunner");
+					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
 					if (!Directory.Exists(xulRunnerLocation))
 					{
 						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
@@ -223,6 +225,7 @@ namespace WeSay.UI.Tests
 						throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
 					}
 #endif
+					Xpcom.EnableProfileMonitoring = true;
 					Xpcom.Initialize(xulRunnerLocation);
 					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
 				}
@@ -251,3 +254,4 @@ namespace WeSay.UI.Tests
 		}
 	}
 }
+#endif

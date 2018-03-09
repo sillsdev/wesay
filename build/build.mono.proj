@@ -7,10 +7,10 @@
 	<Import Project="$(RootDir)/build/build.common.proj" />
 	<Import Project="$(RootDir)/build/NuGet.targets"/>
 
-	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
-	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/Palaso.BuildTasks.dll" />
+	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
+	<UsingTask TaskName="Split" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
+	<UsingTask TaskName="Archive" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
+	<UsingTask TaskName="FileUpdate" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
 	<UsingTask TaskName="RegexReplace" AssemblyFile="$(RootDir)/src/packages/MSBuildTasks.1.5.0.235/tools/MSBuild.Community.Tasks.dll" />
 
 	<PropertyGroup>
@@ -60,15 +60,51 @@
 		<CallTarget Targets="TestOnly"/>
 	</Target>
 
-	<Target Name="TestOnly" DependsOnTargets="RunNUnitTC;RunNUnit"/>
+	<Target Name="TestOnly">
+		<PropertyGroup>
+			<NUnitVersion>2.6.4</NUnitVersion>
+			<NUnitRunnerPackage>$(RootDir)/src/packages/NUnit.Runners.Net4.$(NUnitVersion)</NUnitRunnerPackage>
+		</PropertyGroup>
+		<ItemGroup>
+			<TestAssemblies
+				Include="$(RootDir)/output/$(Configuration)/*.Tests.dll"
+				Exclude="$(RootDir)/output/$(Configuration)/Palaso.Tests.dll"/>
+			<NUnitAddinFiles Include="$(teamcity_dotnet_nunitaddin)-$(NUnitVersion).*" />
+		</ItemGroup>
 
-	<ItemGroup>
-		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
-		<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.mdb" />
-		<ExistingLibraryFiles Include="$(RootDir)/build/mono/chorusmerge" />
-	</ItemGroup>
+		<Message Text="TestOnly RootDir: $(RootDir)" Importance="high"/>
+		<Message Text="TestOnly NUnitRunnerPackage: $(NUnitRunnerPackage)" Importance="high"/>
+		<MakeDir Directories="$(NUnitRunnerPackage)/tools/addins"
+			Condition="'$(teamcity_version)' != ''"/>
+		<Copy SourceFiles="@(NUnitAddinFiles)" DestinationFolder="$(NUnitRunnerPackage)/tools/addins"
+			Condition="'$(teamcity_version)' != ''"/>
+		<NUnit Assemblies="@(TestAssemblies)"
+			ToolPath="$(NUnitRunnerPackage)/tools"
+			TestInNewThread="false"
+			ExcludeCategory="$(ExtraExcludeCategories)$(excludedCategories)"
+			WorkingDirectory="$(RootDir)/output"
+			Force32Bit="$(useNUnit-x86)"
+			Verbose="true"
+			Timeout="4500000"
+			OutputXmlFile="$(RootDir)/output/$(Configuration)/TestResults.xml"/>
+		<Message Text="##teamcity[importData type='nunit' path='$(RootDir)/output/$(Configuration)/TestResults.xml']"
+			Condition="'$(teamcity_version)' != '' and '$(OS)'!='Windows_NT'"/>
+	</Target>
+
+
+
 	<Target Name="CopyFiles">
+		<ItemGroup>
+			<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.config" />
+			<ExistingLibraryFiles Include="$(RootDir)/lib/$(Configuration)/*.mdb" />
+			<ExistingLibraryFiles Include="$(RootDir)/build/mono/chorusmerge" />
+			<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.dll" />
+			<ExistingLibraryFiles Include="$(GeckoDir)/lib/net40/*.mdb" />
+			<ExistingLibraryFiles Include="$(GeckoDir)/build/*.config" />
+			<FirefoxFiles Include="$(GeckoDir)/content/Firefox-Linux$(Architecture)/*.*" />
+		</ItemGroup>
 		<Copy SourceFiles="@(ExistingLibraryFiles)" DestinationFolder="$(OutputDir)" />
+		<Copy SourceFiles="@(FirefoxFiles)" DestinationFolder="$(OutputDir)/Firefox" />
 		<Exec Command="chmod 755 $(OutputDir)/chorusmerge" />
 	</Target>
 
@@ -84,6 +120,7 @@
 		<ChorusHelpFiles Include="$(RootDir)/common/Chorus_Help.chm" />
 		<TemplateFiles Include="$(RootDir)/templates/**/*" />
 		<IconFiles Include="$(IconPath)/**/*" />
+		<XulRunnerFiles Include="$(OutputDir)/Firefox/*" />
 	</ItemGroup>
 	<PropertyGroup>
 		<InstallUsrBin>$(InstallDir)/bin</InstallUsrBin>
@@ -92,6 +129,7 @@
 		<InstallMercurialExtensions>$(InstallDir)/lib/$(ApplicationNameLC)/MercurialExtensions</InstallMercurialExtensions>
 		<InstallData>$(InstallDir)/share/$(ApplicationNameLC)</InstallData>
 		<InstallIcon>$(InstallDir)/share/icons</InstallIcon>
+		<InstallXulRunner>$(InstallDir)/lib/$(ApplicationNameLC)/Firefox</InstallXulRunner>
 		<IconPath>$(RootDir)/src/Installer_Linux/icons/</IconPath>
 	</PropertyGroup>
 	<Target Name="Install">
@@ -118,6 +156,10 @@
 		<Copy
 			SourceFiles="@(TemplateFiles)"
 			DestinationFolder="$(InstallData)/templates/%(RecursiveDir)"
+		/>
+		<Copy
+			SourceFiles="@(XulRunnerFiles)"
+			DestinationFolder="$(InstallXulRunner)/%(RecursiveDir)"
 		/>
 		<!-- Copy (and rename) icon files -->
 		<RegexReplace Input="@(IconFiles->'%(RecursiveDir)/%(FileName)%(Extension)')" Expression="wesay" Replacement="$(ApplicationNameLC)">

@@ -7,18 +7,15 @@ Homepage: https://software.sil.org/wesay/
 Vcs-Git: https://github.com/sillsdev/wesay.git
 Vcs-Browser: https://github.com/sillsdev/wesay
 Build-Depends: debhelper (>=9.0.0),
-  mono4-sil, mono-basic4-sil, gtk-sharp2-sil, libgdiplus4-sil, cli-common-dev (>= 0.8~),
-  unzip,
-  curl,
-  libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev,
-  geckofx29
+  mono4-sil, mono-basic4-sil, gtk-sharp4-sil, libgdiplus4-sil, cli-common-dev (>= 0.8~),
+  unzip, curl, libdbus-glib-1-2, libstdc++6 (>= 4.8.4-2),
+  libicu-dev, libenchant-dev, libsndfile-dev, libxklavier-dev, libdconf-dev, libasound2
 
 Package: wesay
 Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
- mono4-sil, mono-basic4-sil, gtk-sharp2-sil, libgdiplus4-sil,
- geckofx29,
- chmsee, udisks | udisks2
+ mono4-sil, mono-basic4-sil, gtk-sharp4-sil, libgdiplus4-sil,
+ chmsee, udisks | udisks2, libasound2, libdbus-glib-1-2, python-minimal
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable
 Description: A dictionary creation tool

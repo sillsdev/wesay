@@ -22,6 +22,7 @@ namespace WeSay.ConfigTool
 
 			SetupErrorHandling();
 			Logger.Init();
+			Icu.Wrapper.Init();
 
 			SetUpXulRunner();
 
@@ -49,6 +50,7 @@ namespace WeSay.ConfigTool
 				{
 					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
 					SIL.WritingSystems.Sldr.Cleanup();
+					Icu.Wrapper.Cleanup();
 				}
 			}
 		}

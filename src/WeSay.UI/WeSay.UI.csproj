@@ -15,8 +15,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -106,26 +106,12 @@
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Core">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>\usr\lib\cli\geckofx-29\Geckofx-Core.dll</HintPath>
+    <Reference Include="Geckofx-Core">
+      <HintPath>..\..\output\$(Configuration)\Geckofx-Core.dll</HintPath>
     </Reference>
-    <Reference Condition="'$(OS)'!='Windows_NT'" Include="Geckofx-Winforms">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>\usr\lib\cli\geckofx-29\Geckofx-Winforms.dll</HintPath>
+    <Reference Include="Geckofx-Winforms">
+      <HintPath>..\..\output\$(Configuration)\Geckofx-Winforms.dll</HintPath>
     </Reference>
-    <None Include="\usr\lib\cli\geckofx-29\Geckofx-Core.dll.config" Condition="'$(OS)'!='Windows_NT'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Core">
-      <HintPath>..\..\lib\$(Configuration)\Geckofx-Core.dll</HintPath>
-    </Reference>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="Geckofx-Winforms">
-      <HintPath>..\..\lib\$(Configuration)\Geckofx-Winforms.dll</HintPath>
-    </Reference>
-    <None Include="..\..\lib\$(Configuration)\Geckofx-Core.dll.config" Condition="'$(OS)'=='Windows_NT'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

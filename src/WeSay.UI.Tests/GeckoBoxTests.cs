@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if FALSE
+
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -14,7 +16,7 @@ using Gecko;
 
 namespace WeSay.UI.Tests
 {
-	[TestFixture]
+	[TestFixture, RequiresSTA]
 	[Platform(Exclude="Unix")]  // Cant initialize XULRunner in these tests on Linux.
 	class GeckoBoxTests : NUnitFormTest
 	{
@@ -28,7 +30,7 @@ namespace WeSay.UI.Tests
 		{
 			Sldr.Cleanup();
 			// Shutting down xul runner prevents subsequent tests from running successfully
-			//			ShutDownXulRunner();
+			//ShutDownXulRunner();
 		}
 
 		[TestFixtureSetUp]
@@ -63,7 +65,7 @@ namespace WeSay.UI.Tests
 			Assert.AreSame(ws, textBox.WritingSystem);
 		}
 		[Test]
-		[Ignore("FLAKY - somtimes fails in tc continuous build.")]
+		[Ignore("FLAKY - sometimes fails in tc continuous build.")]
 		public void KeyboardInputTest()
 		{
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
@@ -87,7 +89,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[Ignore("FLAKY - somtimes fails in tc continuous build.")]
+		[Ignore("FLAKY - sometimes fails in tc continuous build.")]
 		public void KeyboardInputAfterInitialValueTest()
 		{
 			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
@@ -186,7 +188,7 @@ namespace WeSay.UI.Tests
 					if (!librarySearchPath.Contains(xulRunnerLocation))
 						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 #else
-					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfApplicationOrSolution, "xulrunner");
+					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
 					if (!Directory.Exists(xulRunnerLocation))
 					{
 						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
@@ -196,6 +198,7 @@ namespace WeSay.UI.Tests
 						throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
 					}
 #endif
+					Xpcom.EnableProfileMonitoring = true;
 					Xpcom.Initialize(xulRunnerLocation);
 					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
 				}
@@ -224,3 +227,4 @@ namespace WeSay.UI.Tests
 		}
 	}
 }
+#endif
