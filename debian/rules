@@ -28,7 +28,7 @@ override_dh_auto_configure:
 
 override_dh_auto_build:
 	cd build && \
-	./TestBuild.sh $(CONFIGURATION) Build $(PACKAGE_VERSION)
+	RUNMODE=BUILDINGPACKAGE ./TestBuild.sh $(CONFIGURATION) Build $(PACKAGE_VERSION)
 	rm -f output$(CONFIGURATION)/[Gg]ecko*
 
 override_dh_auto_test:
