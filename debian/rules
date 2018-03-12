@@ -60,7 +60,7 @@ override_dh_auto_install:
 	sed -e "s/\(Icon=sil-\).*/\1$(PACKAGENAME)/" -e "s/Exec=[^ ]*\(.*\)/Exec=$PACKAGENAME\1/" -i $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME).desktop
 	sed -e "s/\(Icon=sil-\).*/\1$(PACKAGENAME)-config/" -e "s/Exec=[^ ]*\(.*\)/Exec=$(PACKAGENAME)-config\1/" -i $(DESTDIR)/usr/share/applications/sil-$(PACKAGENAME)-config.desktop
 	# install the binaries
-	. ./environ && \
+	RUNMODE=BUILDINGPACKAGE . ./environ && \
 	cd build && \
 	xbuild /target:Install /p:Configuration=$(CONFIGURATION) /p:InstallDir=../$(DESTDIR)/usr /p:ApplicationNameLC=$(PACKAGENAME) build.mono.proj
 	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
