@@ -24,7 +24,12 @@ fi
 if [ ! -d ${XULRUNNER} ]; then XULRUNNER=/usr/lib/xulrunner-29; fi
 LD_LIBRARY_PATH="${XULRUNNER}:${LD_LIBRARY_PATH}"
 #GECKOFX="$(pkg-config --variable assemblies_dir Geckofx-Core)"
-LD_PRELOAD=${GECKOFX}/libgeckofix.so
+
+if [ "$RUNMODE" = "BUILDINGPACKAGE" ]
+then
+	LD_PRELOAD=${GECKOFX}/libgeckofix.so
+fi
+
 export MOZ_PATH
 
 if [ "${OLD_PKG_CONFIG_LIBDIR+set}" = set ]; then
