@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Newtonsoft.Json;
-using Palaso.Data;
-using Palaso.DictionaryServices.Model;
-using Palaso.Progress;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.Progress;
 using WeSay.Project;
 using WeSay.Project.Tests;
-using Palaso.Text;
+using SIL.Text;
 
 namespace Lift2Json
 {
@@ -58,7 +58,7 @@ namespace Lift2Json
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 
-				using (var reader = new Palaso.DictionaryServices.Lift.LiftReader(new NullProgressState(),
+				using (var reader = new SIL.DictionaryServices.Lift.LiftReader(new NullProgressState(),
 					WeSayWordsProject.Project.GetSemanticDomainsList(),
 					WeSayWordsProject.Project.GetIdsOfSingleOptionFields()))
 				using (var m = new MemoryDataMapper<LexEntry>())

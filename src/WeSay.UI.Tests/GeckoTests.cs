@@ -10,8 +10,8 @@ using System.Windows.Forms;
 using Gecko;
 using NUnit.Framework;
 using NUnit.Extensions.Forms;
-using Palaso.IO;
-using Palaso.WritingSystems;
+using SIL.IO;
+using SIL.WritingSystems;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
@@ -62,16 +62,20 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void GeckoBox_CreateWithWritingSystem()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, null);
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
 		}
 		[Test]
-		//[Ignore("FLAKY - sometimes fails in tc continuous build.")]
+		[Ignore("FLAKY - sometimes fails in tc continuous build.")]
 		public void GeckoBox_KeyboardInputTest()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, "ControlUnderTest");
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -90,10 +94,12 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		//[Ignore("FLAKY - sometimes fails in tc continuous build.")]
+		[Ignore("FLAKY - sometimes fails in tc continuous build.")]
 		public void GeckoBox_KeyboardInputAfterInitialValueTest()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, "ControlUnderTest");
 			Assert.IsNotNull(textBox);
 			Assert.AreSame(ws, textBox.WritingSystem);
@@ -119,7 +125,9 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void GeckoBox_KeyboardInputWhenReadOnlyTest()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			IWeSayTextBox textBox = new GeckoBox(ws, "ControlUnderTest");
 			textBox.ReadOnly = true;
 			Assert.IsNotNull(textBox);
@@ -153,7 +161,7 @@ namespace WeSay.UI.Tests
 		public void GeckoBox_WritingSystem_Unassigned_Get_Throws()
 		{
 			IWeSayTextBox textBox = new GeckoBox();
-			IWritingSystemDefinition ws;
+			WritingSystemDefinition ws;
 			Assert.Throws<InvalidOperationException>(() => ws = textBox.WritingSystem);
 		}
 
@@ -171,6 +179,7 @@ namespace WeSay.UI.Tests
 			Assert.Throws<InvalidOperationException>(() => textBox.ClearKeyboard());
 		}
 
+
 		#endregion
 
 		#region GeckoListBoxTests
@@ -178,7 +187,7 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void GeckoListBox_CreateWithWritingSystem()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
 			var listBox = new GeckoListBox(ws, null);
 			Assert.IsNotNull(listBox);
 			Assert.AreSame(ws, listBox.WritingSystem);
@@ -188,8 +197,8 @@ namespace WeSay.UI.Tests
 		[Test]
 		public void GeckoListBox_TestAddItem()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
-			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") { DefaultFont = new FontDefinition("Arial") };
 			var listBox = new GeckoListBox();
 			listBox.FormWritingSystem = ws;
 			listBox.MeaningWritingSystem = ws2;
@@ -219,8 +228,8 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn = false;
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
-			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") { DefaultFont = new FontDefinition("Arial") };
 			_listBox = new GeckoListBox();
 			_listBox.FormWritingSystem = ws;
 			_listBox.MeaningWritingSystem = ws2;
@@ -262,8 +271,8 @@ namespace WeSay.UI.Tests
 		{
 			_countOfItemsDrawn = 0;
 			_itemToNotDrawYetDrawn = false;
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
-			IWritingSystemDefinition ws2 = WritingSystemDefinition.Parse("en");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") };
+			WritingSystemDefinition ws2 = new WritingSystemDefinition("en") { DefaultFont = new FontDefinition("Arial") };
 			_listBox = new GeckoListBox();
 			_listBox.FormWritingSystem = ws;
 			_listBox.MeaningWritingSystem = ws2;
@@ -319,23 +328,25 @@ namespace WeSay.UI.Tests
 		#region GeckoComboBoxTests
 
 		[Test]
-		public void GeckoComboBox_CreateWithWritingSystem()
+		public void GeckoCombox_CreateWithWritingSystem()
 		{
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			var comboBox = new GeckoComboBox(ws, null);
 			Assert.IsNotNull(comboBox);
 			Assert.AreSame(ws, comboBox.WritingSystem);
 		}
 
 		[Test]
-		public void GeckoComboBox_TestAddItem()
+		public void GeckoCombox_TestAddItem()
 		{
 			//try
 			//{
 
 			int j = 0;
 			String value = "";
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
 			var comboBox = new GeckoComboBox();
 			comboBox.WritingSystem = ws;
 			comboBox.Name = "ControlUnderTest";
@@ -388,24 +399,26 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		public void GeckoComboBox_SetWritingSystem_Null_Throws()
+		public void GeckoCombox_SetWritingSystem_Null_Throws()
 		{
 			var textBox = new GeckoComboBox();
 			Assert.Throws<ArgumentNullException>(() => textBox.WritingSystem = null);
 		}
 		[Test]
-		public void GeckoComboBox_SetWritingSystem_DoesntThrow()
+		public void GeckoCombox_SetWritingSystem_DoesntThrow()
 		{
 			var textBox = new GeckoComboBox();
-			IWritingSystemDefinition ws = WritingSystemDefinition.Parse("fr");
+			WritingSystemDefinition ws = new WritingSystemDefinition("fr");
+			ws.DefaultFont = new FontDefinition("Arial");
+			ws.DefaultFontSize = 12;
 			Assert.DoesNotThrow(() => textBox.WritingSystem = ws);
 		}
 
 		[Test]
-		public void GeckoComboBox_WritingSystem_Unassigned_Get_Throws()
+		public void GeckoCombox_WritingSystem_Unassigned_Get_Throws()
 		{
 			var textBox = new GeckoComboBox();
-			IWritingSystemDefinition ws;
+			WritingSystemDefinition ws;
 			Assert.Throws<InvalidOperationException>(() => ws = textBox.WritingSystem);
 		}
 

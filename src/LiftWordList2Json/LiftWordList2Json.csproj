@@ -79,17 +79,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Palaso, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.DictionaryServices.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.DictionaryServices.dll</HintPath>
     </Reference>
-    <Reference Include="Palaso.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\Palaso.Lift.dll</HintPath>
+      <HintPath>..\..\lib\$(Configuration)\SIL.Lift.dll</HintPath>
     </Reference>
     <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
       <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
