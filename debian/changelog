@@ -1,4 +1,12 @@
-wesay (1.6.7) UNRELEASED; urgency=medium
+wesay (1.6.8) UNRELEASED; urgency=medium
+
+  * use icu.net 2.3.2
+  * dep on gtk-sharp4-sil (mono4-sil version of gtk-sharp2)
+  * official stable version
+
+ -- Daniel Glassey <wdg@debian.org>  Tue, 20 Mar 2018 16:39:35 +0700
+
+wesay (1.6.7) xenial; urgency=medium
 
   * add python-minimal to deps for bionic
   * remove geckofx package deps, now get from nuget
@@ -6,7 +14,7 @@ wesay (1.6.7) UNRELEASED; urgency=medium
 
  -- Daniel Glassey <wdg@debian.org>  Fri, 02 Mar 2018 14:50:24 +0700
 
-wesay (1.6.6) UNRELEASED; urgency=medium
+wesay (1.6.6) xenial; urgency=medium
 
   * use mono4-sil
 
