@@ -33,6 +33,7 @@ namespace WeSay.UI.Tests
 		[TestFixtureTearDown]
 		public void FixtureCleanup()
 		{
+			Sldr.Cleanup();
 			// Shutting down xul runner prevents subsequent tests from running successfully
 			//ShutDownXulRunner();
 		}
@@ -40,6 +41,7 @@ namespace WeSay.UI.Tests
 		[TestFixtureSetUp]
 		public void FixtureSetup()
 		{
+			Sldr.Initialize(true);
 			SetUpXulRunner();
 		}
 
