@@ -1,4 +1,11 @@
-wesay (1.6.8) UNRELEASED; urgency=medium
+wesay (1.6.9) UNRELEASED; urgency=medium
+
+  * d/control: add dependency on libxlavier16
+      for some reason the package build doesn't add it
+
+ -- Daniel Glassey <wdg@debian.org>  Tue, 25 Sep 2018 15:29:12 +0700
+
+wesay (1.6.8) xenial; urgency=medium
 
   * use icu.net 2.3.2
   * dep on gtk-sharp4-sil (mono4-sil version of gtk-sharp2)

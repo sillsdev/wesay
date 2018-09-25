@@ -15,7 +15,8 @@ Package: wesay
 Architecture: any
 Depends: ${misc:Depends}, ${cli:Depends},
  mono4-sil, mono-basic4-sil, gtk-sharp4-sil, libgdiplus4-sil,
- chmsee, udisks | udisks2, libasound2, libdbus-glib-1-2, python-minimal
+ chmsee, udisks | udisks2, libasound2, libdbus-glib-1-2, python-minimal,
+ libxklavier16
 Suggests: libreoffice-writer (>=3.4), evince | pdf-viewer, art-of-reading
 Conflicts: wesay-stable
 Description: A dictionary creation tool
