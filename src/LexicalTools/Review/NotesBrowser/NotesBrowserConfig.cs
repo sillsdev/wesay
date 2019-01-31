@@ -38,12 +38,12 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 
 		public string Label
 		{
-			get { return "Notes"; }
+			get { return StringCatalog.Get("Notes"); }
 		}
 
 		public string LongLabel
 		{
-			get { return "Browse Notes In Project"; }
+			get { return StringCatalog.Get("Browse Notes In Project"); }
 		}
 
 		public string Description

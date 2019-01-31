@@ -37,12 +37,12 @@ namespace WeSay.LexicalTools.Review.AdvancedHistory
 
 		public string Label
 		{
-			get { return "History"; }
+			get { return StringCatalog.Get("History"); }
 		}
 
 		public string LongLabel
 		{
-			get { return "History"; }
+			get { return StringCatalog.Get("History"); }
 		}
 
 		public string Description
