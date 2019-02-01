@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WeSay.Project;
+using Palaso.i18n;
 
 namespace WeSay.LexicalTools.Review.AdvancedHistory
 {
