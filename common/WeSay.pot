@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
-"POT-Creation-Date: 2019-01-31T19:27:33\n"
+"POT-Creation-Date: 2019-02-03T03:08:25\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,7 +12,7 @@ msgstr ""
 
 # Project-Id-Version: WeSay
 # Report-Msgid-Bugs-To: issues@wesay.org
-# POT-Creation-Date: 2019-01-31T19:27:33
+# POT-Creation-Date: 2019-02-03T03:08:25
 # Content-Type: text/plain; charset=UTF-8
 
 
@@ -375,6 +375,14 @@ msgstr ""
 
 #: C:\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\CongratulationsControl.cs
 msgid "\\u2714 "
+msgstr ""
+
+#: C:\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
+msgid "Configure this project..."
+msgstr ""
+
+#: C:\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
+msgid "Use projector-friendly colors"
 msgstr ""
 
 #: C:\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
