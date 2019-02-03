@@ -21,7 +21,7 @@ namespace WeSay.App
 
 			_launchConfigToolLink = new ToolStripButton()
 										{
-											Text = "Configure This Project...",
+											Text = StringCatalog.Get("Configure This Project..."),
 											//doesn't work Alignment = ToolStripItemAlignment.Right
 
 

@@ -56,8 +56,8 @@ namespace WeSay.LexicalTools.Dashboard
 		private void InitializeContextMenu()
 		{
 			ContextMenu = new ContextMenu();
-			ContextMenu.MenuItems.Add("Configure this project...", OnRunConfigureTool);
-			ContextMenu.MenuItems.Add("Use projector-friendly colors", OnToggleColorScheme);
+			ContextMenu.MenuItems.Add(StringCatalog.Get("Configure this project..."), OnRunConfigureTool);
+			ContextMenu.MenuItems.Add(StringCatalog.Get("Use projector-friendly colors"), OnToggleColorScheme);
 			ContextMenu.MenuItems[1].Checked = DisplaySettings.Default.UsingProjectorScheme;
 		}
 
