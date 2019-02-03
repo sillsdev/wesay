@@ -1,9 +1,10 @@
-wesay (1.6.9) UNRELEASED; urgency=medium
+wesay (1.6.9) xenial; urgency=medium
 
   * d/control: add dependency on libxlavier16
       for some reason the package build doesn't add it
+  * add new translations
 
- -- Daniel Glassey <wdg@debian.org>  Tue, 25 Sep 2018 15:29:12 +0700
+ -- Daniel Glassey <wdg@debian.org>  Sat, 02 Feb 2019 21:46:57 -0600
 
 wesay (1.6.8) xenial; urgency=medium
 
