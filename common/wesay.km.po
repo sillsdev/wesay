@@ -1,19 +1,20 @@
 # 
 # Translators:
+# Bun Ang Van <bunangv@gmail.com>, 2011
+# Makara SOK <makara_sok@hotmail.com>, 2011, 2012
 # palaso_admin <admin@palaso.org>, 2011
-# Greg Blok <greg_blok@sil.org>, 2011
-# palaso_admin <admin@palaso.org>, 2011
+# sungkhum <sungkhum@gmail.com>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2019-02-03T03:08:25\n"
 "PO-Revision-Date: 2019-02-03 03:22+0000\n"
 "Last-Translator: palaso_admin <admin@palaso.org>\n"
-"Language-Team: Thai (http://www.transifex.com/palaso_admin/wesay/language/th/)\n"
+"Language-Team: Khmer (http://www.transifex.com/palaso_admin/wesay/language/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: th\n"
+"Language: km\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 # Project-Id-Version: WeSay
@@ -21,63 +22,63 @@ msgstr ""
 # POT-Creation-Date: 2019-02-03T03:08:25
 # Content-Type: text/plain; charset=UTF-8
 msgid "Meanings"
-msgstr "ความหมาย"
+msgstr "អត្ថន័យ​​"
 
 msgid "Add Meanings"
-msgstr "เพิ่มเติม ความหมาย"
+msgstr "បន្ថែម​អត្ថន័យ"
 
 msgid "Add meanings (senses) to entries where they are missing."
-msgstr "ป้อนความหมายของคำที่ยังไม่ได้รับการป้อน"
+msgstr "បន្ថែម​អត្ថន័យ​​ (ន័យ) ទៅ​​លើ​ធាតុ​បញ្ចូល​ណា​​​ដែល​​មិន​ទាន់​ដាក់អត្ថន័យ ។"
 
 msgid "Parts of Speech"
-msgstr "ป้อนชนิดของคำ"
+msgstr "ថ្នាក់ពាក្យ"
 
 msgid "Add Parts of Speech"
-msgstr "เพิ่มชิ้นส่วนของคำพูด"
+msgstr "បន្ថែម​ថ្នាក់​ពាក្យ"
 
 msgid "Add parts of speech to senses where they are missing."
-msgstr "ป้อนการแยกส่วนคำบรรยายสู่ที่ที่ขาดความหมาย"
+msgstr "បន្ថែម​ថ្នាក់​ពាក្យ​​​ទៅ​​លើ​ន័យ​ណា​​​ដែល​មិន​ទាន់​មាន។"
 
 msgid "Example Sentences"
-msgstr "ตัวอย่างประโยค"
+msgstr "​ឧទាហរណ៍"
 
 msgid "Add Example Sentences"
-msgstr "แสดงตัวอย่างประโยค"
+msgstr "បន្ថែម​ឧទាហរណ៍"
 
 msgid "Add example sentences to senses where they are missing."
-msgstr "ป้อนประโยคตัวอย่างของคำที่ยังไม่ได้รับการป้อน"
+msgstr "បន្ថែម​ឧទាហរណ៍​​លើ​ន័យ​ណា​​​ដែល​មិន​ទាន់​មានផ្នែកនេះ។"
 
 msgid "Base Forms"
-msgstr "รูปแบบพื้นฐาน"
+msgstr "ទម្រង់​ដើម"
 
 msgid "Add Base Forms"
-msgstr ""
+msgstr "បន្ថែម​ទម្រង់​ដើម"
 
 msgid ""
 "Identify the \"base form\" word that this word is built from. In the printed"
 " dictionary, the derived or variant words can optionally be shown as "
 "subentries of their base forms."
-msgstr ""
+msgstr "សូម​សម្គាល់​ពាក្យ ​«ទម្រង់​ដើម» ​ដែល​ជា​ពាក្យ​ឫស​របស់​ពាក្យ​នេះ។ នៅពេល​បោះពុម្ព​​វចនានុក្រម​ យើង​អាច​ជ្រើសរើស​​​យក​​ពាក្យ​ណា​​​ដែល​មាន​ទម្រង់​ដើម​​​មក​ធ្វើ​ជា​​​ធាតុ​បញ្ចូល​រង​របស់​​ពាក្យ​នោះ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Flash Drives..."
-msgstr "มองหา ยูเอสบี แฟลชไดร์"
+msgstr "កំពុង​ស្វែង​រក​ឧបករណ៍​ផ្ទុក​ចល័តនានា..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
-msgstr "กำลังสำรองข้อมูล"
+msgstr "កំពុងបម្រុងទុក..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Backup Complete"
-msgstr "เสร็จสิ้นการสำรองข้อมูล"
+msgstr "បម្រុងទុក​រួច​ហើយ​"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Files backed up to {0}"
-msgstr "แฟ้มข้อมูลถูกสำรองไว้ใน {0}"
+msgstr "ឯកសារ​បម្រុងទុក​ក្នុង {0}"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Files were not backed up."
-msgstr "ยังไม่มีการสำรองแฟ้มข้อมูล"
+msgstr "ឯកសារ​មិន​​ទាន់បាន​​បម្រុងទុក​។​"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
@@ -86,93 +87,93 @@ msgstr "ยังไม่มีการสำรองแฟ้มข้อม
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionSetupDialog.Designer.cs
 msgid "&OK"
-msgstr "&ตกลง"
+msgstr "&យល់ព្រម"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Flash Drive to backup to."
-msgstr "กรุณานำแฟลชไดร์เข้าเพื่อสำรองข้อมูล"
+msgstr "សូម​ភ្ជាប់​ឧបករណ៍​ផ្ទូក​ចល័ត​ដើម្បី​​​រក្សា​ឯកសារ​បម្រុង​ទុក។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Unable to look for the device due to an error."
-msgstr "ไม่สามารถดูอุปกรณ์พิเศษในขณะที่เกิดความผิดพลาด"
+msgstr "មិន​អាច​ស្វែង​រក​ឧបករណ៍​ដោយសារ​មាន​បញ្ហា។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.Designer.cs
 msgid "status goes here"
-msgstr "สถานะในขณะนี้"
+msgstr "សូម​​ដាក់​ស្ថានភាព​​នៅ​ទីនេះ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.Designer.cs
 msgid "Secondary status goes here"
-msgstr "สถานะส่วนสำรองขณะนี้"
+msgstr "សូម​​ដាក់​ស្ថានភាព​​​ទី២ នៅ​ទីនេះ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
 msgid "&Cancel"
-msgstr "ยกเลิก"
+msgstr "&បោះបង់"
 
 #. Long name for action which makes a zip file on a usb flash-drive
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupToDevice.cs
 msgid "Backup To USB Flash Drive"
-msgstr "สำรองข้อมูลลงในอุปกรณ์"
+msgstr "បម្រុង​ទុក​ក្នុង​ឧបករណ៍​ផ្ទុក​ចល័ត"
 
 #. description of usb backup action
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupToDevice.cs
 msgid "Saves a backup on an external device, like a USB Flash Drive."
-msgstr "บันทึกการสำรองข้อมูลสู่ External Device เหมือน ยูเอสบี แฟลชไดร์"
+msgstr "រក្សា​ឯកសារ​បម្រុង​ទុក​ក្នុង​ឧបករណ៍​ផ្ទូក​ក្រៅ ដូច​ជា​ឧបករណ៍​ផ្ទូក​ចល័ត។"
 
 #. Short buton label for usb flash-drive backup action
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupToDevice.cs
 msgid "Backup"
-msgstr "สำรองข้อมูล"
+msgstr "បម្រុងទុក"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email this dictionary to {0}"
-msgstr "ส่งพจนานุกรมทางอีเมลถึง {0}"
+msgstr "ផ្ញើ​វចនានុក្រម​នេះ​តាមសារ​អេឡិកត្រូនិក​ទៅ {0}"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmail.cs
 msgid "Email this dictionary as a compressed attachment"
-msgstr "อีเมลพจนุกรมโดยการบีบอัดข้อมูลเพื่อแนบไปด้วย"
+msgstr "បង្ហាប់​ប្លង់​វចនានុក្រម​នេះ ហើយ​​ផ្ញើ​​​ភ្ជាប់​ទៅ​ជា​មួយ​សារ​អេឡិចត្រូនិក"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmail.cs
 msgid "The latest WeSay project data is attached."
-msgstr "ชิ้นงานล่าสุดของWeSayที่ถูกแนบมาด้วย"
+msgstr "ទិន្នន័យ​របស់​គម្រោង WeSay  ថ្មី​បំផុត​បាន​​ភ្ជាប់​ជា​មួយ​​សារ​អេឡិចត្រូនិក។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmail.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
 msgid "Email"
-msgstr "อีเมล"
+msgstr "សារអេឡិចត្រូនិក"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
 msgid "Recipient Name"
-msgstr "ชื่อผู้รับ"
+msgstr "ឈ្មោះ​អ្នក​ទទួល"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
 msgid "Send Project Email Settings..."
-msgstr "การตั้งค่าการส่งชิ้นงานทางอีเมล"
+msgstr "ផ្ញើ​ការ​កំណត់​សារ​អេឡិចត្រូនិក​​នៃ​គម្រោង..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
-msgstr "นำออกไปที่ Word"
+msgstr "នាំ​ចេញ​ទៅ​កាន់​ Word"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\HtmlInWord.cs
 msgid "Creates a very basic dictionary publication in Microsoft Word."
-msgstr "สร้างเป็นพจนานุกรมที่พื้นฐานมากใน ไมโครซอฟ เวิอด"
+msgstr "បង្កើត​ទម្រង់​បោះពុម្ព​វចនានុក្រម​ក្នុងកម្មវិធី Microsoft Word"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\HtmlTransformer.cs
 msgid "Export to HTML"
-msgstr "นำออกไปที่ HTML"
+msgstr "នាំ​ចេញ​ទៅ​កាន់​ HTML"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\HtmlTransformer.cs
 msgid ""
 "Creates a simple Html version of the dictionary.  Not a very good way to go."
-msgstr "สร้างรูปแบบ HTML ที่เรียบง่ายของพจนานุกรม ไม่ใช่ทางเลือกที่ดีสำหรับการเลือกทำ"
+msgstr "បង្កើត​វចនានុក្រម​ជា​ទម្រង់ HTML ធម្មតា។​ នេះ​មិនមែន​​ជា​វិធី​ល្អ​​នោះ​​ទេ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\LameProgressDialog.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\SimpleProgressDialog.Designer.cs
 msgid "Backing up..."
-msgstr "กำลังสำรองข้อมูล"
+msgstr "កំពុង​បម្រុងទុក..."
 
 #. It's up to you whether to bother translating this or not.
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\LameProgressDialog.Designer.cs
@@ -181,7 +182,7 @@ msgstr "กำลังสำรองข้อมูล"
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\TabbedForm.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "WeSay"
-msgstr "เราบอก"
+msgstr "WeSay"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\LexiquePro\AboutLexiquePro.Designer.cs
 msgid "http://lexiquepro.com"
@@ -193,22 +194,22 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\LexiquePro\AboutLexiquePro.Designer.cs
 msgid "About Lexique Pro"
-msgstr "เกี่ยวกับ Lexique Pro"
+msgstr "អំពីកម្មវិធី Lexique Pro"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
 msgid "Open in Lexique Pro"
-msgstr "เปิดใช้ Lexique Pro"
+msgstr "បើកក្នុងកម្មវិធី Lexique Pro"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\LexiquePro\LexiqueProSender.cs
 msgid ""
 "Open dictionary in Lexique Pro for printing or web-page creation. Requires "
 "version LP ver 3.0 or higher."
-msgstr "เปิดพจนานุกรมในLexique Pro ปริ๊น หรือ การสร้าง web - page ต้องใช้ เวอร์ชั่น LP เวอร์ชั่น 3.0 หรือรุ่นที่สูงกว่า"
+msgstr "បើក​វចនានុក្រម​ក្នុងកម្មវិធី Lexique Pro ដើម្បី​បោះពុម្ព ឬ​បង្កើត​គេហទំព័រ។  ត្រូវ​មាន​កម្មវិធី LP កំណែ ៣.០ ឬ​ ខ្ពស់​ជាង​​នេះ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 msgid "Make OpenOffice Document"
-msgstr "สร้างเอกสารจากโปรแกรม Open Office "
+msgstr "បង្កើត​ឯកសារ​ក្នុងកម្មវិធី OpenOffice"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 msgid ""
@@ -234,7 +235,7 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\LibreOfficePdf.cs
 msgid "Make Pdf Dictionary"
-msgstr "สร้างพจนานุกรมโดยใช้Pdf"
+msgstr "បង្កើត​វចនានុក្រម​ជា​ទម្រង់ PDF"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\PdfMaker.cs
 msgid "Make Simple Pdf Dictionary"
@@ -242,75 +243,75 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Tweaks"
-msgstr "กดเข้า"
+msgstr "ការ​ប៉ះពាល់"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Language Output"
-msgstr "ภาษาที่ส่งออก"
+msgstr "​ទិន្នផលភាសា"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "English"
-msgstr "ภาษาอังกฤษ"
+msgstr "ភាសា​អង់គ្លេស"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "National"
-msgstr "ภาษาประจำชาติ"
+msgstr "ភាសាជាតិ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Regional"
-msgstr "ภาษาประจำถิ่น"
+msgstr "ភាសា​តាម​តំបន់"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Vernacular"
-msgstr "ภาษาพื้นเมือง"
+msgstr "សកភាសា"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Setup Standard Format Export..."
-msgstr "การส่งออกรูปแบบการตั้งค่ามาตรฐาน ..."
+msgstr "ដំឡើង​ទម្រង់​បទដ្ឋាន​នៃ​ការ​នាំ​ចេញ..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
-msgstr "นำออกไปสู่ SFM"
+msgstr "​នាំ​ចេញទៅ​កាន់​ SFM"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SfmTransformer.cs
 msgid "Saves the lexicon in a form of standard format."
-msgstr "บันทึกศัพท์ในรูปแบบมาตรฐาน"
+msgstr "រក្សាទុក​ទិន្នន័យជា​ទម្រង់​បទដ្ឋាន។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\Xhtml\XHtml.cs
 msgid "Export to XHTML"
-msgstr "ส่งออกสู่ XHTML"
+msgstr "​នាំ​ចេញទៅ​កាន់​ XHTML"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Image Picker Test
 #: App\ImagePicker\Form1.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Form1"
-msgstr "Form1"
+msgstr "សំណុំ​បែបបទ​១"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Image Picker Test
 #: App\ImagePicker\ImageDisplayWidget.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\PictureControl.cs
 msgid "Cannot find {0}"
-msgstr "ไม่พบ {0}"
+msgstr "មិន​អាច​រក {0} ឃើញ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Image Picker Test
 #: App\ImagePicker\ImageDisplayWidget.Designer.cs
 msgid "Choose Image..."
-msgstr "เลือกรูปภาพ"
+msgstr "ជ្រើសរើស​រូបភាព"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Image Picker Test
 #: App\ImagePicker\ImageDisplayWidget.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\PictureControl.Designer.cs
 msgid "What is the problem?"
-msgstr "ปัญหานี้คืออะไร"
+msgstr "តើ​មាន​បញ្ហា​អ្វី?"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Image Picker Test
 #: App\ImagePicker\ImageDisplayWidget.Designer.cs
 msgid "Remove Image..."
-msgstr "ย้ายภาพ"
+msgstr "លុប​រូប​ភាព​ចេញ..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalModel\Foundation\SpellCheckerIdToDisplayStringConverter.cs
 msgid "Not installed"
-msgstr "ยังไม่ติดตั้ง"
+msgstr "មិន​បាន​ដំឡើង"
 
 #. This is what shows for a word in a list when the user hasn't yet typed
 #. anything in for the word.  Like if you click the 'New Word' button
@@ -329,51 +330,51 @@ msgstr "ยังไม่ติดตั้ง"
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\TextBoxes\GeckoListView.cs
 msgid "Empty"
-msgstr "ว่าง"
+msgstr "ទទេ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoConfiguration.cs
 msgid "Entries without this:"
-msgstr "ป้อนเข้าโดยปราศจากสิ่งนี้"
+msgstr "ធាតុ​បញ្ចូល​ដែល​គ្មាន​ផ្នែកនេះ៖"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoConfiguration.cs
 msgid "Total Entries:"
-msgstr "ป้อนเข้าทั้งหมด"
+msgstr "ធាតុ​បញ្ចូលសរុប​៖"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
 msgid "Congratulations. You have completed this task."
-msgstr "ขอแสดงความยินดี ท่านทำงานชิ้นนี้เสร็จแล้ว"
+msgstr "អបអរសាទរ! លោក​អ្នក​បាន​បញ្ចប់​កិច្ចការ​​​នេះ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoControl.cs
 msgid "There is no work left to be done on this task."
-msgstr "ไม่มีสิ่งที่ต้องทำในงานชิ้นนี้แล้ว"
+msgstr "អស់​កិច្ចការ​ត្រូវ​ធ្វើ​ក្នុង​ភារកិច្ច​​នេះ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoControl.Designer.cs
 msgid "To Do:"
-msgstr "ต้องทำ"
+msgstr "បញ្ជី​ការងារ​ត្រូវ​ធ្វើ៖"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoControl.Designer.cs
 msgid "Completed:"
-msgstr "ข้อมูลสำรองที่สมบูรณ์"
+msgstr "បញ្ចប់​ទាំង​ស្រុង៖"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoControl.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "(Page Down Key)"
-msgstr "เลื่อนลง"
+msgstr "(ចុច Page Down)"
 
 #. The user will click this to say that this word has no baseform.  E.g.
 #. Kindness has Kind as a baseform, but Kind has no other word as a baseform.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddMissingInfo\MissingInfoViewMaker.cs
 msgid "&This word has no Base Form"
-msgstr "คำนี้ไม่มีรูปแบบพื้นฐาน"
+msgstr "&ពាក្យ​នេះ​គ្មាន​ទម្រង់​ដើម​ទេ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddPictures\AddPicturesControl.Designer.cs
 msgid "Search Words"
-msgstr "ค้นหาคำ"
+msgstr "ស្វែង​រក​ពាក្យ​"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\AddPictures\AddPicturesControl.Designer.cs
 msgid "Search"
-msgstr "ค้นหา"
+msgstr "ស្វែង​រក"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\CongratulationsControl.cs
 msgid "\\u2714 "
@@ -391,45 +392,45 @@ msgstr ""
 #. other tasks and jump to them.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
 msgid "Home"
-msgstr "หน้าหลัก"
+msgstr "ទំព័រដើម"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
 msgid "Switch tasks and see current status of tasks"
-msgstr "สลับงานและดูสถานะปัจจุบันของงาน"
+msgstr "ប្ដូរ​ភារកិច្ច​ ហើយ​​មើល​ស្ថានភាព​ភារកិច្ច​​បច្ចុប្បន្ន​"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.Designer.cs
 msgid ""
 "NOTE: This control should be the same size as the initial tab page size so "
 "the in"
-msgstr "NOTE: This control should be the same size as the initial tab page size so the in"
+msgstr "សូម​ចំណាំ​ថា​៖ ​វត្ថុ​បញ្ជា​នេះ ត្រូវ​មាន​ទំហំ​ដូច​ទំហំ​ថេប​ទំព័រ​ដើម"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\DictionaryStatusControl.designer.cs
 msgid "{1} dictionary has {0} words"
-msgstr "พจนานุกรมของท่านมี {0} คำ"
+msgstr "វចនានុក្រម {1} ​មាន {0} ពាក្យ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\GroupHeader.designer.cs
 msgid "_label"
-msgstr "_label"
+msgstr "_ស្លាក"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\TaskIndicator.designer.cs
 msgid "Gather from Foo words"
-msgstr "Gather from Foo words"
+msgstr "ប្រមូល​ពី​ពាក្យ Foo"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\TaskIndicator.designer.cs
 msgid "See words in Foo, write the same words in Boo"
-msgstr "See words in Foo, write the same words in Boo"
+msgstr "សូម​មើល​ពាក្យ​ក្នុង Foo ​ហើយ​សរសេរ​ពាក្យ​ដូច​គ្នា​ក្នុង Boo"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
 msgid "&Delete"
-msgstr "&ลบ"
+msgstr "&លុប"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
 msgid "This will permanently remove this entry."
-msgstr "สิ่งนี้จะถูกลบออกจากการป้อนอย่างถาวร"
+msgstr "​​លុប​ធាតុ​បញ្ចូល​នេះ​​​ជា​អចិន្រៃ្តយ៍។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\ConfirmDelete.Designer.cs
 msgid "Confirm Delete"
-msgstr "ยืนยันการลบ"
+msgstr "អះអាង​ការ​លុប"
 
 #. The label for the task that lets you see all entries, search for entries,
 #. and edit various fields.  We don't like the English name very much, so feel
@@ -442,89 +443,89 @@ msgstr "ยืนยันการลบ"
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryBrowseAndEditConfiguration.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryBrowseAndEditConfiguration.cs
 msgid "Dictionary Browse && Edit"
-msgstr "พจนานุกรม"
+msgstr "បើក​មើល​វចនានុក្រម និង​កែសម្រួល"
 
 #. This is what shows if the user is listing words by the glossing language,
 #. but the word doesn't have a gloss.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "No Gloss"
-msgstr "ไม่โดดเด่น"
+msgstr "គ្មាន​ពាក្យ​ប្រែ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "Hide &Uncommon Fields"
-msgstr "ซ่อนรายละเอียดเพิ่มเติม"
+msgstr "លាក់ &​​ផ្នែក​ដែល​មិន​ធម្មតា"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "Show &Uncommon Fields"
-msgstr "รายละเอียดเพิ่มเติม"
+msgstr "បង្ហាញ &​​ផ្នែក​ដែល​មិន​ធម្មតា"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&Show All Fields"
-msgstr "แสดงพื้นที่ทั้งหมด"
+msgstr "&​​បង្ហាញ​គ្រប់​ផ្នែក​​ទាំង​អស់"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&Delete This Word"
-msgstr "ลบคำนี้"
+msgstr "&​លុប​ពាក្យ​នេះ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.Designer.cs
 msgid "&New Word"
-msgstr "คำใหม่"
+msgstr "&ពាក្យ​ថ្មី"
 
 #. The description of the 'Dictionary' task.  In place of the {0} will be the
 #. number of words in the dictionary.  In place of the {1} will be the name of
 #. the project.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryTask.cs
 msgid "See all {0} {1} words."
-msgstr "แสดงทั้งหมดที่ {0} {1} คำ"
+msgstr "មើលធាតុបញ្ចូលចំនួន {0} ពាក្យក្នុងវចនានុក្រម {1} ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
 msgid "en"
-msgstr "en"
+msgstr "អង់គ្លេស"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Semantic Domains"
-msgstr "ชุดของคำ"
+msgstr "ដែន​ន័យ​វិទ្យា​"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Gather Words By Semantic Domain"
-msgstr "รวบรวมคำศัพท์"
+msgstr "ប្រមូល​ពាក្យ​តាម​ដែន​​ន័យ​វិទ្យា​"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid ""
 "Collect new words organized by semantic domains and questions about those "
 "domains."
-msgstr "รวบรวมคำใหม่ตามหมวดความหมาย และคำถามเกี่ยวกับหมวดความหมายต่างๆ"
+msgstr "ប្រមូល​ពាក្យ​ថ្មី​ដោយ​រៀបចំ​តាម​ដែន​​​ន័យ​វិទ្យា​ និង​ប្រមូល​​សំណួរ​អំពី​​ដែន​​ន័យ​វិទ្យា​​ទាំង​នោះ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Domains without words"
-msgstr "ยังไม่มีคำศัพท์"
+msgstr "ដែន​​​ន័យ​វិទ្យា​ដែល​គ្មាន​ពាក្យ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Total domains:"
-msgstr "ชุดของคำทั้งหมด"
+msgstr "​​ដែន​​​ន័យ​វិទ្យាសរុប​៖"
 
 #. The label for the field showing the Lexeme Form of the entry.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Word"
-msgstr "คำ"
+msgstr "ពាក្យ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
-msgstr "เข้าสู่"
+msgstr "(ចុច Enter)"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
-msgstr "ลองคิดคำที่ใช้เพื่อจะพูดถึงสิ่งนี้"
+msgstr "ព្យាយាម​គិត​ពី​ពាក្យ​ដែល​លោក​​អ្នក​ប្រើ​​នៅ​ពេល​ដែល​លោកអ្នក​និយាយ​អំពី​រឿង​ទាំងនេះ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Description goes here."
-msgstr "บอกลักษณะ ที่นี่"
+msgstr "សូម​​ដាក់ការពណ៌នា​នៅ​ទី​នេះ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "\"Don't translate\" warning goes here."
-msgstr "x"
+msgstr "សូម​ដាក់​សារ​ព្រមាន «កុំ​បកប្រែ» នៅ​ទី​នេះ។"
 
 #. This label is shown once, but has two roles.  1) it labels the
 #. gloss/definition field, and 2) marks the beginning of the set of fields
@@ -534,7 +535,7 @@ msgstr "x"
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexSenseLayouter.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexSenseLayouter.cs
 msgid "Meaning"
-msgstr "ความหมาย"
+msgstr "អត្ថន័យ"
 
 #. This is shown in the Gather By Semantic Domains task after each semantic
 #. domain question. The questions contain example words to help clarify what
@@ -544,15 +545,15 @@ msgstr "ความหมาย"
 msgid ""
 "Do not just translate these words; instead think of words in your own "
 "language."
-msgstr "แปลโดยไม่ต้องคิดถึงคำในคำในภาษานั้น ๆ"
+msgstr "កុំ​គ្រាន់តែ​បក​ប្រែ​ពាក្យ​ទាំង​នេះ​ ត្រូវ​នឹក​គិត​ពី​ពាក្យ​ក្នុង​ភាសា​កំណើត​របស់​អ្នក​វិញ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "Try thinking of ways to say these words in your language."
-msgstr "ลองคิดวิธีพูดคำนี้ในภาษาของท่าน"
+msgstr "ប្រឹង​គិត​ពី​វិធី​ប្រើ​ពាក្យ​ទាំង​នេះ​ក្នុង​ភាសា​កំណើត​របស់​អ្នក។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "Word:"
-msgstr "คำ"
+msgstr "ពាក្យ៖"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "Foobar"
@@ -571,25 +572,25 @@ msgstr ""
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexExampleSentenceLayouter.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexExampleSentenceLayouter.cs
 msgid "Example"
-msgstr "ตัวอย่าง"
+msgstr "ឧទាហរណ៍"
 
 #. This is the field for putting in a translation of an example sentence.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexExampleSentenceLayouter.cs
 msgid "Translation"
-msgstr "คำแปล"
+msgstr "ការបកប្រែ"
 
 #. The label for the field showing a single word translation, as used in
 #. interlinear text glossing.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexSenseLayouter.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Gloss"
-msgstr "คำอธิบาย"
+msgstr "ពាក្យ​ប្រែ"
 
 #. The label for the field showing the definition of the word.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexSenseLayouter.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Definition"
-msgstr "คำอธิบาย"
+msgstr "និយមន័យ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Review\AdvancedHistory\AdvancedHistoryConfig.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Review\AdvancedHistory\AdvancedHistoryConfig.cs
@@ -607,12 +608,12 @@ msgstr ""
 #. Generic desciption of how many items in a task are left to do.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\TaskBase.cs
 msgid "Remaining:"
-msgstr "คงเหลือ"
+msgstr "នៅសល់៖"
 
 #. Generic description of how many total items there are in a task.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\TaskBase.cs
 msgid "Total:"
-msgstr "รวม"
+msgstr "សរុប៖"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LiftWordList2Json\Options.cs
 msgid ""
@@ -633,17 +634,17 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Refresh"
-msgstr "Refresh"
+msgstr "ធ្វើ​ឱ្យថ្មីឡើងវិញ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Key"
-msgstr "Key"
+msgstr "កូនសោ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Value"
-msgstr "Value"
+msgstr "តម្លៃ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Placeholder for control which uses generics so breaks the designer"
@@ -651,19 +652,19 @@ msgstr "Placeholder for control which uses generics so breaks the designer"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Reference Collection"
-msgstr "Reference Collection"
+msgstr "សម្រាំង​​នៃ​សេចក្ដី​យោង"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Source Collection"
-msgstr "Source Collection"
+msgstr "សម្រាំង​​​ប្រភពឯកសារ​"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionItemControl.cs
 msgid "Make visible in WeSay"
-msgstr "ทำให้ WeSay ปรากฏ"
+msgstr "ធ្វើ​ឱ្យមើល​ឃើញ​ក្នុងកម្មវិធី WeSay"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionItemControl.cs
 msgid "Make invisible in WeSay"
-msgstr "ทำให้ WeSay ไม่ปรากฏ"
+msgstr "ធ្វើ​ឱ្យ​មើល​មិន​ឃើញ​ក្នុងកម្មវិធី WeSay"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionItemControl.designer.cs
 msgid "blah blah blah"
@@ -671,106 +672,106 @@ msgstr "blah blah blah"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionItemControl.designer.cs
 msgid "Action Name"
-msgstr "ชื่อผู้ใช้ระบบปฏิบัติการ"
+msgstr "ឈ្មោះ​សកម្មភាព"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionItemControl.designer.cs
 msgid "Set up..."
-msgstr "ตั้งค่า"
+msgstr "ដំឡើង..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionItemControl.designer.cs
 msgid "Visible In WeSay"
-msgstr "ทำให้ปรากฏใน WeSay"
+msgstr "អាច​មើល​ឃើញ​ក្នុងកម្មវិធី WeSay"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionItemControl.designer.cs
 msgid "More Info..."
-msgstr "ข้อมูลเพิ่มเติม"
+msgstr "ព័ត៌មាន​បន្ថែម..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.AddinLib\ActionSetupDialog.Designer.cs
 msgid "Setup Action..."
-msgstr "ตั้งค่าระบบปฏิบัติการ"
+msgstr "​ដំឡើង​សកម្មភាព..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\CommandLineParser.cs
 msgid "Count number of lines in the input text."
-msgstr "นับจำนวนบรรทัดในการเพิ่มเข้าของข้อความ"
+msgstr "រាប់​ចំនួន​បន្ទាត់​នៃ​អត្ថបទ​ដែល​បាន​បញ្ចូល។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\CommandLineParser.cs
 msgid "Count number of words in the input text."
-msgstr "นับจำนวนคำในการเพิ่มเข้าของข้อความ"
+msgstr "រាប់​ចំនួន​ពាក្យ​នៃ​អត្ថបទ​ដែល​បាន​បញ្ចូល។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\CommandLineParser.cs
 msgid "Count number of chars in the input text."
-msgstr "Count number of chars in the input text."
+msgstr "រាប់​ចំនួន​តួអក្សរ​នៃ​អត្ថបទ​ដែល​បាន​បញ្ចូល។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\CommandLineParser.cs
 msgid "Input files to count."
-msgstr "เพิ่มแฟ้มเข้าเพื่อนับ"
+msgstr "បញ្ចូល​ឯកសារ​ដើម្បី​រាប់។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\LongStartupNotification.Designer.cs
 msgid "label1"
-msgstr "label1"
+msgstr "ស្លាក​១"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\StatusBarController.cs
 msgid "Configure This Project..."
-msgstr "จัดเตรียมสำหรับโครงการนี้"
+msgstr "រៀប​ចំរចនា​សម្ព័ន្ធ​គម្រោង​នេះ..."
 
 #. Shown at the bottom of the screen.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\StatusBarController.cs
 msgid "Dictionary has {0} words"
-msgstr "พจนานุกรมของท่านมี {0} คำ"
+msgstr "វចនានុក្រម​មាន {0} ពាក្យ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\StatusBarController.cs
 msgid "error"
-msgstr "ล้มเหลว"
+msgstr "កំហុស"
 
 #. Appended to the name of a task, in its tab, while the user is waiting for
 #. the task to come up.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\TabbedForm.cs
 msgid "Loading..."
-msgstr "กำลังโหลด"
+msgstr "កំពុង​ផ្ទុក..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\TabbedForm.Designer.cs
 msgid "tabPage2"
-msgstr "tabPage2"
+msgstr "ថេប​ទំព័រ​២"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Please wait while WeSay prepares your data"
-msgstr "กรุณารอในขณะที่ WeSay กำลังเตรียมข้อมูล"
+msgstr "សូម​រង់ចាំ​ខណៈ​ពេលកម្មវិធី ​WeSay កំពុងតែ​រៀបចំ​ទិន្នន័យ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid ""
 "Welcome to WeSay.\\r\\nThe Configuration Tool will now open so that you can "
 "make a new project or choose an existing one."
-msgstr "ยินดีต้อนรับสู่ WeSay. \\ r \\ n เครื่องมือการกำหนดค่าในขณะนี้จะเปิดเพื่อให้คุณสามารถทำโครงการใหม่หรือเลือกที่มีอยู่เดิม"
+msgstr ""
 
 #. The label on the message box which the user sees if WeSay can't figure out
 #. what project to open.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "No Default Project"
-msgstr "ไม่มีโครงการ"
+msgstr "គ្មាន​គម្រោង​លំនាំ​ដើម​ទេ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
-msgstr "หนทางเข้าสู่ Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
+msgstr "ផ្លូវ​ទៅ​ឯកសារ​ Lift XML (ឧ. ក្នុង​ windows \"c:\\khmer\\wesay\\khmer.lift\")"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Language to show the user interface in."
-msgstr "ภาษาที่ใช้แสดงในหน้าของผู้่ใช้"
+msgstr "ភាសា​ដែល​លោក​អ្នក​ប្រើ​ក្នុង​ផ្ទាំងការងារអ្នក​ប្រើប្រាស់។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid ""
 "Start without a user interface (will have no effect if WeSay is already "
 "running with a UI."
-msgstr "Start without a user interface (will have no effect if WeSay is already running with a UI."
+msgstr "ចាប់ផ្តើម​ដោយ​គ្មានផ្ទាំងការងារ​អ្នក​ប្រើប្រាស់ (បើ WeSay កំពុង​ដំណើរការ​លើផ្ទាំងការងារ​អ្នក​ប្រើប្រាស់ ជម្រើស​នេះ​​គ្មាន​ប្រសិទ្ធភាព​នោះ​​ទេ។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid ""
 "Some things, like backup, just gum up automated tests.  This is used to turn"
 " them off."
-msgstr "Some things, like backup, just gum up automated tests.  This is used to turn them off."
+msgstr "មាន​បញ្ហា​ខ្លះៗ​ ដូចជា​ការ​បម្រុងទុក ដែល​ធ្វើ​ឱ្យ​ការ​សាកល្បង​ស្វ័យប្រវត្តិ​ខូច។  ​ប្រើ​វា​ដើម្បី​បិទ​ដំណើរការ​ទាំង​អស់​នោះ​។"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Make it easy to get back to the configuration tool."
-msgstr "ทำให้ง่ายต่อการกลับไปที่เครื่องมือการกำหนดค่า"
+msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Enable use of the help editor by pressing Ctrl+F1"
@@ -778,23 +779,23 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Gather"
-msgstr "เก็บคำ"
+msgstr "ប្រមូល"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Describe"
-msgstr "อธิบาย"
+msgstr "ពណ៌នា"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Refine"
-msgstr "กลั่น"
+msgstr "ធ្វើ​ឱ្យ​ប្រសើរ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Review"
-msgstr "การทบทวน"
+msgstr "ពិនិត្យ​ឡើង​វិញ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Share"
-msgstr "แบ่งปัน"
+msgstr "ចែកចាយ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ChorusBackupMaker.cs
 msgid "WeSay Automatic Backup"
@@ -802,11 +803,11 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\FailedLoadTask.cs
 msgid "Failed To Load: {0}"
-msgstr "ล้มเหลวในการโหลดข้อมูล"
+msgstr "មិន​អាច​ផ្ទុកបាន៖ {0}"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\FailedLoadTask.cs
 msgid "Error: {0}"
-msgstr "ล้มเหลว{0}"
+msgstr "កំហុស៖ {0}"
 
 #. Label for action which uses Chorus to synchronize the dictionary with other
 #. users, devices, and servers. Here, 'synchronizing' means putting your
@@ -815,7 +816,7 @@ msgstr "ล้มเหลว{0}"
 #. similar to email and this is the term Paratext uses.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid "Send/Receive"
-msgstr "ส่ง/รับ"
+msgstr "ផ្ញើ/ទទួល"
 
 #. description of send/receive action
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\Synchronize\SendReceiveAction.cs
@@ -826,37 +827,37 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid "WeSay Send/Receive"
-msgstr "WeSay ส่ง/รับ"
+msgstr "ផ្ញើ/ទទួល របស់កម្មវិធី​ WeSay"
 
 #. Long label for send/receive action.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid ""
 "Send/Receive Changes to devices, servers, or other users on your network."
-msgstr "ส่ง/รับ การเปลี่ยนแปลงอุปกรณ์พิเศษ,server,หรือ ผู้ใช้คนอื่นในระบบเครือข่าย"
+msgstr "ផ្ញើ/ទទួល​ ការ​ផ្លាស់ប្ដូរ​ទៅ​កាន់​ឧបករណ៍ផ្ទុក ម៉ាស៊ីន​មេ ឬ ​អ្នកប្រើប្រាស់​ដទៃ​ទៀត​ក្នុង​បណ្ដាញ​របស់​លោកអ្នក។"
 
 #. The label for the field holding the citation form, which is how the word
 #. will be displayed in the dictionary.  This is used in languages where the
 #. lexeme form may be different from what the Headword should be.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Citation Form"
-msgstr ""
+msgstr "ទម្រង់​ដកស្រង់"
 
 #. The label for the field showing the literal meaning of idiom or proverb.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Literal Meaning"
-msgstr "ควาหมายตัวอักษร"
+msgstr "ន័យត្រង់"
 
 #. The label for the field showing a note.
 #. The label for the field showing a note.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Note"
-msgstr "ข้อความ"
+msgstr "ចំណាំ"
 
 #. The label for the field showing a picture.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Picture"
-msgstr "รูปภาพ"
+msgstr "រូបភាព"
 
 #. The label for the field showing Part Of Speech
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
@@ -871,36 +872,36 @@ msgstr ""
 #. The label for the field showing an example use of the word.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Example Sentence"
-msgstr "ตัวอย่างประโยค"
+msgstr "ឧទាហរណ៍"
 
 #. The label for the field showing the example sentence translated into other
 #. languages.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Example Translation"
-msgstr "ตัวอย่าคำแปล"
+msgstr "ការបកប្រែ​ជា​ឧទាហរណ៍"
 
 #. The label for the field showing Semantic Domains
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Sem Dom"
-msgstr "ชุดของคำ"
+msgstr "ដែន​ន័យ​វិទ្យា​"
 
 #. The label for the field showing the entry which this entry is derived from,
 #. is a subentry of, etc.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Base Form"
-msgstr "รูปแบบพื้นฐาน"
+msgstr "ទម្រង់​ដើម"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ViewTemplate.cs
 msgid "Cross Reference"
-msgstr "คำที่เกี่ยวข้อง"
+msgstr "សេចក្តី​យោង​ឆ្លង"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
 msgid "Checking file..."
-msgstr "ตรวจสอบไฟล์"
+msgstr "កំពុង​ពិនិត្យ​ឯកសារ..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
 msgid "Checking files..."
-msgstr "ตรวจสอบหลายไฟล์"
+msgstr "កំពុង​ពិនិត្យ​ឯកសារ​នានា..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
@@ -913,7 +914,7 @@ msgstr "+"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\CheckBoxControl.Designer.cs
 msgid "checkBox1"
-msgstr "checkBox1"
+msgstr "ប្រអប់​ពិនិត្យ​១"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\PictureControl.Designer.cs
 msgid "Remove Picture..."
@@ -928,4 +929,4 @@ msgstr ""
 #. field.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\SingleOptionControl.cs
 msgid "unknown"
-msgstr "ไม่ทราบ"
+msgstr "មិន​ស្គាល់"
