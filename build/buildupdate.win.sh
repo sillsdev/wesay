@@ -99,14 +99,7 @@ cd -
 #     revision: latest.lastSuccessful
 #     paths: {"WeSay_Helps.chm"=>"External", "wesay.helpmap"=>"External"}
 #     VCS: https://github.com/sillsdev/wesay-doc.git [refs/heads/master]
-# [4] build: wesay-localize-dev Update Pot and Po (bt52)
-#     project: WeSay
-#     URL: http://build.palaso.org/viewType.html?buildTypeId=bt52
-#     clean: false
-#     revision: latest.lastFinished
-#     paths: {"*.po"=>"common"}
-#     VCS: https://github.com/sillsdev/wesay-tx.git [master]
-# [5] build: palaso-win32-libpalaso-2.6-nostrongname Continuous (PalasoWin32v26nostrongCont)
+# [4] build: palaso-win32-libpalaso-2.6-nostrongname Continuous (PalasoWin32v26nostrongCont)
 #     project: libpalaso
 #     URL: http://build.palaso.org/viewType.html?buildTypeId=PalasoWin32v26nostrongCont
 #     clean: false
@@ -118,7 +111,6 @@ cd -
 mkdir -p ../External
 mkdir -p ../MercurialExtensions
 mkdir -p ../MercurialExtensions/fixutf8
-mkdir -p ../common
 mkdir -p ../lib
 mkdir -p ../lib/Debug
 mkdir -p ../lib/Release
@@ -168,32 +160,6 @@ copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/l10nsharp-
 copy_auto http://build.palaso.org/guestAuth/repository/download/bt196/l10nsharp-2.0.tcbuildtag/L10NSharp.pdb ../lib/Release/L10NSharp.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/WeSay15_WesayDocDefault/latest.lastSuccessful/WeSay_Helps.chm ../External/WeSay_Helps.chm
 copy_auto http://build.palaso.org/guestAuth/repository/download/WeSay15_WesayDocDefault/latest.lastSuccessful/wesay.helpmap ../External/wesay.helpmap
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.ar.po ../common/wesay.ar.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.az.po ../common/wesay.az.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.da.po ../common/wesay.da.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.es.po ../common/wesay.es.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.fr.po ../common/wesay.fr.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.he.po ../common/wesay.he.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.hi.po ../common/wesay.hi.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.id.po ../common/wesay.id.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.is.po ../common/wesay.is.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.km.po ../common/wesay.km.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.lo.po ../common/wesay.lo.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.ms_MY.po ../common/wesay.ms_MY.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.my.po ../common/wesay.my.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.nl.po ../common/wesay.nl.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.oc.po ../common/wesay.oc.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.pl.po ../common/wesay.pl.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.pt.po ../common/wesay.pt.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.ru.po ../common/wesay.ru.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.rw.po ../common/wesay.rw.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.sv.po ../common/wesay.sv.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.sw.po ../common/wesay.sw.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.th.po ../common/wesay.th.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.tpi.po ../common/wesay.tpi.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.vi.po ../common/wesay.vi.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_CN.po ../common/wesay.zh_CN.po
-copy_auto http://build.palaso.org/guestAuth/repository/download/bt52/latest.lastFinished/wesay.zh_TW.po ../common/wesay.zh_TW.po
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.8.tcbuildtag/Palaso.dll ../lib/Release/Palaso.dll
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.8.tcbuildtag/Palaso.pdb ../lib/Release/Palaso.pdb
 copy_auto http://build.palaso.org/guestAuth/repository/download/PalasoWin32v26nostrongCont/wesay-1.6.8.tcbuildtag/Palaso.DictionaryServices.dll ../lib/Release/Palaso.DictionaryServices.dll
