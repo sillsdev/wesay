@@ -1,5 +1,6 @@
 # 
 # Translators:
+# palaso_admin <admin@palaso.org>, 2019
 # azulazul <azul@ugr.es>, 2014
 # Chris Adams <chris.a.topher@gmail.com>, 2014,2016,2018
 # Paul Nelson <paul_nelson@sil.org>, 2017
@@ -7,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2019-02-03T03:08:25\n"
-"PO-Revision-Date: 2019-02-03 03:22+0000\n"
+"PO-Revision-Date: 2019-02-06 13:53+0000\n"
 "Last-Translator: palaso_admin <admin@palaso.org>\n"
 "Language-Team: Arabic (http://www.transifex.com/palaso_admin/wesay/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -479,7 +480,7 @@ msgstr "شاهد كل {0} {1} الكلمات."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
 msgid "en"
-msgstr "أن"
+msgstr "en"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Semantic Domains"

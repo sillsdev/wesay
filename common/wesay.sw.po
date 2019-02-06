@@ -1,11 +1,12 @@
 # 
 # Translators:
+# palaso_admin <admin@palaso.org>, 2019
 # Jeff B <jeffreymb@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2019-02-03T03:08:25\n"
-"PO-Revision-Date: 2019-02-03 03:22+0000\n"
+"PO-Revision-Date: 2019-02-06 13:56+0000\n"
 "Last-Translator: palaso_admin <admin@palaso.org>\n"
 "Language-Team: Swahili (http://www.transifex.com/palaso_admin/wesay/language/sw/)\n"
 "MIME-Version: 1.0\n"
@@ -477,7 +478,7 @@ msgstr "Ona maneno yote {0} ya {1}."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
 msgid "en"
-msgstr ""
+msgstr "en"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Semantic Domains"
