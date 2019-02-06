@@ -1,11 +1,12 @@
 # 
 # Translators:
+# palaso_admin <admin@palaso.org>, 2019
 # palaso_admin <admin@palaso.org>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2019-02-03T03:08:25\n"
-"PO-Revision-Date: 2019-02-03 03:22+0000\n"
+"PO-Revision-Date: 2019-02-06 13:59+0000\n"
 "Last-Translator: palaso_admin <admin@palaso.org>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/palaso_admin/wesay/language/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -407,7 +408,7 @@ msgstr "{1} Từ điển của bạn có {0} từ"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\GroupHeader.designer.cs
 msgid "_label"
-msgstr ""
+msgstr "_label"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\TaskIndicator.designer.cs
 msgid "Gather from Foo words"
@@ -477,7 +478,7 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
 msgid "en"
-msgstr ""
+msgstr "en"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Semantic Domains"
@@ -705,7 +706,7 @@ msgstr ""
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\LongStartupNotification.Designer.cs
 msgid "label1"
-msgstr ""
+msgstr "label1"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\StatusBarController.cs
 msgid "Configure This Project..."

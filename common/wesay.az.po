@@ -1,12 +1,13 @@
 # 
 # Translators:
+# palaso_admin <admin@palaso.org>, 2019
 # Griz2011 <grizzly.kenges@gmail.com>, 2016-2017
 # Ken Keyes <ken_keyes@sil.org>, 2016,2018-2019
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2019-02-03T03:08:25\n"
-"PO-Revision-Date: 2019-02-03 03:22+0000\n"
+"PO-Revision-Date: 2019-02-06 13:54+0000\n"
 "Last-Translator: palaso_admin <admin@palaso.org>\n"
 "Language-Team: Azerbaijani (http://www.transifex.com/palaso_admin/wesay/language/az/)\n"
 "MIME-Version: 1.0\n"
@@ -225,7 +226,7 @@ msgstr "http://princexml.com"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
 msgid "http://wesay.palaso.org/printing-dictionaries-with-wesay/"
-msgstr ""
+msgstr "http://wesay.palaso.org/printing-dictionaries-with-wesay/"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
 msgid "About Make Simple Pdf Dictionary"
@@ -380,11 +381,11 @@ msgstr "\\u2714"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
 msgid "Configure this project..."
-msgstr ""
+msgstr "Bu Layihənin Parametrləri Quraşdırmaq"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
 msgid "Use projector-friendly colors"
-msgstr ""
+msgstr "Proyektorla işləməyə rahat olan rənglərdən istifadə et"
 
 #. The label for the 'dashboard'; the task which lets you see the status of
 #. other tasks and jump to them.
@@ -478,7 +479,7 @@ msgstr "Bütün {0} {1} söz baxmaq"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
 msgid "en"
-msgstr "İngilis"
+msgstr "en"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Semantic Domains"
@@ -646,7 +647,7 @@ msgstr "Qiymət"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Placeholder for control which uses generics so breaks the designer"
-msgstr ""
+msgstr "Ümumiyyət istifadə edən nəzarət üçün yerləşdirici belə dizayner pozur"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Reference Collection"

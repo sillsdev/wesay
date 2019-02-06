@@ -1,13 +1,13 @@
 # 
 # Translators:
 # palaso_admin <admin@palaso.org>, 2011
-# Phil Leckrone <language_software_amareasil@sil.org>, 2017
+# Phil Leckrone <language_software_amareasil@sil.org>, 2017,2019
 msgid ""
 msgstr ""
 "Project-Id-Version: WeSay\n"
 "POT-Creation-Date: 2019-02-03T03:08:25\n"
-"PO-Revision-Date: 2019-02-03 03:22+0000\n"
-"Last-Translator: palaso_admin <admin@palaso.org>\n"
+"PO-Revision-Date: 2019-02-06 13:20+0000\n"
+"Last-Translator: Phil Leckrone <language_software_amareasil@sil.org>\n"
 "Language-Team: Spanish (http://www.transifex.com/palaso_admin/wesay/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr "Identificar la palabra \"forma base\" . En el diccionario impreso, las p
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Looking for USB Flash Drives..."
-msgstr ""
+msgstr "Buscando memorias USB..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Backing Up..."
@@ -89,7 +89,7 @@ msgstr "&OK"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Please insert the USB Flash Drive to backup to."
-msgstr ""
+msgstr "Por favor, inserte la unidad flash USB para realizar la copia de seguridad."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupDialog.cs
 msgid "Unable to look for the device due to an error."
@@ -119,7 +119,7 @@ msgstr "Respaldo en Dispositivo USB"
 #. description of usb backup action
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupToDevice.cs
 msgid "Saves a backup on an external device, like a USB Flash Drive."
-msgstr ""
+msgstr "Guarda una copia de seguridad en un dispositivo externo, como una unidad flash USB."
 
 #. Short buton label for usb flash-drive backup action
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\BackupToDevice.cs
@@ -149,7 +149,7 @@ msgstr "Destinatario"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Backup\SendProjectEmailSettingsDialog.Designer.cs
 msgid "Send Project Email Settings..."
-msgstr ""
+msgstr "Enviar configuración de correo electrónico del proyecto...."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\HtmlInWord.cs
 msgid "Export to Word"
@@ -207,17 +207,17 @@ msgstr "Abrir diccionario en Lexique Pro para imprimir o para crear una página 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 msgid "Make OpenOffice Document"
-msgstr ""
+msgstr "Crear un documento de OpenOffice"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 msgid ""
 "WeSay was unable to remove the old .odt file. This may be because it is open"
 " in another program. Please close the file before clicking OK."
-msgstr ""
+msgstr "WeSay no ha podido eliminar el antiguo archivo de .odt. Esto podría deberse a que está abierto en otro programa. Cierre el archivo antes de hacer clic en Aceptar."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\OpenOffice\OpenOfficeAddin.cs
 msgid "Unable to delete old file."
-msgstr ""
+msgstr "No se puede eliminar el archivo antiguo."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
 msgid "http://princexml.com"
@@ -225,11 +225,11 @@ msgstr "http://princexml.com"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
 msgid "http://wesay.palaso.org/printing-dictionaries-with-wesay/"
-msgstr ""
+msgstr "http://wesay.palaso.org/printing-dictionaries-with-wesay/"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\AboutMakePdfDictionary.Designer.cs
 msgid "About Make Simple Pdf Dictionary"
-msgstr ""
+msgstr "Acerca de hacer un diccionario sencillo en PDF"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\LibreOfficePdf.cs
 msgid "Make Pdf Dictionary"
@@ -237,7 +237,7 @@ msgstr "Crear Diccionario PDF"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\PdfDictionary\PdfMaker.cs
 msgid "Make Simple Pdf Dictionary"
-msgstr ""
+msgstr "Hacer un diccionario sencillo en PDF"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Tweaks"
@@ -265,7 +265,7 @@ msgstr "Corriente (Vulgar)"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SFMChangesDialog.Designer.cs
 msgid "Setup Standard Format Export..."
-msgstr ""
+msgstr "Configurar exportación de formato estándar..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\Addin.Transform\SfmTransformer.cs
 msgid "Export To SFM"
@@ -358,7 +358,7 @@ msgstr "Completado:"
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "(Page Down Key)"
-msgstr ""
+msgstr "(Tecla Avanzar Página)"
 
 #. The user will click this to say that this word has no baseform.  E.g.
 #. Kindness has Kind as a baseform, but Kind has no other word as a baseform.
@@ -380,11 +380,11 @@ msgstr "\\u2714"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
 msgid "Configure this project..."
-msgstr ""
+msgstr "Configurar este proyecto..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\Dash.cs
 msgid "Use projector-friendly colors"
-msgstr ""
+msgstr "Use colores que sean fáciles de proyectar"
 
 #. The label for the 'dashboard'; the task which lets you see the status of
 #. other tasks and jump to them.
@@ -412,7 +412,7 @@ msgstr "_etiqueta"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\TaskIndicator.designer.cs
 msgid "Gather from Foo words"
-msgstr ""
+msgstr "Recopilar las palabras de Foo"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Dashboard\TaskIndicator.designer.cs
 msgid "See words in Foo, write the same words in Boo"
@@ -447,7 +447,7 @@ msgstr "Examinar y Editar diccionario"
 #. but the word doesn't have a gloss.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "No Gloss"
-msgstr ""
+msgstr "No hay glosa"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\DictionaryControl.cs
 msgid "Hide &Uncommon Fields"
@@ -478,29 +478,29 @@ msgstr "Mostrar todas las {0} palabras {0} del proyecto {1}."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\DictionaryBrowseAndEdit\SearchBoxControl.Designer.cs
 msgid "en"
-msgstr ""
+msgstr "en"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Semantic Domains"
-msgstr ""
+msgstr "Dominios semánticos"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Gather Words By Semantic Domain"
-msgstr ""
+msgstr "Recopilar palabras por dominio semántico"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid ""
 "Collect new words organized by semantic domains and questions about those "
 "domains."
-msgstr ""
+msgstr "Recopilar nuevas palabras organizadas por dominios semánticos y preguntas sobre esos dominios."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Domains without words"
-msgstr ""
+msgstr "Dominios sin palabras"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainConfig.cs
 msgid "Total domains:"
-msgstr ""
+msgstr "Total de dominios:"
 
 #. The label for the field showing the Lexeme Form of the entry.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
@@ -511,7 +511,7 @@ msgstr "Palabra"
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherByWordList\GatherWordListControl.Designer.cs
 msgid "(Enter Key)"
-msgstr ""
+msgstr "(tecla ENTRAR)"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Try thinking of words you use to talk about these things."
@@ -519,11 +519,11 @@ msgstr "Intente pensar en las palabras que usted usa para hablar acerca de estas
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "Description goes here."
-msgstr ""
+msgstr "La descripción va aquí."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\GatherBySemanticDomains\GatherBySemanticDomainsControl.Designer.cs
 msgid "\"Don't translate\" warning goes here."
-msgstr ""
+msgstr "La advertencia \"No traducir\" va aquí."
 
 #. This label is shown once, but has two roles.  1) it labels the
 #. gloss/definition field, and 2) marks the beginning of the set of fields
@@ -559,11 +559,11 @@ msgstr "Foobar"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Layouter.cs
 msgid "Delete Meaning"
-msgstr ""
+msgstr "Eliminar el significado"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\LexEntryLayouter.cs
 msgid "This will permanently remove the meaning"
-msgstr ""
+msgstr "Esto eliminará permanentemente el significado"
 
 #. This is the field containing an example sentence of a sense of a word.
 #. This is the field containing an example sentence of a sense of a word.
@@ -593,15 +593,15 @@ msgstr "Definición"
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Review\AdvancedHistory\AdvancedHistoryConfig.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Review\AdvancedHistory\AdvancedHistoryConfig.cs
 msgid "History"
-msgstr ""
+msgstr "Historia"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Review\NotesBrowser\NotesBrowserConfig.cs
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\Review\NotesBrowser\NotesBrowserConfig.cs
 msgid "Browse Notes In Project"
-msgstr ""
+msgstr "Navegar por las notas del proyecto"
 
 #. Generic desciption of how many items in a task are left to do.
 #: C\BuildAgent\work\cc4fe1131690a331\src\LexicalTools\TaskBase.cs
@@ -616,19 +616,19 @@ msgstr "Total:"
 #: C\BuildAgent\work\cc4fe1131690a331\src\LiftWordList2Json\Options.cs
 msgid ""
 "Wordlist in lift format with id and glosses in different source languages."
-msgstr ""
+msgstr "Lista de palabras en formato lift con id y glosas en diferentes idiomas de origen."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LiftWordList2Json\Options.cs
 msgid "Output file to write."
-msgstr ""
+msgstr "Archivo de resultados a escribir."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LiftWordList2Json\Options.cs
 msgid "Verbose output."
-msgstr ""
+msgstr "Resultados verbosos."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\LiftWordList2Json\Options.cs
 msgid "Display this help screen."
-msgstr ""
+msgstr "Muestra esta pantalla de ayuda."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Refresh"
@@ -710,7 +710,7 @@ msgstr "label1"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\StatusBarController.cs
 msgid "Configure This Project..."
-msgstr ""
+msgstr "Configurar este proyecto..."
 
 #. Shown at the bottom of the screen.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\StatusBarController.cs
@@ -739,13 +739,13 @@ msgstr "Por favor, espere mientras WeSay prepara sus datos"
 msgid ""
 "Welcome to WeSay.\\r\\nThe Configuration Tool will now open so that you can "
 "make a new project or choose an existing one."
-msgstr ""
+msgstr "Bienvenido a WeSay.\\r\\NLa Herramienta de Configuración se abrirá para que puedas hacer un nuevo proyecto o elegir uno ya existente."
 
 #. The label on the message box which the user sees if WeSay can't figure out
 #. what project to open.
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "No Default Project"
-msgstr ""
+msgstr "Ningún proyecto por defecto"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Path to the Lift Xml file (e.g. on windows, \"c:\\thai\\wesay\\thai.lift\")."
@@ -769,35 +769,35 @@ msgstr "Algunas cosas, como Respaldos, sólo interfieren en las pruebas automati
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Make it easy to get back to the configuration tool."
-msgstr ""
+msgstr "Facilitar el regreso a la herramienta de configuración."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.App\WeSayApp.cs
 msgid "Enable use of the help editor by pressing Ctrl+F1"
-msgstr ""
+msgstr "Habilitar el uso del editor de ayuda pulsando Ctrl+F1"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Gather"
-msgstr ""
+msgstr "Recopilar"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Describe"
-msgstr ""
+msgstr "Describir"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Refine"
-msgstr ""
+msgstr "Refinar"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Review"
-msgstr ""
+msgstr "Revisar"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Foundation\IThingOnDashboard.cs
 msgid "Share"
-msgstr ""
+msgstr "Compartir"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\ChorusBackupMaker.cs
 msgid "WeSay Automatic Backup"
-msgstr ""
+msgstr "WeSay Copia de seguridad automática"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\FailedLoadTask.cs
 msgid "Failed To Load: {0}"
@@ -821,7 +821,7 @@ msgstr "Enviar/Recibir"
 msgid ""
 "Sends your changes to a USB flash drive, server, or other users, and "
 "receives the changes made by other members of your team."
-msgstr ""
+msgstr "Envía los cambios a una unidad flash USB, servidor u otros usuarios, y recibe los cambios realizados por otros miembros de su equipo."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\Synchronize\SendReceiveAction.cs
 msgid "WeSay Send/Receive"
@@ -895,16 +895,16 @@ msgstr "Referencia cruzada"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
 msgid "Checking file..."
-msgstr ""
+msgstr "Verificando archivo..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
 msgid "Checking files..."
-msgstr ""
+msgstr "Verificando archivos..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.Project\WeSayWordsProject.cs
 msgid "Cross Reference migration..."
-msgstr ""
+msgstr "Migración de referencias cruzadas..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\AutoCompleteTextBox\AutoCompleteWithCreationBox.Designer.cs
 msgid "+"
@@ -912,15 +912,15 @@ msgstr "+"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\CheckBoxControl.Designer.cs
 msgid "checkBox1"
-msgstr ""
+msgstr "checkBox1"
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\PictureControl.Designer.cs
 msgid "Remove Picture..."
-msgstr ""
+msgstr "Eliminar imagen..."
 
 #: C\BuildAgent\work\cc4fe1131690a331\src\WeSay.UI\PictureControl.Designer.cs
 msgid "Get Picture..."
-msgstr ""
+msgstr "Obtener imagen..."
 
 #. This is shown in a combo-box (list of options, like Part Of Speech) when no
 #. option has been chosen, or the user just doesn't know what to put in this
