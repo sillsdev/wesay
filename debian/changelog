@@ -1,3 +1,9 @@
+wesay (1.6.10) xenial; urgency=medium
+
+  * updated translations
+
+ -- Daniel Glassey <wdg@debian.org>  Wed, 06 Feb 2019 09:36:00 -0600
+
 wesay (1.6.9) xenial; urgency=medium
 
   * d/control: add dependency on libxlavier16
