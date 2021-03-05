@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using SIL.IO;
 using SIL.Reporting;
-using SIL.Windows.Forms.ImageGallery;
+using SIL.Windows.Forms.ImageToolbox.ImageGallery;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace WeSay.LexicalTools.AddPictures
 	{
 		private readonly AddPicturesConfig _config;
 		private Control _view;
-		private IImageCollection _imageCollection;
+		private ImageCollection _imageCollection;
 
 		public AddPicturesTask( AddPicturesConfig config,
 									LexEntryRepository lexEntryRepository,
@@ -53,7 +53,7 @@ namespace WeSay.LexicalTools.AddPictures
 			}
 		}
 
-		public IImageCollection ImageCollection
+		public ImageCollection ImageCollection
 		{
 			get
 			{

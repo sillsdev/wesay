@@ -7,7 +7,7 @@ using SIL.IO;
 using SIL.Windows.Forms.ImageToolbox;
 using SIL.UiBindings;
 using SIL.Reporting;
-using SIL.Windows.Forms.ImageGallery;
+using SIL.Windows.Forms.ImageToolbox.ImageGallery;
 
 namespace WeSay.UI
 {
