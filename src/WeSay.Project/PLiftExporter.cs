@@ -40,11 +40,11 @@ namespace WeSay.Project
 			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
 			_path = path;
-			_disposed = true; // In case we throw in the constructor
+//			_disposed = true; // In case we throw in the constructor
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
 			_headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
-			_disposed = false;
+//			_disposed = false;
 		}
 
 		public override void Dispose()
