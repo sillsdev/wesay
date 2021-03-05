@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -15,7 +15,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -73,15 +73,15 @@
     <Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\..\lib\$(Configuration)\Chorus.exe</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.chorus.app\3.1.0-beta0055\lib\net461\Chorus.exe</HintPath>
     </Reference>
     <Reference Include="L10NSharp, Version=2.0.32.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\L10NSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\l10nsharp\4.1.0-beta0050\lib\net461\L10NSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\LibChorus.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.chorus.libchorus\3.1.0-beta0055\lib\net461\LibChorus.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0">
       <HintPath>..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
@@ -94,38 +94,39 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
     </Reference>
-
-    <Reference Include="SIL.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SIL.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.core\8.0.0-beta0264\lib\net461\SIL.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SIL.Core.Desktop, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.core.desktop\8.0.0-beta0264\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="SIL.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.DictionaryServices.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.dictionaryservices\8.0.0-beta0264\lib\net461\SIL.DictionaryServices.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.Lift.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.lift\8.0.0-beta0265\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lexicon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.Lexicon.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.lexicon\8.0.0-beta0264\lib\net461\SIL.Lexicon.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.Windows.Forms.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.windows.forms\8.0.0-beta0264\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Windows.Forms.GeckoBrowserAdapter.dll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.Windows.Forms.GeckoBrowserAdapter.dll</HintPath>
+    <Reference Include="SIL.Windows.Forms.GeckoBrowserAdapter">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.windows.forms.geckobrowseradapter\8.0.0-beta0264\lib\net461\SIL.Windows.Forms.GeckoBrowserAdapter.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Windows.Forms.Keyboarding.dll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+    <Reference Include="SIL.Windows.Forms.Keyboarding">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.windows.forms.keyboarding\8.0.0-beta0264\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
     </Reference>
     <Reference Include="SIL.WritingSystems, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.WritingSystems.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.writingsystems\8.0.0-beta0264\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
@@ -236,6 +237,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\wesay.helpmap" />
+    <None Include="app.config" />
     <None Include="Resources\sendReceive32x32.png" />
   </ItemGroup>
   <ItemGroup>
