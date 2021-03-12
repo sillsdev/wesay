@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+//using System.IO;
+//using System.Linq;
+//using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using Chorus.UI.Review;
-using SIL.Code;
+//using SIL.Code;
 using SIL.i18n;
 using SIL.Reporting;
 using WeSay.App.Properties;

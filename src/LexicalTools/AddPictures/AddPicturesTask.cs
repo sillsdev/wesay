@@ -31,8 +31,14 @@ namespace WeSay.LexicalTools.AddPictures
 		public override void Activate()
 		{
 			base.Activate();
-			_imageCollection = ArtOfReadingImageCollection.FromStandardLocations();
-			if(_imageCollection == null)
+			//ArtOReadingImageCollection
+			//_imageCollection = ArtOReadingImageCollection.FromStandardLocations();
+			_imageCollection = new ImageCollection("%ProgramData%\\SIL\\ImageCollections\\Art Of Reading");
+			if (_imageCollection == null)
+			{
+				_imageCollection = new ImageCollection("/usr/share/SIL/ImageCollections/ArtOfReading");
+			}
+			if (_imageCollection == null)
 			{
 				throw new ConfigurationException("Could not locate image index.");
 			}
