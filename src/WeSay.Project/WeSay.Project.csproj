@@ -68,12 +68,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\autofac\2.6.3.862\lib\NET40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <ExecutableExtension>.exe</ExecutableExtension>
       <HintPath>..\..\..\..\..\..\.nuget\packages\sil.chorus.app\3.1.0-beta0055\lib\net461\Chorus.exe</HintPath>
+    </Reference>
+    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\enchant.net\1.4.2\lib\net461\Enchant.Net.dll</HintPath>
     </Reference>
     <Reference Include="L10NSharp, Version=2.0.32.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -83,16 +88,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\.nuget\packages\sil.chorus.libchorus\3.1.0-beta0055\lib\net461\LibChorus.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0">
-      <HintPath>..\packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
-    </Reference>
-    <Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetReflector.1.1.2009\lib\net20\NetReflector.dll</HintPath>
-    </Reference>
     <Reference Include="Commons.Xml.Relaxng, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\mono.addins\1.3.8\lib\net45\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="NetReflector, Version=1.1.2009.1214, Culture=neutral, PublicKeyToken=2f4dd8b32acbcd8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\netreflector\1.1.2009\lib\net20\NetReflector.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -127,10 +136,6 @@
     <Reference Include="SIL.WritingSystems, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\.nuget\packages\sil.writingsystems\8.0.0-beta0264\lib\net461\SIL.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\common\Enchant.Net.dll</HintPath>
     </Reference>
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -238,6 +243,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\wesay.helpmap" />
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Resources\sendReceive32x32.png" />
   </ItemGroup>
   <ItemGroup>
