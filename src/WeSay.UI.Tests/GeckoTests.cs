@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -86,12 +86,12 @@ namespace WeSay.UI.Tests
 			ControlTester t = new ControlTester("ControlUnderTest", _window);
 			KeyboardController keyboardController = new KeyboardController(t);
 			Application.DoEvents();
-			keyboardController.Press("T");
-			keyboardController.Press("e");
-			keyboardController.Press("s");
-			keyboardController.Press("t");
+			keyboardController.Press(Key.T);
+			keyboardController.Press(Key.E);
+			keyboardController.Press(Key.S);
+			keyboardController.Press(Key.T);
 			Application.DoEvents();
-			Assert.AreEqual("Test", textBox.Text);
+			Assert.AreEqual("test", textBox.Text);
 			keyboardController.Dispose();
 		}
 
@@ -113,14 +113,14 @@ namespace WeSay.UI.Tests
 			Application.DoEvents();
 			keyboardController.Press(Key.HOME);
 			Application.DoEvents();
-			keyboardController.Press("V");
-			keyboardController.Press("a");
-			keyboardController.Press("l");
-			keyboardController.Press("u");
-			keyboardController.Press("e");
-			keyboardController.Press(" ");
+			keyboardController.Press(Key.V);
+			keyboardController.Press(Key.A);
+			keyboardController.Press(Key.L);
+			keyboardController.Press(Key.U);
+			keyboardController.Press(Key.E);
+			keyboardController.Press(Key.SPACE);
 			Application.DoEvents();
-			Assert.AreEqual("Value Test", textBox.Text);
+			Assert.AreEqual("value Test", textBox.Text);
 			keyboardController.Dispose();
 		}
 
@@ -142,11 +142,8 @@ namespace WeSay.UI.Tests
 			Application.DoEvents();
 			keyboardController.Press(Key.END);
 			Application.DoEvents();
-			keyboardController.Press(" ");
-			keyboardController.Press("T");
-			keyboardController.Press("e");
-			keyboardController.Press("s");
-			keyboardController.Press("t");
+			keyboardController.Press(Key.SPACE);
+			keyboardController.Press(Key.T);
 			Application.DoEvents();
 			Assert.AreEqual("Value", textBox.Text);
 			keyboardController.Dispose();
@@ -373,16 +370,16 @@ namespace WeSay.UI.Tests
 			Application.DoEvents();
 
 			j = comboBox.Length;
-			keyboardController.Press("{DOWN}");
+			keyboardController.Press(Key.DOWN);
 			Application.DoEvents();
-			keyboardController.Release("{DOWN}");
+			keyboardController.Release(Key.DOWN);
 			Application.DoEvents();
 			value = (String)comboBox.SelectedItem;
 			Assert.AreEqual(3, j);
 			Assert.AreEqual("Saab", value);
-			keyboardController.Press("{DOWN}");
+			keyboardController.Press(Key.DOWN);
 			Application.DoEvents();
-			keyboardController.Release("{DOWN}");
+			keyboardController.Release(Key.DOWN);
 			Application.DoEvents();
 			value = (String)comboBox.SelectedItem;
 			Application.DoEvents();
@@ -390,14 +387,6 @@ namespace WeSay.UI.Tests
 
 			Assert.AreEqual(3, j);
 			Assert.AreEqual("Toyota", value);
-			/*}
-			catch (Exception)
-			{
-				// Team city sometimes throws exception on this test
-				// Rather than remove a test that usually works, I am
-				// putting this in to allow it to pass when timing problems
-				// occur.
-			}*/
 		}
 
 		[Test]

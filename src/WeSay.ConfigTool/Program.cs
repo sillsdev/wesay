@@ -6,6 +6,7 @@ using SIL.IO;
 using SIL.Reporting;
 using WeSay.ConfigTool.Properties;
 using Gecko;
+using SIL.Windows.Forms.Reporting;
 
 namespace WeSay.ConfigTool
 {
@@ -37,21 +38,18 @@ namespace WeSay.ConfigTool
 
 			Settings.Default.Save();
 
-			using (new SIL.CoreSetup())
+			try
 			{
-				try
-				{
-					// initialize Palaso keyboarding
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
-					SIL.WritingSystems.Sldr.Initialize();
-					Application.Run(new ConfigurationWindow(args));
-				}
-				finally
-				{
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
-					SIL.WritingSystems.Sldr.Cleanup();
-					Icu.Wrapper.Cleanup();
-				}
+				// initialize Palaso keyboarding
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+				SIL.WritingSystems.Sldr.Initialize();
+				Application.Run(new ConfigurationWindow(args));
+			}
+			finally
+			{
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+				SIL.WritingSystems.Sldr.Cleanup();
+				Icu.Wrapper.Cleanup();
 			}
 		}
 
@@ -110,12 +108,12 @@ namespace WeSay.ConfigTool
 		{
 			ErrorReport.EmailAddress = "issues@wesay.org";
 			ErrorReport.AddStandardProperties();
-			ExceptionHandler.Init();
+			ExceptionHandler.Init(new WinFormsExceptionHandler());
 		}
 
 		public static void ShowHelpTopic(string topicLink)
 		{
-			string helpFilePath = FileLocator.GetFileDistributedWithApplication(true, "WeSay_Helps.chm");
+			string helpFilePath = FileLocationUtilities.GetFileDistributedWithApplication(true, "WeSay_Helps.chm");
 			if (String.IsNullOrEmpty(helpFilePath))
 			{
 				string commonDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);

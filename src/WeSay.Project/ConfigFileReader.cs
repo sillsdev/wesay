@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
 using Autofac;
 using Autofac.Core;
 using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
-
 
 namespace WeSay.Project
 {

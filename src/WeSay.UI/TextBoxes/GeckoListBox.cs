@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -200,16 +200,16 @@ namespace WeSay.UI.TextBoxes
 
 		public Rectangle GetItemRectangle(int index)
 		{
-			Rectangle itemRectangle = this.ClientRectangle; // Default
-			if (!((_browser == null) || (_browser.Document == null)))
+			var itemRectangle = ClientRectangle; // Default
+			if (_browser?.Document != null)
 			{
 
-				string id = index.ToString() + "-1";
-				var content = (GeckoLIElement)_browser.Document.GetElementById(id);
+				var id = index + "-1";
+				var content = _browser.Document.GetElementById(id);
 				if (content != null)
 				{
-					nsIDOMClientRect domRect = content.DOMHtmlElement.GetBoundingClientRect();
-					itemRectangle = new Rectangle((int)domRect.GetLeftAttribute(), (int)domRect.GetTopAttribute(), (int)domRect.GetWidthAttribute(), (int)domRect.GetHeightAttribute());
+					var domRect = content.GetBoundingClientRect();
+					itemRectangle = new Rectangle(domRect.Left, domRect.Top, domRect.Width, domRect.Height);
 				}
 			}
 			return itemRectangle;

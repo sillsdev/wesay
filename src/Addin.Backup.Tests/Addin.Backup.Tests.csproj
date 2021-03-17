@@ -74,11 +74,11 @@
     </Reference>
     <Reference Include="SIL.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\SIL.Core.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.8.0.0\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="SIL.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.testutilities\8.0.0-beta0264\lib\net461\SIL.TestUtilities.dll</HintPath>
+      <HintPath>..\packages\sil.testutilities\8.0.0-beta0264\lib\net461\SIL.TestUtilities.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

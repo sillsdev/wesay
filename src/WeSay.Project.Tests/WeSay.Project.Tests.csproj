@@ -69,11 +69,11 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\.nuget\packages\autofac\6.1.0\lib\net5.0\Autofac.dll</HintPath>
+      <HintPath>..\packages\Autofac.6.1.0\lib\netstandard20\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\.nuget\packages\enchant.net\1.4.2\lib\net461\Enchant.Net.dll</HintPath>
+      <HintPath>..\packages\Enchant.Net.1.4.2\lib\net461\Enchant.Net.dll</HintPath>
     </Reference>
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -84,10 +84,10 @@
     </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\.nuget\packages\nunit\3.13.1\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="SIL.DictionaryServices">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\sil.dictionaryservices\8.0.0-beta0264\lib\net461\SIL.DictionaryServices.dll</HintPath>
+      <HintPath>..\packages\SIL.DictionaryServices.8.0.0\lib\net461\SIL.DictionaryServices.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
