@@ -56,6 +56,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\autofac\6.1.0\lib\netstandard2.0\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="SIL.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\.nuget\packages\sil.core\8.0.0-beta0264\lib\net461\SIL.Core.dll</HintPath>

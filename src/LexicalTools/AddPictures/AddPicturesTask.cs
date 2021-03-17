@@ -31,8 +31,6 @@ namespace WeSay.LexicalTools.AddPictures
 		public override void Activate()
 		{
 			base.Activate();
-			//ArtOReadingImageCollection
-			//_imageCollection = ArtOReadingImageCollection.FromStandardLocations();
 			_imageCollection = new ImageCollection("%ProgramData%\\SIL\\ImageCollections\\Art Of Reading");
 			if (_imageCollection == null)
 			{

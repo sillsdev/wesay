@@ -91,7 +91,7 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\.nuget\packages\autofac\6.1.0\lib\net5.0\Autofac.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\autofac\6.1.0\lib\netstandard2.0\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Chorus, Version=3.1.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

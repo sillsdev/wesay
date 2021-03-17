@@ -67,6 +67,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\autofac\6.1.0\lib\netstandard2.0\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\.nuget\packages\enchant.net\1.4.2\lib\net461\Enchant.Net.dll</HintPath>
