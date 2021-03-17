@@ -1,0 +1,54 @@
+
+name: WeSay CI workflow
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe (Windows OS)
+      uses: microsoft/setup-msbuild@v1.0.2
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
+      if: ${{ matrix.os == 'windows-latest' }}
+
+    # Run the unit tests
+    - name: Restore
+      run: nuget restore src/WeSay.sln
+
+    - name: Build
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
+      run: msbuild src/WeSay.sln
+
+    - name: Test
+      run: msbuild src/WeSay.sln /t:Test /p:Configuration=Debug /p:Platform="Any CPU"
+        
+#    - name: Test Report
+#      uses: MirrorNG/nunit-reporter@eba9570
+#      if: always()
+#      with:
+#        path: output/**/TestResults.xml
+#        access-token: ${{ secrets.GITHUB_TOKEN }}
+#        reportTitle: "Test Results (${{ matrix.os }})"
