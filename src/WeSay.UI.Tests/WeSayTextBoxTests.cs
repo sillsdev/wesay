@@ -87,11 +87,8 @@ namespace WeSay.UI.Tests
 			TextBoxTester t = new TextBoxTester("_textToSearchForBox", _window);
 			KeyboardController keyboardController = new KeyboardController(t);
 			t.Properties.Focus();
-			keyboardController.Press("Test");
-			keyboardController.Press("e");
-			keyboardController.Press("s");
-			keyboardController.Press("t");
-			Assert.IsTrue(textBox.Text.Equals("Testest"));
+			keyboardController.Press(Key.T);
+			Assert.IsTrue(textBox.Text.Equals("t"));
 			keyboardController.Dispose();
 
 		}

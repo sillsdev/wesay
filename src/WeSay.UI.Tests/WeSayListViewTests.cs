@@ -41,19 +41,19 @@ namespace WeSay.UI.Tests
 		[Platform(Exclude="Unix")] // MouseController uses Win32.GetCursorPos so not portable
 		public void ClickOnWhiteSpaceToRightOfEntry_ThenKeyboardNavigate_CorrectEntrySelected()
 		{
-			ListViewTester l = new ListViewTester("_listView", _window);
+			var l = new ListBoxTester("_listView", _window);
 			using (MouseController mc = new MouseController(l))
 			{
 				using (KeyboardController kc = new KeyboardController(l))
 				{
 					l.Select(0);
-					Rectangle r = l.Properties.GetItemRect(1);
+					Rectangle r = l.Properties.GetItemRectangle(1);
 					mc.Click(r.Right + 1, r.Top + 1);
-					kc.Press("{DOWN}");
-					kc.Release("{DOWN}");
+					kc.Press(Key.DOWN);
+					kc.Release(Key.DOWN);
 				}
 			}
-			Assert.AreEqual(2, l.Properties.SelectedIndices[0]);
+			Assert.That(l.Properties.SelectedIndices[0], Is.EqualTo(2));
 		}
 
 		[Test]
@@ -61,10 +61,10 @@ namespace WeSay.UI.Tests
 		[Platform(Exclude="Unix")] // MouseController uses Win32.GetCursorPos so not portable
 		public void DoubleClickOnWhiteSpaceToRightOfEntry_EntryAlreadySelected_EntryStaysSelected()
 		{
-			ListViewTester l = new ListViewTester("_listView", _window);
+			var l = new ListBoxTester("_listView", _window);
 			using (MouseController mc = new MouseController(l))
 			{
-				Rectangle r = l.Properties.GetItemRect(0);
+				Rectangle r = l.Properties.GetItemRectangle(0);
 				mc.Click(r.Right + 1, r.Top + 1);
 				// move enough to not confuse click with double-click
 				mc.DoubleClick(r.Right + SystemInformation.DoubleClickSize.Width + 2, r.Top + 1);

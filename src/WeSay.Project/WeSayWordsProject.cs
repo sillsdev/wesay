@@ -2059,7 +2059,6 @@ namespace WeSay.Project
 		{
 			var containerBuilder = new ContainerBuilder();
 			adder.Invoke(containerBuilder);
-			containerBuilder.Update(_container);
 		}
 
 		public void SetupUserForChorus()
