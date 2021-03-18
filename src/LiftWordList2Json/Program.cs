@@ -54,7 +54,7 @@ namespace Lift2Json
 			List<LexEntry> _words;
 			_words = new List<LexEntry>();
 
-			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa-x-qaa'><text>fooOne</text></form></lexical-unit></entry>"))
+			using (ProjectDirectorySetupForTesting p = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
 				WeSayWordsProject project = p.CreateLoadedProject();
 

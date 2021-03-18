@@ -320,7 +320,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 							  <multiplicity>ZeroOr1</multiplicity>
 							  <visibility>Visible</visibility>
 							  <writingSystems>
-								<id>qaa-x-qaa</id>
+								<id>qaa</id>
 							  </writingSystems>
 							</field>
 							<field>
@@ -334,7 +334,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 							  <multiplicity>ZeroOr1</multiplicity>
 							  <visibility>NormallyHidden</visibility>
 							  <writingSystems>
-								<id>qaa-x-qaa</id>
+								<id>qaa</id>
 							  </writingSystems>
 							</field>
 							<field>
@@ -447,7 +447,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 							  <multiplicity>ZeroOr1</multiplicity>
 							  <visibility>Visible</visibility>
 							  <writingSystems>
-								<id>qaa-x-qaa</id>
+								<id>qaa</id>
 							  </writingSystems>
 							</field>
 							<field>
@@ -490,7 +490,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 							  <multiplicity>ZeroOr1</multiplicity>
 							  <visibility>NormallyHidden</visibility>
 							  <writingSystems>
-								<id>qaa-x-qaa</id>
+								<id>qaa</id>
 							  </writingSystems>
 							</field>
 							<field>
@@ -504,7 +504,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 							  <multiplicity>ZeroOrMore</multiplicity>
 							  <visibility>NormallyHidden</visibility>
 							  <writingSystems>
-								<id>qaa-x-qaa</id>
+								<id>qaa</id>
 							  </writingSystems>
 							</field>
 						  </fields>
