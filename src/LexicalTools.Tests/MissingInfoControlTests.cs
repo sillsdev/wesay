@@ -10,6 +10,7 @@ using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
 
 using NUnit.Framework;
+using SIL.IO;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
@@ -19,7 +20,7 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
-		private string _filePath;
+		private TempFile _tempFile;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private WritingSystemDefinition _writingSystem;
@@ -64,9 +65,9 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayProjectTestHelper.InitializeForTests();
 
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_tempFolder = new TemporaryFolder("MissingInfoControlTests");
+			_tempFile = _tempFolder.GetNewTempFile(true);
+			_lexEntryRepository = new LexEntryRepository(_tempFile.Path);
 
 			_writingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
 
@@ -130,14 +131,9 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			if (_lexEntryRepository != null)
-			{
-				_lexEntryRepository.Dispose();
-			}
-			if (_tempFolder != null)
-			{
-				_tempFolder.Delete();
-			}
+			_lexEntryRepository?.Dispose();
+			_tempFolder?.Delete();
+			_tempFile?.Dispose();
 			WeSayProjectTestHelper.CleanupForTests();
 		}
 

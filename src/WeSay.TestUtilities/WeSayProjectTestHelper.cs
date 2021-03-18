@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using SIL.Lexicon;
@@ -16,7 +16,6 @@ namespace WeSay.TestUtilities
 		/// </summary>
 		public static WeSayWordsProject InitializeForTests()
 		{
-			Sldr.Initialize(true);
 			WeSayWordsProject project = new WeSayWordsProject();
 
 			try
@@ -74,7 +73,6 @@ namespace WeSay.TestUtilities
 
 		public static void CleanupForTests()
 		{
-			Sldr.Cleanup();
 		}
 
 		private static void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)

@@ -18,10 +18,21 @@ namespace WeSay.LexicalModel.Tests
 		private LexEntryRepository _lexEntryRepository;
 		private WritingSystemDefinition _lexicalFormWritingSystem;
 
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
 		[SetUp]
 		public void Setup()
 		{
-			Sldr.Initialize(true);
 			_lexicalFormWritingSystem = new WritingSystemDefinition("de")
 			{
 				DefaultCollation = new IcuRulesCollationDefinition("standard")
@@ -36,7 +47,6 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_lexEntryRepository.Dispose();
 			_temporaryFolder.Delete();
-			Sldr.Cleanup();
 		}
 
 		private void CreateLexentryWithOnlyCitationForm(string citationForm, string writingSystemId)

@@ -11,7 +11,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>qaa-x-qaa</id>
+			<id>qaa</id>
 		  </writingSystems>
 		</field>
 		<field>
@@ -45,7 +45,7 @@
 		  <multiplicity>ZeroOr1</multiplicity>
 		  <visibility>Visible</visibility>
 		  <writingSystems>
-			<id>qaa-x-qaa</id>
+			<id>qaa</id>
 		  </writingSystems>
 		</field>
 		<field>

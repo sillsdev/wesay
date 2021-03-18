@@ -16,10 +16,21 @@ namespace WeSay.LexicalModel.Tests
 		private TemporaryFolder _tempfolder;
 		private LexEntryRepository _repository;
 
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
 		[SetUp]
 		public void Setup()
 		{
-			Sldr.Initialize(true);
 			_tempfolder = new TemporaryFolder();
 			string persistedFilePath = _tempfolder.GetTemporaryFile();
 			_repository = new LexEntryRepository(persistedFilePath);
@@ -29,7 +40,6 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			_repository.Dispose();
-			Sldr.Cleanup();
 		}
 
 		[Test]

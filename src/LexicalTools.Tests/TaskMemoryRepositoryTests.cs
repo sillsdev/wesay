@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using NUnit.Framework;
 using SIL.TestUtilities;
 
@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using(var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
 			{
-				using(var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo",dir.FolderPath))
+				using(var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo",dir.Path))
 				{
 					Assert.IsNotNull(repo);
 				}
@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
 			{
-				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
 					repo.FindOrCreateSettingsByTaskId("one").Set("common", "forOne");
 					repo.FindOrCreateSettingsByTaskId("two").Set("common", "forTwo");
@@ -34,7 +34,7 @@ namespace WeSay.LexicalTools.Tests
 					Assert.AreEqual("forTwo", repo.FindOrCreateSettingsByTaskId("two").Get("common", "blah"));
 				}
 				//now reopen and verify
-				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
 					Assert.AreEqual("forOne", repo.FindOrCreateSettingsByTaskId("one").Get("common", "blah"));
 					Assert.AreEqual("forTwo", repo.FindOrCreateSettingsByTaskId("two").Get("common", "blah"));
@@ -48,7 +48,7 @@ namespace WeSay.LexicalTools.Tests
 			using (var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
 			{
 				File.WriteAllText(dir.Combine("foo" + TaskMemoryRepository.FileExtensionWithDot), "I am corrupt");
-				using (var seeIfWeCanLoad = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				using (var seeIfWeCanLoad = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
 				}
 			}
@@ -60,7 +60,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
 			{
-				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
 					Assert.IsNotNull(repo.FindOrCreateSettingsByTaskId("NewGuy"));
 				}
@@ -72,11 +72,11 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
 			{
-				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
 					repo.FindOrCreateSettingsByTaskId("NewGuy").Set("color", "blue");
 				}
-				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.FolderPath))
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
 					Assert.AreEqual( "blue", repo.FindOrCreateSettingsByTaskId("NewGuy").Get("color", "blah"));
 				}

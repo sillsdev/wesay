@@ -31,7 +31,6 @@ namespace WeSay.LexicalTools.Tests
 		private string _glossingLanguageWSId;
 		private string _vernacularLanguageWSId;
 		private WordListCatalog _catalog;
-		private TempLiftFile _liftWordListFile;
 
 		[SetUp]
 		public void Setup()

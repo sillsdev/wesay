@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using NUnit.Framework;
 using SIL.Reporting;
 using SIL.WritingSystems;
@@ -10,6 +10,18 @@ namespace WeSay.ConfigTool.Tests
 	[TestFixture]
 	public class MigrationTests
 	{
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
 		private class EnvironmentForTests : TemporaryFolder
 		{
 			public EnvironmentForTests(string path) :
@@ -17,7 +29,6 @@ namespace WeSay.ConfigTool.Tests
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
 				WeSayWordsProject.PreventBackupForTests = true;
-				Sldr.Initialize(true);
 			}
 
 			public void CreateDefaultProject()
@@ -42,9 +53,7 @@ namespace WeSay.ConfigTool.Tests
 			public new void Dispose()
 			{
 				base.Dispose();
-				Sldr.Cleanup();
 			}
-
 		}
 
 		[Test]

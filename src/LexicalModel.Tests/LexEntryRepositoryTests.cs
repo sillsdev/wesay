@@ -18,10 +18,21 @@ namespace WeSay.LexicalModel.Tests
 		private LexEntryRepository _lexEntryRepository;
 		private WritingSystemDefinition _headwordWritingSystem;
 
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
 		[SetUp]
 		public void Setup()
 		{
-			Sldr.Initialize();
 			_temporaryFolder = new TemporaryFolder("LexEntryRepositoryTests");
 			string filePath = _temporaryFolder.GetPathForNewTempFile(false);
 			_lexEntryRepository = new LexEntryRepository(filePath);
@@ -36,7 +47,6 @@ namespace WeSay.LexicalModel.Tests
 		{
 			_lexEntryRepository.Dispose();
 			_temporaryFolder.Delete();
-			Sldr.Cleanup();
 		}
 
 		private void MakeTestLexEntry(string writingSystemId, string lexicalForm)
