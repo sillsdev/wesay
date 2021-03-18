@@ -13,8 +13,8 @@ namespace WeSay.Data.Tests
 		protected IEnumerable _enumerable;
 		protected int _itemCount;
 
-		[TestFixtureSetUp]
-		public virtual void TestFixtureSetUp() {}
+		[OneTimeSetUp]
+		public virtual void OneTimeSetUp() {}
 
 		[SetUp]
 		public virtual void SetUp() {}
@@ -131,8 +131,8 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class IEnumerableTest: IEnumerableBaseTest<int>
 	{
-		[TestFixtureSetUp]
-		public override void TestFixtureSetUp()
+		[OneTimeSetUp]
+		public override void OneTimeSetUp()
 		{
 			List<int> list = new List<int>();
 
@@ -150,8 +150,8 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class IEnumerableStringListTest: IEnumerableBaseTest<string>
 	{
-		[TestFixtureSetUp]
-		public override void TestFixtureSetUp()
+		[OneTimeSetUp]
+		public override void OneTimeSetUp()
 		{
 			List<string> list = new List<string>();
 

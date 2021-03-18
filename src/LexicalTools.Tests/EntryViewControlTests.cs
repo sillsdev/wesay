@@ -31,13 +31,13 @@ namespace WeSay.LexicalTools.Tests
 		private ViewTemplate _viewTemplate;
 		private string _primaryMeaningFieldName;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetUp()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();

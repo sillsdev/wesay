@@ -22,7 +22,7 @@ using SIL.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {
-	[TestFixture, RequiresSTA]
+	[TestFixture, Apartment(ApartmentState.STA)]
 	public class DictionaryControlTests: NUnitFormTest
 	{
 		private WeSayWordsProject _project;
@@ -40,14 +40,14 @@ namespace WeSay.LexicalTools.Tests
 		private string[] _analysisWritingSystemIds;
 		private EntryViewControl.Factory _entryViewFactory;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void SetupFixture()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 			_project = WeSayProjectTestHelper.InitializeForTests();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TearDownFixture()
 		{
 			_project.Dispose();

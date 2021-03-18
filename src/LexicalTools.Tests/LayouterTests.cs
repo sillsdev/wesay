@@ -19,13 +19,13 @@ namespace WeSay.LexicalTools.Tests
 		private int _rowCount;
 		private IServiceLocator Context{ get; set;}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTeardown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();

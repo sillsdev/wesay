@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gecko;
@@ -16,7 +17,7 @@ using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {
-	[TestFixture, RequiresSTA]
+	[TestFixture, Apartment(ApartmentState.STA)]
 	[Platform(Exclude = "Unix")]  // Cant initialize XULRunner in these tests on Linux.
 	class GeckoTests : NUnitFormTest
 	{
@@ -30,7 +31,7 @@ namespace WeSay.UI.Tests
 		private bool _itemToNotDrawYetDrawn;
 		private int _countOfItemsDrawn;
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureCleanup()
 		{
 			Sldr.Cleanup();
@@ -38,7 +39,7 @@ namespace WeSay.UI.Tests
 			//ShutDownXulRunner();
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			Sldr.Initialize(true);

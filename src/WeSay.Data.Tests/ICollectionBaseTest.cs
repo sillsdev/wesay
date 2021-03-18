@@ -9,8 +9,8 @@ namespace WeSay.Data.Tests
 		protected ICollection _collection;
 		protected int _itemCount;
 
-		[TestFixtureSetUp]
-		public virtual void TestFixtureSetUp() {}
+		[OneTimeSetUp]
+		public virtual void OneTimeSetUp() {}
 
 		[SetUp]
 		public virtual void SetUp() {}
@@ -86,12 +86,7 @@ namespace WeSay.Data.Tests
 
 		private class MyClass
 		{
-			private readonly int t;
-
-			public int T
-			{
-				get { return t; }
-			}
+			public int T => 0;
 		}
 
 		[Test]
@@ -105,8 +100,8 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class ICollectionIntTest: ICollectionBaseTest<int>
 	{
-		[TestFixtureSetUp]
-		public override void TestFixtureSetUp()
+		[OneTimeSetUp]
+		public override void OneTimeSetUp()
 		{
 			ArrayList list = new ArrayList();
 
@@ -124,8 +119,8 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class ICollectionStringTest: ICollectionBaseTest<string>
 	{
-		[TestFixtureSetUp]
-		public override void TestFixtureSetUp()
+		[OneTimeSetUp]
+		public override void OneTimeSetUp()
 		{
 			ArrayList list = new ArrayList();
 			list.Add("1");

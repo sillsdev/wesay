@@ -340,45 +340,39 @@ namespace WeSay.Data.Tests
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void SetItem()
 		{
-			base.SetItem();
+			Assert.Throws<NotSupportedException>(() => base.SetItem());
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Add()
 		{
-			base.Add();
+			Assert.Throws<NotSupportedException>(() => base.Add());
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Clear()
 		{
-			base.Clear();
+			Assert.Throws<NotSupportedException>(() => base.Clear());
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Insert()
 		{
-			base.Insert();
+			Assert.Throws<NotSupportedException>(() => base.Insert());
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void Remove()
 		{
-			base.Remove();
+			Assert.Throws<NotSupportedException>(()=>base.Remove());
 		}
 
 		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (NotSupportedException))]
 		public new void RemoveAt()
 		{
-			base.RemoveAt();
+			Assert.Throws<NotSupportedException>(() => base.RemoveAt());
 		}
 	}
 

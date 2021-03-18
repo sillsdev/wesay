@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.WritingSystems;
@@ -7,7 +8,7 @@ using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {
-	[TestFixture, RequiresSTA]
+	[TestFixture, Apartment(ApartmentState.STA)]
 	public class DetailListTests
 	{
 		private readonly WritingSystemDefinition _ws = new WritingSystemDefinition("qaa");
