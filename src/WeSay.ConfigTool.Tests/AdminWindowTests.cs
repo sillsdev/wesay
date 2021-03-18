@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
+using System.Threading;
 using System.Xml.XPath;
-using NUnit.Extensions.Forms;
 using NUnit.Framework;
 using SIL.Reporting;
 using SIL.WritingSystems;
@@ -13,39 +12,46 @@ using WeSay.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
 {
-	[TestFixture, RequiresSTA]
-	public class AdminWindowTests: NUnitFormTest
+	[TestFixture, Apartment(ApartmentState.STA)]
+	public class AdminWindowTests
 	{
 		private ConfigurationWindow _window;
 		private string _projectFolder;
-		private FormTester _mainWindowTester;
 
-		public override void Setup()
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
+		[SetUp]
+		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-			base.Setup();
-			Sldr.Initialize(true);
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 			_window = new ConfigurationWindow(new string[] {});
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
-			_mainWindowTester = new FormTester(_window.Name, _window);
 
 			_projectFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 		}
 
-		public override void TearDown()
+		[TearDown]
+		public void TearDown()
 		{
-			_mainWindowTester.Close();
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
-			base.TearDown();
 			if (BasilProject.IsInitialized)
 			{
 				WeSayWordsProject.Project.Dispose();
 			}
 
 			SIL.TestUtilities.TestUtilities.DeleteFolderThatMayBeInUse(_projectFolder);
-			Sldr.Cleanup();
 		}
 
 		[Test]
@@ -54,7 +60,6 @@ namespace WeSay.ConfigTool.Tests
 			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
 			string p = WeSayWordsProject.Project.PathToConfigFile;
 			DateTime before = File.GetLastWriteTime(p);
-			_mainWindowTester.Close();
 			DateTime after = File.GetLastWriteTime(p);
 			Assert.AreNotEqual(before, after);
 		}
@@ -76,7 +81,6 @@ namespace WeSay.ConfigTool.Tests
 			//paths.Add(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(_projectFolder), "tpi.ldml"));
 			paths.Add(WeSayWordsProject.Project.PathToConfigFile);
 			//paths.Add(WeSayWordsProject.Project.PathToRepository);
-			_mainWindowTester.Close();
 			foreach (string p in paths)
 			{
 				if (!File.Exists(p))
@@ -84,24 +88,6 @@ namespace WeSay.ConfigTool.Tests
 					Assert.Fail("Did not create " + p);
 				}
 			}
-		}
-
-		[Test]
-		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
-		public void WalkTabsAfterOpeningPretendProject()
-		{
-			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
-			//create or overwrite the tasks with our stored resource
-			//            File.Delete(WeSayWordsProject.Project.PathToProjectTaskInventory);
-			//            StreamWriter writer = File.CreateText(WeSayWordsProject.Project.PathToProjectTaskInventory);
-			//            writer.Write(TestResources.tasks);
-			//            writer.Close();
-			File.Copy(
-					Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory,
-								 "PRETEND.WeSayConfig"),
-					WeSayWordsProject.Project.PathToConfigFile,
-					true);
-			WalkTopLevelTabs();
 		}
 
 		[Test]
@@ -113,34 +99,9 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[Test]
-		[Ignore("Mysteriously Causes AutoCompleteWithCreationBoxTestsToFail")]
-		public void WalkTabsAfterCreateNewProject()
-		{
-			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
-			WalkTopLevelTabs();
-
-		}
-
-		[Test]
 		public void CreateNewProjectThenOpen()
 		{
 			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
-		}
-
-		[Test]
-		public void NewProjectShowsTasks()
-		{
-			CreateProjectAndGoToTaskControl();
-			CheckedListBoxTester c = new CheckedListBoxTester("_taskList", _window);
-			Assert.Greater(c.Properties.Items.Count, 0);
-		}
-
-		[Test]
-		public void NewProjectShowSomeDefaultTasks()
-		{
-			CreateProjectAndGoToTaskControl();
-			CheckedListBoxTester c = new CheckedListBoxTester("_taskList", _window);
-			Assert.Greater(c.Properties.CheckedItems.Count, 0);
 		}
 
 		[Test]
@@ -154,58 +115,9 @@ namespace WeSay.ConfigTool.Tests
 			Assert.IsNotNull(doc.CreateNavigator().SelectSingleNode("configuration/components"));
 		}
 
-		private void CreateProjectAndGoToTaskControl()
-		{
-			_window.CreateAndOpenProject(_projectFolder, "th", "Thai");
-
-			ClickToolStripButton("_tasksButton");
-			//            GotoProjectTab("_tasksPage");
-		}
-
-
-		//        private static void GotoProjectTab(string projectTabName)
-		//        {
-		//            TabControlTester t = new TabControlTester("_projectTabControl");
-		//
-		//            foreach (TabPage page in t.Properties.TabPages)
-		//            {
-		//                if (page.Name == projectTabName)
-		//                {
-		//                    t.Properties.SelectedTab = page;
-		//                    break;
-		//                }
-		//            }
-		////            t.Properties.SelectedTab = t.Properties.TabPages[projectTabName];
-		//
-		//            Assert.IsNotNull(t.Properties.SelectedTab, "Couldn't find "+projectTabName);
-		//        }
-
-		private void WalkTopLevelTabs()
-		{
-			//            for(int i = 0; i<10000;i++)
-			//            {
-			//                Application.DoEvents();
-			//            }
-			ControlFinder f = new ControlFinder("_areasToolStrip");
-			ToolStrip toolstrip = (ToolStrip) f.Find();
-			foreach (ToolStripButton button in toolstrip.Items)
-			{
-				string name = button.Name;
-				ClickToolStripButton(name);
-			}
-		}
-
-		private void ClickToolStripButton(string name)
-		{
-			ToolStripButtonTester tester = new ToolStripButtonTester(name, _window);
-			tester.Click();
-		}
-
 		[Test]
 		public void RunAndExitWithoutOpening()
 		{
-			_mainWindowTester.Close();
-			Sldr.Cleanup();
 			WeSayProjectTestHelper.InitializeForTests(); // for Teardown
 		}
 
@@ -229,7 +141,7 @@ namespace WeSay.ConfigTool.Tests
 	public class MoreAdminWindowTests
 	{
 
-		[Test, RequiresSTA]
+		[Test, Apartment(ApartmentState.STA)]
 		public void OpenProject_OpenedWithDirNameWhichDoesNotMatchProjectName_Opens()
 		{
 			using (var projectDir = new ProjectDirectorySetupForTesting(""))

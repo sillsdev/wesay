@@ -97,14 +97,14 @@ namespace WeSay.Project.Tests
 					builder.AppendFormat(@"
 				<entry id='{0}'>
 					<lexical-unit>
-					  <form lang='qaa-x-qaa'>
+					  <form lang='qaa'>
 						<text>{0}</text>
 					  </form>
 					</lexical-unit>
 					<sense>
 						<grammatical-info value='n'/>
 						<definition><form lang='en'><text>blah blah {0} blah blah</text></form></definition>
-						<example lang='qaa-x-qaa'><text>and example of lah blah {0} blah blah</text></example>
+						<example lang='qaa'><text>and example of lah blah {0} blah blah</text></example>
 					</sense>
 				</entry>", i);
 				}

@@ -1,5 +1,6 @@
-﻿using System.IO;
+using System.IO;
 using NUnit.Framework;
+using SIL.WritingSystems;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -14,6 +15,18 @@ namespace Addin.Transform.Tests
 		private LexEntryRepository _lexEntryRepository;
 		private string _filePath;
 		private string _liftFilePath;
+
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[SetUp]
 		public void Setup()

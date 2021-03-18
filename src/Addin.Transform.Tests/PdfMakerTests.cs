@@ -7,6 +7,7 @@ using WeSay.Project;
 using WeSay.TestUtilities;
 using Addin.Transform.PdfDictionary;
 using System.Threading;
+using SIL.WritingSystems;
 
 namespace Addin.Transform.Tests
 {
@@ -18,6 +19,18 @@ namespace Addin.Transform.Tests
 		private string _filePath;
 		private string _liftFilePath;
 		private string _pdfPath;
+
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[SetUp]
 		public void Setup()

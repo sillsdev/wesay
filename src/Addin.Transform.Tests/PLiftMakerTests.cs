@@ -13,12 +13,23 @@ namespace Addin.Transform.Tests
 	{
 		private string _outputPath;
 
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
 		[SetUp]
 		public void Setup()
 		{
 			_outputPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
 			ErrorReport.IsOkToInteractWithUser = false;
-			Sldr.Initialize(true);
 		}
 
 		[Test]
@@ -70,7 +81,6 @@ namespace Addin.Transform.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			Sldr.Cleanup();
 			if (File.Exists(_outputPath))
 			{
 				File.Delete(_outputPath);

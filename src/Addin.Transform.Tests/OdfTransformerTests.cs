@@ -17,6 +17,18 @@ namespace Addin.Transform.Tests
 	[TestFixture]
 	public class OdfTransformerTests
 	{
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
 		private class EnvironmentForTest : IDisposable
 		{
 			private readonly ProjectDirectorySetupForTesting _testProject;
@@ -26,7 +38,6 @@ namespace Addin.Transform.Tests
 			public EnvironmentForTest()
 			{
 				ErrorReport.IsOkToInteractWithUser = false;
-				Sldr.Initialize(true);
 				const string xmlOfEntries = @" <entry id='foo1'>
 						<lexical-unit><form lang='qaa'><text>hello</text></form></lexical-unit>
 					</entry>";
@@ -79,7 +90,6 @@ namespace Addin.Transform.Tests
 				_project.Dispose();
 				_testProject.Dispose();
 				TestUtilities.DeleteFolderThatMayBeInUse(OutputTemplateDir);
-				Sldr.Cleanup();
 			}
 
 			private static void CopyFolder(string sourceFolder, string destFolder)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using NUnit.Framework;
 using SIL.IO;
@@ -7,6 +7,7 @@ using WeSay.AddinLib;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using System.Text.RegularExpressions;
+using SIL.WritingSystems;
 
 namespace Addin.Transform.Tests
 {
@@ -14,6 +15,18 @@ namespace Addin.Transform.Tests
 	public class SfmTransformerTests
 	{
 		public SfmTransformer _addin;
+
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[SetUp]
 		public void Setup()

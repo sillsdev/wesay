@@ -2,6 +2,7 @@ using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
+using SIL.IO;
 using SIL.Lift;
 using SIL.Reporting;
 using SIL.TestUtilities;
@@ -20,7 +21,7 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntry _source;
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
-		private string _filePath;
+		private TempFile _tempFile;
 		private LexRelationType _synonymsRelationType;
 		private LexRelationType _singleSynonymRelationType;
 		private Field _singleSynonymRelationField;
@@ -31,9 +32,9 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayProjectTestHelper.InitializeForTests();
 
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_tempFolder = new TemporaryFolder("RelationControllerTests");
+			_tempFile = _tempFolder.GetNewTempFile(true);
+			_lexEntryRepository = new LexEntryRepository(_tempFile.Path);
 
 			_target = CreateEntry("one", "single item");
 			_source = CreateEntry("single", "one item");
@@ -64,14 +65,9 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void Teardown()
 		{
-			if (_lexEntryRepository != null)
-			{
-				_lexEntryRepository.Dispose();
-			}
-			if (_tempFolder != null)
-			{
-				_tempFolder.Delete();
-			}
+			_lexEntryRepository?.Dispose();
+			_tempFolder?.Delete();
+			_tempFile?.Dispose();
 			WeSayProjectTestHelper.CleanupForTests();
 		}
 

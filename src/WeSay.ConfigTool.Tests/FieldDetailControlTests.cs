@@ -11,10 +11,21 @@ namespace WeSay.ConfigTool.Tests
 		private FieldDetailControl _control;
 		private Field _field;
 
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
 		[SetUp]
 		public void Setup()
 		{
-			Sldr.Initialize(true);
 			BasilProjectTestHelper.InitializeForTests();
 			_control = new FieldDetailControl();
 
@@ -26,7 +37,6 @@ namespace WeSay.ConfigTool.Tests
 		public void TearDown()
 		{
 			_control.Dispose();
-			Sldr.Cleanup();
 		}
 
 		[Test]
