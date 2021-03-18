@@ -47,13 +47,13 @@ namespace WeSay.LexicalTools.Tests
 			return !(hasSense && hasExample);
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetUp()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();

@@ -50,8 +50,8 @@ namespace WeSay.LexicalTools.Tests
 	//[TestFixture]
 	//public class GTKReturningWidget
 	//{
-	//    [TestFixtureSetUp]
-	//    public void TestFixtureSetupUp()
+	//    [OneTimeSetUp]
+	//    public void OneTimeSetUpUp()
 	//    {
 	//        Application.Init();
 	//    }

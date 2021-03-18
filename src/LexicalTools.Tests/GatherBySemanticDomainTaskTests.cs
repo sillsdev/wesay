@@ -34,13 +34,13 @@ namespace WeSay.LexicalTools.Tests
 		private static string _vernacularWritingSystemId = WritingSystemsIdsForTests.VernacularIdForTest;
 		private GatherBySemanticDomainConfig _config;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTearDown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
@@ -480,13 +480,17 @@ namespace WeSay.LexicalTools.Tests
 		/// Using the sorter causes XElement.Parse() to be called, which chokes on '\u001F'.
 		/// </remarks>
 		[Test]
-		[ExpectedException("SIL.Reporting.ErrorReport+ProblemNotificationSentToUserException", ExpectedMessage="character", MatchType=MessageMatch.Contains)]
 		public void AddWord_WordConsistsOfOnlySegmentSeparatorCharacter_AddedToDatabase()
 		{
-			int originalCount = _lexEntryRepository.CountAllItems();
-			Task.AddWord('\u001F'.ToString(), String.Empty);
-			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
-			Task.Deactivate();
+			var message = Assert.Throws<ErrorReport.ProblemNotificationSentToUserException>(() =>
+			{
+				int originalCount = _lexEntryRepository.CountAllItems();
+				Task.AddWord('\u001F'.ToString(), String.Empty);
+				Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
+				Task.Deactivate();
+
+			}).Message;
+			StringAssert.Contains("character", message);
 		}
 
 		[Test]

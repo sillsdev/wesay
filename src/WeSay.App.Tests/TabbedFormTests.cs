@@ -173,8 +173,8 @@ namespace WeSay.App.Tests
 	{
 		private WeSayWordsProject _project;
 
-		[TestFixtureSetUp]
-		public void TestFixtureSetUp()
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
 		{
 			Sldr.Initialize(true);
 			_project = new WeSayWordsProject();
@@ -203,8 +203,8 @@ namespace WeSay.App.Tests
 			_project.Tasks.Clear();
 		}
 
-		[TestFixtureTearDown]
-		public void TestFixtureTearDown()
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
 		{
 			_project.Dispose();
 			Sldr.Cleanup();

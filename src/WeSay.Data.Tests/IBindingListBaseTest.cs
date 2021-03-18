@@ -25,8 +25,8 @@ namespace WeSay.Data.Tests
 			_listChangedEventArgs = e;
 		}
 
-		[TestFixtureSetUp]
-		public virtual void TestFixtureSetUp() {}
+		[OneTimeSetUp]
+		public virtual void OneTimeSetUp() {}
 
 		[SetUp]
 		public virtual void SetUp()
@@ -51,7 +51,7 @@ namespace WeSay.Data.Tests
 				int count = _bindingList.Count;
 				object o = _bindingList.AddNew();
 				Assert.IsNotNull(o);
-				Assert.IsInstanceOfType(typeof (T), o);
+				Assert.IsInstanceOf<T>(o);
 				Assert.AreEqual(count + 1, _bindingList.Count);
 				Assert.AreEqual(o, _bindingList[count]);
 				if (_bindingList.SupportsChangeNotification)
@@ -360,8 +360,8 @@ namespace WeSay.Data.Tests
 	[TestFixture]
 	public class IBindingListStringTest: IBindingListBaseTest<SimpleClass, string>
 	{
-		[TestFixtureSetUp]
-		public override void TestFixtureSetUp()
+		[OneTimeSetUp]
+		public override void OneTimeSetUp()
 		{
 			BindingList<SimpleClass> bindingList = new BindingList<SimpleClass>();
 

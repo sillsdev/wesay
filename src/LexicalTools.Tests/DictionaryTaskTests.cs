@@ -23,13 +23,13 @@ namespace WeSay.LexicalTools.Tests
 		private DictionaryControl.Factory _dictControlFactory;
 		private TaskMemoryRepository _taskMemoryRepository;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureTeardown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();

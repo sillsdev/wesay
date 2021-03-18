@@ -25,7 +25,7 @@ namespace WeSay.UI.Tests
 		static extern bool SetDllDirectory(string lpPathName);
 		private Form _window;
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureCleanup()
 		{
 			Sldr.Cleanup();
@@ -33,7 +33,7 @@ namespace WeSay.UI.Tests
 			//ShutDownXulRunner();
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			Sldr.Initialize(true);

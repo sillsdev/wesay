@@ -30,7 +30,7 @@ namespace WeSay.UI.Tests
 		private bool _itemToNotDrawYetDrawn;
 		private int _countOfItemsDrawn;
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void FixtureCleanup()
 		{
 			Sldr.Cleanup();
@@ -38,7 +38,7 @@ namespace WeSay.UI.Tests
 			// ShutDownXulRunner();
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
 			Sldr.Initialize(true);
