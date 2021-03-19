@@ -1128,8 +1128,20 @@ namespace WeSay.Project
 
 			var doc = new XmlDocument();
 			doc.Load(pathToConfigFile);
-			var e = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
-			e.InnerXml = builder.ToString();
+			var old_components = doc.SelectSingleNode("configuration").SelectSingleNode("components");
+			var new_components = doc.CreateElement("components");
+			if(old_components == null)
+			{
+				//add node
+				var elem = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
+				elem.InnerXml = builder.ToString();
+			}
+			else
+			{
+				//replace node
+				new_components.InnerXml = builder.ToString();
+				doc.SelectSingleNode("configuration").ReplaceChild(new_components, old_components);
+			}
 			doc.Save(pathToConfigFile);
 		}
 
