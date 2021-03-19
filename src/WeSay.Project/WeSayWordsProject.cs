@@ -928,56 +928,6 @@ namespace WeSay.Project
 			return m.MigrateConfigurationXmlIfNeeded(PathToConfigFile, PathToConfigFile);
 		}
 
-
-
-		//        public void LoadFromConfigFilePath(string path)
-		//        {
-		//            DirectoryInfo weSayDirectoryInfo = Directory.GetParent(path);
-		//
-		//        }
-
-//        private void InitializeViewTemplatesFromProjectFiles()
-//        {
-//            if (_viewTemplates == null)
-//            {
-//                List<ViewTemplate> viewTemplates = new List<ViewTemplate>();
-//                ViewTemplate factoryTemplate = ViewTemplate.MakeMasterTemplate(WritingSystems);
-//
-//                try
-//                {
-//                    XPathDocument projectDoc = GetConfigurationDoc();
-//                    if (projectDoc != null)
-//                    {
-//                        XPathNodeIterator nodes =
-//                                projectDoc.CreateNavigator().Select(
-//                                        "configuration/components/viewTemplate");
-//                        foreach (XPathNavigator node in nodes)
-//                        {
-//                            ViewTemplate userTemplate = new ViewTemplate();
-//                            userTemplate.LoadFromString(node.OuterXml);
-//                            ViewTemplate.UpdateUserViewTemplate(factoryTemplate, userTemplate);
-//                            if (userTemplate.Id == "Default View Template")
-//                            {
-//                                _defaultViewTemplate = userTemplate;
-//                            }
-//                            viewTemplates.Add(userTemplate);
-//                        }
-//                    }
-//                }
-//                catch (Exception error)
-//                {
-//                    ErrorReport.NotifyUserOfProblem(
-//                            "There may have been a problem reading the view template xml of the configuration file. A default template will be created." +
-//                            error.Message);
-//                }
-//                if (_defaultViewTemplate == null)
-//                {
-//                    _defaultViewTemplate = factoryTemplate;
-//                }
-//                _viewTemplates = viewTemplates;
-//            }
-//        }
-
 		public XPathNodeIterator GetAddinNodes()
 		{
 			return GetAddinNodes(GetConfigurationDoc());
@@ -1311,21 +1261,13 @@ namespace WeSay.Project
 		/// <returns></returns>
 		private FileLocator GetFileLocator()
 		{
-			return new FileLocator(new string[] { PathToWeSaySpecificFilesDirectoryInProject,
-												  ApplicationCommonDirectory, DirectoryOfTheApplicationExecutable, GetTopAppDirectory()});
+			return new FileLocator(new [] { PathToWeSaySpecificFilesDirectoryInProject,
+												  ApplicationCommonDirectory, DirectoryOfTheApplicationExecutable, TopDevDirectory});
 		}
 
+		public string PathToWeSaySpecificFilesDirectoryInProject => ProjectDirectoryPath;
 
-
-		public string PathToWeSaySpecificFilesDirectoryInProject
-		{
-			get { return ProjectDirectoryPath; }
-		}
-
-		public string PathOldToWeSaySpecificFilesDirectoryInProject
-		{
-			get { return Path.Combine(ProjectDirectoryPath, "wesay"); }
-		}
+		public string PathOldToWeSaySpecificFilesDirectoryInProject => Path.Combine(ProjectDirectoryPath, "wesay");
 
 		public ViewTemplate DefaultViewTemplate
 		{
@@ -2071,6 +2013,7 @@ namespace WeSay.Project
 		{
 			var containerBuilder = new ContainerBuilder();
 			adder.Invoke(containerBuilder);
+			containerBuilder.Update(_container);
 		}
 
 		public void SetupUserForChorus()

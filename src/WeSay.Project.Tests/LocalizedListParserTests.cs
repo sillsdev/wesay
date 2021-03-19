@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
@@ -32,7 +32,7 @@ namespace WeSay.Project.Tests
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
 				var localizedList = new LocalizedListParser();
-				localizedList.ApplicationCommonDirectory = WeSayWordsProject.Project.ApplicationTestDirectory;
+				localizedList.ApplicationCommonDirectory = BasilProject.ApplicationTestDirectory;
 				localizedList.PathToWeSaySpecificFilesDirectoryInProject = projectDirectory.Path;
 				localizedList.SemanticDomainWs = "en";
 				Assert.AreEqual(106, localizedList.ReadListFile());
@@ -51,7 +51,7 @@ namespace WeSay.Project.Tests
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
 				var localizedList = new LocalizedListParser();
-				localizedList.ApplicationCommonDirectory = WeSayWordsProject.Project.ApplicationTestDirectory;
+				localizedList.ApplicationCommonDirectory = BasilProject.ApplicationTestDirectory;
 				localizedList.PathToWeSaySpecificFilesDirectoryInProject = projectDirectory.Path;
 				localizedList.SemanticDomainWs = "fr";
 				Assert.AreEqual(1792, localizedList.ReadListFile());

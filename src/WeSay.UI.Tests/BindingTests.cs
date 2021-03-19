@@ -1,11 +1,8 @@
-using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.WritingSystems;
 using WeSay.Project;
 using SIL.Lift;
-using WeSay.LexicalModel.Foundation;
-using WeSay.Project;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests

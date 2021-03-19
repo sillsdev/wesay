@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.WritingSystems;
-using WeSay.Project;
-using WeSay.Project;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI.TextBoxes;

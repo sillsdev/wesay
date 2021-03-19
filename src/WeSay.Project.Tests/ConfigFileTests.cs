@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -15,6 +15,18 @@ namespace WeSay.Project.Tests
 	[TestFixture]
 	public class ConfigFileTests
 	{
+		[OneTimeSetUp]
+		public void Setup()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void TearDown()
+		{
+			Sldr.Cleanup();
+		}
+
 		[Test]
 		public void ChangeWritingSystemId_IdExists_IsChanged()
 		{

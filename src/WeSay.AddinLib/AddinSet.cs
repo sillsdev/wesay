@@ -97,11 +97,11 @@ namespace WeSay.AddinLib
 			{
 				foreach (XPathNavigator node in addinNodes)
 				{
-					string sid = XmlUtils.GetManditoryAttributeValue(node, "id");
+					var sid = XmlUtils.GetMandatoryAttributeValue(node, "id");
 					// Guid id = new Guid(sid);
 					SetDoShowInWeSay(sid, XmlUtils.GetBooleanAttributeValue(node, "showInWeSay"));
 					string contents = node.InnerXml;
-					if (!String.IsNullOrEmpty(contents))
+					if (!string.IsNullOrEmpty(contents))
 					{
 						_addinSettings.Add(sid, contents);
 					}

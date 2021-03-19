@@ -4,11 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.WritingSystems;
-using WeSay.Project;
-using WeSay.Project;
 using SIL.Lift;
 using SIL.Lift.Options;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
 

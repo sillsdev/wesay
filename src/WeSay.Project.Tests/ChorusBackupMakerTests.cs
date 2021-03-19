@@ -23,7 +23,6 @@ namespace WeSay.Project.Tests
 			public BackupScenario(string testName)
 			{
 				SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
-				Sldr.Initialize(true);
 				_projDir = new ProjectDirectorySetupForTesting("");
 
 				_backupMaker = new ChorusBackupMaker(new CheckinDescriptionBuilder());
@@ -52,7 +51,6 @@ namespace WeSay.Project.Tests
 			{
 				_projDir.Dispose();
 				_backupDir.Dispose();
-				Sldr.Cleanup();
 			}
 
 			public void BackupNow()
@@ -63,7 +61,7 @@ namespace WeSay.Project.Tests
 			public void AssertDirExistsInWorkingDirectory(string s)
 			{
 				string  expectedDir = Path.Combine(PathToBackupProjectDir, s);
-				Assert.IsTrue(Directory.Exists(expectedDir));
+				Assert.IsTrue(Directory.Exists(expectedDir), $"{expectedDir} was not found.");
 			}
 
 			public void AssertFileExistsInWorkingDirectory(string s)
@@ -117,6 +115,18 @@ namespace WeSay.Project.Tests
 
 				File.WriteAllText(Path.Combine(SourceProjectDir, filename), liftContents);
 			}
+		}
+
+		[OneTimeSetUp]
+		public void Setup()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void TearDown()
+		{
+			Sldr.Cleanup();
 		}
 
 		[Test]

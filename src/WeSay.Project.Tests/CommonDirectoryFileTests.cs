@@ -30,7 +30,7 @@ namespace WeSay.Project.Tests
 			using(var e = new TestEnvironment())
 			{
 				var ldmlVersionGetter = new WritingSystemLdmlVersionGetter();
-				foreach (var filePath in Directory.GetFiles(e.WritingSystemLdmlFolderPath))
+				foreach (var filePath in Directory.GetFiles(e.WritingSystemLdmlFolderPath, "*.ldml"))
 				{
 					Assert.AreEqual(LdmlDataMapper.CurrentLdmlLibraryVersion, ldmlVersionGetter.GetFileVersion(filePath), String.Format("The file {0} did not have the correct version.", filePath));
 				}

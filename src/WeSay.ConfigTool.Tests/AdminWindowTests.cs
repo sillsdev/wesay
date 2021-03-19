@@ -140,6 +140,17 @@ namespace WeSay.ConfigTool.Tests
 	[TestFixture]
 	public class MoreAdminWindowTests
 	{
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[Test, Apartment(ApartmentState.STA)]
 		public void OpenProject_OpenedWithDirNameWhichDoesNotMatchProjectName_Opens()

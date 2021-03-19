@@ -36,7 +36,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
 			File.Copy(
-					Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory,
+					Path.Combine(BasilProject.ApplicationTestDirectory,
 								 "PRETEND.WeSayConfig"),
 					WeSayWordsProject.Project.PathToConfigFile,
 					true);

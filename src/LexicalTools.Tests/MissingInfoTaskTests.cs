@@ -2,6 +2,7 @@ using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.IO;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
@@ -27,6 +28,19 @@ namespace WeSay.LexicalTools.Tests
 		private ViewTemplate _viewTemplate;
 		private readonly string _vernacularWritingSystemId = "PretendVernacular";
 		private string _missingFieldName;
+
+		[OneTimeSetUp]
+		public void FixtureSetup()
+		{
+			Sldr.Initialize(true);
+			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+		}
+
+		[OneTimeTearDown]
+		public void FixtureTearDown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[SetUp]
 		public void Setup()

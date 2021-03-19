@@ -3,6 +3,7 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.TestUtilities;
 
@@ -15,6 +16,18 @@ namespace Addin.Backup.Tests
 		private string _destinationZip;
 		private string _sourceProjectPath;
 		private string[] _filesToBackup;
+
+		[OneTimeSetUp]
+		public void OneTimeSetup()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[SetUp]
 		public void Setup()
