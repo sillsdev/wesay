@@ -10,6 +10,7 @@ using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 using SIL.Lift;
+using SIL.WritingSystems;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -22,6 +23,7 @@ namespace WeSay.LexicalTools.Tests
 		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
+			Sldr.Initialize(true);
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
@@ -29,6 +31,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FixtureTeardown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+			Sldr.Cleanup();
 		}
 
 		[SetUp]

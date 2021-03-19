@@ -26,6 +26,7 @@ namespace WeSay.LexicalTools.Tests
 		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
+			Sldr.Initialize(true);
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
@@ -33,6 +34,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FixtureTeardown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+			Sldr.Cleanup();
 		}
 
 		[SetUp]

@@ -45,7 +45,7 @@ namespace Addin.Transform.Tests
 				_project = _testProject.CreateLoadedProject();
 				_projectInfo = _project.GetProjectInfoForAddin();
 
-				string sourceTemplateDir = Path.Combine(_projectInfo.PathToApplicationRootDirectory, String.Format("..{0}..{0}templates", Path.DirectorySeparatorChar));
+				var sourceTemplateDir = Path.Combine(_projectInfo.PathToApplicationRootDirectory, "..", "..", "..", "templates");
 				TestUtilities.DeleteFolderThatMayBeInUse(OutputTemplateDir);
 				CopyFolder(sourceTemplateDir, OutputTemplateDir);
 			}

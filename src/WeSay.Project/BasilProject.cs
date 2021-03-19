@@ -131,7 +131,7 @@ There are problems in:
 
 		public static string GetPretendProjectDirectory()
 		{
-			return Path.Combine(GetTopAppDirectory(), Path.Combine("SampleProjects", "PRETEND"));
+			return Path.Combine(ApplicationTestDirectory, Path.Combine("SampleProjects", "PRETEND"));
 		}
 
 		public IWritingSystemRepository WritingSystems
@@ -228,13 +228,17 @@ There are problems in:
 		public static string ApplicationCommonDirectory
 		{
 			get {
-				string returndir = Path.Combine(GetTopAppDirectory(), "common");
-				if (!Directory.Exists(returndir))
+				var appCommonDir = Path.Combine(DirectoryOfTheApplicationExecutable, "common");
+				if (!Directory.Exists(appCommonDir))
 				{
-					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-					returndir = Path.Combine(commonpath, WeSaySharedDirectory);
+					var commonPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					appCommonDir = Path.Combine(commonPath, WeSaySharedDirectory);
 				}
-				return returndir;
+				if (!Directory.Exists(appCommonDir))
+				{
+					appCommonDir = Path.Combine(TopDevDirectory, "common");
+				}
+				return appCommonDir;
 			}
 		}
 
@@ -253,7 +257,7 @@ There are problems in:
 					shareddir = DirectoryOfTheApplicationExecutable;
 				}
 				else
-						{
+				{
 					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 					shareddir = Path.Combine(commonpath, WeSaySharedDirectory);
 				}
@@ -261,23 +265,10 @@ There are problems in:
 			}
 		}
 
-		public string ApplicationTestDirectory
-		{
-			get { return Path.Combine(GetTopAppDirectory(), "test"); }
-		}
+		public static string ApplicationTestDirectory => Path.Combine(TopDevDirectory ?? throw new InvalidOperationException(), "test");
 
-		protected static string GetTopAppDirectory()
-		{
-			string path = DirectoryOfTheApplicationExecutable;
-			char sep = Path.DirectorySeparatorChar;
-			int i = path.ToLower().LastIndexOf(sep + "output" + sep);
-
-			if (i > -1)
-			{
-				path = path.Substring(0, i + 1);
-			}
-			return path;
-		}
+		// On development machines we run in src\output\Debug so get the parent directory of src to access other directories
+		protected static string TopDevDirectory => Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(DirectoryOfTheApplicationExecutable)));
 
 		public static string DirectoryOfTheApplicationExecutable
 		{

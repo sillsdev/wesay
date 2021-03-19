@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Addin.Transform.PdfDictionary;
@@ -24,10 +24,21 @@ namespace Addin.Transform.Tests
         private LexEntryRepository _repo;
         private LexEntry _entry;
 
-        [SetUp]
+		[OneTimeSetUp]
+		public void OneTimeSetUp()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void OneTimeTeardown()
+		{
+			Sldr.Cleanup();
+		}
+
+		[SetUp]
         public void Setup()
         {
-			Sldr.Initialize(true);
 			_projectDir = new ProjectDirectorySetupForTesting("");
 			_project = _projectDir.CreateLoadedProject();
 			var ws = _project.WritingSystems.Get("en");
@@ -55,10 +66,9 @@ namespace Addin.Transform.Tests
         [TearDown]
         public void TearDown()
         {
-            _project.Dispose();
-            _projectDir.Dispose();
-            _repo.Dispose();
-			Sldr.Cleanup();
+            _project?.Dispose();
+            _projectDir?.Dispose();
+            _repo?.Dispose();
         }
 
         [Test]

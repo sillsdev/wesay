@@ -853,7 +853,7 @@ namespace WeSay.Project.Tests
 
 				//Grab a valid configfile and insert german into it
 				string configFilePath = Path.Combine(projectDirectory.Path, "test.WeSayConfig");
-				File.Copy(Path.Combine(project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), configFilePath);
+				File.Copy(Path.Combine(BasilProject.ApplicationTestDirectory, "PRETEND.WeSayConfig"), configFilePath);
 				var configFile = new XmlDocument();
 				configFile.Load(configFilePath);
 				var node = configFile.SelectSingleNode(
@@ -879,7 +879,7 @@ namespace WeSay.Project.Tests
 
 				//Grab a valid configfile and insert german into it
 				string configFilePath = Path.Combine(projectDirectory.Path, "test.WeSayConfig");
-				File.Copy(Path.Combine(project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), configFilePath);
+				File.Copy(Path.Combine(BasilProject.ApplicationTestDirectory, "PRETEND.WeSayConfig"), configFilePath);
 				var configFile = new XmlDocument();
 				configFile.Load(configFilePath);
 				var node = configFile.SelectSingleNode(
@@ -905,7 +905,7 @@ namespace WeSay.Project.Tests
 				var wsPrefsFile = projectDirectory.GetNewTempFile(true);
 				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
 				wsPrefsFile.MoveTo(Path.Combine(projectDirectory.Path, "WritingSystemPrefs.xml"));
-				File.Copy(Path.Combine(project.ApplicationTestDirectory, "PRETEND.WeSayConfig"), Path.Combine(projectDirectory.Path, "test.WeSayConfig"));
+				File.Copy(Path.Combine(BasilProject.ApplicationTestDirectory, "PRETEND.WeSayConfig"), Path.Combine(projectDirectory.Path, "test.WeSayConfig"));
 				File.Copy(WeSayWordsProject.PathToPretendLiftFile, liftFilePath);
 				string wsToMigrateXml = WritingSystemPrefsFileContent.GetSingleWritingSystemXml(language, language, "", "", "", 12,
 																					false, language, "", false, true);

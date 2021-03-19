@@ -6,6 +6,7 @@ using SIL.IO;
 using SIL.Lift;
 using SIL.Reporting;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -26,6 +27,18 @@ namespace WeSay.LexicalTools.Tests
 		private LexRelationType _singleSynonymRelationType;
 		private Field _singleSynonymRelationField;
 		private Field _synonymsRelationField;
+
+		[OneTimeSetUp]
+		public void FixtureSetup()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void FixtureTearDown()
+		{
+			Sldr.Cleanup();
+		}
 
 		[SetUp]
 		public void Setup()

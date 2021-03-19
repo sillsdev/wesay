@@ -37,6 +37,7 @@ namespace WeSay.LexicalTools.Tests
 		[OneTimeSetUp]
 		public void FixtureSetup()
 		{
+			Sldr.Initialize(true);
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 		}
 
@@ -44,6 +45,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FixtureTearDown()
 		{
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+			Sldr.Cleanup();
 		}
 
 		[SetUp]
@@ -66,12 +68,12 @@ namespace WeSay.LexicalTools.Tests
 												   new StringLogger());
 			if (!File.Exists(Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml")))
 			{
-				File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "SemDom.xml"),
+				File.Copy(Path.Combine(BasilProject.ApplicationTestDirectory, "SemDom.xml"),
 					Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml"));
 			}
 			if (!File.Exists(Path.Combine(BasilProject.GetPretendProjectDirectory(), "LocalizedLists-fr.xml")))
 			{
-				File.Copy(Path.Combine(WeSayWordsProject.Project.ApplicationTestDirectory, "LocalizedLists-fr.xml"),
+				File.Copy(Path.Combine(BasilProject.ApplicationTestDirectory, "LocalizedLists-fr.xml"),
 					Path.Combine(BasilProject.GetPretendProjectDirectory(), "LocalizedLists-fr.xml"));
 			}
 		}

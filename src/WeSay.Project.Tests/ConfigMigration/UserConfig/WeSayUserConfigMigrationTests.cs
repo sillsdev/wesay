@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -15,13 +15,13 @@ namespace WeSay.Project.Tests.ConfigMigration.UserConfig
 	[TestFixture]
 	public class WeSayUserConfigMigrationTests
 	{
-		[SetUp]
+		[OneTimeSetUp]
 		public void Setup()
 		{
 			Sldr.Initialize(true);
 		}
 
-		[TearDown]
+		[OneTimeTearDown]
 		public void TearDown()
 		{
 			Sldr.Cleanup();

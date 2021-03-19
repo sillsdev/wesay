@@ -32,6 +32,18 @@ namespace WeSay.LexicalTools.Tests
 		private string _vernacularLanguageWSId;
 		private WordListCatalog _catalog;
 
+		[OneTimeSetUp]
+		public void FixtureSetup()
+		{
+			Sldr.Initialize(true);
+		}
+
+		[OneTimeTearDown]
+		public void FixtureTearDown()
+		{
+			Sldr.Cleanup();
+		}
+
 		[SetUp]
 		public void Setup()
 		{

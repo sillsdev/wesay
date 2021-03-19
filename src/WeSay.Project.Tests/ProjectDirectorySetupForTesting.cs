@@ -25,7 +25,7 @@ namespace WeSay.Project.Tests
 		{
 			_testFolder = new TemporaryFolder("WeSayProjectTest");
 			_projectRootFolder = new TemporaryFolder(_testFolder, ProjectFolder);
-			string unlistedLanguage = WellKnownSubtags.UnlistedLanguage + "-x-" + WellKnownSubtags.UnlistedLanguage;
+			string unlistedLanguage = WellKnownSubtags.UnlistedLanguage;
 			WeSayWordsProject.CreateEmptyProjectFiles(_projectRootFolder.Path, ProjectName, unlistedLanguage);
 
 			//overwrite the blank lift file
