@@ -49,7 +49,7 @@ jobs:
       run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86"
         
     - name: Test Report
-      uses: MirrorNG/nunit-reporter@d5911b27280abeade006565b05ed30decf2185ec
+      uses: jasonleenaylor/nunit-reporter@c62913433498af1a6d4c0da4835c412001afbca6
       if: always()
       with:
         path: output/**/TestResults.xml
