@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using SIL.Lift.Validation;
 using SIL.TestUtilities;
+using SIL.Windows.Forms.Progress;
 using SIL.WritingSystems;
 
 namespace WeSay.Project.Tests
@@ -124,11 +125,11 @@ namespace WeSay.Project.Tests
 
 		#endregion
 
-		public WeSayWordsProject CreateLoadedProject()
+		public WeSayWordsProject CreateLoadedProject(IProgressNotificationProvider progressProvider = null)
 		{
 
 			var p = new WeSayWordsProject();
-			p.LoadFromLiftLexiconPath(PathToLiftFile);
+			p.LoadFromLiftLexiconPath(PathToLiftFile, progressProvider);
 
 			return p;
 		}

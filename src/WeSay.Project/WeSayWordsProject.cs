@@ -150,7 +150,7 @@ namespace WeSay.Project
 			get { return Path.Combine(GetPretendProjectDirectory(), "WritingSystemPrefs.xml"); }
 		}
 
-		public void SetupProjectDirForTests(string pathToLift)
+		public void SetupProjectDirForTests(string pathToLift, IProgressNotificationProvider progressProvider)
 		{
 			ProjectDirectoryPath = Directory.GetParent(pathToLift).Parent.FullName;
 			PathToLiftFile = pathToLift;
@@ -164,7 +164,7 @@ namespace WeSay.Project
 					  true);
 			RemoveCache();
 			ErrorReport.IsOkToInteractWithUser = false;
-			LoadFromProjectDirectoryPath(ProjectDirectoryPath);
+			LoadFromProjectDirectoryPath(ProjectDirectoryPath, progressProvider);
 			UiOptions.Language = "en";
 		}
 
@@ -193,7 +193,8 @@ namespace WeSay.Project
 #endif
 		}
 
-		public bool LoadFromLiftLexiconPath(string liftPath)
+		public bool LoadFromLiftLexiconPath(string liftPath,
+			IProgressNotificationProvider progressProvider = null)
 		{
 			try{
 				PathToLiftFile = LiftFileLocator.LocateAt(liftPath);
@@ -240,7 +241,7 @@ namespace WeSay.Project
 
 				try
 				{
-					LoadFromProjectDirectoryPath(ProjectDirectoryPath);
+					LoadFromProjectDirectoryPath(ProjectDirectoryPath, progressProvider);
 				}
 				catch (LiftFormatException)
 				{
@@ -301,7 +302,7 @@ namespace WeSay.Project
 			return producerNode.Contains("SIL.FLEx");
 		}
 
-		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath)
+		public override void LoadFromProjectDirectoryPath(string projectDirectoryPath, IProgressNotificationProvider progressProvider = null)
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
 
@@ -321,7 +322,7 @@ namespace WeSay.Project
 				string projectName = Path.GetFileName(Path.GetFileNameWithoutExtension(preferredLiftFile));
 
 				CreateEmptyProjectFiles(projectDirectoryPath, projectName, WellKnownSubtags.UnlistedLanguage);
-				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
+				LoadFromProjectDirectoryPathInner(projectDirectoryPath, progressProvider);
 
 				//will rarely be needed... only when we're starting with a raw lift folder
 				ProjectFromLiftFolderCreator.PrepareLiftFolderForWeSay(this);
@@ -329,11 +330,11 @@ namespace WeSay.Project
 			}
 			else
 			{
-				LoadFromProjectDirectoryPathInner(projectDirectoryPath);
+				LoadFromProjectDirectoryPathInner(projectDirectoryPath, progressProvider);
 			}
 		}
 
-		private void LoadFromProjectDirectoryPathInner(string projectDirectoryPath)
+		private void LoadFromProjectDirectoryPathInner(string projectDirectoryPath, IProgressNotificationProvider progressProvider = null)
 		{
 			ProjectDirectoryPath = projectDirectoryPath;
 
@@ -359,7 +360,7 @@ namespace WeSay.Project
 
 			base.LoadFromProjectDirectoryPath(projectDirectoryPath);
 			//review: is this the right place for this?
-			PopulateDIContainer();
+			PopulateDIContainer(progressProvider);
 
 			LoadUserConfig();
 			InitStringCatalog();
@@ -459,13 +460,13 @@ namespace WeSay.Project
 			return url;
 		}
 
-		private void PopulateDIContainer()
+		private void PopulateDIContainer(IProgressNotificationProvider progressProvider = null)
 		{
 			var builder = new ContainerBuilder();
 
 			builder.RegisterInstance(new WordListCatalog());
 
-			builder.RegisterInstance<IProgressNotificationProvider>(new DialogProgressNotificationProvider());
+			builder.RegisterInstance<IProgressNotificationProvider>(progressProvider ?? new DialogProgressNotificationProvider());
 
 			//NB: these are delegates because the viewtemplate is not yet avaialbe when were're building the container
 			builder.Register<OptionsList>(c => GetSemanticDomainsList()).SingleInstance();//todo: figure out how to limit this with a name... currently, it's for any OptionList

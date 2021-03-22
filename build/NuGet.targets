@@ -11,66 +11,18 @@
 
 		<!-- Download NuGet.exe if it does not already exist -->
 		<DownloadNuGetExe Condition=" '$(DownloadNuGetExe)' == '' ">true</DownloadNuGetExe>
+		<NuGetExeUrl>https://dist.nuget.org/win-x86-commandline/latest/nuget.exe</NuGetExeUrl>
 	</PropertyGroup>
-
-	<ItemGroup Condition=" '$(PackageSources)' == '' ">
-		<!-- Package sources used to restore packages. -->
-		<!-- The official NuGet package source (https://nuget.org/api/v2/) will be excluded if package sources are specified and it does not appear in the list -->
-		<PackageSource Include="https://nuget.org/api/v2/" />
-		<PackageSource Include="http://build.palaso.org/guestAuth/app/nuget/v1/FeedService.svc/" />
-	</ItemGroup>
-
-	<Target Name="SetLinuxArch" Condition="'$(OS)'!='Windows_NT'">
-		<Exec Command="/usr/bin/test `dpkg --print-architecture` = amd64" ContinueOnError="true" IgnoreExitCode="true">
-			<Output TaskParameter="ExitCode" PropertyName="ZeroIfamd64"/>
-		</Exec>
-		<Exec Command="/usr/bin/test `dpkg --print-architecture` = i386" ContinueOnError="true" IgnoreExitCode="true">
-			<Output TaskParameter="ExitCode" PropertyName="ZeroIfi386"/>
-		</Exec>
-		<PropertyGroup>
-			<DpkgArch Condition="'$(ZeroIfamd64)'=='0'">amd64</DpkgArch>
-			<DpkgArch Condition="'$(ZeroIfi386)'=='0'">i386</DpkgArch>
-			<Architecture Condition="'$(DpkgArch)'=='amd64'">64</Architecture>
-			<Architecture Condition="'$(DpkgArch)'=='i386'">32</Architecture>
-			<PackagesConfigSource>$(NuGetToolsPath)packages-linux-$(DpkgArch).config</PackagesConfigSource>
-			<GeckoDir>$(RootDir)/src/packages/Geckofx45.$(Architecture).Linux.45.0.28</GeckoDir>
-		</PropertyGroup>
-	</Target>
 
 	<PropertyGroup>
 		<NuGetToolsPath>$(MSBuildThisFileDirectory)</NuGetToolsPath>
-		<PackagesConfigSource Condition="'$(OS)'=='Windows_NT'">$(NuGetToolsPath)packages-windows.config</PackagesConfigSource>
-		<GeckoDir Condition="'$(OS)'=='Windows_NT'">$(RootDir)/src/packages/Geckofx45.45.0.34</GeckoDir><!--yes, this version is missing the terminal .0-->
 		<PackagesConfig>$(ProjectDir)packages.config</PackagesConfig>
 
-		<PackageSources Condition=" $(PackageSources) == '' ">@(PackageSource)</PackageSources>
-
 		<!-- NuGet command -->
-		<NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)/NuGet.exe</NuGetExePath>
-		<NuGetCommand Condition="'$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
-		<!--
-		NuGet has trouble when Ubuntu 16.04 pbuilder sets the home directory to /nonexistent, and
-		just setting -ConfigFile is not enough to make nuget not work with config files in the home directory.
-		Setting XDG_CONFIG_HOME prevents nuget from working with config files the home directory.
-		-->
-		<NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">[ -d $HOME ] || export XDG_CONFIG_HOME=`mktemp -d`; mono --runtime=v4.0.30319 $(NuGetExePath)</NuGetCommand>
+		<NuGetExePath Condition=" '$(NuGetExePath)' == '' ">$(NuGetToolsPath)/nuget.exe</NuGetExePath>
 
-		<!-- Command to download packages -->
-		<CoreRestoreCommand>$(NuGetCommand) restore "$(PackagesConfig)" -NonInteractive -PackagesDirectory "$(SolutionDir)/src/packages"</CoreRestoreCommand>
-		<RestoreCommand Condition="'$(OS)' == 'Windows_NT'">$(CoreRestoreCommand)</RestoreCommand>
-		<!-- 2017-03-17: Sometimes NuGet fails after downloading when running on a build node, such as with message "Object reference not set to an instance of an object". Try it more than once to reduce this random failure. Maybe upgrading NuGet will help actually fix the problem. -->
-		<RestoreCommand Condition="'$(OS)' != 'Windows_NT'">$(CoreRestoreCommand) || (sleep 2m; $(CoreRestoreCommand)) || (sleep 2m; $(CoreRestoreCommand))</RestoreCommand>
-	</PropertyGroup>
-
-	<Target Name="RestorePlatformDependentPackages" DependsOnTargets="SetLinuxArch;CheckPrerequisites">
-		<Message Condition="'$(OS)' != 'Windows_NT'" Text="DpkgArch: $(DpkgArch)" Importance="high"/>
-		<Copy SourceFiles="$(PackagesConfigSource)" DestinationFiles="$(PackagesConfig)"/>
-		<Exec Command="$(RestoreCommand)"/>
-	</Target>
-
-	<PropertyGroup>
-		<NuGetUrl Condition="'$(OS)' == 'Windows_NT'">https://nuget.org/NuGet.exe</NuGetUrl>
-		<NuGetUrl Condition="'$(OS)' != 'Windows_NT'">"https://drive.google.com/uc?export=download&amp;id=0BwTQrVjXe5wbQUhfcEFSbnktUzQ"</NuGetUrl>
+		<NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
+		<NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">mono $(NuGetExePath)</NuGetCommand>
 	</PropertyGroup>
 
 	<Target Name="CheckPrerequisites">
@@ -89,15 +41,19 @@
 	<Target Name="_DownloadNuGet" Condition=" '$(DownloadNuGetExe)' == 'true' AND !Exists('$(NuGetExePath)')">
 		<DownloadNuGet OutputFilename="$(NuGetExePath)"
 			Condition="'$(OS)' == 'Windows_NT'" />
-		<Exec Command="wget -O NuGet.exe $(NuGetUrl) || curl -o NuGet.exe -L $(NuGetUrl)"
+		<Exec Command="wget $(NuGetExeUrl) || curl -O -L $(NuGetExeUrl)"
 			WorkingDirectory="$(NuGetToolsPath)"
 			Condition="'$(OS)' != 'Windows_NT'" />
 	</Target>
 
-	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites;RestorePlatformDependentPackages">
-		<Exec Command='$(NuGetCommand) restore -source "$(PackageSources)" "$(SolutionPath)"'
+	<ItemGroup>
+		<PackageConfigs Include="$(SolutionDir)/**/packages.config"/>
+	</ItemGroup>
+
+	<Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
+		<Exec Command='$(NuGetCommand) restore -Force "$(SolutionPath)"'
 			Condition="Exists('$(SolutionPath)')"/>
-		<Exec Command='$(NuGetCommand) restore -source "$(PackageSources)" -SolutionDirectory "$(SolutionDir)" "%(PackageConfigs.FullPath)"'
+		<Exec Command='$(NuGetCommand) restore -Force -SolutionDirectory "$(SolutionDir)" "%(PackageConfigs.FullPath)"'
 			Condition="!Exists('$(SolutionPath)')"/>
 	</Target>
 
@@ -119,9 +75,13 @@
 				try {
 					OutputFilename = Path.GetFullPath(OutputFilename);
 
-					Log.LogMessage("Downloading latest version of NuGet.exe...");
+					Log.LogMessage("Downloading latest version of nuget.exe...");
+
+					ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+					Log.LogMessage("Enabled Protocols: " + ServicePointManager.SecurityProtocol);
+
 					WebClient webClient = new WebClient();
-					webClient.DownloadFile("https://nuget.org/NuGet.exe", OutputFilename);
+					webClient.DownloadFile("$(NuGetExeUrl)", OutputFilename);
 
 					return true;
 				}

@@ -11,6 +11,7 @@ using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI.Tests
 {
+	[Category("SkipOnTeamCity")]
 	[TestFixture]
 	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
 	{

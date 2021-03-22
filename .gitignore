@@ -29,7 +29,7 @@ Mercurial/
 MercurialExtensions/
 xulrunner/
 package/
-src/packages/
+**/packages/
 build/NuGet.exe
 External/
 WeSay_Helps.chm

@@ -12,6 +12,7 @@ using WeSay.TestUtilities;
 
 namespace WeSay.ConfigTool.Tests
 {
+	[Category("SkipOnTeamCity")]
 	[TestFixture, Apartment(ApartmentState.STA)]
 	public class AdminWindowTests
 	{
@@ -136,7 +137,7 @@ namespace WeSay.ConfigTool.Tests
 	}
 
 	/* these are more modern, without use of static, "pretend" project, or the big setup/teardown of the old style */
-
+	[Category("SkipOnTeamCity")]
 	[TestFixture]
 	public class MoreAdminWindowTests
 	{

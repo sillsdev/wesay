@@ -11,6 +11,7 @@ using SIL.WritingSystems;
 
 namespace Addin.Transform.Tests
 {
+	[Category("SkipOnTeamCity")] // Uses ProgressDialog during transforms. 
 	[TestFixture]
 	public class SfmTransformerTests
 	{

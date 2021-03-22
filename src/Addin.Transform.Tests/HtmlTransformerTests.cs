@@ -19,6 +19,7 @@ namespace Addin.Transform.Tests
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
+			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			Sldr.Initialize(true);
 		}
 

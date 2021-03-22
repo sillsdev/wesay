@@ -144,7 +144,8 @@ namespace Addin.Transform
 		}
 
 		/// <summary>
-		///
+		/// Execute a transform while displaying progress to the user
+		///	TODO: Refactor to use a progress indicator that can be replaced with a null indicator during tests
 		/// </summary>
 		/// <param name="arguments"></param>
 		/// <returns>false if not successful or cancelled</returns>

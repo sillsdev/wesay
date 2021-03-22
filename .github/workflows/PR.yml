@@ -42,13 +42,16 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
       run: msbuild src/WeSay.sln
 
+    - name: Prepare to Test
+      run: msbuild build/WeSay.proj /t:RestoreBuildTasks
+      
     - name: Test
-      run: msbuild src/WeSay.sln /t:Test /p:Configuration=Debug /p:Platform="Any CPU"
+      run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86"
         
-#    - name: Test Report
-#      uses: MirrorNG/nunit-reporter@eba9570
-#      if: always()
-#      with:
-#        path: output/**/TestResults.xml
-#        access-token: ${{ secrets.GITHUB_TOKEN }}
-#        reportTitle: "Test Results (${{ matrix.os }})"
+    - name: Test Report
+      uses: MirrorNG/nunit-reporter@d5911b27280abeade006565b05ed30decf2185ec
+      if: always()
+      with:
+        path: output/**/TestResults.xml
+        access-token: ${{ secrets.GITHUB_TOKEN }}
+        reportTitle: "Test Results (${{ matrix.os }})"
