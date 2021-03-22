@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SIL.WritingSystems;
 using WeSay.Foundation;
 using WeSay.Project;
+using WeSay.TestUtilities;
 using WeSay.UI;
 
 namespace WeSay.App.Tests
@@ -179,7 +180,7 @@ namespace WeSay.App.Tests
 			Sldr.Initialize(true);
 			_project = new WeSayWordsProject();
 			_project.UiOptions.Language = "en";
-			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory());
+			_project.LoadFromProjectDirectoryPath(BasilProject.GetPretendProjectDirectory(), progressProvider:new NullProgressNotificationProvider());
 
 			_project.Tasks = new List<ITask>();
 		}

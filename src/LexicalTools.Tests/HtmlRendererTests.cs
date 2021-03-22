@@ -208,7 +208,7 @@ namespace WeSay.LexicalTools.Tests
 
 			wsc.Save();
 
-			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile);
+			project.SetupProjectDirForTests(WeSayWordsProject.PathToPretendLiftFile, new NullProgressNotificationProvider());
 			project.BackupMaker = null;//don't bother. Modern tests which might want to check backup won't be using this old approach anyways.
 			return project;
 		}

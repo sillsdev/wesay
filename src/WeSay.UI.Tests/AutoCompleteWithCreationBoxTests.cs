@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.WritingSystems;
-using WeSay.Project;
 using SIL.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
@@ -13,6 +11,7 @@ using SIL.Lift.Options;
 
 namespace WeSay.UI.Tests
 {
+	[Category("SkipOnTeamCity")]
 	[TestFixture]
 	public class AutoCompleteWithCreationBoxTests
 	{

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using SIL.i18n;
 using SIL.Lexicon;
 using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
 
@@ -76,9 +77,9 @@ namespace WeSay.Project
 			UiOptions = new UiConfigurationOptions();
 		}
 
-		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath)
+		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath, IProgressNotificationProvider progressProvider = null)
 		{
-			LoadFromProjectDirectoryPath(projectDirectoryPath, false);
+			LoadFromProjectDirectoryPath(projectDirectoryPath, false, progressProvider);
 		}
 
 		/// <summary>
@@ -87,7 +88,8 @@ namespace WeSay.Project
 		/// <param name="projectDirectoryPath"></param>
 		/// <param name="dontInitialize"></param>
 		public virtual void LoadFromProjectDirectoryPath(string projectDirectoryPath,
-														 bool dontInitialize)
+														 bool dontInitialize,
+														 IProgressNotificationProvider progressProvider = null)
 		{
 			_projectDirectoryPath = projectDirectoryPath;
 			if (!dontInitialize)

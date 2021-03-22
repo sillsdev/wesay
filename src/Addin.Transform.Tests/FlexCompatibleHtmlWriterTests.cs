@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Addin.Transform.PdfDictionary;
+using Autofac;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift; // review: really?
@@ -13,6 +14,7 @@ using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.Project.Tests;
+using WeSay.TestUtilities;
 
 namespace Addin.Transform.Tests
 {
@@ -27,6 +29,7 @@ namespace Addin.Transform.Tests
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
+			SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 			Sldr.Initialize(true);
 		}
 
@@ -40,7 +43,7 @@ namespace Addin.Transform.Tests
         public void Setup()
         {
 			_projectDir = new ProjectDirectorySetupForTesting("");
-			_project = _projectDir.CreateLoadedProject();
+			_project = _projectDir.CreateLoadedProject(new NullProgressNotificationProvider());
 			var ws = _project.WritingSystems.Get("en");
 			ws.DefaultCollation = new IcuRulesCollationDefinition("standard");
 			_project.WritingSystems.Set(ws);
