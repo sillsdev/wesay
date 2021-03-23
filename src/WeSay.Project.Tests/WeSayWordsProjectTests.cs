@@ -75,7 +75,7 @@ namespace WeSay.Project.Tests
 					WritingSystemDefinition ws = project.WritingSystems.Get("qaa");
 					ws.Language = "aac";
 					project.MakeWritingSystemIdChange("aac", "qaa");
-					using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
+					using (new ErrorReport.NonFatalErrorReportExpected())
 					{
 						project.Save();
 					}

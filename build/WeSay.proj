@@ -56,7 +56,7 @@
 
 	<Target Name="TestOnly" DependsOnTargets="RestoreBuildTasks">
 		<ItemGroup>
-			<TestAssemblies Include="$(RootDir)/src/output/**/*.Tests.dll"/>
+			<TestAssemblies Include="$(RootDir)/src/output/**/*.Tests.dll" Exclude="$(RootDir)/src/output/**/SIL.*.Tests.dll"/>
 		</ItemGroup>
 
 		<NUnit3
