@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [windows-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -49,9 +49,10 @@ jobs:
       run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86"
         
     - name: Test Report
-      uses: jasonleenaylor/nunit-reporter@c62913433498af1a6d4c0da4835c412001afbca6
+      uses: jasonleenaylor/nunit-reporter@63ab85dd5da111c3f4ef95f2fb73bbe667f58db9
       if: always()
       with:
         path: output/**/TestResults.xml
         access-token: ${{ secrets.GITHUB_TOKEN }}
         reportTitle: "Test Results (${{ matrix.os }})"
+        numFailures: 

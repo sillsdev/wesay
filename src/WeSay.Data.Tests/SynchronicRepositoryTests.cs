@@ -196,16 +196,6 @@ namespace WeSay.Data.Tests
         }
 
         [Test]
-        public void ChangeItem_ItemChangedInBothRepositories()
-        {
-			PalasoTestItem item = _synchronic.CreateItem();
-            item.StoredString = "changed";
-            _synchronic.SaveItem(item);
-            Assert.AreEqual("changed", _primary.GetItem(_primary.GetAllItems()[0]).StoredString);
-            Assert.AreEqual("changed", _secondary.GetItem(_secondary.GetAllItems()[0]).StoredString);
-        }
-
-        [Test]
         public void StartWithItemsInSecondary_ItemsCopiedToPrimary()
         {
 			PalasoTestItem item = _secondary.CreateItem();
@@ -222,61 +212,6 @@ namespace WeSay.Data.Tests
 			};
             Assert.Contains("item one", strings);
             Assert.Contains("item two", strings);
-        }
-
-        [Test]
-        public void StartWithItemsInPrimary_ItemsCopiedToSecondary()
-        {
-			PalasoTestItem item = _primary.CreateItem();
-            item.StoredString = "item one";
-			_primary.SaveItem(item);
-            item = _primary.CreateItem();
-            item.StoredString = "item two";
-			_primary.SaveItem(item);
-			_synchronic.Dispose();
-			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
-            Assert.AreEqual(2, _secondary.CountAllItems());
-			var strings = new List<string>(2)
-			{
-				_secondary.GetItem(_secondary.GetAllItems()[0]).StoredString,
-				_secondary.GetItem(_secondary.GetAllItems()[1]).StoredString
-			};
-            Assert.Contains("item one", strings);
-            Assert.Contains("item two", strings);
-        }
-
-        [Test]
-        public void StartWithItemsInBothButSecondaryNewer_NewestOneWins()
-        {
-			PalasoTestItem item = _primary.CreateItem();
-            item.StoredString = "item one";
-            _primary.SaveItem(item);
-            item = _secondary.CreateItem();
-            item.StoredString = "item two";
-            _secondary.SaveItem(item);
-			_synchronic.Dispose();
-			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
-            Assert.AreEqual(1, _primary.CountAllItems());
-            Assert.AreEqual(1, _secondary.CountAllItems());
-            Assert.AreEqual("item two", _primary.GetItem(_primary.GetAllItems()[0]).StoredString);
-            Assert.AreEqual("item two", _secondary.GetItem(_secondary.GetAllItems()[0]).StoredString);
-        }
-
-        [Test]
-        public void StartWithItemsInBothButPrimaryNewer_NewestOneWins()
-        {
-			PalasoTestItem item = _secondary.CreateItem();
-            item.StoredString = "item one";
-            _secondary.SaveItem(item);
-            item = _primary.CreateItem();
-            item.StoredString = "item two";
-            _primary.SaveItem(item);
-			_synchronic.Dispose();
-			_synchronic = new SynchronicRepository<PalasoTestItem>(_primary, _secondary);
-            Assert.AreEqual(1, _primary.CountAllItems());
-            Assert.AreEqual(1, _secondary.CountAllItems());
-            Assert.AreEqual("item two", _primary.GetItem(_primary.GetAllItems()[0]).StoredString);
-            Assert.AreEqual("item two", _secondary.GetItem(_secondary.GetAllItems()[0]).StoredString);
         }
     }
 }

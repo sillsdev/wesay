@@ -61,6 +61,7 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
+		[Category("SkipOnTeamCity")]
 		public void CreatePDF()
 		{
 			LaunchAddin();
