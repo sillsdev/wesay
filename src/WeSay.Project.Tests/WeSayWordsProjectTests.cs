@@ -951,6 +951,7 @@ namespace WeSay.Project.Tests
 				wsRepo.Set(ws);
 				wsRepo.Set(ws1);
 				wsRepo.Save();
+				// Latn script is the default and will be dropped
 				ws1.LanguageTag = IetfLanguageTag.Create("fr", "Latn", "US", "x-CHANGED");
 				wsRepo.Set(ws1);
 				wsRepo.Save();
@@ -963,13 +964,13 @@ namespace WeSay.Project.Tests
 				Assert.That(project.WritingSystems.Contains("qaa-x-config"));
 				Assert.That(project.WritingSystems.Contains("de"));
 				Assert.That(project.WritingSystems.Contains("qaa-x-option"));
-				Assert.That(project.WritingSystems.Contains("fr-Latn-US-x-CHANGED"));
+				Assert.That(project.WritingSystems.Contains("fr-US-x-CHANGED"));
 
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "en.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-config.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "de.ldml")));
 				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "qaa-x-option.ldml")));
-				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-Latn-US-x-CHANGED.ldml")));
+				Assert.That(File.Exists(Path.Combine(writingSystemFolderPath, "fr-US-x-CHANGED.ldml")));
 
 				var configFile = new ConfigFile(configFilePath);
 				Assert.That(configFile.WritingSystemsInUse.Count(), Is.EqualTo(3));
