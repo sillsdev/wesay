@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool", "WeSay.ConfigTool\WeSay.ConfigTool.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.Foundation", "WeSay.Foundation\WeSay.Foundation.csproj", "{F12EB680-0990-4900-B77E-0FBF2E28A815}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addin.Backup", "Addin.Backup\Addin.Backup.csproj", "{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}"
@@ -15,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicalTools", "LexicalTool
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.AddinLib", "WeSay.AddinLib\WeSay.AddinLib.csproj", "{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.ConfigTool", "WeSay.ConfigTool\WeSay.ConfigTool.csproj", "{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeSay.UI", "WeSay.UI\WeSay.UI.csproj", "{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}"
 EndProject
