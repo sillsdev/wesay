@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Xml;
 using SIL.Code;
 using SIL.Reporting;
 using WeSay.Project;
@@ -66,7 +67,6 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			{
 				Directory.CreateDirectory(pathToNewDirectory);
 			}
-			string pathToSourceLiftFolder = Path.GetDirectoryName(pathToSourceLift);
 			string pathToSourceWritingSystems = Path.Combine(Path.GetDirectoryName(pathToSourceLift), "WritingSystems");
 			if(!Directory.Exists(pathToSourceWritingSystems))
 			{
@@ -77,7 +77,6 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			{
 				string fileName = Path.GetFileName(pathToLdml);
 				Logger.WriteMinorEvent(@"Copying LDML file " + fileName);
-				//assumes that ldml files will be found and moved to WritingSystems folder when checking lift file
 				File.Copy(pathToLdml, Path.Combine(pathToNewDirectory, fileName), true);
 			}
 		}
@@ -86,8 +85,19 @@ namespace WeSay.ConfigTool.NewProjectCreation
 		{
 			var projectName = Path.GetFileNameWithoutExtension(pathToNewDirectory);
 			var pathToTargetLift = Path.Combine(pathToNewDirectory, projectName+".lift");
+			//open source lift file as xml and strip out qaa-x-spec
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load(pathToSourceLift);
+			XmlNodeList xnList = xmlDoc.SelectNodes("/lift/header/fields/field/form[@lang='qaa-x-spec']");
+			foreach (XmlNode xn in xnList)  //each Field node
+			{
+				if (xn != null)
+				{
+					xn.ParentNode.RemoveChild(xn);
+				}
+			}
 			Logger.WriteMinorEvent(@"Copying Lift file " + pathToSourceLift);
-			File.Copy(pathToSourceLift, pathToTargetLift, true);
+			xmlDoc.Save(pathToTargetLift);
 		}
 
 		private static void CopyOverPictures(string pathToSourceLift, string pathToNewDirectory)
