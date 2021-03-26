@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using SIL.Code;
 using SIL.Reporting;
@@ -66,10 +66,18 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			{
 				Directory.CreateDirectory(pathToNewDirectory);
 			}
-			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
+			string pathToSourceLiftFolder = Path.GetDirectoryName(pathToSourceLift);
+			string pathToSourceWritingSystems = Path.Combine(Path.GetDirectoryName(pathToSourceLift), "WritingSystems");
+			if(!Directory.Exists(pathToSourceWritingSystems))
+			{
+				pathToSourceWritingSystems = Path.GetDirectoryName(pathToSourceLift);
+			}
+//			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
+			foreach (string pathToLdml in Directory.GetFiles(pathToSourceWritingSystems, "*.ldml"))
 			{
 				string fileName = Path.GetFileName(pathToLdml);
 				Logger.WriteMinorEvent(@"Copying LDML file " + fileName);
+				//assumes that ldml files will be found and moved to WritingSystems folder when checking lift file
 				File.Copy(pathToLdml, Path.Combine(pathToNewDirectory, fileName), true);
 			}
 		}
