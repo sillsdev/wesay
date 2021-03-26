@@ -124,7 +124,7 @@
     <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\Keyman10Interop.dll</HintPath>
+      <HintPath>..\output\Debug\Keyman10Interop.dll</HintPath>
     </Reference>
     <Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -662,11 +662,13 @@
     <Error Condition="!Exists('..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets'))" />
     <Error Condition="!Exists('..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets'))" />
   </Target>
   <Import Project="..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets" Condition="Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" />
   <Import Project="..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets" Condition="Exists('..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets')" />
   <Import Project="..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets')" />
   <Import Project="..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
+  <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
