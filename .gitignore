@@ -2,6 +2,7 @@
 *.pdb
 .guidsForInstaller.xml
 output/
+BuildDir/
 Thumbs.db
 .bzr/
 obj/
@@ -37,3 +38,4 @@ WeSay_Helps.chm
 icu4c.readme.txt
 .vscode/
 **/.vs
+**/Firefox/*

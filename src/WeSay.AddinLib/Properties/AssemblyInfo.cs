@@ -36,7 +36,7 @@ using Mono.Addins;
 // You can specify all the values or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("0.9.25")]
-[assembly: AssemblyFileVersion("0.9.25")]
+[assembly: AssemblyVersion("1.9.0.10")]
+[assembly: AssemblyFileVersion("1.9.0.10")]
 [assembly: AddinRoot("WeSay.AddinLib", "1.0")]
 [assembly: CLSCompliant(true)]

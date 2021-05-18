@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <!-- will be used later on in this file.  The product version value should be BUILD_SCRIPT_MUST_REPLACE_AT_RUNTIME (in quotes). -->
-<?define Property_ProductVersion = "BUILD_SCRIPT_MUST_REPLACE_AT_RUNTIME" ?> <!--this is replaced at build time by the msbuild 'package' target -->
+<?define Property_ProductVersion = "1.9.0.10" ?> <!--this is replaced at build time by the msbuild 'package' target -->
 <?define Property_ProductCode = "*" ?> <!-- auto-generate a new guid each time -->
 <?define Property_UpgradeCode = "{6B6778A7-D3AD-4de8-BE95-C8956665B85A}" ?> <!--Don't even think of EVER changing this -->
 
@@ -148,12 +148,13 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 					<File Id="Enchant.Net.dll" Name="Enchant.Net.dll" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll" />
 				  </Component>
 
-				  <!--	 These are already installed by Chorus Merge Module
-				  Vulcan Help Provider
-
+				<!-- We currently require a specific version of Autofac that supports what is done in WeSay -->
 				  <Component Id="autofac.dll" Guid="{43EEAD0E-79B9-4E40-9FE0-BDEE34173BBB}">
 					<File Id="autofac.dll" Name="autofac.dll" KeyPath="yes" Source="..\..\output\release\autofac.dll" />
 				  </Component>
+
+				  <!--	 These are already installed by Chorus Merge Module
+				  Vulcan Help Provider
 
 				  <Component Id="SIL.Core.dll" Guid="{8984F36D-7C63-47aa-BE08-70A43962C184}">
 					<File Id="SIL.Core.dll" Name="SIL.Core.dll" KeyPath="yes" Source="..\..\output\release\SIL.Core.dll" />
@@ -230,8 +231,9 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="NetReflector.dll" Guid="{AE9F3A6E-390F-46B3-AFCB-CE8A2E8EC769}">
 					<File Id="NetReflector.dll" Name="NetReflector.dll" KeyPath="yes" Source="..\..\output\release\NetReflector.dll" />
 				  </Component>
-
-
+				  <Component Id="SIL.Core.Desktop.dll" Guid="{E24427F3-574E-4FAE-BA45-F2D3E3946560}">
+					<File Id="SIL.Core.Desktop.dll" Name="SIL.Core.Desktop.dll" KeyPath="yes" Source="..\..\output\release\SIL.Core.Desktop.dll" />
+				  </Component>
 				  <Component Id="SIL.DictionaryServices.dll" Guid="{3CCA9386-0A99-418D-BF33-E070D6337D2A}">
 					<File Id="SIL.DictionaryServices.dll" Name="SIL.DictionaryServices.dll" KeyPath="yes" Source="..\..\output\release\SIL.DictionaryServices.dll" />
 				  </Component>
@@ -244,8 +246,8 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
   				  <Component Id="Spart.dll" Guid="{3EB5DFD2-0B28-48B9-AD0F-E678C28E0DDC}">
 					<File Id="Spart.dll" KeyPath="yes" Source="..\..\output\release\Spart.dll" />
 				  </Component>
-				  <Component Id="taglib_sharp.dll" Guid="{9E7A818B-9D51-4DFF-8CEE-93AA374DC25F}">
-					<File Id="taglib_sharp.dll" KeyPath="yes" Source="..\..\output\release\taglib-sharp.dll" />
+				  <Component Id="TagLibSharp.dll" Guid="{9E7A818B-9D51-4DFF-8CEE-93AA374DC25F}">
+					<File Id="TagLibSharp.dll" KeyPath="yes" Source="..\..\output\release\TagLibSharp.dll" />
 				  </Component>
 
 				  <Component Id="WeSay.App.exe.config" Guid="{ED8319B8-8325-4598-8E4C-004D3356E373}">
@@ -300,7 +302,12 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				  <Component Id="Keyman7Interop.dll" Guid="{4F786363-00D6-41ec-9464-9168B2EF3499}">
 					<File Id="Keyman7Interop.dll" Name="Keyman7Interop.dll" KeyPath="yes" Source="..\..\output\release\Keyman7Interop.dll" />
 				  </Component>
-
+				  <Component Id="Keyman10Interop.dll" Guid="{D5FED824-C1A9-482D-A384-5F474B5BA386}">
+					<File Id="Keyman10Interop.dll" Name="Keyman10Interop.dll" KeyPath="yes" Source="..\..\output\release\Keyman10Interop.dll" />
+				  </Component>
+				  <Component Id="Microsoft.Extensions.DependencyModel.dll" Guid="{A17BB1D2-97DF-442A-930F-453F894F0438}">
+					<File Id="Microsoft.Extensions.DependencyModel.dll" Name="Microsoft.Extensions.DependencyModel.dll" KeyPath="yes" Source="..\..\output\release\Microsoft.Extensions.DependencyModel.dll" />
+				  </Component>
 
 <!-- Comment: used by SIL.WindowsForms for talking to scanner -->
 				  <Component Id="Interop.WIA.dll" Guid="{47038218-2646-4F83-BE95-4F83A8D41811}">
@@ -316,12 +323,6 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				</Component>
 				<Component Id="Addin.Transform.pdb" Guid="{24BDA882-8A90-4C0B-8749-0D191D13781B}">
 					<File Id="Addin.Transform.pdb" KeyPath="yes" Source="..\..\output\release\Addin.Transform.pdb" />
-				</Component>
-				<Component Id="Chorus.pdb" Guid="{7A747756-5AEB-4BEE-9B8A-A7CC4FC28688}">
-					<File Id="Chorus.pdb" KeyPath="yes" Source="..\..\output\release\Chorus.pdb" />
-				</Component>
-				<Component Id="ChorusMerge.pdb" Guid="{95475870-D8E2-4885-B021-ED2C665F8FDF}">
-					<File Id="ChorusMerge.pdb" KeyPath="yes" Source="..\..\output\release\ChorusMerge.pdb" />
 				</Component>
 				<Component Id="Enchant.Net.dll.config" Guid="{AB1072D4-9BA7-41DF-AF82-1352BAF7E949}">
 					<File Id="Enchant.Net.dll.config" KeyPath="yes" Source="..\..\output\release\Enchant.Net.dll.config" />
@@ -341,59 +342,23 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 				<Component Id="L10NSharp.dll" Guid="{9ECCBB7C-0753-4309-84D1-AE8BE691C7E6}">
 					<File Id="L10NSharp.dll" KeyPath="yes" Source="..\..\output\release\L10NSharp.dll" />
 				</Component>
-				<Component Id="L10NSharp.pdb" Guid="{EB990ACB-7E5F-4E92-AB78-6D24B6E94636}">
-					<File Id="L10NSharp.pdb" KeyPath="yes" Source="..\..\output\release\L10NSharp.pdb" />
-				</Component>
-				<Component Id="LibChorus.pdb" Guid="{C8F30B83-1D51-4631-B6E2-C867B5D7D17B}">
-					<File Id="LibChorus.pdb" KeyPath="yes" Source="..\..\output\release\LibChorus.pdb" />
-				</Component>
 				<Component Id="lift2sfm.xsl" Guid="{3768D3EA-C6D3-46F6-80C3-55641DE586D3}">
 					<File Id="lift2sfm.xsl" KeyPath="yes" Source="..\..\output\release\lift2sfm.xsl" />
-				</Component>
-				<Component Id="SIL.DictionaryServices.pdb" Guid="{8469CFC4-D014-4D7E-ACEB-509D3EDDA890}">
-					<File Id="SIL.DictionaryServices.pdb" KeyPath="yes" Source="..\..\output\release\SIL.DictionaryServices.pdb" />
-				</Component>
-				<Component Id="SIL.Lift.pdb" Guid="{FB13AD6A-4E3B-45E4-8EAE-477121C78551}">
-					<File Id="SIL.Lift.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Lift.pdb" />
-				</Component>
-				<Component Id="SIL.Media.pdb" Guid="{5F493C7F-CA10-4D07-91F9-A028AF7C17DB}">
-					<File Id="SIL.Media.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Media.pdb" />
-				</Component>
-				<Component Id="SIL.Core.pdb" Guid="{DC1A18EB-6BFE-45FF-833E-C4D71B767B48}">
-					<File Id="SIL.Core.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Core.pdb" />
 				</Component>
 				<Component Id="SIL.Lexicon.dll" Guid="{E412BCD0-E014-4D2D-85F6-0D7A7B4A2B53}">
 					<File Id="SIL.Lexicon.dll" KeyPath="yes" Source="..\..\output\release\SIL.Lexicon.dll" />
 				</Component>
-				<Component Id="SIL.Lexicon.pdb" Guid="{E7497018-31FF-4195-A290-C7B1A2851B32}">
-					<File Id="SIL.Lexicon.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Lexicon.pdb" />
-				</Component>
 				<Component Id="SIL.Windows.Forms.GeckoBrowserAdapter.dll" Guid="{E41DAB23-604C-4745-90C7-0E9CEF6BC8F8}">
 					<File Id="SIL.Windows.Forms.GeckoBrowserAdapter.dll" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.GeckoBrowserAdapter.dll" />
-				</Component>
-				<Component Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb" Guid="{F73CAFD3-297C-444C-A6D4-4C782708DE3B}">
-					<File Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.GeckoBrowserAdapter.pdb" />
 				</Component>
 				<Component Id="SIL.Windows.Forms.Keyboarding.dll" Guid="{3EB19835-FC60-41A3-B9EF-416B22830770}">
 					<File Id="SIL.Windows.Forms.Keyboarding.dll" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.Keyboarding.dll" />
 				</Component>
-				<Component Id="SIL.Windows.Forms.Keyboarding.pdb" Guid="{1EAF082D-0E43-45CF-8BF1-B5562F590610}">
-					<File Id="SIL.Windows.Forms.Keyboarding.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.Keyboarding.pdb" />
-				</Component>
 				<Component Id="SIL.Windows.Forms.WritingSystems.dll" Guid="{7E4DE7B9-9D90-402B-8CF0-75A5F96E9971}">
 					<File Id="SIL.Windows.Forms.WritingSystems.dll" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.WritingSystems.dll" />
 				</Component>
-				<Component Id="SIL.Windows.Forms.WritingSystems.pdb" Guid="{979F659D-AB6B-4F49-89A7-9317EDD5A91D}">
-					<File Id="SIL.Windows.Forms.WritingSystems.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.WritingSystems.pdb" />
-				</Component>
-				<Component Id="SIL.Windows.Forms.pdb" Guid="{044C8A00-E72C-4049-A401-B3C60EC1A3FC}">
-					<File Id="SIL.Windows.Forms.pdb" KeyPath="yes" Source="..\..\output\release\SIL.Windows.Forms.pdb" />
-				</Component>
 				<Component Id="SIL.WritingSystems.dll" Guid="{49DE8083-E19C-4DC6-8868-B773E232C44F}">
 					<File Id="SIL.WritingSystems.dll" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.dll" />
-				</Component>
-				<Component Id="SIL.WritingSystems.pdb" Guid="{218EC407-D7A9-43A4-A1DF-D418C6A57464}">
-					<File Id="SIL.WritingSystems.pdb" KeyPath="yes" Source="..\..\output\release\SIL.WritingSystems.pdb" />
 				</Component>
 				<Component Id="plift2html.xsl" Guid="{2D29595E-8F1F-42A5-BC92-5D83979685E0}">
 					<File Id="plift2html.xsl" KeyPath="yes" Source="..\..\output\release\plift2html.xsl" />
@@ -440,12 +405,14 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="LexicalTools.dll" />
 			  <ComponentRef Id="LexicalTools.pdb" />
 			  <ComponentRef Id="Commons.Xml.Relaxng.dll" />
+			  <ComponentRef Id="Microsoft.Extensions.DependencyModel.dll" />
 			  <ComponentRef Id="NetReflector.dll" />
 			  <ComponentRef Id="Newtonsoft.Json.dll" />
+			  <ComponentRef Id="SIL.Core.Desktop.dll" />
 			  <ComponentRef Id="SIL.DictionaryServices.dll" />
 			  <ComponentRef Id="SIL.Media.dll" />
 			  <ComponentRef Id="Spart.dll" />
-			  <ComponentRef Id="taglib_sharp.dll" />
+			  <ComponentRef Id="TagLibSharp.dll" />
 			  <ComponentRef Id="WeSay.App.exe" />
 			  <ComponentRef Id="WeSay.App.exe.config" />
 			  <ComponentRef Id="WeSay.App.pdb" />
@@ -458,6 +425,7 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 			  <ComponentRef Id="WeSay.UI.dll" />
 			  <ComponentRef Id="WeSay.UI.pdb" />
 
+			  <ComponentRef Id="autofac.dll" />
 			  <ComponentRef Id="Addin.Backup.dll"/>
 			  <!--	  <ComponentRef Id="Addin.LiftReports.dll"/> -->
 			  <ComponentRef Id="Addin.Transform.dll"/>
@@ -466,37 +434,24 @@ are trying to support, you're better off using non-advertised shortcuts. "-->
 
 			  <!--we get this from chorus merge module <ComponentRef Id="Icu.Net.dll"/> -->
 			  <ComponentRef Id="Keyman7Interop.dll"/>
+			  <ComponentRef Id="Keyman10Interop.dll"/>
 			  
 			  <!-- all the other essential ComponentRefs needed in the new install -->
 			  	<ComponentRef Id="Addin.Backup.pdb"/>
 				<ComponentRef Id="Addin.Transform.dll.config"/>
 				<ComponentRef Id="Addin.Transform.pdb"/>
-				<ComponentRef Id="Chorus.pdb"/>
-				<ComponentRef Id="ChorusMerge.pdb"/>
 				<ComponentRef Id="Enchant.Net.dll.config"/>
 				<ComponentRef Id="Geckofx_Core.dll"/>
 				<ComponentRef Id="Geckofx_Core.pdb"/>
 				<ComponentRef Id="Geckofx_Winforms.dll"/>
 				<ComponentRef Id="Geckofx_Winforms.pdb"/>
 				<ComponentRef Id="L10NSharp.dll"/>
-				<ComponentRef Id="L10NSharp.pdb"/>
-				<ComponentRef Id="LibChorus.pdb"/>
 				<ComponentRef Id="lift2sfm.xsl"/>
-				<ComponentRef Id="SIL.DictionaryServices.pdb"/>
-				<ComponentRef Id="SIL.Lift.pdb"/>
-				<ComponentRef Id="SIL.Media.pdb"/>
-				<ComponentRef Id="SIL.Core.pdb"/>
 				<ComponentRef Id="SIL.Lexicon.dll"/>
-				<ComponentRef Id="SIL.Lexicon.pdb"/>
-				<ComponentRef Id="SIL.Windows.Forms.pdb"/>
 				<ComponentRef Id="SIL.Windows.Forms.GeckoBrowserAdapter.dll"/>
-				<ComponentRef Id="SIL.Windows.Forms.GeckoBrowserAdapter.pdb"/>
 				<ComponentRef Id="SIL.Windows.Forms.Keyboarding.dll"/>
-				<ComponentRef Id="SIL.Windows.Forms.Keyboarding.pdb"/>
 				<ComponentRef Id="SIL.Windows.Forms.WritingSystems.dll"/>
-				<ComponentRef Id="SIL.Windows.Forms.WritingSystems.pdb"/>
 				<ComponentRef Id="SIL.WritingSystems.dll"/>
-				<ComponentRef Id="SIL.WritingSystems.pdb"/>
 				<ComponentRef Id="plift2html.xsl"/>
 				<ComponentRef Id="SampleDataProcessor.exe"/>
 				<ComponentRef Id="SampleDataProcessor.pdb"/>

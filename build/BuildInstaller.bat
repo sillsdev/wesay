@@ -1,3 +1,6 @@
+REM Build the installer for WeSay - This differs from the github action version which has more steps to show if it is the
+REM installer that has failed, or the build its self
+
 echo off
 
 echo.
@@ -13,9 +16,8 @@ REM Add Bin and DistFiles to the PATH:
 pushd %~dp0
 cd ..
 set PATH=%cd%\DistFiles;%cd%\Bin;%WIX%\bin;%PATH%
-popd
 
-for /f "usebackq tokens=1* delims=: " %%i in (`vswhere -version "[15.0,15.999)" -requires Microsoft.Component.MSBuild`) do (
+for /f "usebackq tokens=1* delims=: " %%i in (`build\vswhere -version "[15.0,15.999)" -requires Microsoft.Component.MSBuild`) do (
   if /i "%%i"=="installationPath" set InstallDir=%%j
   if /i "%%i"=="catalog_productLineVersion" set VSVersion=%%j
 )
@@ -54,13 +56,12 @@ set OAPERUSERTLIBREG=1
 
 echo "Feedback" %MsBuild%
 REM Run the next target only if the previous target succeeded
-( %MsBuild% ../src/WeSay.sln
+( REM TODO: Add a step to download nuget and put it in the build directory: build/nuget restore src/WeSay.sln
 ) && (
-	%MsBuild% WeSay.proj /t:RestoreBuildTasks
-) && (
-	%MsBuild% WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /v:diag
+	%MsBuild% build/Installer.targets /p:Configuration=Release /p:Platform=x86 /t:BuildRelease /v:diag
 )
 :END
 FOR /F "tokens=*" %%g IN ('date /t') do (SET DATE=%%g)
 FOR /F "tokens=*" %%g IN ('time /t') do (SET TIME=%%g)
+popd
 echo Build completed at %TIME% on %DATE%

@@ -1,3 +1,6 @@
+REM This file will build and run the tests and should be kept step for step equivalent to the github action PR.yml
+REM TODO: Add a special step for this batch file to download nuget.exe which is already on the path in the github VMs
+
 echo off
 
 echo.
@@ -13,9 +16,8 @@ REM Add Bin and DistFiles to the PATH:
 pushd %~dp0
 cd ..
 set PATH=%cd%\DistFiles;%cd%\Bin;%WIX%\bin;%PATH%
-popd
 
-for /f "usebackq tokens=1* delims=: " %%i in (`vswhere -version "[15.0,15.999)" -requires Microsoft.Component.MSBuild`) do (
+for /f "usebackq tokens=1* delims=: " %%i in (`build\vswhere -version "[15.0,15.999)" -requires Microsoft.Component.MSBuild`) do (
   if /i "%%i"=="installationPath" set InstallDir=%%j
   if /i "%%i"=="catalog_productLineVersion" set VSVersion=%%j
 )
@@ -54,13 +56,17 @@ set OAPERUSERTLIBREG=1
 
 echo "Feedback" %MsBuild%
 REM Run the next target only if the previous target succeeded
-( %MsBuild% ../src/WeSay.sln
+( 
+	"build/nuget.exe" restore src/WeSay.sln
 ) && (
-	%MsBuild% WeSay.proj /t:RestoreBuildTasks
+	%MsBuild% src/WeSay.sln  /p:Configuration=Debug /p:Platform=x86 /v:diag
 ) && (
-	%MsBuild% WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /v:diag
+	%MsBuild% build/WeSay.proj /t:Restore
+) && (
+	%MsBuild% build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform=x86 /v:diag
 )
 :END
 FOR /F "tokens=*" %%g IN ('date /t') do (SET DATE=%%g)
 FOR /F "tokens=*" %%g IN ('time /t') do (SET TIME=%%g)
+popd
 echo Build completed at %TIME% on %DATE%

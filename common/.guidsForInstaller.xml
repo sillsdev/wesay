@@ -41,4 +41,5 @@
   <File Id="wesay.hi.po" Guid="fdadb576-8836-4515-b059-67223530506c" />
   <File Id="wesay.km.po" Guid="0d50cc6a-4c0a-418b-a830-598d1ea05e68" />
   <File Id="wesay.lo.po" Guid="569a4d3a-b7d0-4b09-afb6-2c37c8079beb" />
+  <File Id="common.wesay.th.po" Guid="76d0cb71-37b8-4af6-847d-ef4dba852e4a" />
 </InstallerMetadata>

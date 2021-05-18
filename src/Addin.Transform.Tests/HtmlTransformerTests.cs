@@ -1,7 +1,6 @@
 using System.IO;
 using NUnit.Framework;
 using SIL.WritingSystems;
-using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.TestUtilities;

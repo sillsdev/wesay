@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+	<!-- Don't install shortcuts, but put them under a feature to keep the ICE validator happy. -->
+	<Feature Id='Shortcuts' Title='Start Menu Shortcut' Description='Creates a shortcut in the Start menu.' Level='0' ConfigurableDirectory='APPFOLDER' AllowAdvertise="no" InstallDefault="source" Absent='allow' TypicalDefault="install" >
+		<ComponentRef Id='ApplicationShortcutDesktop'/>
+		<ComponentRef Id='ApplicationShortcutMenu' />
+	</Feature>
+	<!-- Install Chorus and Mercurial -->
+	<Feature Id='Chorus' Title='Chorus' Description='Necessary to Send and Receive.' Level='1' ConfigurableDirectory='APPFOLDER' AllowAdvertise="no" InstallDefault="source" Absent='disallow' TypicalDefault="install">
+		<MergeRef Id="ChorusMergeModule"/>
+	</Feature>
+</Include>

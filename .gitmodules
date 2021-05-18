@@ -1,0 +1,3 @@
+[submodule "genericinstaller"]
+	path = genericinstaller
+	url = https://github.com/sillsdev/genericinstaller

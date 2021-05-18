@@ -56,18 +56,10 @@
 
 	<Target Name="TestOnly" DependsOnTargets="RestoreBuildTasks">
 		<ItemGroup>
-			<TestAssemblies Include="$(RootDir)/src/output/**/*.Tests.dll" Exclude="$(RootDir)/src/output/**/SIL.*.Tests.dll"/>
+			<TestAssemblies Include="$(RootDir)/output/$(Configuration)/*.Tests.dll" Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll"/>
 		</ItemGroup>
-
-		<NUnit3
-			Assemblies="@(TestAssemblies)"
-			ToolPath="$(RootDir)/packages/NUnit.ConsoleRunner/tools"
-			ExcludeCategory="$(ExtraExcludeCategories)$(excludedCategories)"
-			WorkingDirectory="$(RootDir)/src/output/$(Configuration)"
-			Force32Bit="$(useNUnit-x86)"
-			Verbose="true"
-			UseNUnit3Xml="true"
-			OutputXmlFile="$(TestOutputXmlFile)"
-			TeamCity="$(TeamCity)"/>
+		<Message Text="$(RootDir)/packages/NUnit.ConsoleRunner" />
+		<Exec Command="$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console @(TestAssemblies->'%(Filename)%(Extension)', ' ')  &quot;--result:$(RootDir)/output/$(Configuration)/TestResults.xml;format=nunit3&quot; --labels=Before --x86" 
+			WorkingDirectory="$(RootDir)/output/$(Configuration)" />
 	</Target>
 </Project>

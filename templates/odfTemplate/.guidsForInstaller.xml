@@ -4,4 +4,7 @@
   <File Id="meta.xml" Guid="7df25c27-062b-4a31-b0e1-7bc152d4456b" />
   <File Id="mimetype" Guid="eb8c38b5-21cd-452e-824b-e6d7c55dccfa" />
   <File Id="settings.xml" Guid="4d12a284-018f-4c14-bed6-34e5101b6a83" />
+  <File Id="TemplatesDir.odfTemplate.meta.xml" Guid="c1ae1a04-6771-4cd0-8d44-ba23762f4481" />
+  <File Id="TemplatesDir.odfTemplate.mimetype" Guid="760fa679-0fd5-4c08-beba-b0c286c28673" />
+  <File Id="TemplatesDir.odfTemplate.settings.xml" Guid="9ba38950-ce2a-4052-91c7-a956e042d0b3" />
 </InstallerMetadata>
