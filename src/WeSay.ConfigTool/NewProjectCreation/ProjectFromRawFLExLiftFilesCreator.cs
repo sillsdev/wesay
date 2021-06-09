@@ -33,6 +33,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 				CopyOverPictures(Path.GetDirectoryName(pathToSourceLift), BasilProject.GetPathToPictures(pathToNewDirectory));
 
+				CopyOverAudioFiles(Path.GetDirectoryName(pathToSourceLift), pathToNewDirectory);
+
 				CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
 				CopyOverLdmlFiles(pathToSourceLift, BasilProject.GetPathToLdmlWritingSystemsFolder(pathToNewDirectory));
@@ -114,6 +116,29 @@ namespace WeSay.ConfigTool.NewProjectCreation
 					string fileName = Path.GetFileName(pathToPicture);
 					Logger.WriteMinorEvent(@"Copying picture " + fileName);
 					File.Copy(pathToPicture, Path.Combine(pathToNewDirectory, fileName), true);
+				}
+			}
+		}
+
+		private static void CopyOverAudioFiles(string pathToSourceDirectory, string pathToNewDirectory)
+		{
+			var pathToSourceAudioFiles = Path.Combine(pathToSourceDirectory, "audio");
+			if (Directory.Exists(pathToSourceAudioFiles))
+			{
+				if (!Directory.Exists(pathToNewDirectory))
+				{
+					Directory.CreateDirectory(pathToNewDirectory);
+				}
+				var pathToNewAudioDirectory = Path.Combine(pathToNewDirectory, "audio");
+				if (!Directory.Exists(pathToNewAudioDirectory))
+				{
+					Directory.CreateDirectory(pathToNewAudioDirectory);
+				}
+				foreach (string pathToAudioFile in Directory.GetFiles(pathToSourceAudioFiles))
+				{
+					string fileName = Path.GetFileName(pathToAudioFile);
+					Logger.WriteMinorEvent(@"Copying audio file " + fileName);
+					File.Copy(pathToAudioFile, Path.Combine(pathToNewAudioDirectory, fileName), true);
 				}
 			}
 		}

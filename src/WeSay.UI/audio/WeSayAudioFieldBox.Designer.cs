@@ -1,4 +1,4 @@
-﻿namespace WeSay.UI.audio
+namespace WeSay.UI.audio
 {
 	partial class WeSayAudioFieldBox
 	{
@@ -49,7 +49,9 @@
 																						| System.Windows.Forms.AnchorStyles.Right)));
 			this._shortSoundFieldControl1.Location = new System.Drawing.Point(0, 2);
 			this._shortSoundFieldControl1.Name = "_shortSoundFieldControl1";
-			this._shortSoundFieldControl1.Path = null;
+			//			this._shortSoundFieldControl1.Path = null;
+			//this._shortSoundFieldControl1.Path = "_path";
+			this._shortSoundFieldControl1.Path = "";
 			this._shortSoundFieldControl1.Size = new System.Drawing.Size(234, 19);
 			this._shortSoundFieldControl1.TabIndex = 2;
 			//
