@@ -20,10 +20,33 @@
 		<DeterministicSourcePaths>$(ContinuousIntegrationBuild)</DeterministicSourcePaths>
 	</PropertyGroup>
 
-	<UsingTask TaskName="NUnit3"
-		AssemblyFile="$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll"
-		Condition="Exists('$(RootDir)/packages/SIL.BuildTasks/tools/SIL.BuildTasks.dll')" />
+	<UsingTask TaskName="BuildExcludeString" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+		<ParameterGroup>
+			<Categories ParameterType="System.String" Required="true" />
+			<ExcludeArg ParameterType="System.String" Output="true" />
+		</ParameterGroup>
+		<Task>
+		<Code Type="Fragment" Language="cs"><![CDATA[
+			var bldr = new StringBuilder();
+			foreach (var cat in Categories.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				bldr.Append("cat != ");
+				bldr.Append(cat);
+				bldr.Append(" and ");
+			}
+			bldr.Length = bldr.Length - " and ".Length; // remove final "and"
+			bldr.Insert(0, "(").Append(")");
+			var exclude = bldr.ToString();
+			bldr.Clear();
+			bldr.Append(" --where \"");
+			bldr.Append(exclude);
+			bldr.Append("\"");
 
+			ExcludeArg = bldr.ToString();
+		]]></Code>
+		</Task>
+	</UsingTask>
+  
 	<Import Project="NuGet.targets"/>
 
 	<Target Name="RestoreBuildTasks" DependsOnTargets="CheckPrerequisites">
@@ -58,8 +81,10 @@
 		<ItemGroup>
 			<TestAssemblies Include="$(RootDir)/output/$(Configuration)/*.Tests.dll" Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll"/>
 		</ItemGroup>
-		<Message Text="$(RootDir)/packages/NUnit.ConsoleRunner" />
-		<Exec Command="$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console @(TestAssemblies->'%(Filename)%(Extension)', ' ')  &quot;--result:$(RootDir)/output/$(Configuration)/TestResults.xml;format=nunit3&quot; --labels=Before --x86" 
+		<Message Text="CI=$(CI) $(RootDir)/packages/NUnit.ConsoleRunner" />
+		<BuildExcludeString Categories="SkipOnTeamCity,KnownMonoIssue" Condition="'$(ExtraExcludeCategories)' == ''" />
+		<Message Text="Exclude Arg = $(ExcludeArg)" />
+		<Exec Command="$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console @(TestAssemblies->'%(Filename)%(Extension)', ' ')  &quot;--result:$(RootDir)/output/$(Configuration)/TestResults.xml;format=nunit3&quot; --labels=Before --x86 --agents=1 $(ExcludeArg)" 
 			WorkingDirectory="$(RootDir)/output/$(Configuration)" />
 	</Target>
 </Project>

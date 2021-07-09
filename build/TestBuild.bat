@@ -58,7 +58,7 @@ REM Run the next target only if the previous target succeeded
 ) && (
 	%MsBuild% WeSay.proj /t:RestoreBuildTasks
 ) && (
-	%MsBuild% WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /v:diag
+	%MsBuild% WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /p:CI=True /v:diag
 )
 :END
 FOR /F "tokens=*" %%g IN ('date /t') do (SET DATE=%%g)
