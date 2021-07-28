@@ -5,8 +5,8 @@
 		<Solution>Palaso.sln</Solution>
 		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
 		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
-		<ExtraExcludeCategories Condition="'$(OS)'!='Windows_NT'">KnownMonoIssue,</ExtraExcludeCategories>
-		<ExtraExcludeCategories Condition="'$(teamcity_version)' != '' Or '$(JENKINS_URL)' != '' Or '$(CI)' != ''">SkipOnTeamCity,$(ExtraExcludeCategories)</ExtraExcludeCategories>
+		<LinuxExcludeCategories Condition="'$(OS)'!='Windows_NT'">KnownMonoIssue,</LinuxExcludeCategories>
+		<ExtraExcludeCategories Condition="'$(teamcity_version)' != '' Or '$(JENKINS_URL)' != '' Or '$(CI)' != ''">SkipOnTeamCity,$(LinuxExcludeCategories)</ExtraExcludeCategories>
 		<useNUnit-x86 Condition="'$(OS)'=='Windows_NT'">true</useNUnit-x86>
 		<Platform Condition="'$(Platform)'==''">x</Platform>
 		<useNUnit-x86 Condition="'$(OS)'!='Windows_NT'">false</useNUnit-x86>
@@ -82,7 +82,7 @@
 			<TestAssemblies Include="$(RootDir)/output/$(Configuration)/*.Tests.dll" Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll"/>
 		</ItemGroup>
 		<Message Text="CI=$(CI) $(RootDir)/packages/NUnit.ConsoleRunner" />
-		<BuildExcludeString Categories="SkipOnTeamCity,KnownMonoIssue" Condition="'$(ExtraExcludeCategories)' == ''">
+		<BuildExcludeString Categories="$(ExtraIncludeCategories)" Condition="'$(ExtraExcludeCategories)' != ''">
 			<Output PropertyName="ExcludeArgument" TaskParameter="ExcludeArg" />
 		</BuildExcludeString>
 		<Message Text="Exclude Arg = $(ExcludeArgument)" />
