@@ -82,7 +82,7 @@
 			<TestAssemblies Include="$(RootDir)/output/$(Configuration)/*.Tests.dll" Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll"/>
 		</ItemGroup>
 		<Message Text="CI=$(CI) $(RootDir)/packages/NUnit.ConsoleRunner" />
-		<BuildExcludeString Categories="$(ExtraIncludeCategories)" Condition="'$(ExtraExcludeCategories)' != ''">
+		<BuildExcludeString Categories="$(ExtraExcludeCategories)" Condition="'$(ExtraExcludeCategories)' != ''">
 			<Output PropertyName="ExcludeArgument" TaskParameter="ExcludeArg" />
 		</BuildExcludeString>
 		<Message Text="Exclude Arg = $(ExcludeArgument)" />
