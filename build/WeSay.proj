@@ -82,9 +82,11 @@
 			<TestAssemblies Include="$(RootDir)/output/$(Configuration)/*.Tests.dll" Exclude="$(RootDir)/output/$(Configuration)/SIL.*.Tests.dll"/>
 		</ItemGroup>
 		<Message Text="CI=$(CI) $(RootDir)/packages/NUnit.ConsoleRunner" />
-		<BuildExcludeString Categories="SkipOnTeamCity,KnownMonoIssue" Condition="'$(ExtraExcludeCategories)' == ''" />
-		<Message Text="Exclude Arg = $(ExcludeArg)" />
-		<Exec Command="$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console @(TestAssemblies->'%(Filename)%(Extension)', ' ')  &quot;--result:$(RootDir)/output/$(Configuration)/TestResults.xml;format=nunit3&quot; --labels=Before --x86 --agents=1 $(ExcludeArg)" 
+		<BuildExcludeString Categories="SkipOnTeamCity,KnownMonoIssue" Condition="'$(ExtraExcludeCategories)' == ''">
+			<Output PropertyName="ExcludeArgument" TaskParameter="ExcludeArg" />
+		</BuildExcludeString>
+		<Message Text="Exclude Arg = $(ExcludeArgument)" />
+		<Exec Command="$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console @(TestAssemblies->'%(Filename)%(Extension)', ' ')  &quot;--result:$(RootDir)/output/$(Configuration)/TestResults.xml;format=nunit3&quot; --labels=Before --x86 --agents=1 $(ExcludeArgument)" 
 			WorkingDirectory="$(RootDir)/output/$(Configuration)" />
 	</Target>
 </Project>
