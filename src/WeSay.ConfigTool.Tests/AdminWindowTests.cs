@@ -60,7 +60,8 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
 			string p = WeSayWordsProject.Project.PathToConfigFile;
-			DateTime before = File.GetLastWriteTime(p);
+			DateTime before = File.GetLastWriteTime(p);		
+			File.WriteAllLines(p, File.ReadAllLines(p)); //touches file leaving it in original state
 			DateTime after = File.GetLastWriteTime(p);
 			Assert.AreNotEqual(before, after);
 		}
