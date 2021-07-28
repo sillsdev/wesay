@@ -3,6 +3,8 @@
 	<Property Id="APPFOLDERREGSZNAME" Value="InstallationDir"/>
 	<SetProperty Id="APPFOLDER" Value="[ProgramFilesFolder]\SIL\$(var.SafeApplicationName)\" Before="AppSearch"/>
 	<SetProperty Id="OVRAPPFOLDER" Value="[ProgramFilesFolder]\SIL\$(var.SafeApplicationName)\" Before="AppSearch"/>
+	<SetProperty Id="OVRDATAFOLDER" Value="[CommonAppDataFolder]SIL\WeSay\Projects" Before="AppSearch"/>
+
 
 	<!-- Install Chorus and Mercurial -->
 	<DirectoryRef  Id='APPFOLDER'>
