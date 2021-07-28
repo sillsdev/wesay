@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Chorus;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using SIL.TestUtilities;
