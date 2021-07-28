@@ -124,7 +124,7 @@
     <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\output\Debug\Keyman10Interop.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\Keyman10Interop.dll</HintPath>
     </Reference>
     <Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
