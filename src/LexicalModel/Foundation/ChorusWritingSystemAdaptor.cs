@@ -1,10 +1,11 @@
+using Chorus;
 using SIL.Windows.Forms.Keyboarding;
 using SIL.Windows.Forms.WritingSystems;
 using SIL.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation
 {
-	public class ChorusWritingSystemAdaptor : Chorus.IWritingSystem
+	public class ChorusWritingSystemAdaptor : IWritingSystem
 	{
 		private readonly WritingSystemDefinition _writingSystem;
 

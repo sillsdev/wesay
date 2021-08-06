@@ -55,35 +55,20 @@ namespace Addin.Transform.Tests
 				_project.WritingSystems.Set(ws);
 				_projectInfo = _project.GetProjectInfoForAddin();
 
-				var sourceTemplateDir = Path.Combine(_projectInfo.PathToApplicationRootDirectory, "..", "..", "..", "templates");
+				var sourceTemplateDir = Path.Combine(_projectInfo.PathToApplicationRootDirectory, "..", "..", "templates");
 				TestUtilities.DeleteFolderThatMayBeInUse(OutputTemplateDir);
 				CopyFolder(sourceTemplateDir, OutputTemplateDir);
 			}
 
-			public ProjectInfo ProjectInfo
-			{
-				get { return _projectInfo; }
-			}
+			public ProjectInfo ProjectInfo => _projectInfo;
 
-			private string OutputTemplateDir
-			{
-				get { return Path.Combine(_projectInfo.PathToApplicationRootDirectory, "templates"); }
-			}
+			private string OutputTemplateDir => Path.Combine(_projectInfo.PathToApplicationRootDirectory, "templates");
 
-			public string OdtFile
-			{
-				get { return Path.Combine(_projectInfo.PathToExportDirectory, _projectInfo.Name + ".odt"); }
-			}
+			public string OdtFile => Path.Combine(_projectInfo.PathToExportDirectory, _projectInfo.Name + ".odt");
 
-			public string OdtContent
-			{
-				get { return Path.Combine(_projectInfo.PathToExportDirectory, "content.xml"); }
-			}
+			public string OdtContent => Path.Combine(_projectInfo.PathToExportDirectory, "content.xml");
 
-			public string OdtStyles
-			{
-				get { return Path.Combine(_projectInfo.PathToExportDirectory, "styles.xml"); }
-			}
+			public string OdtStyles => Path.Combine(_projectInfo.PathToExportDirectory, "styles.xml");
 
 			public void Dispose ()
 			{

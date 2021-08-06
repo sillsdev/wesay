@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Chorus;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using SIL.TestUtilities;
@@ -22,6 +23,8 @@ namespace WeSay.Project.Tests
 
 			public BackupScenario(string testName)
 			{
+				var locationOfHg = Path.Combine(BasilProject.ApplicationRootDirectory, "..", "..", "src", "Mercurial");
+				MercurialLocation.PathToMercurialFolder = locationOfHg;
 				SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 				_projDir = new ProjectDirectorySetupForTesting("");
 
@@ -130,7 +133,7 @@ namespace WeSay.Project.Tests
 		}
 
 		[Test]
-		[Category("Known Mono Issue")]
+		[Category("KnownMonoIssue")]
 		public void BackupNow_FirstTime_CreatesValidRepositoryAndWorkingTree()
 		{
 			using (var scenario = new BackupScenario("BackupNow_NewFolder_CreatesNewRepository"))

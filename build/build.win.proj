@@ -5,7 +5,6 @@
 	</PropertyGroup>
 
 	<Import Project="$(RootDir)/build/build.common.proj" />
-	<Import Project="$(RootDir)/build/NuGet.targets"/>
 
 	<UsingTask TaskName="StampAssemblies" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
 	<UsingTask TaskName="MakeWixForDirTree" AssemblyFile="$(RootDir)/build/SIL.BuildTasks.dll" />
@@ -17,7 +16,7 @@
 	<!-- <UsingTask TaskName="MsBuild.Community.Tasks.WebDownload" AssemblyFile="$(RootDir)/src/packages/MSBuildTasks.1.5.0.235/tools/MSBuild.Community.Tasks.dll" /> -->
 
 	<PropertyGroup>
-		<Solution>WeSay VS2010.sln</Solution>
+		<Solution>WeSay.sln</Solution>
 		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<ApplicationName>WeSay</ApplicationName>
 		<!-- NB: the folder name may be set to lower case, so we have to define it again for rsync  -->
@@ -76,20 +75,7 @@
 		<Delete Files="@(ExistingInstallerFiles)" />
 	</Target>
 
-	<Target Name="CopyGeckofxFiles">
-		<Message Text="CopyGeckofxFiles"/>
-		<Error Condition="'$(GeckoDir)' == ''"
-			Text="Unable to locate Gecko directory" />
-		<ItemGroup>
-			<GeckofxFiles Include="$(GeckoDir)/lib/net45/*.dll" />
-			<GeckofxFiles Include="$(GeckoDir)/lib/net45/*.pdb" />
-			<FirefoxFiles Include="$(GeckoDir)/content/Firefox/*.*" />
-		</ItemGroup>
-		<Copy SourceFiles="@(GeckofxFiles)" DestinationFolder="$(OutputDir)" />
-		<Copy SourceFiles="@(FirefoxFiles)" DestinationFolder="$(OutputDir)/Firefox" />
-	</Target>
-
-	<Target Name="Compile" DependsOnTargets="RestorePackages;UnzipMercurial;CopyGeckofxFiles">
+	<Target Name="Compile" DependsOnTargets="UnzipMercurial">
 		<MSBuild
 			Projects="$(RootDir)\src\$(Solution)"
 			Targets="Build"
@@ -163,6 +149,7 @@
 	</Target>
 
 	<Target Name="MakeWixForPoFiles">
+		<Message Text="Making Wix for Xulrunner" />
 		<MakeWixForDirTree
 			DirectoryReferenceId="common"
 			ComponentGroupId="PoFiles"
@@ -174,6 +161,7 @@
 	</Target>
 
 	<Target Name="MakeWixForTemplates">
+		<Message Text="Making Wix for Xulrunner" />
 		<MakeWixForDirTree
 			DirectoryReferenceId="TemplatesDir"
 			ComponentGroupId="templates"
@@ -185,6 +173,7 @@
 	</Target>
 
 	<Target Name="MakeWixForXulrunner">
+		<Message Text="Making Wix for Xulrunner" />
 		<MakeWixForDirTree
 			DirectoryReferenceId="XulrunnerFiles"
 			ComponentGroupId="xulrunner"
@@ -196,15 +185,16 @@
 	</Target>
 
 	<Target Name="MakeWixForDistFiles">
+			<Message Text="Making Wix for DistFiles" />
 		<CallTarget targets="MakeWixForPoFiles"/>
 		<CallTarget targets="MakeWixForTemplates"/>
 		<CallTarget targets="MakeWixForXulrunner"/>
 	</Target>
 
-	<Target Name="Installer" DependsOnTargets="Clean; VersionNumbers; MakeWixForDistFiles; Build ">
+	<Target Name="Installer" DependsOnTargets="Clean; VersionNumbers; Build; MakeWixForDistFiles">
 		<!-- set the version number in the installer configuration program.  Perhaps there's a way to just send in the variables rather than this brute-force
 		changing of the script, but I haven't figured that out. -->
-
+		<Message Text="About to update the Installer file." />
 		<FileUpdate
 			File="$(RootDir)\src\Installer\Installer.wxs"
 			Regex='Property_ProductVersion = ".*"'

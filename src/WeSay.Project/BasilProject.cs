@@ -270,7 +270,7 @@ There are problems in:
 		public static string ApplicationTestDirectory => Path.Combine(TopDevDirectory ?? throw new InvalidOperationException(), "test");
 
 		// On development machines we run in src\output\Debug so get the parent directory of src to access other directories
-		protected static string TopDevDirectory => Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(DirectoryOfTheApplicationExecutable)));
+		protected static string TopDevDirectory => Path.GetDirectoryName(Path.GetDirectoryName(DirectoryOfTheApplicationExecutable));
 
 		public static string DirectoryOfTheApplicationExecutable
 		{

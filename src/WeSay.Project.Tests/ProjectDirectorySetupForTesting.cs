@@ -24,7 +24,7 @@ namespace WeSay.Project.Tests
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries, string liftVersion)
 		{
-			_testFolder = new TemporaryFolder("WeSayProjectTest");
+			_testFolder = new TemporaryFolder("WeSayProjectTest" + Path.GetRandomFileName());
 			_projectRootFolder = new TemporaryFolder(_testFolder, ProjectFolder);
 			string unlistedLanguage = WellKnownSubtags.UnlistedLanguage;
 			WeSayWordsProject.CreateEmptyProjectFiles(_projectRootFolder.Path, ProjectName, unlistedLanguage);

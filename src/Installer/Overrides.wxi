@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+	<Property Id="APPFOLDERREGSZNAME" Value="InstallationDir"/>
+	<SetProperty Id="APPFOLDER" Value="[ProgramFilesFolder]\SIL\$(var.SafeApplicationName)\" Before="AppSearch"/>
+	<SetProperty Id="OVRAPPFOLDER" Value="[ProgramFilesFolder]\SIL\$(var.SafeApplicationName)\" Before="AppSearch"/>
+	<SetProperty Id="OVRDATAFOLDER" Value="[CommonAppDataFolder]SIL\WeSay\Projects" Before="AppSearch"/>
+
+
+	<!-- Install Chorus and Mercurial -->
+	<DirectoryRef  Id='APPFOLDER'>
+		<Merge Id="ChorusMergeModule" Language="1033" SourceFile="..\..\genericinstaller\libs\ChorusMergeModule.msm" DiskId="1"/>
+	</DirectoryRef>
+</Include>

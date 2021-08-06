@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="XulrunnerFiles">
+            <Component Id="XulrunnerFiles.AccessibleHandler.dll" Guid="DF1FFE61-72E0-4391-B431-5EE68E00340C">
+                <File Id="XulrunnerFiles.AccessibleHandler.dll" Name="AccessibleHandler.dll" KeyPath="yes" Source="..\..\output\Release\Firefox\AccessibleHandler.dll" />
+                <RemoveFile Id="_6623374abe3a475691006706e8173f2d" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.AccessibleMarshal.dll" Guid="5A8D787E-5ED4-4CA0-85A3-6FCF1C0796EB">
+                <File Id="XulrunnerFiles.AccessibleMarshal.dll" Name="AccessibleMarshal.dll" Source="..\..\output\Release\Firefox\AccessibleMarshal.dll" />
+                <RemoveFile Id="_c12c8bf8734d4041bb9a6fc321ae0393" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.breakpadinjector.dll" Guid="3788F864-8F88-40D0-B0F8-CC0B6EB43DA3">
+                <File Id="XulrunnerFiles.breakpadinjector.dll" Name="breakpadinjector.dll" Source="..\..\output\Release\Firefox\breakpadinjector.dll" />
+                <RemoveFile Id="_155a3d6dbe0d47a6a688a7f1b79159a9" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.d3dcompiler_47.dll" Guid="EBBD3763-31F3-4018-8105-8F139FC87E7B">
+                <File Id="XulrunnerFiles.d3dcompiler_47.dll" Name="d3dcompiler_47.dll" Source="..\..\output\Release\Firefox\d3dcompiler_47.dll" />
+                <RemoveFile Id="_bff3770bbdd44f4f8820a76e1c30a58d" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.freebl3.dll" Guid="CA826C44-5053-4D50-9489-5054FB7380B9">
+                <File Id="XulrunnerFiles.freebl3.dll" Name="freebl3.dll" Source="..\..\output\Release\Firefox\freebl3.dll" />
+                <RemoveFile Id="_8e0892af35a74fcda3bdd2bd8c34a8bb" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.IA2Marshal.dll" Guid="8CED581A-DF77-4CEE-9FD8-97A0B2FF933B">
+                <File Id="XulrunnerFiles.IA2Marshal.dll" Name="IA2Marshal.dll" Source="..\..\output\Release\Firefox\IA2Marshal.dll" />
+                <RemoveFile Id="_0c9ffef5a87d41d18b9675f963a8c3a6" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.lgpllibs.dll" Guid="97BCBEB7-5232-4EF8-BE2F-AF5D8F35DEE8">
+                <File Id="XulrunnerFiles.lgpllibs.dll" Name="lgpllibs.dll" Source="..\..\output\Release\Firefox\lgpllibs.dll" />
+                <RemoveFile Id="_d0b00547959e40b49b94432c8055458f" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.libEGL.dll" Guid="C694B846-AFFD-49CF-9225-CF25E3AB10AD">
+                <File Id="XulrunnerFiles.libEGL.dll" Name="libEGL.dll" Source="..\..\output\Release\Firefox\libEGL.dll" />
+                <RemoveFile Id="_7bac3028f1e4485e99ca3e94370cbdeb" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.libGLESv2.dll" Guid="93926771-0611-4362-B90A-D4B9F511D6D0">
+                <File Id="XulrunnerFiles.libGLESv2.dll" Name="libGLESv2.dll" Source="..\..\output\Release\Firefox\libGLESv2.dll" />
+                <RemoveFile Id="_99b0f41594314d969eb67c38f227661d" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.mozavcodec.dll" Guid="8E014F59-5F6E-471A-AAAE-8FB507AE30B3">
+                <File Id="XulrunnerFiles.mozavcodec.dll" Name="mozavcodec.dll" Source="..\..\output\Release\Firefox\mozavcodec.dll" />
+                <RemoveFile Id="_c8fc0adc17ab4ba38ea80e71e45e4bf9" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.mozavutil.dll" Guid="D7C4882D-2574-4EA0-B608-6199BFE26CB1">
+                <File Id="XulrunnerFiles.mozavutil.dll" Name="mozavutil.dll" Source="..\..\output\Release\Firefox\mozavutil.dll" />
+                <RemoveFile Id="_6cced4f5980f407fa0f454dbdc244485" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.mozglue.dll" Guid="1D02B113-E849-434E-99DF-1CD48957A98B">
+                <File Id="XulrunnerFiles.mozglue.dll" Name="mozglue.dll" Source="..\..\output\Release\Firefox\mozglue.dll" />
+                <RemoveFile Id="_53c35e4ff33543aab96583b33008abea" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.nss3.dll" Guid="2172CA6C-D0FE-4BAB-AAC7-256D40FA0C9B">
+                <File Id="XulrunnerFiles.nss3.dll" Name="nss3.dll" Source="..\..\output\Release\Firefox\nss3.dll" />
+                <RemoveFile Id="_dbab2ca7228645e4a47d29169051a597" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.nssckbi.dll" Guid="B2DDF26B-F579-4573-B039-C33AB321A3D1">
+                <File Id="XulrunnerFiles.nssckbi.dll" Name="nssckbi.dll" Source="..\..\output\Release\Firefox\nssckbi.dll" />
+                <RemoveFile Id="_b5b7fd3834c74946b6bf0e78381ffbbc" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.nssdbm3.dll" Guid="54841BE5-3951-4B9D-843B-FBA28D2BE41B">
+                <File Id="XulrunnerFiles.nssdbm3.dll" Name="nssdbm3.dll" Source="..\..\output\Release\Firefox\nssdbm3.dll" />
+                <RemoveFile Id="_9de7216c16a7460d8c24e654b35625c6" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.omni.ja" Guid="ADB47B6C-7671-4BB7-AB9C-87D13660529E">
+                <File Id="XulrunnerFiles.omni.ja" Name="omni.ja" Source="..\..\output\Release\Firefox\omni.ja" />
+                <RemoveFile Id="_1999f1f639ce452ab4c366295e006c6d" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.plugin_container.exe" Guid="47EC7C67-63CF-46E7-A5B2-CF2084DA21A3">
+                <File Id="XulrunnerFiles.plugin_container.exe" Name="plugin-container.exe" Source="..\..\output\Release\Firefox\plugin-container.exe" />
+                <RemoveFile Id="_87dab63946f940409c64ab5c9950519d" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.plugin_hang_ui.exe" Guid="1709EA2E-3083-415E-A4C1-68D487889F23">
+                <File Id="XulrunnerFiles.plugin_hang_ui.exe" Name="plugin-hang-ui.exe" Source="..\..\output\Release\Firefox\plugin-hang-ui.exe" />
+                <RemoveFile Id="_8f3f19f4d11749978878e8618cf53c45" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.qipcap.dll" Guid="9711EF12-2A0C-4D63-8326-4AA17C00CDEC">
+                <File Id="XulrunnerFiles.qipcap.dll" Name="qipcap.dll" Source="..\..\output\Release\Firefox\qipcap.dll" />
+                <RemoveFile Id="_af33e6fb929240ad902d953df309be6d" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.softokn3.dll" Guid="846D5647-3693-49D3-9CE2-A57058B0EA9B">
+                <File Id="XulrunnerFiles.softokn3.dll" Name="softokn3.dll" Source="..\..\output\Release\Firefox\softokn3.dll" />
+                <RemoveFile Id="_5cc6c68bca7049088e1b902d6353db9a" On="both" Name="*.*" />
+            </Component>
+            <Component Id="XulrunnerFiles.xul.dll" Guid="C85A6AE7-9837-43D2-A90E-B688CBFAD431">
+                <File Id="XulrunnerFiles.xul.dll" Name="xul.dll" Source="..\..\output\Release\Firefox\xul.dll" />
+                <RemoveFile Id="_fec7a17dcd8d4b8bab34c2e4e6b6f5d2" On="both" Name="*.*" />
+            </Component>
+        </DirectoryRef>
+        <ComponentGroup Id="xulrunner">
+            <ComponentRef Id="XulrunnerFiles.AccessibleHandler.dll" />
+            <ComponentRef Id="XulrunnerFiles.AccessibleMarshal.dll" />
+            <ComponentRef Id="XulrunnerFiles.breakpadinjector.dll" />
+            <ComponentRef Id="XulrunnerFiles.d3dcompiler_47.dll" />
+            <ComponentRef Id="XulrunnerFiles.freebl3.dll" />
+            <ComponentRef Id="XulrunnerFiles.IA2Marshal.dll" />
+            <ComponentRef Id="XulrunnerFiles.lgpllibs.dll" />
+            <ComponentRef Id="XulrunnerFiles.libEGL.dll" />
+            <ComponentRef Id="XulrunnerFiles.libGLESv2.dll" />
+            <ComponentRef Id="XulrunnerFiles.mozavcodec.dll" />
+            <ComponentRef Id="XulrunnerFiles.mozavutil.dll" />
+            <ComponentRef Id="XulrunnerFiles.mozglue.dll" />
+            <ComponentRef Id="XulrunnerFiles.nss3.dll" />
+            <ComponentRef Id="XulrunnerFiles.nssckbi.dll" />
+            <ComponentRef Id="XulrunnerFiles.nssdbm3.dll" />
+            <ComponentRef Id="XulrunnerFiles.omni.ja" />
+            <ComponentRef Id="XulrunnerFiles.plugin_container.exe" />
+            <ComponentRef Id="XulrunnerFiles.plugin_hang_ui.exe" />
+            <ComponentRef Id="XulrunnerFiles.qipcap.dll" />
+            <ComponentRef Id="XulrunnerFiles.softokn3.dll" />
+            <ComponentRef Id="XulrunnerFiles.xul.dll" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

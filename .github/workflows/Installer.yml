@@ -1,15 +1,15 @@
 
-name: WeSay CI workflow
+name: WeSay Installer
 
 on:
-  pull_request:
+  push:
     branches: [ develop ]
 
 jobs:
 
   build:
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         os: [windows-latest]
     runs-on: ${{ matrix.os }}
@@ -18,6 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2.3.4
       with:
+        submodules: recursive
         fetch-depth: 0
 
     # Install the .NET Core workload
@@ -40,21 +41,13 @@ jobs:
     - name: Build
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
-      run: msbuild src/WeSay.sln
-
-    - name: Prepare to Test
-      run: msbuild build/WeSay.proj /t:RestoreBuildTasks
-      
-    - name: Test
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So testing files and folders can be created
-      run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /p:CI=true /v:diag
+      run: msbuild src/WeSay.sln /p:Configuration=Release
         
-    - name: Test Report
-      uses: jasonleenaylor/nunit-reporter@63ab85dd5da111c3f4ef95f2fb73bbe667f58db9
-      if: always()
+    - name: Build Installer
+      run: msbuild build/Installer.targets /p:Configuration=Release /p:Platform=x86 /t:BuildRelease
+      
+    - name: Publish Installer
+      uses: actions/upload-artifact@v2
       with:
-        path: output/**/TestResults.xml
-        access-token: ${{ secrets.GITHUB_TOKEN }}
-        reportTitle: "Test Results (${{ matrix.os }})"
-        numFailures: 
+        name: WeSayInstallers
+        path: BuildDir/WeSay*.exe

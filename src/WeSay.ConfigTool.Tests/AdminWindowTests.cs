@@ -66,8 +66,6 @@ namespace WeSay.ConfigTool.Tests
 			Assert.AreNotEqual(before, after);
 		}
 
-
-
 		//stupid nunitforms will freak 'cause window was closed
 		[Test] //, ExpectedException(typeof(FormsTestAssertionException))]
 		public void AfterCreateProjectAndQuitFilesExist()
