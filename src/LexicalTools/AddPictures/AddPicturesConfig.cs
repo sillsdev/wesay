@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.AddPictures
@@ -18,7 +16,7 @@ namespace WeSay.LexicalTools.AddPictures
 		public string IndexFileName
 		{
 			get { return _indexFileName; }
-			set { _indexFileName = value;}
+			set { _indexFileName = value; }
 		}
 
 		protected override IEnumerable<KeyValuePair<string, string>> ValuesToSave

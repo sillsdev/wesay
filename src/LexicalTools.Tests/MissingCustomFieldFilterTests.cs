@@ -1,8 +1,8 @@
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
+using SIL.Lift;
 using SIL.Lift.Options;
 using WeSay.LexicalModel;
-using SIL.Lift;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			var field = new Field("customField", "LexExampleSentence", new[] {"vernacular"});
+			var field = new Field("customField", "LexExampleSentence", new[] { "vernacular" });
 			_missingCustomFieldFilter = new MissingFieldQuery(field, null, null);
 		}
 
@@ -145,7 +145,7 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			var field = new Field("customField", "LexEntry", new[] {"vernacular"});
+			var field = new Field("customField", "LexEntry", new[] { "vernacular" });
 			_missingCustomFieldFilter = new MissingFieldQuery(field, null, null);
 		}
 
@@ -183,8 +183,8 @@ namespace WeSay.LexicalTools.Tests
 			var custom = entry.GetOrCreateProperty<MultiText>("customField");
 			custom["en"] = "hello";
 
-			var field = new Field("customField", "LexEntry", new[] { "en","fr" });
-			var hasEnglishButNotFrenchFilter = new MissingFieldQuery(field, new string[]{"fr"}, new string[]{"en"});
+			var field = new Field("customField", "LexEntry", new[] { "en", "fr" });
+			var hasEnglishButNotFrenchFilter = new MissingFieldQuery(field, new string[] { "fr" }, new string[] { "en" });
 			Assert.IsTrue(hasEnglishButNotFrenchFilter.FilteringPredicate(entry));
 		}
 
@@ -209,7 +209,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			var field = new Field("customField",
 									"LexSense",
-									new[] {"vernacular"},
+									new[] { "vernacular" },
 									Field.MultiplicityType.ZeroOr1,
 									"Option");
 			_missingCustomFieldFilter = new MissingFieldQuery(field, null, null);

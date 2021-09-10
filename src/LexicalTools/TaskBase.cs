@@ -1,8 +1,8 @@
+using SIL.i18n;
 using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using SIL.i18n;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -10,7 +10,7 @@ using WeSay.Project;
 namespace WeSay.LexicalTools
 {
 
-	public abstract class TaskBase: ITask
+	public abstract class TaskBase : ITask
 	{
 		public const int CountNotRelevant = -1;
 		public const int CountNotComputed = -2;
@@ -58,20 +58,20 @@ namespace WeSay.LexicalTools
 
 			// convert any amount of whitespace to one space
 			Regex rgx = new Regex("\\s+");
-			_label = rgx.Replace (config.Label.Trim(), " ");
-			_longLabel = rgx.Replace (config.LongLabel.Trim(), " ");
-			_description = rgx.Replace (config.Description.Trim(), " ");
-			_remainingCountText = rgx.Replace (config.RemainingCountText.Trim(), " ");
-			_referenceCountText = rgx.Replace (config.ReferenceCountText.Trim(), " ");
+			_label = rgx.Replace(config.Label.Trim(), " ");
+			_longLabel = rgx.Replace(config.LongLabel.Trim(), " ");
+			_description = rgx.Replace(config.Description.Trim(), " ");
+			_remainingCountText = rgx.Replace(config.RemainingCountText.Trim(), " ");
+			_referenceCountText = rgx.Replace(config.ReferenceCountText.Trim(), " ");
 			_isPinned = config.IsPinned;
 
-//            _cachePath = WeSayWordsProject.Project.PathToCache;
-//            _cacheFilePath = Path.Combine(_cachePath, MakeSafeName(Label + ".cache"));
-//
-//            ReadCacheFile();
+			//            _cachePath = WeSayWordsProject.Project.PathToCache;
+			//            _cacheFilePath = Path.Combine(_cachePath, MakeSafeName(Label + ".cache"));
+			//
+			//            ReadCacheFile();
 
 			_remainingCount = _taskMemory.Get("RemainingCount", CountNotComputed);
-			_referenceCount =  _taskMemory.Get("ReferenceCount", CountNotComputed);
+			_referenceCount = _taskMemory.Get("ReferenceCount", CountNotComputed);
 
 		}
 
@@ -105,65 +105,65 @@ namespace WeSay.LexicalTools
 		}
 
 
-//        private static string MakeSafeName(string fileName)
-//        {
-//            foreach (char invalChar in Path.GetInvalidFileNameChars())
-//            {
-//                fileName = fileName.Replace(invalChar.ToString(), "");
-//            }
-//            return fileName;
-//        }
+		//        private static string MakeSafeName(string fileName)
+		//        {
+		//            foreach (char invalChar in Path.GetInvalidFileNameChars())
+		//            {
+		//                fileName = fileName.Replace(invalChar.ToString(), "");
+		//            }
+		//            return fileName;
+		//        }
 
-//        private void WriteCacheFile()
-//        {
-//            try
-//            {
-//                if (!Directory.Exists(_cachePath))
-//                {
-//                    Directory.CreateDirectory(_cachePath);
-//                }
-//                using (StreamWriter sw = File.CreateText(_cacheFilePath))
-//                {
-//                    sw.Write(_remainingCount + ", " + _referenceCount);
-//                }
-//            }
-//            catch
-//            {
-//                Console.WriteLine("Could not write cache file: " + _cacheFilePath);
-//            }
-//        }
+		//        private void WriteCacheFile()
+		//        {
+		//            try
+		//            {
+		//                if (!Directory.Exists(_cachePath))
+		//                {
+		//                    Directory.CreateDirectory(_cachePath);
+		//                }
+		//                using (StreamWriter sw = File.CreateText(_cacheFilePath))
+		//                {
+		//                    sw.Write(_remainingCount + ", " + _referenceCount);
+		//                }
+		//            }
+		//            catch
+		//            {
+		//                Console.WriteLine("Could not write cache file: " + _cacheFilePath);
+		//            }
+		//        }
 
-//        private void ReadCacheFile()
-//        {
-//            _remainingCount = CountNotComputed;
-//            _referenceCount = CountNotComputed;
-//            try
-//            {
-//                if (File.Exists(_cacheFilePath))
-//                {
-//                    using (StreamReader sr = new StreamReader(_cacheFilePath))
-//                    {
-//                        string s;
-//                        s = sr.ReadToEnd();
-//                        string[] values = s.Split(',');
-//                        if (values.Length > 1) //old style didn't have reference
-//                        {
-//                            bool gotIt = int.TryParse(values[1], out _referenceCount);
-//                            Debug.Assert(gotIt);
-//                        }
-//                        if (values.Length > 0) //old style didn't have reference
-//                        {
-//                            bool gotIt = int.TryParse(values[0], out _remainingCount);
-//                            Debug.Assert(gotIt);
-//                        }
-//                    }
-//                }
-//            }
-//            catch
-//            {
-//                // Console.WriteLine("Could not read cache file: " + cacheFilePath);
-//            }
-//        }
+		//        private void ReadCacheFile()
+		//        {
+		//            _remainingCount = CountNotComputed;
+		//            _referenceCount = CountNotComputed;
+		//            try
+		//            {
+		//                if (File.Exists(_cacheFilePath))
+		//                {
+		//                    using (StreamReader sr = new StreamReader(_cacheFilePath))
+		//                    {
+		//                        string s;
+		//                        s = sr.ReadToEnd();
+		//                        string[] values = s.Split(',');
+		//                        if (values.Length > 1) //old style didn't have reference
+		//                        {
+		//                            bool gotIt = int.TryParse(values[1], out _referenceCount);
+		//                            Debug.Assert(gotIt);
+		//                        }
+		//                        if (values.Length > 0) //old style didn't have reference
+		//                        {
+		//                            bool gotIt = int.TryParse(values[0], out _remainingCount);
+		//                            Debug.Assert(gotIt);
+		//                        }
+		//                    }
+		//                }
+		//            }
+		//            catch
+		//            {
+		//                // Console.WriteLine("Could not read cache file: " + cacheFilePath);
+		//            }
+		//        }
 
 		public virtual void Deactivate()
 		{

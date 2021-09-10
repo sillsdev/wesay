@@ -1,17 +1,17 @@
+using SIL.i18n;
+using SIL.Reporting;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using SIL.i18n;
-using SIL.Reporting;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class InterfaceLanguageControl: ConfigurationControlBase
+	public partial class InterfaceLanguageControl : ConfigurationControlBase
 	{
 		public InterfaceLanguageControl(ILogger logger)
-			: base("settings for the user interface", logger,"interfaceLanguage")
+			: base("settings for the user interface", logger, "interfaceLanguage")
 		{
 			InitializeComponent();
 		}
@@ -29,15 +29,15 @@ namespace WeSay.ConfigTool
 		{
 			if (_languageCombo.SelectedItem != null)
 			{
-				var lang = ((PoProxy) _languageCombo.SelectedItem).LanguageCode;
+				var lang = ((PoProxy)_languageCombo.SelectedItem).LanguageCode;
 				if (UILanguage != lang)
 				{
 					UILanguage = lang;
-					if(lang==string.Empty)
+					if (lang == string.Empty)
 					{
 						lang = "default";
 					}
-					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed UI Language to {0}", "Checkin Description in WeSay Config Tool used when you change the User Interface language."),lang);
+					_logger.WriteConciseHistoricalEvent(StringCatalog.Get("Changed UI Language to {0}", "Checkin Description in WeSay Config Tool used when you change the User Interface language."), lang);
 				}
 			}
 		}
@@ -97,13 +97,13 @@ namespace WeSay.ConfigTool
 				}
 				// ReSharper disable EmptyGeneralCatchClause
 				catch
-				{}
+				{ }
 				// ReSharper restore EmptyGeneralCatchClause
 			}
 
 			private static string PoFilePathToLanguageCode(string poFilePath)
 			{
-				var parts = poFilePath.Split(new[] {'.', '-'});
+				var parts = poFilePath.Split(new[] { '.', '-' });
 				return parts[parts.Length - 2];
 			}
 
@@ -113,7 +113,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		private class EnglishPoProxy: PoProxy
+		private class EnglishPoProxy : PoProxy
 		{
 			public EnglishPoProxy()
 			{
@@ -152,11 +152,11 @@ namespace WeSay.ConfigTool
 		private void OnChooseFont(object sender, EventArgs e)
 		{
 			var dialog = new FontDialog
-							 {
-								 Font = Options.GetLabelFont(),
-								 ShowColor = false,
-								 ShowEffects = false
-							 };
+			{
+				Font = Options.GetLabelFont(),
+				ShowColor = false,
+				ShowEffects = false
+			};
 
 			try //strange, but twice we've found situations where ShowDialog crashes on windows
 			{

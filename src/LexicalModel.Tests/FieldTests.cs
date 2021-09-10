@@ -1,6 +1,6 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -16,19 +16,19 @@ namespace WeSay.LexicalModel.Tests
 		}
 
 		[TearDown]
-		public void TearDown() {}
+		public void TearDown() { }
 
 		[Test]
 		public void CreateNoWritingSystem()
 		{
-			Field field = new Field("fieldName", "LexEntry", new string[] {});
+			Field field = new Field("fieldName", "LexEntry", new string[] { });
 			Assert.IsNotNull(field);
 		}
 
 		[Test]
 		public void CreateSingleWritingSystem()
 		{
-			Field field = new Field("fieldName", "LexEntry", new string[] {"writingSystemId"});
+			Field field = new Field("fieldName", "LexEntry", new string[] { "writingSystemId" });
 			Assert.IsNotNull(field);
 		}
 
@@ -45,25 +45,25 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void Create_NullFieldName_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new Field(null, "LexEntry", new string[] {"writingSystem"}));
+			Assert.Throws<ArgumentNullException>(() => new Field(null, "LexEntry", new string[] { "writingSystem" }));
 		}
 
 		[Test]
 		public void Create_NullClassName_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>new Field("fieldName", null, new string[] {"writingSystem"}));
+			Assert.Throws<ArgumentNullException>(() => new Field("fieldName", null, new string[] { "writingSystem" }));
 		}
 
 		[Test]
 		public void Create_NullWritingSystem_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>new Field("fieldName", "LexEntry", null));
+			Assert.Throws<ArgumentNullException>(() => new Field("fieldName", "LexEntry", null));
 		}
 
 		[Test]
 		public void Create_NullWritingSystems_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>new Field("fieldName", "LexEntry", new string[] {null, null}));
+			Assert.Throws<ArgumentNullException>(() => new Field("fieldName", "LexEntry", new string[] { null, null }));
 		}
 
 		[Test]
@@ -100,7 +100,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetFieldName_InitializedFromConstructor()
 		{
-			Field field = new Field("fieldName", "LexEntry", new string[] {"writingSystemId"});
+			Field field = new Field("fieldName", "LexEntry", new string[] { "writingSystemId" });
 			Assert.AreEqual("fieldName", field.FieldName);
 		}
 
@@ -119,8 +119,8 @@ namespace WeSay.LexicalModel.Tests
 		[Ignore("Semantics have changed, per John")]
 		public void InvalidWritingSystemNotConveyedToMaster()
 		{
-			Field master = new Field("foo", "LexEntry", new string[] {"dropme", "keepme"});
-			Field user = new Field("foo", "LexEntry", new string[] {"dropmetoo", "keepme"});
+			Field master = new Field("foo", "LexEntry", new string[] { "dropme", "keepme" });
+			Field user = new Field("foo", "LexEntry", new string[] { "dropmetoo", "keepme" });
 			Field.ModifyMasterFromUser(master, user);
 
 			Assert.AreEqual(1, master.WritingSystemIds.Count);
@@ -130,8 +130,8 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void MasterWritingSystemsTrimmedByUser()
 		{
-			Field master = new Field("foo", "LexEntry", new string[] {"dropme", "keepme"});
-			Field user = new Field("foo", "LexEntry", new string[] {"keepme"});
+			Field master = new Field("foo", "LexEntry", new string[] { "dropme", "keepme" });
+			Field user = new Field("foo", "LexEntry", new string[] { "keepme" });
 			Field.ModifyMasterFromUser(master, user);
 
 			Assert.AreEqual(1, master.WritingSystemIds.Count);
@@ -158,7 +158,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			Field field = new Field();
 			field.WritingSystemsChanged += OnWritingSystemIdsChanged;
-			field.WritingSystemIds= new List<string>();
+			field.WritingSystemIds = new List<string>();
 			Assert.That(_eventFired, Is.True);
 		}
 

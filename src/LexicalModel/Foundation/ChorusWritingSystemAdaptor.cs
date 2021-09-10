@@ -1,6 +1,4 @@
 using Chorus;
-using SIL.Windows.Forms.Keyboarding;
-using SIL.Windows.Forms.WritingSystems;
 using SIL.WritingSystems;
 
 namespace WeSay.LexicalModel.Foundation

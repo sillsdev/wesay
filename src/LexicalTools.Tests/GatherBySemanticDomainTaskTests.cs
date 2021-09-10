@@ -1,30 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using Autofac;
-using Microsoft.Practices.ServiceLocation;
+using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
+using SIL.Lift.Options;
 using SIL.Reporting;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherBySemanticDomains;
 using WeSay.Project;
-using WeSay.Project.LocalizedList;
-using SIL.Lift.Options;
-
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class GatherBySemanticDomainsTaskTests: TaskBaseTests
+	public class GatherBySemanticDomainsTaskTests : TaskBaseTests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
@@ -89,14 +83,14 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4,
 												  "LexSense",
-												  new string[] {nameAndQuestionWritingSystem});
+												  new string[] { nameAndQuestionWritingSystem });
 			semanticDomainField.OptionsListFile = "SemDom.xml";
 			semanticDomainField.DataTypeName = "OptionRefCollection";
 
 			ViewTemplate v = new ViewTemplate();
 			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 											   "LexEntry",
-											   new string[] {_vernacularWritingSystemId});
+											   new string[] { _vernacularWritingSystemId });
 			lexicalFormField.DataTypeName = "MultiText";
 
 			v.Add(lexicalFormField);
@@ -107,7 +101,7 @@ namespace WeSay.LexicalTools.Tests
 
 			v.Add(defnField);
 
-			if(!v.WritingSystems.Contains("en"))
+			if (!v.WritingSystems.Contains("en"))
 			{
 				v.WritingSystems.Set(new WritingSystemDefinition("en"));
 			}
@@ -140,7 +134,7 @@ namespace WeSay.LexicalTools.Tests
 				{
 					_task.Activate();
 				}
-				return ((GatherBySemanticDomainTask) _task);
+				return ((GatherBySemanticDomainTask)_task);
 			}
 		}
 
@@ -156,7 +150,7 @@ namespace WeSay.LexicalTools.Tests
 		private void AddSenseToEntry(LexEntry e, string gloss, string domainToAdd)
 		{
 			LexSense s = AddNewSenseToEntry(e);
-			if(!string.IsNullOrEmpty(gloss))
+			if (!string.IsNullOrEmpty(gloss))
 				s.Definition.SetAlternative("en", gloss);
 			if (!string.IsNullOrEmpty(domainToAdd))
 			{
@@ -190,7 +184,7 @@ namespace WeSay.LexicalTools.Tests
 															memory,
 															new StringLogger());
 			task2.Activate();
-			Assert.AreEqual(5,task2.CurrentDomainIndex);
+			Assert.AreEqual(5, task2.CurrentDomainIndex);
 			Assert.AreEqual(2, task2.CurrentQuestionIndex);
 			task2.Deactivate();
 		}
@@ -239,7 +233,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ConstructWithTemplate()
 		{
-			Assert.IsNotNull(new GatherBySemanticDomainTask( GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
+			Assert.IsNotNull(new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath),
 															_lexEntryRepository,
 															_viewTemplate,
 															new TaskMemoryRepository(),
@@ -540,7 +534,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			int originalCount = _lexEntryRepository.CountAllItems();
 			Task.AddWord("vernacular", String.Empty);
-			Assert.IsTrue(Task.CurrentWords.Any(w=>w.Vernacular.Form=="vernacular"));
+			Assert.IsTrue(Task.CurrentWords.Any(w => w.Vernacular.Form == "vernacular"));
 			Assert.AreEqual(originalCount + 1, _lexEntryRepository.CountAllItems());
 			Task.Deactivate();
 		}
@@ -561,7 +555,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void PrepareToMoveWordToEditArea_null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea((GatherBySemanticDomainTask.WordDisplay) null));
+			Assert.Throws<ArgumentNullException>(() => Task.PrepareToMoveWordToEditArea((GatherBySemanticDomainTask.WordDisplay)null));
 			Task.Deactivate();
 		}
 
@@ -594,7 +588,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.PrepareToMoveWordToEditArea("raposa");
-			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form=="raposa"));
+			Assert.IsFalse(Task.CurrentWords.Any(w => w.Vernacular.Form == "raposa"));
 			Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
 			Task.Deactivate();
 		}
@@ -633,7 +627,7 @@ namespace WeSay.LexicalTools.Tests
 			AddEntryToRecordList("cachorro", "dog", Task.DomainKeys[0]);
 
 			Task.PrepareToMoveWordToEditArea("raposa");
-			Assert.IsFalse(Task.CurrentWords.Any(w=>w.Vernacular.Form==("raposa")));
+			Assert.IsFalse(Task.CurrentWords.Any(w => w.Vernacular.Form == ("raposa")));
 			Assert.AreEqual(2, Task.CurrentWords.Count);
 			Task.Deactivate();
 		}
@@ -799,7 +793,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 0;
 			Task.PrepareToMoveWordToEditArea("peixe");
 
-			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems());
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems());
 			Task.Deactivate();
 		}
 
@@ -811,7 +805,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 0;
 			Task.PrepareToMoveWordToEditArea("peixe");
 
-			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems());
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems());
 			Task.Deactivate();
 		}
 
@@ -873,11 +867,11 @@ namespace WeSay.LexicalTools.Tests
 			var originalCount = AddEntry(entryWithMistake);
 
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
-												 {
-													 Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
-													 Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
-												 });
-			Assert.AreEqual(originalCount-1, _lexEntryRepository.CountAllItems(),"expected it to be removed from the lexicon");
+			{
+				Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+				Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
+			});
+			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
 			var modifiedEntries = Task.AddWord("peixe2", "the meaning");
 			Assert.AreEqual(1, modifiedEntries.Count);
 			Assert.AreEqual(preexistingEntry, modifiedEntries[0], "expected the pre-existing 'peixe2' to be the recipient of the move, now that the spelling was changed to match it.");
@@ -907,10 +901,10 @@ namespace WeSay.LexicalTools.Tests
 			var originalCount = AddEntry(entryWithMistake);
 
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
-												{
-													Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
-													Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
-												});
+			{
+				Vernacular = entryWithMistake.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+				Meaning = entryWithMistake.Senses[0].Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
+			});
 			Assert.AreEqual(originalCount - 1, _lexEntryRepository.CountAllItems(), "expected it to be removed from the lexicon");
 			var modifiedEntries = Task.AddWord("peixe2", "the meaning2");
 			Assert.AreEqual(1, modifiedEntries.Count);
@@ -1001,7 +995,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(2, _lexEntryRepository.CountAllItems(), "should have created a new entry.");
 			Assert.AreEqual(1, entry.Senses.Count, "expected to end up with 1 sense as the two matching the current domain should have been moved");
 			Assert.That(entry.Senses.All(s => !s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])), Is.True);
-			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1",WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
+			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
 			Assert.AreEqual(2, newEntry.Senses.Count, "expected to end up with 2 sense as the two matching the current domain should have been moved");
 			Assert.That(newEntry.LexicalForm[_vernacularWritingSystemId], Is.EqualTo("peixe1"));
 			Assert.That(newEntry.Senses.All(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])), Is.True);
@@ -1034,7 +1028,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.AreEqual(1, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
 			var newEntry = _lexEntryRepository.GetEntriesWithMatchingLexicalForm("peixe1", WeSayWordsProject.Project.WritingSystems.Get(_vernacularWritingSystemId))[0].RealObject;
 			Assert.That(sensesToMove.All(movedSense => newEntry.Senses.Contains(movedSense)));
-			Assert.That(newEntry.Senses.All(s=>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])));
+			Assert.That(newEntry.Senses.All(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(Task.DomainKeys[0])));
 			Task.Deactivate();
 		}
 
@@ -1048,10 +1042,10 @@ namespace WeSay.LexicalTools.Tests
 			var secondSense = entry.Senses[1];
 
 			Task.PrepareToMoveWordToEditArea(new GatherBySemanticDomainTask.WordDisplay
-												 {
-													 Vernacular = entry.LexicalForm.GetBestAlternative(new []{_vernacularWritingSystemId}),
-													 Meaning = secondSense.Definition.GetBestAlternative(new[]{Task.DefinitionWritingSystem.LanguageTag})
-												 });
+			{
+				Vernacular = entry.LexicalForm.GetBestAlternative(new[] { _vernacularWritingSystemId }),
+				Meaning = secondSense.Definition.GetBestAlternative(new[] { Task.DefinitionWritingSystem.LanguageTag })
+			});
 			Task.AddWord("peixe1", "de_word");
 
 			Assert.AreEqual(2, _lexEntryRepository.CountAllItems(), "expected new entry 'peixe1' in lexicon");
@@ -1195,7 +1189,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.CurrentDomainIndex = 0;
 			Task.GotoNextDomainLackingAnswers();
 			Assert.AreEqual(0, Task.CurrentQuestionIndex);
-			Assert.AreEqual(Task.DomainKeys.Count-1, Task.CurrentDomainIndex);
+			Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
 			Task.Deactivate();
 		}
 
@@ -1282,7 +1276,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void FillAllDomainsWithWords()
 		{
-			for (int i = 0;i < Task.DomainKeys.Count;i++)
+			for (int i = 0; i < Task.DomainKeys.Count; i++)
 			{
 				Task.CurrentDomainIndex = i;
 				Task.AddWord(i.ToString());
@@ -1314,24 +1308,24 @@ namespace WeSay.LexicalTools.Tests
 			Task.Deactivate();
 		}
 
- /* I JH think we don't want this behavior anymore
-  * [Test]
-		public void GotoNextDomainQuestion_HasNoMoreDomainsNoMoreQuestions_DoesNothing()
-		{
-			Task.CurrentDomainIndex = Task.DomainKeys.Count - 1;
-			Task.CurrentQuestionIndex = Task.Questions.Count - 1;
-			Task.GotoNextDomainQuestion();
-			Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
-			Assert.AreEqual(Task.Questions.Count - 1, Task.CurrentQuestionIndex);
-		}
-*/
+		/* I JH think we don't want this behavior anymore
+		 * [Test]
+			   public void GotoNextDomainQuestion_HasNoMoreDomainsNoMoreQuestions_DoesNothing()
+			   {
+				   Task.CurrentDomainIndex = Task.DomainKeys.Count - 1;
+				   Task.CurrentQuestionIndex = Task.Questions.Count - 1;
+				   Task.GotoNextDomainQuestion();
+				   Assert.AreEqual(Task.DomainKeys.Count - 1, Task.CurrentDomainIndex);
+				   Assert.AreEqual(Task.Questions.Count - 1, Task.CurrentQuestionIndex);
+			   }
+	   */
 
 
 		[Test]
 		public void AddWordWithDef_ExistingWordWithSameDomainButDiffDef_NewSense()
 		{
 			Task.AddWord("one", "1");
-			var entries =Task.AddWord("one", "2");
+			var entries = Task.AddWord("one", "2");
 			Assert.AreEqual(1, entries.Count);
 			Assert.AreEqual(2, entries[0].Senses.Count, "Should create new senses");
 			Task.Deactivate();
@@ -1354,7 +1348,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWordWithDef_ExistingWordDefAlreadyExists_SemDomAdded()
 		{
-			var entries1 =Task.AddWord("one", "1");
+			var entries1 = Task.AddWord("one", "1");
 			Task.CurrentDomainIndex++;
 			var entries2 = Task.AddWord("one", "1");
 			Assert.AreEqual(entries1[0], entries2[0], "Should not create new word");
@@ -1366,8 +1360,8 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void AddWordWithDef_MatchesTwoWordsNeitherHasMatchingDef_SenseAddedToFirstOnly()
 		{
-			var e1  = AddEntryToRecordList("one", "1", null);
-			var e2  = AddEntryToRecordList("one", "2", null);
+			var e1 = AddEntryToRecordList("one", "1", null);
+			var e2 = AddEntryToRecordList("one", "2", null);
 			AssertNumberOfDomainsInSense(0, e2.Senses[0]);
 			var entries = Task.AddWord("one", "3");
 			Assert.AreEqual(e1, entries[0], "Should choose first match");
@@ -1404,12 +1398,12 @@ namespace WeSay.LexicalTools.Tests
 		[Test, Ignore("We don't know how to pull this off yet")]
 		public void FixWordSpelling_HadDefInThisSession_SpellingFixed()
 		{
-			var originalWordCount =_lexEntryRepository.CountAllItems();
+			var originalWordCount = _lexEntryRepository.CountAllItems();
 			var entries1 = Task.AddWord("onee", "1");
 			Task.PrepareToMoveWordToEditArea("one");//this is what the control currently does when you click on a word in the list so you can edit it
 			var entries2 = Task.AddWord("one", "1");
 
-			Assert.AreEqual(1, _lexEntryRepository.CountAllItems()-originalWordCount, "Should only create one new word");
+			Assert.AreEqual(1, _lexEntryRepository.CountAllItems() - originalWordCount, "Should only create one new word");
 			Assert.AreEqual(1, entries2[0].Senses.Count, "Should have just one sense");
 			AssertNumberOfDomainsInSense(1, entries1[0].Senses[0]);
 			Assert.AreEqual("1", entries2[0].LexicalForm[_vernacularWritingSystemId], "Should have just one sense");
@@ -1614,12 +1608,12 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void ParseFrenchSemanticDomainFile_Localized()
 		{
-			WeSayWordsProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr") {DefaultFont = new FontDefinition("Arial")});
+			WeSayWordsProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr") { DefaultFont = new FontDefinition("Arial") });
 			WeSayWordsProject.Project.DefaultViewTemplate.GetField(LexSense.WellKnownProperties.SemanticDomainDdp4).
-										WritingSystemIds[0] ="fr";
+										WritingSystemIds[0] = "fr";
 			string frenchSemanticDomainFilePath = Path.GetTempFileName();
 			ViewTemplate template = MakeViewTemplate("fr");
-			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask( GatherBySemanticDomainConfig.CreateForTests(frenchSemanticDomainFilePath),
+			GatherBySemanticDomainTask task = new GatherBySemanticDomainTask(GatherBySemanticDomainConfig.CreateForTests(frenchSemanticDomainFilePath),
 																			 _lexEntryRepository,
 																			 template,
 																			 new TaskMemoryRepository(),

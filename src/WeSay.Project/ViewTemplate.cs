@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml;
-using Chorus;
 using Chorus.UI.Notes;
 using Exortech.NetReflector;
 using SIL.DictionaryServices.Model;
@@ -11,16 +5,20 @@ using SIL.i18n;
 using SIL.Lift;
 using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
 	[ReflectorType("viewTemplate")]
-	public class ViewTemplate: List<Field>
+	public class ViewTemplate : List<Field>
 	{
 		private string _id = "Default View Template";
-		private bool _doWantGhosts=true;
+		private bool _doWantGhosts = true;
 
 		/// <summary>
 		/// For serialization only
@@ -32,7 +30,7 @@ namespace WeSay.Project
 			set
 			{
 				Clear();
-				foreach (Field  f in value)
+				foreach (Field f in value)
 				{
 					if (f == null)
 					{
@@ -98,7 +96,7 @@ namespace WeSay.Project
 			{
 				throw new ArgumentNullException();
 			}
-			field = Find(delegate(Field f) { return f.FieldName == fieldName; });
+			field = Find(delegate (Field f) { return f.FieldName == fieldName; });
 
 			if (field == default(Field))
 			{
@@ -121,7 +119,7 @@ namespace WeSay.Project
 		public Field GetMeaningField()
 		{
 			Field gloss = GetField(LexSense.WellKnownProperties.Gloss);
-			return gloss.IsMeaningField ? gloss :  GetField(LexSense.WellKnownProperties.Definition);
+			return gloss.IsMeaningField ? gloss : GetField(LexSense.WellKnownProperties.Definition);
 		}
 
 		public List<Field> GetCustomFields(string className)
@@ -345,9 +343,9 @@ namespace WeSay.Project
 
 		public static ViewTemplate MakeMasterTemplate(IWritingSystemRepository writingSystems, string languageTag = WeSayWordsProject.VernacularWritingSystemIdForProjectCreation)
 		{
-			var defaultVernacularSet = new List<string> {languageTag};
+			var defaultVernacularSet = new List<string> { languageTag };
 
-			var defaultAnalysisSet = new List<string> {WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation};
+			var defaultAnalysisSet = new List<string> { WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation };
 
 			ViewTemplate masterTemplate = new ViewTemplate();
 
@@ -405,7 +403,7 @@ namespace WeSay.Project
 			masterTemplate.Add(glossField);
 
 			Field silCawlField = new Field("SILCAWL",
-										 "LexSense", new string[]{"en"});
+										 "LexSense", new string[] { "en" });
 			silCawlField.DisplayName = "SIL CAWL #";
 			silCawlField.Description = "The SIL CAWL wordlist # for this entry, (see the SIL CAWL wordlist task).";
 			silCawlField.Visibility = CommonEnumerations.VisibilitySetting.NormallyHidden;
@@ -596,8 +594,8 @@ namespace WeSay.Project
 		private static NetReflectorTypeTable MakeTypeTable()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof (ViewTemplate));
-			t.Add(typeof (Field));
+			t.Add(typeof(ViewTemplate));
+			t.Add(typeof(Field));
 			//   t.Add(typeof(Field.WritingSystemId));
 			return t;
 		}
@@ -689,7 +687,7 @@ namespace WeSay.Project
 		{
 			foreach (var field in Fields)
 			{
-				if(field.WritingSystemIds.Contains(writingSystemId))
+				if (field.WritingSystemIds.Contains(writingSystemId))
 				{
 					return true;
 				}
@@ -704,7 +702,7 @@ namespace WeSay.Project
 			{
 				throw new ConfigurationException(String.Format("The field {0} has not been enabled for your project. Please enable it in the WeSay config tool.", fieldName));
 			}
-			if(field.WritingSystemIds.Count == 0)
+			if (field.WritingSystemIds.Count == 0)
 			{
 				throw new ConfigurationException(String.Format("The field {0} has no input system associated with it. Please assign an input system to it in the WeSay config tool.", fieldName));
 			}
@@ -727,7 +725,7 @@ namespace WeSay.Project
 			}
 			foreach (var writingSystemId in field.WritingSystemIds)
 			{
-				var writingSystem= BasilProject.Project.WritingSystems.Get(writingSystemId);
+				var writingSystem = BasilProject.Project.WritingSystems.Get(writingSystemId);
 				if (!writingSystem.IsVoice)
 					return writingSystem;
 			}
@@ -827,12 +825,12 @@ namespace WeSay.Project
 
 		public ChorusNotesDisplaySettings CreateChorusDisplaySettings()
 		{
-		   var list = new List<Chorus.IWritingSystem>();
+			var list = new List<Chorus.IWritingSystem>();
 
 			WritingSystemDefinition noteWritingSystem;
 			try
 			{
-				noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note);;
+				noteWritingSystem = GetDefaultWritingSystemForField(LexSense.WellKnownProperties.Note); ;
 			}
 			catch (ConfigurationException)
 			{
@@ -840,22 +838,22 @@ namespace WeSay.Project
 				noteWritingSystem = new WritingSystemDefinition(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation);
 			}
 
-			list.Insert(0,new ChorusWritingSystemAdaptor(noteWritingSystem));
+			list.Insert(0, new ChorusWritingSystemAdaptor(noteWritingSystem));
 			foreach (var system in WritingSystems.TextWritingSystems())
 			{
-				if(system!=noteWritingSystem)
+				if (system != noteWritingSystem)
 				{
 					list.Add(new ChorusWritingSystemAdaptor(system));
 				}
 			}
 
-			 return new Chorus.UI.Notes.ChorusNotesDisplaySettings()
-									{
-										WritingSystems = list,
-										WritingSystemForNoteContent = new ChorusWritingSystemAdaptor(noteWritingSystem) ,
-										WritingSystemForNoteLabel = new ChorusWritingSystemAdaptor(GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit))
-									};
-		 }
+			return new Chorus.UI.Notes.ChorusNotesDisplaySettings()
+			{
+				WritingSystems = list,
+				WritingSystemForNoteContent = new ChorusWritingSystemAdaptor(noteWritingSystem),
+				WritingSystemForNoteLabel = new ChorusWritingSystemAdaptor(GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit))
+			};
+		}
 
 		public void DeleteWritingSystem(string id)
 		{
@@ -876,6 +874,6 @@ namespace WeSay.Project
 		{
 			ShowGhost = show;
 		}
-		public bool ShowGhost{ get; set;}
+		public bool ShowGhost { get; set; }
 	}
 }

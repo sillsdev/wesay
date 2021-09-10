@@ -1,6 +1,6 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
-using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
@@ -10,10 +10,10 @@ namespace WeSay.Data.Tests
 		protected int _itemCount;
 
 		[OneTimeSetUp]
-		public virtual void OneTimeSetUp() {}
+		public virtual void OneTimeSetUp() { }
 
 		[SetUp]
-		public virtual void SetUp() {}
+		public virtual void SetUp() { }
 
 		[Test]
 		public void Count()
@@ -54,7 +54,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void CopyToArrayIsMultidimensional()
 		{
-			T[,] array = new T[_itemCount + 1,_itemCount + 1];
+			T[,] array = new T[_itemCount + 1, _itemCount + 1];
 			Assert.Throws<ArgumentException>(() => _collection.CopyTo(array, 0));
 		}
 
@@ -98,7 +98,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class ICollectionIntTest: ICollectionBaseTest<int>
+	public class ICollectionIntTest : ICollectionBaseTest<int>
 	{
 		[OneTimeSetUp]
 		public override void OneTimeSetUp()
@@ -117,7 +117,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class ICollectionStringTest: ICollectionBaseTest<string>
+	public class ICollectionStringTest : ICollectionBaseTest<string>
 	{
 		[OneTimeSetUp]
 		public override void OneTimeSetUp()
@@ -135,7 +135,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class ICollectionNoDataTest: ICollectionBaseTest<string>
+	public class ICollectionNoDataTest : ICollectionBaseTest<string>
 	{
 		[SetUp]
 		public override void SetUp()

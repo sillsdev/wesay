@@ -1,11 +1,11 @@
+using NUnit.Framework;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using NUnit.Framework;
-using SIL.WritingSystems;
-using SIL.Lift;
-using SIL.Lift.Options;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
 
@@ -13,7 +13,7 @@ namespace WeSay.UI.Tests
 {
 	[Category("SkipOnTeamCity")]
 	[TestFixture]
-	public class ReferenceCollectionEditorTests: IReceivePropertyChangeNotifications
+	public class ReferenceCollectionEditorTests : IReceivePropertyChangeNotifications
 	{
 		private readonly WritingSystemDefinition _ws = new WritingSystemDefinition("qaa");
 		private ReferenceCollectionEditor<Option, string, OptionRef> _control;
@@ -208,7 +208,7 @@ namespace WeSay.UI.Tests
 
 		private void SimulateTypingOver(int boxNumber, string s)
 		{
-			WeSayAutoCompleteTextBox box = (WeSayAutoCompleteTextBox) Boxes[boxNumber].Box;
+			WeSayAutoCompleteTextBox box = (WeSayAutoCompleteTextBox)Boxes[boxNumber].Box;
 			box.Focus();
 			box.SelectionStart = 0;
 			box.SelectionLength = box.TextLength;
@@ -327,7 +327,7 @@ namespace WeSay.UI.Tests
 
 		#region IReceivePropertyChangeNotifications Members
 
-		public void NotifyPropertyChanged(string property) {}
+		public void NotifyPropertyChanged(string property) { }
 
 		#endregion
 	}

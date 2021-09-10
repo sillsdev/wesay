@@ -1,15 +1,15 @@
-using System;
-using System.IO;
 using NUnit.Framework;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
+using System;
+using System.IO;
 
 namespace WeSay.Project.Tests
 {
 	[TestFixture]
 	public class CommonDirectoryFileTests
 	{
-		private class TestEnvironment:IDisposable
+		private class TestEnvironment : IDisposable
 		{
 			public string WritingSystemLdmlFolderPath
 			{
@@ -27,7 +27,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void WritingSystemLdmlFiles_Version_IsLatestVersion()
 		{
-			using(var e = new TestEnvironment())
+			using (var e = new TestEnvironment())
 			{
 				var ldmlVersionGetter = new WritingSystemLdmlVersionGetter();
 				foreach (var filePath in Directory.GetFiles(e.WritingSystemLdmlFolderPath, "*.ldml"))

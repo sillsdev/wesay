@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Text;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -226,7 +226,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (string id in WritingSystems.FilterForTextLanguageTags(text.Forms.Select(f=>f.WritingSystemId)))
+					foreach (string id in WritingSystems.FilterForTextLanguageTags(text.Forms.Select(f => f.WritingSystemId)))
 					{
 
 						var form = text.Forms.First(f => f.WritingSystemId == id);
@@ -235,7 +235,7 @@ namespace WeSay.LexicalTools
 				}
 				else // show all forms turned on in the field
 				{
-					foreach (string id in field.WritingSystemIds.Intersect(text.Forms.Select(f=>f.WritingSystemId)))
+					foreach (string id in field.WritingSystemIds.Intersect(text.Forms.Select(f => f.WritingSystemId)))
 					{
 						var form = text.Forms.First(f => f.WritingSystemId == id);
 						RenderForm(text, currentItem, rtfBuilder, form, sizeBoost);
@@ -279,7 +279,7 @@ namespace WeSay.LexicalTools
 												 int? number)
 		{
 			string rtf = string.Empty;
-			if (currentItem != null && property == currentItem.PropertyName && parent==currentItem.Parent)
+			if (currentItem != null && property == currentItem.PropertyName && parent == currentItem.Parent)
 			{
 				//REVIEW: is a ws switch needed for a blank? rtf += SwitchToWritingSystem(WritingSystems.AnalysisWritingSystemDefault.Id);
 				if (number != null)
@@ -305,7 +305,7 @@ namespace WeSay.LexicalTools
 			}
 			WritingSystemDefinition writingSystem = (WritingSystemDefinition)WritingSystems.Get(writingSystemId);
 			string rtf = @"\f" + GetFontNumber(writingSystem);
-			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints)*2);
+			int fontSize = Convert.ToInt16((sizeBoost + WritingSystemInfo.CreateFont(writingSystem).SizeInPoints) * 2);
 			rtf += @"\fs" + fontSize + " ";
 			return rtf;
 		}

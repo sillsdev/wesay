@@ -1,4 +1,4 @@
-﻿namespace WeSay.UI.audio
+namespace WeSay.UI.audio
 {
 	partial class WeSayAudioFieldBox
 	{

@@ -1,12 +1,12 @@
+using SIL.i18n;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.i18n;
 using WeSay.Foundation;
 
 namespace WeSay.Project
 {
-	public class FailedLoadTask: ITask
+	public class FailedLoadTask : ITask
 	{
 		private readonly string _label;
 		private readonly string _longLabel;
@@ -19,9 +19,9 @@ namespace WeSay.Project
 			_description = description;
 		}
 
-		public void Activate() {}
+		public void Activate() { }
 
-		public void Deactivate() {}
+		public void Deactivate() { }
 
 		#region ITask Members
 

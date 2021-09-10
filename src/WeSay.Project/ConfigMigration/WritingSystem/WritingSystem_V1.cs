@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Exortech.NetReflector;
+using SIL.Keyboarding;
+using SIL.WritingSystems;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
-using Exortech.NetReflector;
-using SIL.Windows.Forms.Keyboarding;
-using SIL.Keyboarding;
-using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
@@ -50,7 +49,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		}
 
 		[ReflectorProperty("Id", Required = true)]
-		public string ISO{ get; set;}
+		public string ISO { get; set; }
 
 		[ReflectorProperty("Abbreviation", Required = false)]
 		public string Abbreviation
@@ -97,7 +96,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		/// </summary>
 		[Browsable(false)]
 		[ReflectorProperty("SortUsing", Required = false)]
-		public string SortUsing{ get; set; }
+		public string SortUsing { get; set; }
 
 		[Browsable(false)]
 		public bool UsesCustomSortRules { get; set; }
@@ -107,33 +106,33 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		/// </summary>
 		[Browsable(false)]
 		[ReflectorProperty("CustomSortRules", Required = false)]
-		public string CustomSortRules{ get; set; }
+		public string CustomSortRules { get; set; }
 
 		[TypeConverter(typeof(KeyboardListHelper))]
 		[Browsable(true)]
 		[ReflectorProperty("WindowsKeyman", Required = false)]
-		public string KeyboardName{ get; set; }
+		public string KeyboardName { get; set; }
 
 		[Browsable(false)]
 		[ReflectorProperty("FontName", Required = true)]
-		public string FontName{ get; set; }
+		public string FontName { get; set; }
 
 		[Browsable(false)]
 		[ReflectorProperty("FontSize", Required = true)]
-		public int FontSize{ get; set; }
+		public int FontSize { get; set; }
 
 		[ReflectorProperty("RightToLeft", Required = false)]
-		public bool RightToLeft{ get; set; }
+		public bool RightToLeft { get; set; }
 
 		[TypeConverter(typeof(SpellCheckerIdToDisplayStringConverter))]
 		[ReflectorProperty("SpellCheckingId", Required = false)]
-		public string SpellCheckingId{ get; set; }
+		public string SpellCheckingId { get; set; }
 
 		[ReflectorProperty("IsAudio", Required = false)]
-		public bool IsAudio{ get; set; }
+		public bool IsAudio { get; set; }
 
 		[ReflectorProperty("IsUnicode", Required = false)]
-		public bool IsUnicode{ get; set; }
+		public bool IsUnicode { get; set; }
 
 		#region IComparer<string> Members
 

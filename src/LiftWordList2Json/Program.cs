@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
 using SIL.Progress;
+using SIL.Text;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using WeSay.Project;
 using WeSay.Project.Tests;
-using SIL.Text;
 
 namespace Lift2Json
 {

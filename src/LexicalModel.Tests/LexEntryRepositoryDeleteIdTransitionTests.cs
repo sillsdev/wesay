@@ -1,9 +1,9 @@
-using System;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
-using SIL.TestUtilities;
 using SIL.IO;
 using SIL.Tests.Data;
+using SIL.TestUtilities;
+using System;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -38,7 +38,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			SetState();
 			Item.Senses.Add(new LexSense());
-			Assert.Throws<ArgumentOutOfRangeException>(() =>DataMapperUnderTest.SaveItem(Item));
+			Assert.Throws<ArgumentOutOfRangeException>(() => DataMapperUnderTest.SaveItem(Item));
 		}
 
 		protected override void CreateNewRepositoryFromPersistedData()

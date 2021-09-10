@@ -72,8 +72,8 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 		public static string WrapWritingSystemXmlWithCollectionXml(string writingSystemXml)
 		{
-			return  "<?xml version='1.0' encoding='utf-8'?><WritingSystemCollection><members>" +
-					writingSystemXml                                                           +
+			return "<?xml version='1.0' encoding='utf-8'?><WritingSystemCollection><members>" +
+					writingSystemXml +
 					"</members></WritingSystemCollection>";
 
 		}

@@ -1,14 +1,13 @@
+using Autofac;
+using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Autofac;
-using SIL.Reporting;
-using WeSay.ConfigTool.Tasks;
 
 namespace WeSay.ConfigTool
 {
-	public partial class SettingsControl: UserControl
+	public partial class SettingsControl : UserControl
 	{
 		private readonly List<ConfigurationControlBase> _areaControls;
 
@@ -21,28 +20,28 @@ namespace WeSay.ConfigTool
 
 			var m = context.Resolve<Tasks.TaskListPresentationModel>();
 			_tasksButton.Tag = m.View;
-			_areaControls.Add((ConfigurationControlBase) _tasksButton.Tag);
+			_areaControls.Add((ConfigurationControlBase)_tasksButton.Tag);
 
 			_writingSystemButton.Tag = context.Resolve<WritingSystemSetup>();
-			_areaControls.Add((ConfigurationControlBase) _writingSystemButton.Tag);
+			_areaControls.Add((ConfigurationControlBase)_writingSystemButton.Tag);
 
 			_fieldsButton.Tag = context.Resolve<FieldsControl>();
-			_areaControls.Add((ConfigurationControlBase) _fieldsButton.Tag);
+			_areaControls.Add((ConfigurationControlBase)_fieldsButton.Tag);
 
 			_interfaceLanguageButton.Tag = context.Resolve<InterfaceLanguageControl>();
-			_areaControls.Add((ConfigurationControlBase) _interfaceLanguageButton.Tag);
+			_areaControls.Add((ConfigurationControlBase)_interfaceLanguageButton.Tag);
 
-			_actionsButton.Tag = context.Resolve <ActionsControl>();
-			_areaControls.Add((ConfigurationControlBase) _actionsButton.Tag);
+			_actionsButton.Tag = context.Resolve<ActionsControl>();
+			_areaControls.Add((ConfigurationControlBase)_actionsButton.Tag);
 
 			_backupButton.Tag = context.Resolve<BackupPlanControl>();
-			_areaControls.Add((ConfigurationControlBase) _backupButton.Tag);
+			_areaControls.Add((ConfigurationControlBase)_backupButton.Tag);
 
-//            _chorusButton.Tag = context.Resolve<ChorusControl>();
-//            _areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
+			//            _chorusButton.Tag = context.Resolve<ChorusControl>();
+			//            _areaControls.Add((ConfigurationControlBase)_chorusButton.Tag);
 
 			_optionsListButton.Tag = context.Resolve<OptionListControl>();
-			_areaControls.Add((ConfigurationControlBase) _optionsListButton.Tag);
+			_areaControls.Add((ConfigurationControlBase)_optionsListButton.Tag);
 
 			SetStyle(ControlStyles.ResizeRedraw, true); //makes OnPaint work
 
@@ -86,12 +85,12 @@ namespace WeSay.ConfigTool
 				}
 				item.Checked = false;
 			}
-			ToolStripButton button = (ToolStripButton) sender;
+			ToolStripButton button = (ToolStripButton)sender;
 			button.Checked = true;
 
 			if (currentItem != null)
 			{
-				_areaPanel.Controls.Remove((Control) (currentItem.Tag));
+				_areaPanel.Controls.Remove((Control)(currentItem.Tag));
 			}
 			ConfigurationControlBase c = button.Tag as ConfigurationControlBase;
 			if (c != null)
@@ -114,7 +113,7 @@ namespace WeSay.ConfigTool
 				}
 				c.Focus();
 
-				UsageReporter.SendNavigationNotice("settings/"+c.NameForUsageReporting);
+				UsageReporter.SendNavigationNotice("settings/" + c.NameForUsageReporting);
 			}
 		}
 
@@ -123,7 +122,7 @@ namespace WeSay.ConfigTool
 			base.OnPaint(e);
 			foreach (ToolStripButton item in _areasToolStrip.Items)
 			{
-				if (item.Checked) {}
+				if (item.Checked) { }
 			}
 
 			Rectangle r = new Rectangle(_areaPanel.Left - 1,

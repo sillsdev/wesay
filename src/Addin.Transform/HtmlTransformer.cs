@@ -1,20 +1,20 @@
+using Addin.Transform.PdfDictionary;
+using SIL.DictionaryServices.Lift;
+using SIL.i18n;
+using SIL.Reporting;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Addin.Transform.PdfDictionary;
-using SIL.DictionaryServices.Lift;
-using SIL.Reporting;
-using SIL.i18n;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace Addin.Transform
 {
-  //don't show this anymore  [Extension]
+	//don't show this anymore  [Extension]
 	public class HtmlTransformer : LiftTransformer//todo remove this dependency
 	{
 		public override string LocalizedName
@@ -64,7 +64,7 @@ namespace Addin.Transform
 
 			string layoutCssPath = projectInfo.LocateFile(Path.Combine("templates", "defaultDictionary.css"));
 
-			string destination =Path.Combine(Path.GetDirectoryName(pathToHtml), "defaultDictionary.css");
+			string destination = Path.Combine(Path.GetDirectoryName(pathToHtml), "defaultDictionary.css");
 
 			File.Copy(layoutCssPath, destination, true);
 
@@ -85,10 +85,10 @@ namespace Addin.Transform
 			var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + ".plift");
 
 
-				var maker = new PLiftMaker();
-				maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
-										projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as
-										ViewTemplate, LiftWriter.ByteOrderStyle.NoBOM);
+			var maker = new PLiftMaker();
+			maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
+									projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as
+									ViewTemplate, LiftWriter.ByteOrderStyle.NoBOM);
 
 
 			var pathToOutput = Path.Combine(projectInfo.PathToExportDirectory,
@@ -98,7 +98,7 @@ namespace Addin.Transform
 				File.Delete(pathToOutput);
 			}
 
-			var htmWriter = new FLExCompatibleXhtmlWriter(linkToUserCss, ((WeSay.Project.WeSayWordsProject) projectInfo.Project).DefaultViewTemplate);
+			var htmWriter = new FLExCompatibleXhtmlWriter(linkToUserCss, ((WeSay.Project.WeSayWordsProject)projectInfo.Project).DefaultViewTemplate);
 
 			SetupLetterGroups(projectInfo, htmWriter);
 

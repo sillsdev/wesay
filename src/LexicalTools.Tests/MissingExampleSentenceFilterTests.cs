@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Field field = new Field(Field.FieldNames.ExampleSentence.ToString(),
 									"LexExampleSentence",
-									new string[] {"vernacular"});
+									new string[] { "vernacular" });
 			_missingExampleSentenceFilter = new MissingFieldQuery(field, null, null);
 		}
 

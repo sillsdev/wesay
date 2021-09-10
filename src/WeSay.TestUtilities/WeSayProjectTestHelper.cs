@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using SIL.Lexicon;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using WeSay.Project;
 
 namespace WeSay.TestUtilities

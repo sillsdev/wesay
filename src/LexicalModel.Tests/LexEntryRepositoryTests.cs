@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
@@ -8,6 +6,8 @@ using SIL.Lift.Options;
 using SIL.TestUtilities;
 using SIL.Text;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -90,7 +90,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByHeadword_CitationFormExistsInWritingSystemForAllEntries_ReturnsListSortedByCitationForm()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.CitationForm; });
+			CreateThreeDifferentLexEntries(delegate (LexEntry e) { return e.CitationForm; });
 			WritingSystemDefinition german = new WritingSystemDefinition("de")
 			{
 				DefaultCollation = new IcuRulesCollationDefinition("standard")
@@ -118,7 +118,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByHeadword_CitationFormInWritingSystemDoesNotExistButLexicalFormDoes_SortsByLexicalFormForThatEntry()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.CitationForm; });
+			CreateThreeDifferentLexEntries(delegate (LexEntry e) { return e.CitationForm; });
 			LexEntry lexEntryWithOutGermanCitationForm = _lexEntryRepository.CreateItem();
 			lexEntryWithOutGermanCitationForm.CitationForm.SetAlternative("fr", "fr Word4");
 			lexEntryWithOutGermanCitationForm.LexicalForm.SetAlternative("de", "de Word0");
@@ -157,7 +157,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByLexicalFormOrAlternative_LexicalFormExistsInWritingSystemForAllEntries_ReturnsListSortedByLexicalForm()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
+			CreateThreeDifferentLexEntries(delegate (LexEntry e) { return e.LexicalForm; });
 			WritingSystemDefinition german = new WritingSystemDefinition("de")
 			{
 				DefaultCollation = new IcuRulesCollationDefinition("standard")
@@ -232,7 +232,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionExistsInWritingSystemForAllEntries_ReturnsListSortedByDefinition()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e)
+			CreateThreeDifferentLexEntries(delegate (LexEntry e)
 														 {
 															 e.Senses.Add(new LexSense());
 															 return e.Senses[0].Definition;
@@ -251,7 +251,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionsDoesNotExistInWritingSystemButGlossDoesForAllEntries_ReturnsListSortedByGloss()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e)
+			CreateThreeDifferentLexEntries(delegate (LexEntry e)
 														 {
 															 e.Senses.Add(new LexSense());
 															 return e.Senses[0].Gloss;
@@ -608,7 +608,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetAllEntriesSortedByDefinition_DefinitionAndGlossOfOneEntryAreIdentical_ReturnsOnlyOneRecordToken()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e)
+			CreateThreeDifferentLexEntries(delegate (LexEntry e)
 														 {
 															 e.Senses.Add(new LexSense());
 															 return e.Senses[0].Definition;
@@ -689,7 +689,7 @@ namespace WeSay.LexicalModel.Tests
 			return lexEntryWithSemanticDomain;
 		}
 
-		private void AddSenseWithSemanticDomainToLexEntry(LexEntry entry,string semanticDomain)
+		private void AddSenseWithSemanticDomainToLexEntry(LexEntry entry, string semanticDomain)
 		{
 			entry.Senses.Add(new LexSense());
 			OptionRefCollection o =
@@ -713,7 +713,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetEntriesWithSimilarLexicalForm_MultipleEntriesWithEqualAndLowestMatchingDistance_ReturnsThoseEntries()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
+			CreateThreeDifferentLexEntries(delegate (LexEntry e) { return e.LexicalForm; });
 			WritingSystemDefinition ws = new WritingSystemDefinition("de")
 			{
 				DefaultCollation = new IcuRulesCollationDefinition("standard")
@@ -798,7 +798,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void GetEntriesWithSimilarLexicalForm_EntriesWithDifferingWritingSystems_OnlyFindEntriesMatchingTheGivenWritingSystem()
 		{
-			CreateThreeDifferentLexEntries(delegate(LexEntry e) { return e.LexicalForm; });
+			CreateThreeDifferentLexEntries(delegate (LexEntry e) { return e.LexicalForm; });
 			LexEntry lexEntryWithFrenchLexicalForm = _lexEntryRepository.CreateItem();
 			lexEntryWithFrenchLexicalForm.LexicalForm.SetAlternative("fr", "de Word2");
 			WritingSystemDefinition ws = new WritingSystemDefinition("de")
@@ -1030,7 +1030,7 @@ namespace WeSay.LexicalModel.Tests
 			entryWithGlossAndLexicalForm.Senses.Add(new LexSense());
 			entryWithGlossAndLexicalForm.Senses[0].Gloss.SetAlternative(glossToMatch.WritingSystemId, glossToMatch.Form);
 			entryWithGlossAndLexicalForm.LexicalForm.SetAlternative(lexicalFormWritingSystem, lexicalForm);
-		 }
+		}
 
 		[Test]
 		public void GetEntriesWithMatchingGlossSortedByLexicalForm_EntryHasNoLexicalFormInWritingSystem_ReturnsNullForThatEntry()

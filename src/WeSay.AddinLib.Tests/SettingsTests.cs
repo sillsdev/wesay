@@ -7,10 +7,10 @@ namespace WeSay.AddinLib.Tests
 	public class SettingsTests
 	{
 		[SetUp]
-		public void Setup() {}
+		public void Setup() { }
 
 		[TearDown]
-		public void TearDown() {}
+		public void TearDown() { }
 
 		//        [Test]
 		//        public void Test()

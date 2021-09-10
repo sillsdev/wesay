@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using WeSay.LexicalTools.Properties;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
-	public partial class GatherBySemanticDomainsControl: UserControl
+	public partial class GatherBySemanticDomainsControl : UserControl
 	{
 		private readonly GatherBySemanticDomainTask _presentationModel;
 		private bool _animationIsMovingFromList;
@@ -36,14 +35,14 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 #endif
 			InitializeDisplaySettings();
 			_listViewWords.FormWritingSystem = _presentationModel.FormWritingSystem;
-			_listViewWords.MeaningWritingSystem = _presentationModel.ShowMeaningField ? _presentationModel.MeaningWritingSystem: null;
+			_listViewWords.MeaningWritingSystem = _presentationModel.ShowMeaningField ? _presentationModel.MeaningWritingSystem : null;
 			_listViewWords.ItemDrawer = DrawOneAnswerForList;
 			_listViewWords.BackColor = Color.White;
 			_listViewWords.DisplayMeaning = _presentationModel.ShowMeaningField;
 
 			_domainListComboBox.Font = _presentationModel.GetFontOfSemanticDomainField();
 			_domainListComboBox.WritingSystem = _presentationModel.GetSemanticDomainWritingSystem();
-			_question.Font =  _presentationModel.GetFontOfSemanticDomainField();
+			_question.Font = _presentationModel.GetFontOfSemanticDomainField();
 			((IWeSayTextBox)_question).WritingSystem = _presentationModel.GetSemanticDomainWritingSystem();
 			((IWeSayTextBox)_question).Multiline = true;
 			_question.Width = Width - _question.Location.X - 10;
@@ -105,24 +104,24 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			//so all this is to be able to turn IsSpellCheckingEnabled before the box is built.
 
 			var meaning = new MultiTextControl(_presentationModel.ViewTemplate.WritingSystems, WeSayWordsProject.Project.ServiceLocator)
-				{
-					IsSpellCheckingEnabled = true,
-					ShowAnnotationWidget = false,
-					WritingSystemsForThisField = new[] {_presentationModel.DefinitionWritingSystem},
-					Visible = _presentationModel.ShowMeaningField,
-					Anchor = _meaningBox.Anchor,
-					BackColor = _meaningBox.BackColor,
-					AutoSize = _meaningBox.AutoSize,
-					AutoSizeMode = _meaningBox.AutoSizeMode,
-					Location = _meaningBox.Location,
-					Size = _meaningBox.Size,
-					TabIndex = _meaningBox.TabIndex
-				};
-			meaning.KeyDown  += _boxVernacularWord_KeyDown;
+			{
+				IsSpellCheckingEnabled = true,
+				ShowAnnotationWidget = false,
+				WritingSystemsForThisField = new[] { _presentationModel.DefinitionWritingSystem },
+				Visible = _presentationModel.ShowMeaningField,
+				Anchor = _meaningBox.Anchor,
+				BackColor = _meaningBox.BackColor,
+				AutoSize = _meaningBox.AutoSize,
+				AutoSizeMode = _meaningBox.AutoSizeMode,
+				Location = _meaningBox.Location,
+				Size = _meaningBox.Size,
+				TabIndex = _meaningBox.TabIndex
+			};
+			meaning.KeyDown += _boxVernacularWord_KeyDown;
 			tableLayoutPanel6.Controls.Remove(_meaningBox);
 			tableLayoutPanel6.Controls.Add(meaning, 1, 1);
 			_meaningBox = meaning;
-		   _meaningLabel.Visible = _presentationModel.ShowMeaningField;
+			_meaningLabel.Visible = _presentationModel.ShowMeaningField;
 
 
 			//  _listViewWords.ItemHeight = (int)Math.Ceiling(_presentationModel.FormWritingSystem.Font.GetHeight());
@@ -317,7 +316,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			if (_listViewWords.SelectedItem != null)
 			{
-				GatherBySemanticDomainTask.WordDisplay word = (GatherBySemanticDomainTask.WordDisplay) _listViewWords.SelectedItem;
+				GatherBySemanticDomainTask.WordDisplay word = (GatherBySemanticDomainTask.WordDisplay)_listViewWords.SelectedItem;
 				// NB: don't do this before storing what they clicked on.
 
 
@@ -363,10 +362,10 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			Control currentcontrolInHierarchy = controlToLocate;
 			Point absolutePosition = currentcontrolInHierarchy.Location;
-			while(currentcontrolInHierarchy.Parent != null)
+			while (currentcontrolInHierarchy.Parent != null)
 			{
 				currentcontrolInHierarchy = currentcontrolInHierarchy.Parent;
-				absolutePosition = absolutePosition + (Size) currentcontrolInHierarchy.Location;
+				absolutePosition = absolutePosition + (Size)currentcontrolInHierarchy.Location;
 			}
 			return absolutePosition;
 		}

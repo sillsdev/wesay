@@ -1,17 +1,16 @@
+using SIL.Lift;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.Lift;
-using SIL.UiBindings;
-using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI
 {
-	public partial class ReferenceCollectionEditor<KV, ValueT, KEY_CONTAINER>: FlowLayoutPanel
+	public partial class ReferenceCollectionEditor<KV, ValueT, KEY_CONTAINER> : FlowLayoutPanel
 			where ValueT : class where KEY_CONTAINER : IValueHolder<ValueT>, IReferenceContainer
 	{
 		private readonly IBindingList _chosenItems;
@@ -203,13 +202,13 @@ namespace WeSay.UI
 			// due to the way the popup listbox works, if it has focus,
 			// ContainsFocus will not report it, so we check separately.
 			bool listBoxFocused = false;
-			var box = (IWeSayAutoCompleteTextBox) sender;
+			var box = (IWeSayAutoCompleteTextBox)sender;
 			if (box != null)
 			{
 				listBoxFocused = box.ListBoxFocused;
 			}
 			if (!(listBoxFocused || ContainsFocus))
-					//doing cleanup while the user is in the area will lead to much grief
+			//doing cleanup while the user is in the area will lead to much grief
 			{
 				IReportEmptiness x = _alternateEmptinessHelper;
 				if (x == null)
@@ -280,14 +279,14 @@ namespace WeSay.UI
 		private void emptyPicker_ValueChanged(object sender, EventArgs e)
 		{
 			AutoCompleteWithCreationBox<KV, ValueT> picker =
-					(AutoCompleteWithCreationBox<KV, ValueT>) sender;
-			KV kv = (KV) picker.Box.SelectedItem;
+					(AutoCompleteWithCreationBox<KV, ValueT>)sender;
+			KV kv = (KV)picker.Box.SelectedItem;
 			if (kv != null)
 			{
 				picker.ValueChanged -= emptyPicker_ValueChanged;
 				_emptyPicker = null;
 				_ignoreListChanged = true;
-				KEY_CONTAINER newGuy = (KEY_CONTAINER) _chosenItems.AddNew();
+				KEY_CONTAINER newGuy = (KEY_CONTAINER)_chosenItems.AddNew();
 				_choiceSystemAdaptor.UpdateKeyContainerFromKeyValue(kv, newGuy);
 				_ignoreListChanged = false;
 				picker.Box.Tag = newGuy;

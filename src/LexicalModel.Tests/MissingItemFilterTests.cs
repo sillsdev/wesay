@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
+using System;
+using System.Collections.Generic;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -13,7 +13,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void ConstructWithField()
 		{
-			Field field = new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
+			Field field = new Field("customField", "LexExampleSentence", new string[] { "vernacular" });
 			Assert.IsNotNull(new MissingFieldQuery(field, null, null));
 		}
 
@@ -47,7 +47,7 @@ namespace WeSay.LexicalModel.Tests
 			MissingFieldQuery filter2 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"analysis"}), null, null);
+													new string[] { "analysis" }), null, null);
 			Assert.IsFalse(filter1.Key == filter2.Key);
 		}
 
@@ -57,18 +57,18 @@ namespace WeSay.LexicalModel.Tests
 			MissingFieldQuery filter1 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"vernacular", "analysis"}), null, null);
+													new string[] { "vernacular", "analysis" }), null, null);
 			MissingFieldQuery filter2 =
 					new MissingFieldQuery(new Field("customField",
 													"LexExampleSentence",
-													new string[] {"analysis", "vernacular"}), null, null);
+													new string[] { "analysis", "vernacular" }), null, null);
 			Assert.IsTrue(filter1.Key == filter2.Key);
 		}
 
 		[Test]
 		public void FilteringPredicate_Null_False()
 		{
-			Field field = new Field("customField", "LexExampleSentence", new string[] {"vernacular"});
+			Field field = new Field("customField", "LexExampleSentence", new string[] { "vernacular" });
 			MissingFieldQuery f = new MissingFieldQuery(field, null, null);
 			Assert.IsFalse(f.FilteringPredicate(null));
 		}
@@ -91,7 +91,7 @@ namespace WeSay.LexicalModel.Tests
 			entryWithUnknownPos.LexicalForm.SetAlternative("de", "LexicalForm");
 			entryWithUnknownPos.Senses.Add(new LexSense());
 			entryWithUnknownPos.Senses[0].Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("POS", new OptionRef()));
-			((OptionRef) entryWithUnknownPos.Senses[0].Properties[0].Value).Key = "unknown";
+			((OptionRef)entryWithUnknownPos.Senses[0].Properties[0].Value).Key = "unknown";
 			Field field = new Field("POS", "LexSense", new string[] { "en" }, Field.MultiplicityType.ZeroOr1, "Option");
 			MissingFieldQuery f = new MissingFieldQuery(field, null, null);
 			Assert.IsTrue(f.FilteringPredicate(entryWithUnknownPos));
@@ -126,10 +126,10 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void FilteringPredicate_RelationTargetIsFilled_False()
 		{
-			CheckRelationFilter("uncle","ken", false);
+			CheckRelationFilter("uncle", "ken", false);
 		}
 
-		private static void CheckRelationFilter(string relationname,string targetId, bool shouldMatch)
+		private static void CheckRelationFilter(string relationname, string targetId, bool shouldMatch)
 		{
 			LexEntry entry = new LexEntry();
 			entry.AddRelationTarget(relationname, targetId);

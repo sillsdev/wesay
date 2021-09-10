@@ -1,16 +1,16 @@
-using System;
-using System.Windows.Forms;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.WritingSystems;
+using System;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
-using SIL.Lift;
-using SIL.WritingSystems;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools.Tests
 	public class LayouterTests
 	{
 		private int _rowCount;
-		private IServiceLocator Context{ get; set;}
+		private IServiceLocator Context { get; set; }
 
 		[OneTimeSetUp]
 		public void FixtureSetup()
@@ -39,7 +39,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayProjectTestHelper.InitializeForTests();
 			var b = new ContainerBuilder();
-			b.Register(c => new MediaNamingHelper(new string[] {"en"}));
+			b.Register(c => new MediaNamingHelper(new string[] { "en" }));
 			b.Register<IWeSayTextBox>(c =>
 			{
 				var m = new WeSayTextBox();
@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools.Tests
 				var m = new WeSayListView();
 				return m;
 			});
-			Context =   new WeSay.Project.ServiceLocatorAdapter(b.Build());
+			Context = new WeSay.Project.ServiceLocatorAdapter(b.Build());
 		}
 
 		[TearDown]
@@ -164,7 +164,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			using (DetailList dl = MakeDetailList(false, false, MakeViewTemplate()))
 			{
-				MultiTextControl box = (MultiTextControl) dl.GetEditControlFromRow(0);
+				MultiTextControl box = (MultiTextControl)dl.GetEditControlFromRow(0);
 				Assert.AreEqual("WordInVernacular", box.TextBoxes[0].Text);
 			}
 		}

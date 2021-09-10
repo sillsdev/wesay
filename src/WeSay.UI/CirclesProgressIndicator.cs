@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace WeSay.UI
 {
-	public partial class CirclesProgressIndicator: UserControl
+	public partial class CirclesProgressIndicator : UserControl
 	{
 		private int _maximum;
 		private int _minimum;
@@ -176,7 +176,7 @@ namespace WeSay.UI
 			get { return Size.Add(_bulletSize, _bulletPadding.Size); }
 		}
 
-		[DefaultValue(typeof (Size), "5,5")]
+		[DefaultValue(typeof(Size), "5,5")]
 		public Size BulletSize
 		{
 			get { return _bulletSize; }
@@ -191,7 +191,7 @@ namespace WeSay.UI
 			}
 		}
 
-		[DefaultValue(typeof (Padding), "1")]
+		[DefaultValue(typeof(Padding), "1")]
 		public Padding BulletPadding
 		{
 			get { return _bulletPadding; }
@@ -206,7 +206,7 @@ namespace WeSay.UI
 			}
 		}
 
-		[DefaultValue(typeof (Color), "System.Drawing.Color.Azure")]
+		[DefaultValue(typeof(Color), "System.Drawing.Color.Azure")]
 		public Color BulletColor
 		{
 			get { return _bulletColor; }
@@ -217,7 +217,7 @@ namespace WeSay.UI
 			}
 		}
 
-		[DefaultValue(typeof (Color), "System.Drawing.Color.MediumBlue")]
+		[DefaultValue(typeof(Color), "System.Drawing.Color.MediumBlue")]
 		public Color BulletColorEnd
 		{
 			get { return _bulletColorEnd; }
@@ -244,9 +244,9 @@ namespace WeSay.UI
 			int columnCount = GetColumnCount();
 
 			int currentItem = Minimum - 1;
-			for (int column = 0;column < columnCount;column++)
+			for (int column = 0; column < columnCount; column++)
 			{
-				for (int row = 0;row < Rows;row++)
+				for (int row = 0; row < Rows; row++)
 				{
 					++currentItem;
 					if (currentItem > Maximum)

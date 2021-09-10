@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SIL.WritingSystems;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.WritingSystems;
 using WeSay.LexicalTools.Properties;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
@@ -63,8 +63,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			set
 			{
-				if(value !=null)//the designer generated code leads to this being null initially
-				_textToSearchForBox.WritingSystem = value;
+				if (value != null)//the designer generated code leads to this being null initially
+					_textToSearchForBox.WritingSystem = value;
 			}
 
 		}
@@ -98,10 +98,10 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 			_writingSystemChooser.Left = Width - _writingSystemChooser.Width;
 			_findButton.Left = _writingSystemChooser.Left - _findButton.Width;
-			_textToSearchForBox.Left = _selectedWritingSystemLabel.Right ;
+			_textToSearchForBox.Left = _selectedWritingSystemLabel.Right;
 			_textToSearchForBox.Width = _findButton.Left - _textToSearchForBox.Left;
 
-		 //   this.MinimumSize = new Size(_writingSystemChooser.Right + 10, this.Height);
+			//   this.MinimumSize = new Size(_writingSystemChooser.Right + 10, this.Height);
 		}
 
 		private Size GetAbbreviationSize()
@@ -129,7 +129,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void SearchBoxControl_Load(object sender, EventArgs e)
 		{
-			_desperationDisplayTimer.Enabled=true;
+			_desperationDisplayTimer.Enabled = true;
 		}
 
 		private void _desperationDisplayTimer_Tick(object sender, EventArgs e)

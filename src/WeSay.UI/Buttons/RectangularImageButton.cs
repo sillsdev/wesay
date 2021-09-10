@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 namespace WeSay.UI.Buttons
 {
 	[Description("Rectangular Button Control")]
-	public class RectangularImageButton: RegionButton
+	public class RectangularImageButton : RegionButton
 	{
 		private Size _keepThisSize;
 
@@ -21,7 +21,7 @@ namespace WeSay.UI.Buttons
 			//we don't leave the size up to anyone; it's determined by the width of the image
 			if (this.Image != null)
 			{
-				var sz = new Size(Image.Size.Width + 5, Image.Size.Height +5);
+				var sz = new Size(Image.Size.Width + 5, Image.Size.Height + 5);
 				if (Size.Equals(sz))
 					Size = sz;
 			}

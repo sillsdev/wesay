@@ -1,13 +1,13 @@
+using SIL.IO;
+using SIL.Reporting;
+using SIL.UiBindings;
+using SIL.Windows.Forms.ImageToolbox;
+using SIL.Windows.Forms.ImageToolbox.ImageGallery;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using SIL.IO;
-using SIL.Windows.Forms.ImageToolbox;
-using SIL.UiBindings;
-using SIL.Reporting;
-using SIL.Windows.Forms.ImageToolbox.ImageGallery;
 
 namespace WeSay.UI
 {
@@ -68,7 +68,7 @@ namespace WeSay.UI
 			else
 			{
 				_pictureBox.Visible = true;
-				_removeImageLink.Visible = true;	// need explicit setting for Mono
+				_removeImageLink.Visible = true;    // need explicit setting for Mono
 				_imageToolboxLink.Visible = false;
 				_problemLabel.Visible = false;
 				try
@@ -221,8 +221,8 @@ namespace WeSay.UI
 		private void OnSearchGalleryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			Cursor = Cursors.WaitCursor;
-		   var searchString = SearchTermProvider == null ? string.Empty : SearchTermProvider.SearchString;
-			PalasoImage currentImage=null;
+			var searchString = SearchTermProvider == null ? string.Empty : SearchTermProvider.SearchString;
+			PalasoImage currentImage = null;
 
 			try
 			{
@@ -231,14 +231,14 @@ namespace WeSay.UI
 					currentImage = PalasoImage.FromFile(GetPathToImage());
 				}
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				//if we couldn't load it (like if it's missing), best to carry on and let them pick a new one
 			}
 
-			using(var dlg = new SIL.Windows.Forms.ImageToolbox.ImageToolboxDialog(currentImage ?? new PalasoImage(), searchString))
+			using (var dlg = new SIL.Windows.Forms.ImageToolbox.ImageToolboxDialog(currentImage ?? new PalasoImage(), searchString))
 			{
-				if(DialogResult.OK == dlg.ShowDialog(this.ParentForm))
+				if (DialogResult.OK == dlg.ShowDialog(this.ParentForm))
 				{
 					try
 					{
@@ -247,7 +247,7 @@ namespace WeSay.UI
 							File.Delete(GetPathToImage());
 						}
 						string fileName = CheckFileName(searchString);
-						if(string.IsNullOrEmpty(fileName))
+						if (string.IsNullOrEmpty(fileName))
 							fileName = DateTime.UtcNow.ToFileTimeUtc().ToString();
 
 						string fileExt;
@@ -267,7 +267,7 @@ namespace WeSay.UI
 						//so this will add to the name if what we have is not unique.
 						if (File.Exists(Path.Combine(_storageFolderPath, fileName + fileExt)))
 						{
-							fileName += "-"+DateTime.UtcNow.ToFileTimeUtc();
+							fileName += "-" + DateTime.UtcNow.ToFileTimeUtc();
 						}
 
 						fileName += fileExt;

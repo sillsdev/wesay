@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public partial class ItemsToDoIndicator: UserControl
+	public partial class ItemsToDoIndicator : UserControl
 	{
 		private int _count = 327;
 		private int _referenceCount = 1000;
@@ -63,7 +63,7 @@ namespace WeSay.LexicalTools.Dashboard
 			float globalCountWidth =
 					e.Graphics.MeasureString(referenceNumberForWidth.ToString(), Font).Width;
 			float countWidth = e.Graphics.MeasureString(_count.ToString(), Font).Width;
-			Width = (int) (globalCountWidth + paperDistanceFromLeftEdge + paperWidth + 10);
+			Width = (int)(globalCountWidth + paperDistanceFromLeftEdge + paperWidth + 10);
 
 			DrawIntrayBounds(e, ClientRectangle);
 			DrawPaperStack(e, paperDistanceFromLeftEdge, paperWidth, ClientRectangle);
@@ -106,10 +106,10 @@ namespace WeSay.LexicalTools.Dashboard
 			int numberOfPieces = 0;
 			if (_count > 0 && _referenceCount > 0)
 			{
-				numberOfPieces = (int) (maximumNumberOfPapers * (_count / (float) _referenceCount));
+				numberOfPieces = (int)(maximumNumberOfPapers * (_count / (float)_referenceCount));
 				numberOfPieces = Math.Max(1, numberOfPieces); //at least one if there count is > 0
 			}
-			for (int i = 0;i < numberOfPieces;i++)
+			for (int i = 0; i < numberOfPieces; i++)
 			{
 				DrawOnePieceOfPaper(paperDistanceFromLeftEdge,
 									e,

@@ -1,13 +1,13 @@
+using SIL.i18n;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using WeSay.Project;
-using SIL.i18n;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public partial class DictionaryStatusControl: UserControl
+	public partial class DictionaryStatusControl : UserControl
 	{
 		private Size _oldLabelSize;
 

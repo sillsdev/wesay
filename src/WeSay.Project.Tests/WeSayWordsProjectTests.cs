@@ -1,22 +1,22 @@
+using Autofac.Core;
+using NUnit.Framework;
+using SIL.DictionaryServices.Model;
+using SIL.IO;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Reporting;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Autofac.Core;
-using NUnit.Framework;
-using SIL.DictionaryServices.Model;
-using SIL.Lift;
-using SIL.Lift.Options;
-using SIL.TestUtilities;
-using SIL.IO;
-using SIL.Reporting;
-using SIL.WritingSystems;
-using SIL.WritingSystems.Migration;
 using WeSay.LexicalModel;
-using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.LexicalTools.AddMissingInfo;
+using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 using WeSay.Project.Tests.ConfigMigration.WritingSystem;
 using WeSay.TestUtilities;
@@ -51,11 +51,11 @@ namespace WeSay.Project.Tests
 		{
 			using (var f = new TemporaryFolder("OpeningLiftFile_MissingConfigFile_GivesMessage"))
 			{
-				using(var lift = new TempLiftFile(f, "", "0.13"))
+				using (var lift = new TempLiftFile(f, "", "0.13"))
 				{
-					using(var p = new WeSayWordsProject())
+					using (var p = new WeSayWordsProject())
 					{
-						Assert.AreEqual(lift.Path,p.UpdateFileStructure(lift.Path));
+						Assert.AreEqual(lift.Path, p.UpdateFileStructure(lift.Path));
 					}
 				}
 			}
@@ -169,7 +169,7 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				//Add an option to the list
 				//Got to create a field to pass to the project
-				var fieldThatUsesOptionsList = new Field{OptionsListFile = optionListName};
+				var fieldThatUsesOptionsList = new Field { OptionsListFile = optionListName };
 				var optionList = project.GetOptionsList(fieldThatUsesOptionsList, false);
 				var multitextToAdd = new MultiText();
 				multitextToAdd.SetAlternative(WritingSystemsIdsForTests.OtherIdForTest, "yodel");
@@ -318,7 +318,7 @@ namespace WeSay.Project.Tests
 				WeSayWordsProject project = p.CreateLoadedProject();
 				project.MakeWritingSystemIdChange("es", "fr");  //fr is already contained in the default PoS optionlist, thus this would cause a duplicate
 				var optionList = project.GetOptionsList("POS");
-				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation.Forms.Count(form => form.WritingSystemId=="fr"), Is.EqualTo(1));
+				Assert.That(optionList.GetOptionFromKey("Verb").Abbreviation.Forms.Count(form => form.WritingSystemId == "fr"), Is.EqualTo(1));
 				Assert.That(optionList.GetOptionFromKey("Verb").Name.Forms.Count(form => form.WritingSystemId == "fr"), Is.EqualTo(1));
 				Assert.That(optionList.GetOptionFromKey("Verb").Description.Forms.Count(form => form.WritingSystemId == "fr"), Is.EqualTo(0));
 
@@ -400,7 +400,7 @@ namespace WeSay.Project.Tests
 
 				foreach (var field in fieldsUsingQaa)
 				{
-					Assert.That(field.WritingSystemIds.Count(wsId => wsId=="de"), Is.EqualTo(1));
+					Assert.That(field.WritingSystemIds.Count(wsId => wsId == "de"), Is.EqualTo(1));
 					Assert.That(field.WritingSystemIds.Contains("de"));
 				}
 			}
@@ -416,11 +416,11 @@ namespace WeSay.Project.Tests
 			File.CreateText(path).Close();
 			using (TempFile.TrackExisting(path))
 			{
-					using (WeSayWordsProject p = new WeSayWordsProject())
-					{
-						Assert.AreEqual(path, p.UpdateFileStructure(path));
-					}
+				using (WeSayWordsProject p = new WeSayWordsProject())
+				{
+					Assert.AreEqual(path, p.UpdateFileStructure(path));
 				}
+			}
 		}
 
 		[Test]
@@ -465,13 +465,13 @@ namespace WeSay.Project.Tests
 				}
 			}
 		}
-//
-//        private static WeSayWordsProject CreateAndLoad(TemporaryFolder projectFolder)
-//        {
-//            WeSayWordsProject p = new WeSayWordsProject();
-//            p.LoadFromProjectDirectoryPath(projectDir);
-//            return p;
-//        }
+		//
+		//        private static WeSayWordsProject CreateAndLoad(TemporaryFolder projectFolder)
+		//        {
+		//            WeSayWordsProject p = new WeSayWordsProject();
+		//            p.LoadFromProjectDirectoryPath(projectDir);
+		//            return p;
+		//        }
 
 		private static string MakeDir(string existingParent, string newChild)
 		{
@@ -559,7 +559,7 @@ namespace WeSay.Project.Tests
 				p.ViewTemplates.Add(new ViewTemplate());
 				oldName = Field.MakeFieldNameSafe(oldName);
 				newName = Field.MakeFieldNameSafe(newName);
-				Field f = new Field(oldName, "LexEntry", new string[] {"en"});
+				Field f = new Field(oldName, "LexEntry", new string[] { "en" });
 				p.ViewTemplates[0].Add(f);
 
 
@@ -617,7 +617,7 @@ namespace WeSay.Project.Tests
 				{
 					using (new SIL.Reporting.ErrorReport.NonFatalErrorReportExpected())
 					{
-						Field f = new Field("old", "LexEntry", new string[] {"en"});
+						Field f = new Field("old", "LexEntry", new string[] { "en" });
 						project.ViewTemplates[0].Add(f);
 						project.Save();
 						f.FieldName = "new";
@@ -630,14 +630,14 @@ namespace WeSay.Project.Tests
 		[Ignore("just for manual use"), Test]
 		public void MakeTestLiftFile()
 		{
-			string pathToFolder=@"C:\wesay\lifttest";
-			string projectName= "lifttest";
+			string pathToFolder = @"C:\wesay\lifttest";
+			string projectName = "lifttest";
 
 			if (!Directory.Exists(pathToFolder))
 				Directory.CreateDirectory(pathToFolder);
 
 			StringBuilder builder = new StringBuilder();
-			int numberOfTestLexEntries =50;
+			int numberOfTestLexEntries = 50;
 			for (int i = 0; i < numberOfTestLexEntries; i++)
 			{
 				builder.AppendFormat(@"
@@ -674,7 +674,7 @@ namespace WeSay.Project.Tests
 		{
 			using (ProjectDirectorySetupForTesting dir = new ProjectDirectorySetupForTesting("<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>"))
 			{
-				string oldWorkingDir= System.Environment.CurrentDirectory;
+				string oldWorkingDir = System.Environment.CurrentDirectory;
 				try
 				{
 					using (WeSayWordsProject project = new WeSayWordsProject())
@@ -726,7 +726,7 @@ namespace WeSay.Project.Tests
 					}
 					catch (DependencyResolutionException e)
 					{
-						 gotException = true;
+						gotException = true;
 					}
 				}
 				Assert.IsTrue(gotException);
@@ -775,15 +775,15 @@ namespace WeSay.Project.Tests
 			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
 				using (var project = projdir.CreateLoadedProject())
-			{
-				var wsFolderPath = WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(project.ProjectDirectoryPath);
-				var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
-				var versionReader = new SIL.WritingSystems.Migration.WritingSystemLdmlVersionGetter();
-				Assert.That(LdmlDataMapper.CurrentLdmlLibraryVersion, Is.EqualTo(versionReader.GetFileVersion(pathToEnglish)));
-				var pathToQaa = Path.Combine(wsFolderPath, "qaa.ldml");
-				Assert.That(LdmlDataMapper.CurrentLdmlLibraryVersion, Is.EqualTo(versionReader.GetFileVersion(pathToQaa)));
+				{
+					var wsFolderPath = WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(project.ProjectDirectoryPath);
+					var pathToEnglish = Path.Combine(wsFolderPath, "en.ldml");
+					var versionReader = new SIL.WritingSystems.Migration.WritingSystemLdmlVersionGetter();
+					Assert.That(LdmlDataMapper.CurrentLdmlLibraryVersion, Is.EqualTo(versionReader.GetFileVersion(pathToEnglish)));
+					var pathToQaa = Path.Combine(wsFolderPath, "qaa.ldml");
+					Assert.That(LdmlDataMapper.CurrentLdmlLibraryVersion, Is.EqualTo(versionReader.GetFileVersion(pathToQaa)));
+				}
 			}
-		}
 		}
 
 		[Test]
@@ -794,10 +794,10 @@ namespace WeSay.Project.Tests
 			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
 				using (var project = projdir.CreateLoadedProject())
-			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.OtherIdForTest));
+				{
+					Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.OtherIdForTest));
+				}
 			}
-		}
 		}
 
 		[Test]
@@ -808,10 +808,10 @@ namespace WeSay.Project.Tests
 			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
 				using (var project = projdir.CreateLoadedProject())
-			{
-				Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.AnalysisIdForTest));
+				{
+					Assert.IsNotNull(project.WritingSystems.Get(WritingSystemsIdsForTests.AnalysisIdForTest));
+				}
 			}
-		}
 		}
 
 		[Test]
@@ -897,7 +897,7 @@ namespace WeSay.Project.Tests
 		public void LoadFromLiftLexiconPath_WritingsystemsAreInOldWsPrefsFormat_WritingSystemsAreMigrated()
 		{
 			var language = "english";
-			using(var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder())
 			{
 				//setting up a minimal WeSay project with an old writingsystemprefs.xml file
 				var project = new WeSayWordsProject();
@@ -910,7 +910,7 @@ namespace WeSay.Project.Tests
 				string wsToMigrateXml = WritingSystemPrefsFileContent.GetSingleWritingSystemXml(language, language, "", "", "", 12,
 																					false, language, "", false, true);
 				string english = WritingSystemPrefsFileContent.GetSingleWritingSystemXmlForLanguage("en");
-				File.WriteAllText(wsPrefsFile.Path, WritingSystemPrefsFileContent.WrapWritingSystemXmlWithCollectionXml(wsToMigrateXml+english));
+				File.WriteAllText(wsPrefsFile.Path, WritingSystemPrefsFileContent.WrapWritingSystemXmlWithCollectionXml(wsToMigrateXml + english));
 
 				project.LoadFromLiftLexiconPath(liftFilePath);
 
@@ -934,7 +934,7 @@ namespace WeSay.Project.Tests
 				//Create Config, Lift and OptionList files as well as a writing system folder.
 				//These files contain various orphans
 				string configFilePath = Path.Combine(projectDirectory.Path, "test.WeSayConfig");
-				File.WriteAllText(configFilePath, ConfigFileContentForTests.GetCompleteV8ConfigFile("en","config","de"));
+				File.WriteAllText(configFilePath, ConfigFileContentForTests.GetCompleteV8ConfigFile("en", "config", "de"));
 				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
 				File.WriteAllText(liftFilePath, LiftContentForTests.WrapEntriesInLiftElements("0.13",
 					LiftContentForTests.GetSingleEntryWithWritingSystems("option", "de")
@@ -981,7 +981,7 @@ namespace WeSay.Project.Tests
 			}
 		}
 
-	private void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
+		private void OnWritingSystemLoadProblem(IEnumerable<WritingSystemRepositoryProblem> problems)
 		{
 			throw new NotImplementedException();
 		}
@@ -1026,11 +1026,11 @@ namespace WeSay.Project.Tests
 			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
 				using (var project = projdir.CreateLoadedProject())
-			{
-				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				{
+					File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				}
 			}
-		}
 		}
 
 		[Test]
@@ -1039,10 +1039,10 @@ namespace WeSay.Project.Tests
 			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
 				using (var project = projdir.CreateLoadedProject())
-			{
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				{
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				}
 			}
-		}
 		}
 
 		[Test]
@@ -1051,11 +1051,11 @@ namespace WeSay.Project.Tests
 			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
 				using (var project = projdir.CreateLoadedProject())
-			{
-				File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				{
+					File.WriteAllText(project.PathToLiftFile, @"<entry id='foo1'><lexical-unit><form lang='de'><text>fooOne</text></form></lexical-unit></entry>");
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.True);
+				}
 			}
-		}
 		}
 
 		[Test]
@@ -1064,10 +1064,10 @@ namespace WeSay.Project.Tests
 			using (var projdir = new ProjectDirectorySetupForTesting(""))
 			{
 				using (var project = projdir.CreateLoadedProject())
-			{
-				Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				{
+					Assert.That(project.IsWritingSystemUsedInLiftFile("de"), Is.False);
+				}
 			}
-		}
 		}
 
 		[Test]

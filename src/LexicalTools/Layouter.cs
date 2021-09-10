@@ -1,21 +1,21 @@
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Reporting;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using SIL.DictionaryServices.Model;
-using SIL.Lift;
-using SIL.Lift.Options;
-using SIL.UiBindings;
-using SIL.Reporting;
-using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
-using SIL.i18n;
 
 namespace WeSay.LexicalTools
 {
@@ -134,7 +134,7 @@ namespace WeSay.LexicalTools
 						_glossMeaningField = false;
 					}
 				}
-				return (bool) _glossMeaningField;
+				return (bool)_glossMeaningField;
 			}
 			set { _glossMeaningField = value; }
 		}
@@ -376,7 +376,7 @@ namespace WeSay.LexicalTools
 			int rowCount = newLayouter.AddWidgets(wsdo, position.Row);
 			var newPosition = _detailList.GetCellPosition(refControl);
 			Debug.Assert(position.Row + rowCount == newPosition.Row);
-			FirstRow = LastRow = newPosition.Row;	// adjust settings for ghost's layouter (ie, "this")
+			FirstRow = LastRow = newPosition.Row;   // adjust settings for ghost's layouter (ie, "this")
 			AdjustLayoutRowsAfterGhostTrigger(rowCount);
 			//DumpLayoutRowsForDebugging();
 			_detailList.ResumeLayout();
@@ -394,7 +394,7 @@ namespace WeSay.LexicalTools
 		{
 			Debug.WriteLine("{0}Layout: this={1}, FirstRow={2}, LastRow={3}", indent, layouter, layouter.FirstRow, layouter.LastRow);
 			foreach (var child in layouter.ChildLayouts)
-				WriteLayouterRows(child, indent+"    ");
+				WriteLayouterRows(child, indent + "    ");
 		}
 
 		/// <summary>
@@ -408,7 +408,7 @@ namespace WeSay.LexicalTools
 			// Nothing needs to be done for LexEntryLayouter or LexSenseLayouter.
 		}
 
-		protected virtual void UpdateGhostLabel(int itemCount, int index) {}
+		protected virtual void UpdateGhostLabel(int itemCount, int index) { }
 
 		protected static int AddChildrenWidgets(Layouter layouter, PalasoDataObject po, int row)
 		{
@@ -563,7 +563,7 @@ namespace WeSay.LexicalTools
 				 BasilProject.Project.WritingSystemsFromIds(field.WritingSystemIds);
 			IChoiceSystemAdaptor<Option, string, OptionRef> displayAdaptor;
 
-			if (field.FieldName== LexSense.WellKnownProperties.SemanticDomainDdp4)
+			if (field.FieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
 			{
 				displayAdaptor = new DdpOptionDisplayAdaptor(availableOptions, field.WritingSystemIds[0]);
 			}
@@ -599,7 +599,7 @@ namespace WeSay.LexicalTools
 
 		protected virtual Control MakePictureWidget(PalasoDataObject target, Field field, DetailList detailList)
 		{
-			ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),"Sorry, pictures are only supported on senses");
+			ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), "Sorry, pictures are only supported on senses");
 			return null;//only LexSenseLayouter actually has this
 		}
 	}

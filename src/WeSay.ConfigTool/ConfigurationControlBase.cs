@@ -1,10 +1,9 @@
-using System;
-using System.Windows.Forms;
 using SIL.Reporting;
+using System.Windows.Forms;
 
 namespace WeSay.ConfigTool
 {
-	public class ConfigurationControlBase: UserControl
+	public class ConfigurationControlBase : UserControl
 	{
 		private readonly string _header;
 		protected readonly ILogger _logger;
@@ -17,9 +16,9 @@ namespace WeSay.ConfigTool
 			SetStyle(ControlStyles.ResizeRedraw, true);
 		}
 
-		public string NameForUsageReporting{ get; private set;}
+		public string NameForUsageReporting { get; private set; }
 
-		public virtual void PreLoad() {}
+		public virtual void PreLoad() { }
 
 		//design-time
 		public ConfigurationControlBase()

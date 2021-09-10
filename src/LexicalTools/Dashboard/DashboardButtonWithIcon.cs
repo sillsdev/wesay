@@ -9,7 +9,7 @@ using WeSay.Foundation;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public class DashboardButtonWithIcon: DashboardButton
+	public class DashboardButtonWithIcon : DashboardButton
 	{
 		private readonly Image _image;
 		private const int ImageWidth = 30;

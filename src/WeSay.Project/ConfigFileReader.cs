@@ -1,10 +1,10 @@
+using Autofac;
+using Autofac.Core;
+using SIL.WritingSystems;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.XPath;
-using Autofac;
-using Autofac.Core;
-using SIL.WritingSystems;
 
 namespace WeSay.Project
 {
@@ -36,10 +36,10 @@ namespace WeSay.Project
 			XPathNodeIterator taskListNodeIterator = navigator.Select("configuration/tasks/task");
 			foreach (XPathNavigator taskNode in taskListNodeIterator)
 			{
-				ITaskConfiguration configuration = CreateTaskConfiguration(context,_taskTypes, taskNode);
+				ITaskConfiguration configuration = CreateTaskConfiguration(context, _taskTypes, taskNode);
 				if (configuration != null)
 				{
-					if(!configs.Exists(t=> t.AreEquivalent(configuration)))
+					if (!configs.Exists(t => t.AreEquivalent(configuration)))
 					{
 						configs.Add(configuration);
 					}
@@ -60,56 +60,56 @@ namespace WeSay.Project
 			}
 			return null;
 		}
-/*
-		private List<Parameter> GetParameters(XPathNavigator component)
-		{
-			List<Parameter> parameters = new List<Parameter>();
-
-			if (component.HasChildren)
-			{
-				XPathNodeIterator children = component.SelectChildren(string.Empty, string.Empty);
-				foreach (XPathNavigator child in children)
+		/*
+				private List<Parameter> GetParameters(XPathNavigator component)
 				{
-					if (child.GetAttribute("UseInConstructor", string.Empty) == "false")
-						continue;
-					parameters.Add(GetSimpleParameter(child));
+					List<Parameter> parameters = new List<Parameter>();
+
+					if (component.HasChildren)
+					{
+						XPathNodeIterator children = component.SelectChildren(string.Empty, string.Empty);
+						foreach (XPathNavigator child in children)
+						{
+							if (child.GetAttribute("UseInConstructor", string.Empty) == "false")
+								continue;
+							parameters.Add(GetSimpleParameter(child));
+						}
+					}
+					return parameters;
 				}
-			}
-			return parameters;
-		}
 
-		private Parameter GetSimpleParameter(XPathNavigator child)
-		{
+				private Parameter GetSimpleParameter(XPathNavigator child)
+				{
 
-			switch (child.GetAttribute("class", string.Empty))
-			{
-				case "":
-					return new NamedParameter(child.Name, child.Value);
-					break;
-				case "string":
-					return new NamedParameter(child.Name, child.Value);
-					break;
-				case "bool":
-					return new NamedParameter(child.Name, child.ValueAsBoolean);
-					break;
-				case "DateTime":
-					return new NamedParameter(child.Name, child.ValueAsDateTime);
-					break;
-				case "double":
-					return new NamedParameter(child.Name, child.ValueAsDouble);
-					break;
-				case "int":
-					return new NamedParameter(child.Name, child.ValueAsInt);
-					break;
-				case "long":
-					return new NamedParameter(child.Name, child.ValueAsLong);
-					break;
-				default:
-					throw new ConfigurationException("Didn't understand this type of paramter in the config file: '{0}'", child.GetAttribute("class", string.Empty));
-					break;
-			}
-		}
-		*/
+					switch (child.GetAttribute("class", string.Empty))
+					{
+						case "":
+							return new NamedParameter(child.Name, child.Value);
+							break;
+						case "string":
+							return new NamedParameter(child.Name, child.Value);
+							break;
+						case "bool":
+							return new NamedParameter(child.Name, child.ValueAsBoolean);
+							break;
+						case "DateTime":
+							return new NamedParameter(child.Name, child.ValueAsDateTime);
+							break;
+						case "double":
+							return new NamedParameter(child.Name, child.ValueAsDouble);
+							break;
+						case "int":
+							return new NamedParameter(child.Name, child.ValueAsInt);
+							break;
+						case "long":
+							return new NamedParameter(child.Name, child.ValueAsLong);
+							break;
+						default:
+							throw new ConfigurationException("Didn't understand this type of paramter in the config file: '{0}'", child.GetAttribute("class", string.Empty));
+							break;
+					}
+				}
+				*/
 		// review: this might belong in a nother file...
 		public static IEnumerable<ViewTemplate> CreateViewTemplates(string xmlConfiguration, IWritingSystemRepository writingSystems)
 		{

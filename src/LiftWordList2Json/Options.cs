@@ -24,7 +24,8 @@ namespace Lift2Json
 		[HelpOption]
 		public string GetUsage()
 		{
-			var help = new HelpText {
+			var help = new HelpText
+			{
 				Heading = new HeadingInfo("Lift2Json", "0.1"),
 				Copyright = new CopyrightInfo("SIL International", 2018),
 				AdditionalNewLineAfterOption = false,

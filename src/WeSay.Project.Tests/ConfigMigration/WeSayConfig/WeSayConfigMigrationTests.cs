@@ -1,9 +1,8 @@
+using NUnit.Framework;
+using SIL.TestUtilities;
 using System;
 using System.IO;
 using System.Xml;
-using System.Xml.XPath;
-using NUnit.Framework;
-using SIL.TestUtilities;
 using WeSay.Project.ConfigMigration.WeSayConfig;
 
 namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
@@ -174,7 +173,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WeSayConfig
 							</task>
 						</tasks></components></configuration>"
 			);
-			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig,_outputPath);
+			_migrator.MigrateConfigurationXmlIfNeeded(_pathToInputConfig, _outputPath);
 			AssertHasAtLeastOneMatch("//task/field[text()='semantic-domain-ddp4']", _outputPath);
 			AssertHasAtLeastOneMatch("//task/showFields[text()='semantic-domain-ddp4']", _outputPath);
 			AssertHasAtLeastOneMatch("//task/readOnly[text()='semantic-domain-ddp4']", _outputPath);

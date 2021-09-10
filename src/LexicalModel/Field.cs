@@ -1,14 +1,14 @@
+using Exortech.NetReflector;
+using Exortech.NetReflector.Util;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
-using Exortech.NetReflector;
-using Exortech.NetReflector.Util;
-using SIL.DictionaryServices.Model;
-using SIL.Lift;
-using SIL.WritingSystems;
 
 namespace WeSay.LexicalModel
 {
@@ -64,7 +64,7 @@ namespace WeSay.LexicalModel
 			EntryLexicalForm,
 			ExampleSentence,
 			ExampleTranslation
-		} ;
+		};
 
 		public Field()
 		{
@@ -73,7 +73,8 @@ namespace WeSay.LexicalModel
 
 		public Field(string fieldName, string className, IEnumerable<string> writingSystemIds)
 				: this(fieldName, className, writingSystemIds, MultiplicityType.ZeroOr1, "MultiText"
-						) {}
+						)
+		{ }
 
 		public Field(string fieldName,
 					 string parentClassName,
@@ -229,7 +230,7 @@ namespace WeSay.LexicalModel
 		//            }
 		//        }
 
-		[TypeConverter(typeof (ParentClassConverter))]
+		[TypeConverter(typeof(ParentClassConverter))]
 		[Description("The parent of this field. E.g. Entry, Sense, Example.")]
 		[ReflectorCollection("className", Required = true)]
 		public string ClassName
@@ -321,8 +322,8 @@ namespace WeSay.LexicalModel
 			get
 			{
 				if (_fieldName == "SILCAWL" ||
-					_fieldName =="Picture")
-					// || Don't disable this:  it is actually used to change the language used when displaying domains:  _fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
+					_fieldName == "Picture")
+				// || Don't disable this:  it is actually used to change the language used when displaying domains:  _fieldName == LexSense.WellKnownProperties.SemanticDomainDdp4)
 				{
 					return false;
 				}
@@ -348,7 +349,7 @@ namespace WeSay.LexicalModel
 		}
 
 
-		[TypeConverter(typeof (DataTypeClassConverter))]
+		[TypeConverter(typeof(DataTypeClassConverter))]
 		[Description(
 				"The type of the field. E.g. multilingual text, option, option collection, relation."
 				)]
@@ -365,8 +366,9 @@ namespace WeSay.LexicalModel
 		[ReflectorProperty("optionsListFile", Required = false)]
 		public string OptionsListFile
 		{
-			get { // this is about trying to get the win version to stop outputing <optionsListfile>(return)</optionsListFile>(whereas mono doesn't)
-				if(_optionsListFile==null)
+			get
+			{ // this is about trying to get the win version to stop outputing <optionsListfile>(return)</optionsListFile>(whereas mono doesn't)
+				if (_optionsListFile == null)
 					return null;
 				return _optionsListFile.Trim();
 			}
@@ -409,7 +411,7 @@ namespace WeSay.LexicalModel
 		}
 
 		[Browsable(false)]
-		[ReflectorProperty("writingSystems", typeof (WsIdCollectionSerializerFactory))]
+		[ReflectorProperty("writingSystems", typeof(WsIdCollectionSerializerFactory))]
 		public IList<string> WritingSystemIds
 		{
 			get { return _writingSystemIds; }
@@ -425,7 +427,7 @@ namespace WeSay.LexicalModel
 														"Input System argument" + i + "is null");
 					}
 				}
-				if(_writingSystemIds != null)
+				if (_writingSystemIds != null)
 				{
 					_writingSystemIds.ListChanged -= OnWritingSystemIdsChanged;
 				}
@@ -437,7 +439,7 @@ namespace WeSay.LexicalModel
 
 		private void FireWritingSystemsChangedEvent()
 		{
-			if(WritingSystemsChanged != null)
+			if (WritingSystemsChanged != null)
 			{
 				WritingSystemsChanged(this, new EventArgs());
 			}
@@ -588,7 +590,7 @@ namespace WeSay.LexicalModel
 		public bool IsMultiParagraph
 		{
 			get { return _isMultiParagraph; }
-			set { _isMultiParagraph = value;}
+			set { _isMultiParagraph = value; }
 		}
 
 
@@ -621,7 +623,7 @@ namespace WeSay.LexicalModel
 
 		#region persistence
 
-		internal class WsIdCollectionSerializerFactory: ISerialiserFactory
+		internal class WsIdCollectionSerializerFactory : ISerialiserFactory
 		{
 			public IXmlMemberSerialiser Create(ReflectorMember member,
 											   ReflectorPropertyAttribute attribute)
@@ -630,16 +632,16 @@ namespace WeSay.LexicalModel
 			}
 		}
 
-		internal class WsIdCollectionSerializer: XmlMemberSerialiser
+		internal class WsIdCollectionSerializer : XmlMemberSerialiser
 		{
 			public WsIdCollectionSerializer(ReflectorMember member,
 											ReflectorPropertyAttribute attribute)
-					: base(member, attribute) {}
+					: base(member, attribute) { }
 
 			public override void Write(XmlWriter writer, object target)
 			{
 				writer.WriteStartElement("writingSystems");
-				foreach (string s in ((Field) target)._writingSystemIds)
+				foreach (string s in ((Field)target)._writingSystemIds)
 				{
 					writer.WriteElementString("id", s);
 				}
@@ -664,23 +666,23 @@ namespace WeSay.LexicalModel
 
 	}
 
-	internal class ParentClassConverter: WeSayStringConverter
+	internal class ParentClassConverter : WeSayStringConverter
 	{
 		public override string[] ValidStrings
 		{
-			get { return new[] {"LexEntry", "LexSense", "LexExampleSentence"}; }
+			get { return new[] { "LexEntry", "LexSense", "LexExampleSentence" }; }
 		}
 	}
 
-	internal class DataTypeClassConverter: WeSayStringConverter
+	internal class DataTypeClassConverter : WeSayStringConverter
 	{
 		public override string[] ValidStrings
 		{
-			get { return new[] {"MultiText", "Option", "OptionCollection", "RelationToOneEntry"}; }
+			get { return new[] { "MultiText", "Option", "OptionCollection", "RelationToOneEntry" }; }
 		}
 	}
 
-	internal abstract class WeSayStringConverter: StringConverter
+	internal abstract class WeSayStringConverter : StringConverter
 	{
 		public abstract string[] ValidStrings { get; }
 

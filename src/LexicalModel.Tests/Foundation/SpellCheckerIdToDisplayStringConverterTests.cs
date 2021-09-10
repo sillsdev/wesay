@@ -1,7 +1,7 @@
-using System;
-using System.Globalization;
 using NUnit.Framework;
 using SIL.i18n;
+using System;
+using System.Globalization;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
@@ -23,7 +23,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			_spellCheckerIdToDisplayStringConverter =
 				new SpellCheckerIdToDisplayStringConverter();
 			_spellCheckerIdToDisplayStringConverter.GetInstalledSpellCheckingIdsStrategy =
-				delegate { return new string[] {_idKnownToWindows, _idNotKnownToWindows}; };
+				delegate { return new string[] { _idKnownToWindows, _idNotKnownToWindows }; };
 		}
 
 		[Test]
@@ -31,19 +31,19 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			Assert.AreEqual("none",
 							_spellCheckerIdToDisplayStringConverter.ConvertTo("none",
-																			  typeof (string)));
+																			  typeof(string)));
 		}
 
 		[Test]
 		public void ConvertTo_ConvertingToAnythingButString_Throws()
 		{
-			Assert.Throws<NotSupportedException>(() => _spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof (bool)));
+			Assert.Throws<NotSupportedException>(() => _spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", typeof(bool)));
 		}
 
 		[Test]
 		public void ConvertTo_ConvertingToNull_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>_spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null));
+			Assert.Throws<ArgumentNullException>(() => _spellCheckerIdToDisplayStringConverter.ConvertTo("en_US", null));
 		}
 
 		[Test]
@@ -54,7 +54,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			string cultureInfoTail = " (" + cultureInfo.NativeName + ")";
 			Assert.AreEqual(_idKnownToWindows + cultureInfoTail,
 							_spellCheckerIdToDisplayStringConverter.ConvertTo(_idKnownToWindows,
-																			  typeof (string)));
+																			  typeof(string)));
 		}
 
 		[Test]
@@ -62,7 +62,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		{
 			Assert.AreEqual(_idNotKnownToWindows,
 							_spellCheckerIdToDisplayStringConverter.ConvertTo(_idNotKnownToWindows,
-																			  typeof (string)));
+																			  typeof(string)));
 		}
 
 		[Test]
@@ -73,7 +73,7 @@ namespace WeSay.LexicalModel.Tests.Foundation
 			string spellCheckingNotInstalledTail = " (" + StringCatalog.Get("Not installed") + ")";
 			Assert.AreEqual("fr_CA" + spellCheckingNotInstalledTail,
 							_spellCheckerIdToDisplayStringConverter.ConvertTo("fr_CA",
-																			  typeof (string)));
+																			  typeof(string)));
 		}
 
 		[Test]

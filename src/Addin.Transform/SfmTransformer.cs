@@ -1,23 +1,22 @@
+using Mono.Addins;
+using SIL.i18n;
+using SIL.Progress;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Mono.Addins;
-using SIL.i18n;
-using SIL.Progress;
 using WeSay.AddinLib;
-using WeSay.LexicalModel;
-using System.Linq;
 
 namespace Addin.Transform
 {
 	[Extension]
-	public class SfmTransformer: LiftTransformer, IWeSayAddinHasSettings
+	public class SfmTransformer : LiftTransformer, IWeSayAddinHasSettings
 	{
 		private SfmTransformSettings _settings;
 
@@ -61,8 +60,8 @@ namespace Addin.Transform
 		/// </summary>
 		private static void OnDoGrepWork(object sender, DoWorkEventArgs args)
 		{
-			var progressState = (ProgressState) args.Argument;
-			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
+			var progressState = (ProgressState)args.Argument;
+			var workerArguments = (TransformWorkerArguments)(progressState.Arguments);
 
 			progressState.StatusLabel = "Converting to MDF (can take a very long time)...";
 			//System.Threading.Thread.Sleep(100);//don't event see that message otherwise
@@ -71,15 +70,15 @@ namespace Addin.Transform
 
 		private static void GrepFile(string inputPath, DoWorkEventArgs args)
 		{
-			var progressState = (ProgressState) args.Argument;
-			var workerArguments = (TransformWorkerArguments) (progressState.Arguments);
-			var sfmSettings = (SfmTransformSettings) workerArguments.postTransformArgument;
+			var progressState = (ProgressState)args.Argument;
+			var workerArguments = (TransformWorkerArguments)(progressState.Arguments);
+			var sfmSettings = (SfmTransformSettings)workerArguments.postTransformArgument;
 			int entriesCount = workerArguments.inputDocument.SelectNodes("//entry").Count;
 
 			string tempPath = inputPath + ".tmp";
 			IEnumerable<SfmTransformSettings.ChangePair> pairs = sfmSettings.ChangePairs;
 
-			if(!pairs.Any())
+			if (!pairs.Any())
 			{
 				return;
 			}
@@ -104,8 +103,8 @@ namespace Addin.Transform
 						writer.Write(record);
 						progressState.NumberOfStepsCompleted++;
 						count++;
-						if(count % 20 ==0 )
-							progressState.StatusLabel = "Converting to MDF: "+count + "/" + entriesCount;
+						if (count % 20 == 0)
+							progressState.StatusLabel = "Converting to MDF: " + count + "/" + entriesCount;
 					}
 					writer.Close();
 				}
@@ -129,7 +128,7 @@ namespace Addin.Transform
 			while (!reader.EndOfStream)
 			{
 				line = reader.ReadLine();
-				if(line != Environment.NewLine)
+				if (line != Environment.NewLine)
 				{
 					if (line.StartsWith("\\dt "))
 					{
@@ -138,7 +137,7 @@ namespace Addin.Transform
 					record.Append(line);
 					record.Append(Environment.NewLine);
 				}
-				if(reader.EndOfStream || line.Length==0)
+				if (reader.EndOfStream || line.Length == 0)
 				{
 					yield return record.ToString();
 					record = new StringBuilder();
@@ -207,7 +206,7 @@ namespace Addin.Transform
 		public object Settings
 		{
 			get { return _settings; }
-			set { _settings = (SfmTransformSettings) value; }
+			set { _settings = (SfmTransformSettings)value; }
 		}
 
 		public override string ID

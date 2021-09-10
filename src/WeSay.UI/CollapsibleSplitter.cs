@@ -9,12 +9,12 @@
 
 */
 
+using SIL.Windows.Forms.Miscellaneous;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using SIL.Windows.Forms.Miscellaneous;
 
 namespace WeSay.UI
 {
@@ -39,15 +39,15 @@ namespace WeSay.UI
 		Center = 0,
 		LeftOrTop,
 		RightOrBottom
-	} ;
+	};
 
 	#endregion
 
 	/// <summary>
 	/// A custom collapsible splitter that can resize, hide and show associated form controls
 	/// </summary>
-	[ToolboxBitmap(typeof (CollapsibleSplitter))]
-	public class CollapsibleSplitter: Splitter
+	[ToolboxBitmap(typeof(CollapsibleSplitter))]
+	public class CollapsibleSplitter : Splitter
 	{
 		#region Private Properties
 
@@ -398,64 +398,64 @@ namespace WeSay.UI
 				switch (_gripperStyle)
 				{
 					case GripperStyles.Mozilla:
-					{
-						int dotCount = gripLength / 3;
-						for (int i = 0;i < dotCount;i++)
 						{
-							// light dot
-							bg.DrawLine(new Pen(SystemColors.ControlLightLight),
-										x,
-										y + (i * 3),
-										x + 1,
-										y + 1 + (i * 3));
-							// dark dot
-							bg.DrawLine(new Pen(SystemColors.ControlDarkDark),
-										x + 1,
-										y + 1 + (i * 3),
-										x + 2,
-										y + 2 + (i * 3));
-							// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-							bg.DrawLine(new Pen(BackColor),
-										x + 2,
-										y + 1 + (i * 3),
-										x + 2,
-										y + 2 + (i * 3));
+							int dotCount = gripLength / 3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawLine(new Pen(SystemColors.ControlLightLight),
+											x,
+											y + (i * 3),
+											x + 1,
+											y + 1 + (i * 3));
+								// dark dot
+								bg.DrawLine(new Pen(SystemColors.ControlDarkDark),
+											x + 1,
+											y + 1 + (i * 3),
+											x + 2,
+											y + 2 + (i * 3));
+								// overdraw the background color as we actually drew 2px diagonal lines, not just dots
+								bg.DrawLine(new Pen(BackColor),
+											x + 2,
+											y + 1 + (i * 3),
+											x + 2,
+											y + 2 + (i * 3));
+							}
 						}
-					}
 						break;
 
 					case GripperStyles.DoubleDots:
-					{
-						int dotCount = gripLength / 3;
-						for (int i = 0;i < dotCount;i++)
 						{
-							// light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
-											 x,
-											 y + 1 + (i * 3),
-											 1,
-											 1);
-							// dark dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
-											 x - 1,
-											 y + (i * 3),
-											 1,
-											 1);
-							i++;
-							// light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
-											 x + 2,
-											 y + 1 + (i * 3),
-											 1,
-											 1);
-							// dark dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
-											 x + 1,
-											 y + (i * 3),
-											 1,
-											 1);
+							int dotCount = gripLength / 3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+												 x,
+												 y + 1 + (i * 3),
+												 1,
+												 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+												 x - 1,
+												 y + (i * 3),
+												 1,
+												 1);
+								i++;
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+												 x + 2,
+												 y + 1 + (i * 3),
+												 1,
+												 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+												 x + 1,
+												 y + (i * 3),
+												 1,
+												 1);
+							}
 						}
-					}
 						break;
 
 					case GripperStyles.Win9x:
@@ -475,67 +475,68 @@ namespace WeSay.UI
 						break;
 
 					case GripperStyles.XP:
-					{
-						int dotCount = gripLength / 5;
-
-						for (int i = 0;i < dotCount;i++)
 						{
-							// light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLight),
-											 x,
-											 y + (i * 5),
-											 2,
-											 2);
-							// light light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
-											 x + 1,
-											 y + 1 + (i * 5),
-											 1,
-											 1);
-							// dark dark dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark),
-											 x,
-											 y + (i * 5),
-											 1,
-											 1);
-							// dark fill
-							bg.DrawLine(new Pen(SystemColors.ControlDark),
-										x,
-										y + (i * 5),
-										x,
-										y + (i * 5) + 1);
-							bg.DrawLine(new Pen(SystemColors.ControlDark),
-										x,
-										y + (i * 5),
-										x + 1,
-										y + (i * 5));
+							int dotCount = gripLength / 5;
+
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLight),
+												 x,
+												 y + (i * 5),
+												 2,
+												 2);
+								// light light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+												 x + 1,
+												 y + 1 + (i * 5),
+												 1,
+												 1);
+								// dark dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark),
+												 x,
+												 y + (i * 5),
+												 1,
+												 1);
+								// dark fill
+								bg.DrawLine(new Pen(SystemColors.ControlDark),
+											x,
+											y + (i * 5),
+											x,
+											y + (i * 5) + 1);
+								bg.DrawLine(new Pen(SystemColors.ControlDark),
+											x,
+											y + (i * 5),
+											x + 1,
+											y + (i * 5));
+							}
 						}
-					}
 						break;
 
 					case GripperStyles.Lines:
-					{
-						int lineCount = gripLength / 2;
-						for (int i = 0;i < lineCount;i++)
 						{
-							bg.DrawLine(new Pen(SystemColors.ControlDark),
-										x,
-										y + (i * 2),
-										x + 2,
-										y + (i * 2));
+							int lineCount = gripLength / 2;
+							for (int i = 0; i < lineCount; i++)
+							{
+								bg.DrawLine(new Pen(SystemColors.ControlDark),
+											x,
+											y + (i * 2),
+											x + 2,
+											y + (i * 2));
+							}
 						}
-					}
 						break;
 
-					case GripperStyles.None: {}
+					case GripperStyles.None:
+						{ }
 						break;
 				}
 			}
 
-					#endregion
+			#endregion
 
-					// Horizontal Splitter support added in v1.2
-					#region Horizontal Splitter
+			// Horizontal Splitter support added in v1.2
+			#region Horizontal Splitter
 
 			else
 			{
@@ -546,64 +547,64 @@ namespace WeSay.UI
 				switch (_gripperStyle)
 				{
 					case GripperStyles.Mozilla:
-					{
-						int dotCount = gripLength / 3;
-						for (int i = 0;i < dotCount;i++)
 						{
-							// light dot
-							bg.DrawLine(new Pen(SystemColors.ControlLightLight),
-										x + (i * 3),
-										y,
-										x + 1 + (i * 3),
-										y + 1);
-							// dark dot
-							bg.DrawLine(new Pen(SystemColors.ControlDarkDark),
-										x + 1 + (i * 3),
-										y + 1,
-										x + 2 + (i * 3),
-										y + 2);
-							// overdraw the background color as we actually drew 2px diagonal lines, not just dots
-							bg.DrawLine(new Pen(BackColor),
-										x + 1 + (i * 3),
-										y + 2,
-										x + 2 + (i * 3),
-										y + 2);
+							int dotCount = gripLength / 3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawLine(new Pen(SystemColors.ControlLightLight),
+											x + (i * 3),
+											y,
+											x + 1 + (i * 3),
+											y + 1);
+								// dark dot
+								bg.DrawLine(new Pen(SystemColors.ControlDarkDark),
+											x + 1 + (i * 3),
+											y + 1,
+											x + 2 + (i * 3),
+											y + 2);
+								// overdraw the background color as we actually drew 2px diagonal lines, not just dots
+								bg.DrawLine(new Pen(BackColor),
+											x + 1 + (i * 3),
+											y + 2,
+											x + 2 + (i * 3),
+											y + 2);
+							}
 						}
-					}
 						break;
 
 					case GripperStyles.DoubleDots:
-					{
-						int dotCount = gripLength / 3;
-						for (int i = 0;i < dotCount;i++)
 						{
-							// light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
-											 x + 1 + (i * 3),
-											 y,
-											 1,
-											 1);
-							// dark dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
-											 x + (i * 3),
-											 y - 1,
-											 1,
-											 1);
-							i++;
-							// light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
-											 x + 1 + (i * 3),
-											 y + 2,
-											 1,
-											 1);
-							// dark dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlDark),
-											 x + (i * 3),
-											 y + 1,
-											 1,
-											 1);
+							int dotCount = gripLength / 3;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+												 x + 1 + (i * 3),
+												 y,
+												 1,
+												 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+												 x + (i * 3),
+												 y - 1,
+												 1,
+												 1);
+								i++;
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+												 x + 1 + (i * 3),
+												 y + 2,
+												 1,
+												 1);
+								// dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDark),
+												 x + (i * 3),
+												 y + 1,
+												 1,
+												 1);
+							}
 						}
-					}
 						break;
 
 					case GripperStyles.Win9x:
@@ -623,58 +624,59 @@ namespace WeSay.UI
 						break;
 
 					case GripperStyles.XP:
-					{
-						int dotCount = gripLength / 5;
-						for (int i = 0;i < dotCount;i++)
 						{
-							// light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLight),
-											 x + (i * 5),
-											 y,
-											 2,
-											 2);
-							// light light dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
-											 x + 1 + (i * 5),
-											 y + 1,
-											 1,
-											 1);
-							// dark dark dot
-							bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark),
-											 x + (i * 5),
-											 y,
-											 1,
-											 1);
-							// dark fill
-							bg.DrawLine(new Pen(SystemColors.ControlDark),
-										x + (i * 5),
-										y,
-										x + (i * 5) + 1,
-										y);
-							bg.DrawLine(new Pen(SystemColors.ControlDark),
-										x + (i * 5),
-										y,
-										x + (i * 5),
-										y + 1);
+							int dotCount = gripLength / 5;
+							for (int i = 0; i < dotCount; i++)
+							{
+								// light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLight),
+												 x + (i * 5),
+												 y,
+												 2,
+												 2);
+								// light light dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlLightLight),
+												 x + 1 + (i * 5),
+												 y + 1,
+												 1,
+												 1);
+								// dark dark dot
+								bg.DrawRectangle(new Pen(SystemColors.ControlDarkDark),
+												 x + (i * 5),
+												 y,
+												 1,
+												 1);
+								// dark fill
+								bg.DrawLine(new Pen(SystemColors.ControlDark),
+											x + (i * 5),
+											y,
+											x + (i * 5) + 1,
+											y);
+								bg.DrawLine(new Pen(SystemColors.ControlDark),
+											x + (i * 5),
+											y,
+											x + (i * 5),
+											y + 1);
+							}
 						}
-					}
 						break;
 
 					case GripperStyles.Lines:
-					{
-						int lineCount = gripLength / 2;
-						for (int i = 0;i < lineCount;i++)
 						{
-							bg.DrawLine(new Pen(SystemColors.ControlDark),
-										x + (i * 2),
-										y,
-										x + (i * 2),
-										y + 2);
+							int lineCount = gripLength / 2;
+							for (int i = 0; i < lineCount; i++)
+							{
+								bg.DrawLine(new Pen(SystemColors.ControlDark),
+											x + (i * 2),
+											y,
+											x + (i * 2),
+											y + 2);
+							}
 						}
-					}
 						break;
 
-					case GripperStyles.None: {}
+					case GripperStyles.None:
+						{ }
 						break;
 				}
 			}

@@ -1,7 +1,6 @@
+using SIL.UiBindings;
 using System;
 using System.ComponentModel;
-using SIL.Lift;
-using SIL.UiBindings;
 
 namespace WeSay.UI
 {

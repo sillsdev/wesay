@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
-using SIL.Reporting;
+﻿using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.Drawing;
 
 namespace WeSay.LexicalModel.Foundation
 {

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Xml;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.GatherByWordList
@@ -23,12 +21,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 	}
 
 
-	public class GatherWordListConfig : TaskConfigurationBase, IGatherWordListConfig, ITaskConfiguration , ICareThatWritingSystemIdChanged
+	public class GatherWordListConfig : TaskConfigurationBase, IGatherWordListConfig, ITaskConfiguration, ICareThatWritingSystemIdChanged
 	{
 		private readonly WordListCatalog _catalog;
 
 		public GatherWordListConfig(string xml, WordListCatalog catalog)
-			:base(xml)
+			: base(xml)
 		{
 			_catalog = catalog;
 		}
@@ -130,7 +128,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public void OnWritingSystemIdChanged(string from, string to)
 		{
-			  //TODO, (maybe?) when we become writeable
+			//TODO, (maybe?) when we become writeable
 			// if(WordListWritingSystemIdOfOldFlatWordList==from)
 			//      WordListWritingSystemIdOfOldFlatWordList=to;
 			// mark dirty if necessary

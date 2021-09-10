@@ -1,9 +1,9 @@
-using System;
-using System.IO;
 using SIL.Lift.Validation;
 using SIL.TestUtilities;
 using SIL.Windows.Forms.Progress;
 using SIL.WritingSystems;
+using System;
+using System.IO;
 
 namespace WeSay.Project.Tests
 {
@@ -20,7 +20,7 @@ namespace WeSay.Project.Tests
 		private readonly TemporaryFolder _projectRootFolder;
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries)
-				: this(xmlOfEntries, Validator.LiftVersion) {}
+				: this(xmlOfEntries, Validator.LiftVersion) { }
 
 		public ProjectDirectorySetupForTesting(string xmlOfEntries, string liftVersion)
 		{

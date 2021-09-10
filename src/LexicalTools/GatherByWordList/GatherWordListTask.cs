@@ -1,26 +1,22 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using SIL.Code;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
-using SIL.Lift.Options;
 using SIL.Progress;
 using SIL.Reporting;
 using SIL.Text;
 using SIL.WritingSystems;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.GatherByWordList
 {
-	public class GatherWordListTask: WordGatheringTaskBase
+	public class GatherWordListTask : WordGatheringTaskBase
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly string _lexemeFormListFileName;
@@ -49,7 +45,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 			//enhance: this isn't really true anymore, as we're moving to wordpack (where it's the folder)
 			//for now, this is figure out more carefully in GetPathToUse
-			_usingLiftFile =  ".lift"==Path.GetExtension(config.WordListFileName).ToLower();
+			_usingLiftFile = ".lift" == Path.GetExtension(config.WordListFileName).ToLower();
 
 			_lexicalUnitWritingSystem =
 				viewTemplate.GetFirstNonVoiceWritingSystemForFieldOrThrow(Field.FieldNames.EntryLexicalForm.ToString());
@@ -60,8 +56,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			Guard.AgainstNull(f, "No field for definition");
 			_definitionWritingSystemIds = f.WritingSystemIds;
 
-			 f = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
-			if(f!=null)
+			f = viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
+			if (f != null)
 				_glossWritingSystemIds = f.WritingSystemIds;
 			else
 			{
@@ -87,7 +83,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				if (!_viewTemplate.WritingSystems.Contains(_preferredPromptingWritingSystemId))
 				{
-					return _viewTemplate.GetDefaultWritingSystemForField(_glossMeaningField ? LexSense.WellKnownProperties.Gloss :  LexSense.WellKnownProperties.Definition);//shouldn't ever happen
+					return _viewTemplate.GetDefaultWritingSystemForField(_glossMeaningField ? LexSense.WellKnownProperties.Gloss : LexSense.WellKnownProperties.Definition);//shouldn't ever happen
 				}
 				return _viewTemplate.WritingSystems.Get(_preferredPromptingWritingSystemId);
 			}
@@ -96,7 +92,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		private void LoadWordList()
 		{
 			string pathToUse = GetPathToUse();
-			if(pathToUse == null)
+			if (pathToUse == null)
 				return;
 
 			_words = new List<LexEntry>();
@@ -148,7 +144,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			wordpackDirectory = Path.Combine(wordpackDirectory,
 								wordpackFolderName);
 			string pathInProgramDirOwnFolder = Path.Combine(wordpackDirectory,
-								wordpackFolderName+".lift");
+								wordpackFolderName + ".lift");
 			if (File.Exists(pathInProgramDirOwnFolder))
 				return pathInProgramDirOwnFolder;
 
@@ -167,7 +163,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			using (var reader = new SIL.DictionaryServices.Lift.LiftReader(new NullProgressState(),
 				WeSayWordsProject.Project.GetSemanticDomainsList(),
 				WeSayWordsProject.Project.GetIdsOfSingleOptionFields()))
-			using(var m = new MemoryDataMapper<LexEntry>())
+			using (var m = new MemoryDataMapper<LexEntry>())
 			{
 				reader.Read(path, m);
 				_words.AddRange(from RepositoryId repositoryId in m.GetAllItems() select m.GetItem(repositoryId));
@@ -269,7 +265,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			get
 			{
 				var form = CurrentPromptingLanguageForm;
-				if(form!=null)
+				if (form != null)
 					return form.Form;
 				return string.Empty;
 			}
@@ -281,12 +277,12 @@ namespace WeSay.LexicalTools.GatherByWordList
 				//note, we choose to skip this word if it doesn't have any of the same languages as our
 				//current meaning field.  But we don't skip it just because it doesn't have our
 				//preferred (first) one.
-				var preferred = new string[]{_meaningWritingSystemIds.First()};
+				var preferred = new string[] { _meaningWritingSystemIds.First() };
 				var sense = CurrentTemplateSense;
-				LanguageForm lf=null;
+				LanguageForm lf = null;
 				if (sense != null)
 					lf = _glossMeaningField ? sense.Gloss.GetBestAlternative(preferred) : sense.Definition.GetBestAlternative(preferred);
-				if(lf==null && sense!=null)
+				if (lf == null && sense != null)
 					lf = _glossMeaningField ? sense.Definition.GetBestAlternative(preferred) : sense.Gloss.GetBestAlternative(preferred);
 
 				//ok, if we didn't get the best one, how about any others in the def field?
@@ -303,7 +299,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 
 		public WritingSystemDefinition GetWritingSystemOfLanguageForm(LanguageForm languageForm)
 		{
-			if(!_viewTemplate.WritingSystems.Contains(languageForm.WritingSystemId))
+			if (!_viewTemplate.WritingSystems.Contains(languageForm.WritingSystemId))
 			{
 				return null;
 			}
@@ -339,27 +335,27 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 		}
 
-//        protected bool SomeFurtherWordWillHaveSomeElligbleWritingSystem
-//        {
-//            get
-//            {
-//                for (int i = 1+CurrentIndexIntoWordlist; i < _words.Count;i++ )
-//                {
-//                    if(GetWordHasElligibleWritingSystem(_words[i]))
-//                        return true;
-//                }
-//                return false;
-//            }
-//        }
+		//        protected bool SomeFurtherWordWillHaveSomeElligbleWritingSystem
+		//        {
+		//            get
+		//            {
+		//                for (int i = 1+CurrentIndexIntoWordlist; i < _words.Count;i++ )
+		//                {
+		//                    if(GetWordHasElligibleWritingSystem(_words[i]))
+		//                        return true;
+		//                }
+		//                return false;
+		//            }
+		//        }
 
 		private bool GetWordHasElligibleWritingSystem(LexEntry entry)
 		{
 			var sense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
 			foreach (var id in _meaningWritingSystemIds)
 			{
-				if ((entry.LexicalForm!=null && entry.LexicalForm.ContainsAlternative(id))
-					|| (sense!=null && sense.Gloss!=null && sense.Gloss.ContainsAlternative(id))
-					|| (sense!=null && sense.Definition!=null &&sense.Definition.ContainsAlternative(id)))
+				if ((entry.LexicalForm != null && entry.LexicalForm.ContainsAlternative(id))
+					|| (sense != null && sense.Gloss != null && sense.Gloss.ContainsAlternative(id))
+					|| (sense != null && sense.Definition != null && sense.Definition.ContainsAlternative(id)))
 					return true;
 			}
 			return false;
@@ -436,7 +432,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		public void WordCollected(MultiText newVernacularWord)
 		{
 			var sense = CurrentTemplateLexicalEntry.Senses.FirstOrDefault();
-			AddSenseToLexicon(newVernacularWord,sense);
+			AddSenseToLexicon(newVernacularWord, sense);
 		}
 
 		/// <summary>
@@ -488,8 +484,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 					LexEntryRepository.GetEntriesWithMatchingLexicalForm(
 							lexemeForm[_lexicalUnitWritingSystem.LanguageTag], _lexicalUnitWritingSystem);
 			var meaningField = _glossMeaningField ? sense.Gloss : sense.Definition;
-			LanguageForm firstMeaning = new LanguageForm("en", "-none-",null);
-			if(meaningField.Forms.Length>0)
+			LanguageForm firstMeaning = new LanguageForm("en", "-none-", null);
+			if (meaningField.Forms.Length > 0)
 				firstMeaning = meaningField.Forms[0];
 
 			if (entriesWithSameForm.Count == 0)
@@ -498,7 +494,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				entry.LexicalForm.MergeIn(lexemeForm);
 				entry.Senses.Add(sense.Clone());
 				LexEntryRepository.SaveItem(entry);
-				Logger.WriteEvent("WordList-Adding new word '{0}'and giving the sense '{1}'", entry.GetSimpleFormForLogging(), firstMeaning );
+				Logger.WriteEvent("WordList-Adding new word '{0}'and giving the sense '{1}'", entry.GetSimpleFormForLogging(), firstMeaning);
 			}
 			else
 			{
@@ -519,7 +515,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 						}
 					}
 				}
-				if(sense.Gloss.Forms.Length==0 && sense.Definition.Forms.Length ==0 && sense.ExampleSentences.Count==0)
+				if (sense.Gloss.Forms.Length == 0 && sense.Definition.Forms.Length == 0 && sense.ExampleSentences.Count == 0)
 					return;//nothing worth adding (may happen in unit test)
 
 				entry.Senses.Add(sense);
@@ -582,7 +578,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 		public void NavigateFirstToShow()
 		{
 			_currentWordIndex = -1;
-			if(!NavigateNext())
+			if (!NavigateNext())
 			{
 				if (_words == null)//WS-33662, which we could not reproduce
 				{
@@ -593,21 +589,21 @@ namespace WeSay.LexicalTools.GatherByWordList
 				{
 					var firstLexeme = _words.First().LexicalForm;
 					var s = "";
-					foreach(var form in firstLexeme.Forms)
+					foreach (var form in firstLexeme.Forms)
 					{
 						var name = form.WritingSystemId;
 						if (_viewTemplate.WritingSystems.Contains(form.WritingSystemId))
 							name = _viewTemplate.WritingSystems.Get(form.WritingSystemId).Language.Name;
 						else
-						{	//if these langs aren't in the project, we might not be able to look them up, so do them by hand
+						{   //if these langs aren't in the project, we might not be able to look them up, so do them by hand
 							if (form.WritingSystemId == "en")///SIL CAWL comes with French and English
 								name = "English";
 							else if (form.WritingSystemId == "fr")
 								name = "French";
 						}
-						s += " "+ name + ",";
+						s += " " + name + ",";
 					}
-					s = s.Trim(new char[] {' ', ','});
+					s = s.Trim(new char[] { ' ', ',' });
 					LoadFailureMessage = string.Format(
 						"To use this word pack, set your first meaning field to one of ({0}).", s);
 					SIL.Reporting.ErrorReport.NotifyUserOfProblem(LoadFailureMessage);
@@ -620,13 +616,13 @@ namespace WeSay.LexicalTools.GatherByWordList
 			CurrentIndexIntoWordlist = 0;
 		}
 
-//        public ResultSet<LexEntry> NotifyOfAddedWord()
-//        {
-//            return
-//                    LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
-//                            CurrentWordAsMultiText.Find(_preferredPromptingWritingSystemId),
-//                            _lexicalUnitWritingSystem);
-//        }
+		//        public ResultSet<LexEntry> NotifyOfAddedWord()
+		//        {
+		//            return
+		//                    LexEntryRepository.GetEntriesWithMatchingGlossSortedByLexicalForm(
+		//                            CurrentWordAsMultiText.Find(_preferredPromptingWritingSystemId),
+		//                            _lexicalUnitWritingSystem);
+		//        }
 
 		public ResultSet<LexEntry> GetRecordsWithMatchingMeaning()
 		{
@@ -662,9 +658,9 @@ namespace WeSay.LexicalTools.GatherByWordList
 			// have to iterate through these in reverse order
 			// since they might get modified
 			LexEntry entry = recordToken.RealObject;
-			for (int i = entry.Senses.Count - 1;i >= 0;i--)
+			for (int i = entry.Senses.Count - 1; i >= 0; i--)
 			{
-				if(entry.Senses[i].Equals(CurrentTemplateSense))
+				if (entry.Senses[i].Equals(CurrentTemplateSense))
 				{
 					entry.Senses.RemoveAt(i);
 				}

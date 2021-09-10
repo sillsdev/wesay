@@ -3,12 +3,12 @@ using System.ComponentModel;
 
 namespace WeSay.Data.Tests
 {
-	public class SimpleIntTestClass: INotifyPropertyChanged,
+	public class SimpleIntTestClass : INotifyPropertyChanged,
 									 IComparable,
 									 IComparable<SimpleIntTestClass>
 	{
 		private int _i;
-		public SimpleIntTestClass() {}
+		public SimpleIntTestClass() { }
 
 		public SimpleIntTestClass(int i)
 		{
@@ -20,7 +20,7 @@ namespace WeSay.Data.Tests
 			get
 			{
 				PropertyDescriptorCollection pdc =
-						TypeDescriptor.GetProperties(typeof (SimpleIntTestClass));
+						TypeDescriptor.GetProperties(typeof(SimpleIntTestClass));
 				return pdc.Find("I", false);
 			}
 		}
@@ -58,7 +58,7 @@ namespace WeSay.Data.Tests
 
 		int IComparable.CompareTo(object obj)
 		{
-			return CompareTo((SimpleIntTestClass) obj);
+			return CompareTo((SimpleIntTestClass)obj);
 		}
 
 		#endregion

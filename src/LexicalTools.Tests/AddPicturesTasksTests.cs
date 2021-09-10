@@ -1,7 +1,7 @@
-﻿using System.Configuration;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SIL.IO;
 using SIL.TestUtilities;
+using System.Configuration;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.AddPictures;
 
@@ -14,17 +14,17 @@ namespace WeSay.LexicalTools.Tests
 		[Ignore("FLAKY - sometimes fails first time run all tests in VS.")]
 		public void Activate_IndexNotFound_GivesUserMessage()
 		{
-				using (var repoFile = new TempLiftFile(""))
+			using (var repoFile = new TempLiftFile(""))
+			{
+				using (var repo = new LexEntryRepository(repoFile.Path))
 				{
-					using(var repo = new LexEntryRepository(repoFile.Path))
-					{
-						AddPicturesConfig config = MakeConfig("Bogus.txt");
-						var task = new AddPicturesTask(config, repo,
-							new TaskMemoryRepository(),
-							new FileLocator(new string[0])  );
-						Assert.Throws<ConfigurationException>(() => task.Activate());
-					}
+					AddPicturesConfig config = MakeConfig("Bogus.txt");
+					var task = new AddPicturesTask(config, repo,
+						new TaskMemoryRepository(),
+						new FileLocator(new string[0]));
+					Assert.Throws<ConfigurationException>(() => task.Activate());
 				}
+			}
 		}
 
 		private AddPicturesConfig MakeConfig(string indexName)
@@ -56,7 +56,7 @@ namespace WeSay.LexicalTools.Tests
 			AddPicturesConfig config = new AddPicturesConfig(string.Format("<task taskName='AddMissingInfo' visible='true'><indexFileName>{0}</indexFileName></task>", "ArtOfReadingIndexV3_en.txt"));
 			_task = new AddPicturesTask(config, _repo,
 										new TaskMemoryRepository(),
-										new FileLocator(new string[]{WeSay.Project.BasilProject.ApplicationCommonDirectory}));
+										new FileLocator(new string[] { WeSay.Project.BasilProject.ApplicationCommonDirectory }));
 			_task.Activate();
 		}
 		[TearDown]

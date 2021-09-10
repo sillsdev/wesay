@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Windows.Forms.Layout;
-using System.Xml.Linq;
-using SIL.TestUtilities;
-using SIL.Lexicon;
-using SIL.WritingSystems;
-using WeSay.Project.ConfigMigration.UserConfig;
 using NUnit.Framework;
+using SIL.Lexicon;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml.Linq;
+using WeSay.Project.ConfigMigration.UserConfig;
 
 namespace WeSay.Project.Tests.ConfigMigration.UserConfig
 {

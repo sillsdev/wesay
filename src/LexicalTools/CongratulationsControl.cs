@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace WeSay.LexicalTools
 {
-	public partial class CongratulationsControl: UserControl
+	public partial class CongratulationsControl : UserControl
 	{
 		public CongratulationsControl()
 		{
@@ -18,7 +18,7 @@ namespace WeSay.LexicalTools
 
 		public void Show(string message)
 		{
-			checkmarkLabel.Text = "\u2714 ";	// The trailing space seems critical at times for proper display. (?)
+			checkmarkLabel.Text = "\u2714 ";    // The trailing space seems critical at times for proper display. (?)
 			_messageText.Text = message;
 			BringToFront();
 			Visible = true;

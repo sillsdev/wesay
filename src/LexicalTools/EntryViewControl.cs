@@ -1,22 +1,18 @@
+using SIL.DictionaryServices.Model;
+using SIL.Reporting;
+using SIL.Windows.Forms.Miscellaneous;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.DictionaryServices.Model;
-using SIL.Windows.Forms.Miscellaneous;
-using SIL.Reporting;
 using WeSay.LexicalModel;
-using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
 using WeSay.UI;
-using WeSay.UI.Buttons;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools
 {
-	public partial class EntryViewControl: UserControl
+	public partial class EntryViewControl : UserControl
 	{
 		//autofac generates a factory which comes up with all the other needed parameters from its container
 		public delegate EntryViewControl Factory();
@@ -177,13 +173,13 @@ namespace WeSay.LexicalTools
 
 						_record.CleanUpAfterEditting();
 
-//                        //from WS-1173 (jonathan_coombs@sil.org) Faulty Missing Baseform query?
-//                        //what's wrong here is that since we've disabled the event handers, we don't
-//                        //know if this CleanUp call makes any changes that need to be saved
-//                        if(_record.IsDirty)
-//                        {
-//                            _lexEntryRepository.SaveItem(_record);
-//                        }
+						//                        //from WS-1173 (jonathan_coombs@sil.org) Faulty Missing Baseform query?
+						//                        //what's wrong here is that since we've disabled the event handers, we don't
+						//                        //know if this CleanUp call makes any changes that need to be saved
+						//                        if(_record.IsDirty)
+						//                        {
+						//                            _lexEntryRepository.SaveItem(_record);
+						//                        }
 					}
 					_record = value;
 					_currentItemInFocus = null;
@@ -281,11 +277,11 @@ namespace WeSay.LexicalTools
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved: b4 MoveInsertionPoint");
 			if (row != null)
 			{
-				row = Math.Min((int) row, _detailListControl.RowCount - 1);
+				row = Math.Min((int)row, _detailListControl.RowCount - 1);
 				Debug.Assert(row > -1, "You've reproduced bug ws-511!");
 				// bug WS-511, which we haven't yet been able to reproduce
-				row = Math.Max((int) row, 0); //would get around bug WS-511
-				_detailListControl.MoveInsertionPoint((int) row);
+				row = Math.Max((int)row, 0); //would get around bug WS-511
+				_detailListControl.MoveInsertionPoint((int)row);
 			}
 			Logger.WriteMinorEvent("OnEmptyObjectsRemoved end");
 		}
@@ -293,11 +289,11 @@ namespace WeSay.LexicalTools
 		private void OnRecordPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			VerifyNotDisposed();
-			LexEntry entry = (LexEntry) sender;
+			LexEntry entry = (LexEntry)sender;
 			switch (e.PropertyName)
 			{
-					// these are changes to the list not a change that needs to clean up
-					// and can actually have very detrimental effect if we do.
+				// these are changes to the list not a change that needs to clean up
+				// and can actually have very detrimental effect if we do.
 				case "exampleSentences":
 				case "senses":
 					break;
@@ -320,7 +316,7 @@ namespace WeSay.LexicalTools
 					break;
 			}
 			_lexEntryRepository.NotifyThatLexEntryHasBeenUpdated((LexEntry)sender);
-		  // can't afford to do this every keystroke, with large files
+			// can't afford to do this every keystroke, with large files
 
 		}
 
@@ -333,7 +329,7 @@ namespace WeSay.LexicalTools
 				return;
 
 			Logger.WriteMinorEvent("OnCleanupTimer_Tick");
-			LexEntry entry = (LexEntry) _cleanupTimer.Tag;
+			LexEntry entry = (LexEntry)_cleanupTimer.Tag;
 			entry.CleanUpEmptyObjects();
 
 			RefreshLexicalEntryPreview();
@@ -361,7 +357,7 @@ namespace WeSay.LexicalTools
 			{
 #endif
 			VerifyHasLexEntryRepository();
-			_entryHeaderView.UpdateContents(_record,_currentItemInFocus,_lexEntryRepository);
+			_entryHeaderView.UpdateContents(_record, _currentItemInFocus, _lexEntryRepository);
 #if !DEBUG
 			}
 			catch (Exception)
@@ -417,7 +413,8 @@ namespace WeSay.LexicalTools
 						_senseDeletionEnabled,
 						_confirmDeleteFactory,
 						_showMinorMeaningLabel
-					) {ShowNormallyHiddenFields = ShowNormallyHiddenFields};
+					)
+					{ ShowNormallyHiddenFields = ShowNormallyHiddenFields };
 					_layout.AddWidgets(_record, 0);
 				}
 				_detailListControl.Visible = true;
@@ -444,9 +441,9 @@ namespace WeSay.LexicalTools
 
 		private void OnBackColorChanged(object sender, EventArgs e)
 		{
-			if(_detailListControl !=null)
+			if (_detailListControl != null)
 				_detailListControl.BackColor = BackColor;
-			if(_entryHeaderView!=null)
+			if (_entryHeaderView != null)
 				_entryHeaderView.BackColor = BackColor;
 		}
 

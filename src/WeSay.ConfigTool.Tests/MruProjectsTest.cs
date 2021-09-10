@@ -1,6 +1,6 @@
+using NUnit.Framework;
 using System;
 using System.IO;
-using NUnit.Framework;
 
 namespace WeSay.ConfigTool.Tests
 {
@@ -16,9 +16,9 @@ namespace WeSay.ConfigTool.Tests
 		}
 
 		[TearDown]
-		public void TearDown() {}
+		public void TearDown() { }
 
-		private class TempFile: IDisposable
+		private class TempFile : IDisposable
 		{
 			private readonly string fileName;
 
@@ -88,7 +88,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			using (TempFile file1 = new TempFile(), file2 = new TempFile())
 			{
-				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName};
+				_mruProjects.Paths = new string[] { file1.FileName, file2.FileName };
 				_mruProjects.Paths = null;
 				Assert.IsNotNull(_mruProjects.Paths);
 				foreach (string path in _mruProjects.Paths)
@@ -105,7 +105,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			using (TempFile file1 = new TempFile(), file2 = new TempFile(), file3 = new TempFile())
 			{
-				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName, file3.FileName};
+				_mruProjects.Paths = new string[] { file1.FileName, file2.FileName, file3.FileName };
 				Assert.AreEqual(3, _mruProjects.Paths.Length);
 				Assert.AreEqual(file1.FileName, _mruProjects.Paths[0]);
 				Assert.AreEqual(file2.FileName, _mruProjects.Paths[1]);
@@ -120,7 +120,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			using (TempFile file1 = new TempFile(), file2 = new TempFile(), file3 = new TempFile())
 			{
-				_mruProjects.Paths = new string[] {file1.FileName, file2.FileName, file3.FileName};
+				_mruProjects.Paths = new string[] { file1.FileName, file2.FileName, file3.FileName };
 				_mruProjects.AddNewPath(file2.FileName);
 				string[] mruPaths = _mruProjects.Paths;
 				Assert.AreEqual(3, mruPaths.Length);

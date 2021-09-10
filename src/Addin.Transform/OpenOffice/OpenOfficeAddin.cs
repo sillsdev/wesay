@@ -1,32 +1,29 @@
 
+using ICSharpCode.SharpZipLib.Zip;
+using Mono.Addins;
+using SIL.Data;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Lexicon;
+using SIL.Lift;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO.Compression;
-using System.IO;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
-using SIL.Data;
-using SIL.Lift;
-using SIL.DictionaryServices.Model;
-using SIL.DictionaryServices.Lift;
-using Mono.Addins;
-
-using ICSharpCode.SharpZipLib.Zip;
-
-using SIL.i18n;
-using SIL.Lexicon;
-using SIL.Reporting;
-using SIL.Progress;
-using SIL.Windows.Forms.Progress;
-using SIL.WritingSystems;
-using WeSay.Project;
 using WeSay.AddinLib;
-using WeSay.LexicalModel;
 using WeSay.Foundation;
+using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace Addin.Transform.OpenOffice
 {
@@ -77,8 +74,9 @@ namespace Addin.Transform.OpenOffice
 
 		public string LocalizedLongLabel
 		{
-			get {
-				return  StringCatalog.Get(
+			get
+			{
+				return StringCatalog.Get(
 						"Save the dictionary in Open Document Text (OpenOffice) format.");
 			}
 		}
@@ -109,7 +107,7 @@ namespace Addin.Transform.OpenOffice
 				args.name = projectInfo.Name;
 				args.exportDir = projectInfo.PathToExportDirectory;
 				args.appRoot = projectInfo.PathToApplicationRootDirectory;
-				args.viewTemplate =  projectInfo.ServiceProvider.GetService(typeof(ViewTemplate))
+				args.viewTemplate = projectInfo.ServiceProvider.GetService(typeof(ViewTemplate))
 					as ViewTemplate;
 				args.lexEntryRepository = projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository))
 					as LexEntryRepository;
@@ -117,9 +115,9 @@ namespace Addin.Transform.OpenOffice
 				string templateDir = Path.Combine(projectInfo.PathToApplicationRootDirectory, "templates");
 				args.odfTemplate = Path.Combine(templateDir, "odfTemplate");
 				args.topLevelDir = projectInfo.PathToTopLevelDirectory;
-				if (! Directory.Exists(args.odfTemplate))
+				if (!Directory.Exists(args.odfTemplate))
 				{
-					Object [] msgArgs = {args.odfTemplate };
+					Object[] msgArgs = { args.odfTemplate };
 					ErrorReport.NotifyUserOfProblem("Directory {0} does not exist.", msgArgs);
 				}
 				if (DoTransformWithProgressDialog(args) && _launchAfterExport)
@@ -195,15 +193,15 @@ namespace Addin.Transform.OpenOffice
 				foreach (RecordToken<LexEntry> token in recordTokens)
 				{
 					int homographNumber = 0;
-					if ((bool) token["HasHomograph"])
+					if ((bool)token["HasHomograph"])
 					{
-						homographNumber = (int) token["HomographNumber"];
+						homographNumber = (int)token["HomographNumber"];
 					}
 					LexEntry lexEntry = token.RealObject;
 					EmbeddedXmlCollection sortedAnnotation = new EmbeddedXmlCollection();
-					sortedAnnotation.Values.Add("<annotation name='sorted-index' value='" + (++index) +"'/>");
+					sortedAnnotation.Values.Add("<annotation name='sorted-index' value='" + (++index) + "'/>");
 
-					lexEntry.Properties.Add(new KeyValuePair<string,IPalasoDataObjectProperty>("SortedIndex", sortedAnnotation));
+					lexEntry.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>("SortedIndex", sortedAnnotation));
 
 					exporter.Add(lexEntry, homographNumber);
 				}
@@ -217,7 +215,7 @@ namespace Addin.Transform.OpenOffice
 		/// </summary>
 		private static void OnDoTransformWork(object sender, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState) args.Argument;
+			ProgressState progressState = (ProgressState)args.Argument;
 			if (progressState == null) return;
 			TransformWorkerArguments arguments =
 				(TransformWorkerArguments)progressState.Arguments;
@@ -253,7 +251,7 @@ namespace Addin.Transform.OpenOffice
 			SortLift(liftPath, arguments.lexEntryRepository, arguments.viewTemplate);
 			//var maker = new PLiftMaker();
 			//maker.MakePLiftTempFile(pliftPath, arguments.lexEntryRepository, arguments.viewTemplate);
-			String odfTemplate =  arguments.odfTemplate;
+			String odfTemplate = arguments.odfTemplate;
 			String contentPath = Path.Combine(arguments.exportDir, "content.xml");
 			String stylesPath = Path.Combine(arguments.exportDir, "styles.xml");
 			Stream stylesOutput = new FileStream(stylesPath, FileMode.Create);
@@ -278,7 +276,7 @@ namespace Addin.Transform.OpenOffice
 				xsltArgs.AddParam("title", "", arguments.name);
 				// TODO what is the correct url base path for illustrations?
 				// It seems one level up just gets out of the zip file, so use 2 levels here
-				xsltArgs.AddParam("urlBase", "",  "../../");
+				xsltArgs.AddParam("urlBase", "", "../../");
 
 				transform.Transform(liftPath, xsltArgs, contentOutput);
 				contentOutput.Close();
@@ -316,7 +314,7 @@ namespace Addin.Transform.OpenOffice
 				zipFile.Close();
 				progressState.StatusLabel = "Openning in OpenOffice";
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				progressState.ExceptionThatWasEncountered = e;
 				progressState.WriteToLog(e.Message);
@@ -371,33 +369,33 @@ namespace Addin.Transform.OpenOffice
 		private static string GetHeadwordWritingSystemId(ViewTemplate viewTemplate)
 		{
 
-				Field lexicalFormField = viewTemplate.Fields.Find(f=> f.FieldName == "EntryLexicalForm");
-				if (lexicalFormField != null)
+			Field lexicalFormField = viewTemplate.Fields.Find(f => f.FieldName == "EntryLexicalForm");
+			if (lexicalFormField != null)
+			{
+				if (lexicalFormField.WritingSystemIds.Count > 0)
 				{
-					if (lexicalFormField.WritingSystemIds.Count > 0)
-					{
-						return lexicalFormField.WritingSystemIds[0];
-					}
+					return lexicalFormField.WritingSystemIds[0];
 				}
+			}
 			return "";
-	}
+		}
 
 
-/// <summary>
-///
-/// </summary>
-/// <param name="zipFile">
-/// A <see cref="ZipFile"/>
-/// </param>
-/// <param name="directoryName">
-/// A <see cref="System.String"/>
-/// </param>
-/// <param name="zipDirectory">
-/// A <see cref="System.String"/>
-/// </param>
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="zipFile">
+		/// A <see cref="ZipFile"/>
+		/// </param>
+		/// <param name="directoryName">
+		/// A <see cref="System.String"/>
+		/// </param>
+		/// <param name="zipDirectory">
+		/// A <see cref="System.String"/>
+		/// </param>
 		private static void addDirectoryFilesToZip(ZipFile zipFile, string directoryName, string zipDirectory)
 		{
-			string [] fileNames = System.IO.Directory.GetFiles(directoryName);
+			string[] fileNames = System.IO.Directory.GetFiles(directoryName);
 			foreach (string f in fileNames)
 			{
 				string fileName = Path.GetFileName(f);

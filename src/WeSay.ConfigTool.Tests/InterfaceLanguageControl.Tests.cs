@@ -1,11 +1,11 @@
-using System;
-using System.IO;
-using System.Threading;
-using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.IO;
 using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -38,7 +38,7 @@ namespace WeSay.ConfigTool.Tests
 
 		private void GoToUILanguageTab()
 		{
-			var toolstrip = (ToolStrip) _window.Controls.Find("_areasToolStrip", true)[0];
+			var toolstrip = (ToolStrip)_window.Controls.Find("_areasToolStrip", true)[0];
 			foreach (ToolStripButton button in toolstrip.Items)
 			{
 				if (button.Text.Contains("Language"))
@@ -107,7 +107,7 @@ namespace WeSay.ConfigTool.Tests
 
 		private void OpenExisting(string path)
 		{
-			_window = new ConfigurationWindow(new string[] {});
+			_window = new ConfigurationWindow(new string[] { });
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 			_window.OpenProject(path);

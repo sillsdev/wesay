@@ -1,8 +1,8 @@
+using SIL.Lift;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
-using SIL.Lift;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -18,7 +18,7 @@ namespace WeSay.UI.TextBoxes
 		private INotifyPropertyChanged _dataTarget;
 		private Control _textBoxTarget;
 		private bool _inMidstOfChange;
-		private string _pendingValueChange=null;
+		private string _pendingValueChange = null;
 
 		public TextBinding(INotifyPropertyChanged dataTarget,
 						   string writingSystemId,
@@ -39,7 +39,7 @@ namespace WeSay.UI.TextBoxes
 			_textBoxTarget.KeyDown += OnTextBoxKeyDown;
 			if (_textBoxTarget is IWeSayTextBox)
 			{
-				((IWeSayTextBox) _textBoxTarget).UserLostFocus += OnTextBoxExit;
+				((IWeSayTextBox)_textBoxTarget).UserLostFocus += OnTextBoxExit;
 				((IWeSayTextBox)_textBoxTarget).UserGotFocus += OnTextBoxEntered;
 			}
 		}
@@ -57,7 +57,7 @@ namespace WeSay.UI.TextBoxes
 
 		private void OnTextBoxExit(object sender, EventArgs e)
 		{
-			if(null != _pendingValueChange) //nb: string.emtpy is still a value we want to set!
+			if (null != _pendingValueChange) //nb: string.emtpy is still a value we want to set!
 			{
 				SetTargetValue(_textBoxTarget.Text);
 			}
@@ -127,7 +127,7 @@ namespace WeSay.UI.TextBoxes
 			// but which happens before this. Even though the event handler has been removed, it will
 			// still fire this event.
 			if (_dataTarget == null || _inMidstOfChange || e.PropertyName != _writingSystemId)
-				//FIX THIS
+			//FIX THIS
 			{
 				return;
 			}
@@ -170,15 +170,15 @@ namespace WeSay.UI.TextBoxes
 
 				if (_dataTarget is MultiText)
 				{
-					MultiText text = (MultiText) _dataTarget;
+					MultiText text = (MultiText)_dataTarget;
 					text[_writingSystemId] = s;
 				}
-					//else if (_dataTarget as IBindingList != null)
-					//{
-					//    IBindingList list = _dataTarget as IBindingList;
-					//    //in addition to add a menu item, this will fire events on the object that owns the list
-					//    list.AddNew();
-					//}
+				//else if (_dataTarget as IBindingList != null)
+				//{
+				//    IBindingList list = _dataTarget as IBindingList;
+				//    //in addition to add a menu item, this will fire events on the object that owns the list
+				//    list.AddNew();
+				//}
 				else
 				{
 					throw new ArgumentException("Binding doesn't understand that type of target.");

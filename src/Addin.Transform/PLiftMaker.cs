@@ -1,11 +1,9 @@
+using SIL.Data;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using SIL.Data;
-using SIL.DictionaryServices;
-using SIL.DictionaryServices.Lift;
-using SIL.DictionaryServices.Model;
-using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
@@ -26,7 +24,7 @@ namespace Addin.Transform
 		//    return path;
 		//}
 
-		public void  MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template, LiftWriter.ByteOrderStyle style)
+		public void MakePLiftTempFile(string outputPath, LexEntryRepository lexEntryRepository, ViewTemplate template, LiftWriter.ByteOrderStyle style)
 		{
 			using (var exporter = new PLiftExporter(outputPath, lexEntryRepository, template))
 			{
@@ -37,9 +35,9 @@ namespace Addin.Transform
 				foreach (RecordToken<LexEntry> token in recordTokens)
 				{
 					int homographNumber = 0;
-					if ((bool) token["HasHomograph"])
+					if ((bool)token["HasHomograph"])
 					{
-						homographNumber = (int) token["HomographNumber"];
+						homographNumber = (int)token["HomographNumber"];
 					}
 					exporter.Add(token.RealObject, homographNumber);
 				}

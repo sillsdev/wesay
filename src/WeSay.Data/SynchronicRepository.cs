@@ -1,109 +1,109 @@
+using SIL.Data;
+using SIL.Progress;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using SIL.Data;
-using SIL.Progress;
 
 namespace WeSay.Data
 {
-	public class SynchronicRepository<T>: IDataMapper<T> where T : class, new()
-    {
+	public class SynchronicRepository<T> : IDataMapper<T> where T : class, new()
+	{
 		private readonly IDataMapper<T> _primary;
 		private readonly IDataMapper<T> _secondary;
 
-        public delegate void CopyStrategy(T destination, T source);
+		public delegate void CopyStrategy(T destination, T source);
 
-        private readonly CopyStrategy _copyStrategy;
+		private readonly CopyStrategy _copyStrategy;
 
-        private readonly Dictionary<RepositoryId, RepositoryId> _primarySecondaryMap;
+		private readonly Dictionary<RepositoryId, RepositoryId> _primarySecondaryMap;
 
 		public SynchronicRepository(IDataMapper<T> primary,
 									IDataMapper<T> secondary,
 									CopyStrategy copyStrategy)
-			:this(primary, secondary, copyStrategy, null) {}
+			: this(primary, secondary, copyStrategy, null) { }
 
 		public SynchronicRepository(IDataMapper<T> primary,
 									IDataMapper<T> secondary,
 									CopyStrategy copyStrategy,
 									ProgressState progressState)
-        {
-            if (primary == null)
-            {
+		{
+			if (primary == null)
+			{
 				Dispose();
-                throw new ArgumentNullException("primary");
-            }
-            if (secondary == null)
-            {
+				throw new ArgumentNullException("primary");
+			}
+			if (secondary == null)
+			{
 				Dispose();
-                throw new ArgumentNullException("secondary");
-            }
-            if (copyStrategy == null)
-            {
+				throw new ArgumentNullException("secondary");
+			}
+			if (copyStrategy == null)
+			{
 				Dispose();
-                throw new ArgumentNullException("copyStrategy");
-            }
-            if (ReferenceEquals(primary, secondary))
-            {
+				throw new ArgumentNullException("copyStrategy");
+			}
+			if (ReferenceEquals(primary, secondary))
+			{
 				Dispose();
-                throw new ArgumentException("primary and secondary must not be equal");
-            }
-            _primary = primary;
-            _secondary = secondary;
-            _copyStrategy = copyStrategy;
-            _primarySecondaryMap = new Dictionary<RepositoryId, RepositoryId>();
-            SynchronizeRepositories();
-        }
+				throw new ArgumentException("primary and secondary must not be equal");
+			}
+			_primary = primary;
+			_secondary = secondary;
+			_copyStrategy = copyStrategy;
+			_primarySecondaryMap = new Dictionary<RepositoryId, RepositoryId>();
+			SynchronizeRepositories();
+		}
 
 		public SynchronicRepository(IDataMapper<T> primary, IDataMapper<T> secondary)
-				: this(primary, secondary, DefaultCopyStrategy) {}
+				: this(primary, secondary, DefaultCopyStrategy) { }
 
-        private static void DefaultCopyStrategy(T destination, T source)
-        {
-			Type type = typeof (T);
+		private static void DefaultCopyStrategy(T destination, T source)
+		{
+			Type type = typeof(T);
 			FieldInfo[] fields =
 					type.GetFields(BindingFlags.Instance | BindingFlags.Public |
 								   BindingFlags.NonPublic);
-            foreach (FieldInfo field in fields)
-            {
-                field.SetValue(destination, field.GetValue(source));
-            }
-        }
+			foreach (FieldInfo field in fields)
+			{
+				field.SetValue(destination, field.GetValue(source));
+			}
+		}
 
-        private void SynchronizeRepositories()
-        {
-            // if one persists, but not the other, then the persistable one wins
-            // otherwise, go with the repository most recently changed
+		private void SynchronizeRepositories()
+		{
+			// if one persists, but not the other, then the persistable one wins
+			// otherwise, go with the repository most recently changed
 			IDataMapper<T> master = _secondary;
 			IDataMapper<T> slave = _primary;
-            if ((_primary.CanPersist && !_secondary.CanPersist) ||
+			if ((_primary.CanPersist && !_secondary.CanPersist) ||
 				(_primary.LastModified > _secondary.LastModified &&
 				 _primary.CanPersist == _secondary.CanPersist))
-            {
-                master = _primary;
-                slave = _secondary;
-            }
+			{
+				master = _primary;
+				slave = _secondary;
+			}
 
 			RepositoryId[] ids = master.GetAllItems();
 
 			// avoid doing anything which would change LastModifiedTime if both are empty
 			if (ids.Length == 0 && slave.CountAllItems() == 0)
-            {
+			{
 				return;
-            }
+			}
 
 			slave.DeleteAllItems();
 
-            foreach (RepositoryId id in ids)
-            {
-                T slaveItem = slave.CreateItem();
-                _copyStrategy(slaveItem, master.GetItem(id));
-            }
-        }
+			foreach (RepositoryId id in ids)
+			{
+				T slaveItem = slave.CreateItem();
+				_copyStrategy(slaveItem, master.GetItem(id));
+			}
+		}
 
 		#region IDataMapper<T> Members
 
-        public DateTime LastModified
-        {
+		public DateTime LastModified
+		{
 			get
 			{
 				return
@@ -111,64 +111,64 @@ namespace WeSay.Data
 								Math.Max(_primary.LastModified.Ticks, _secondary.LastModified.Ticks),
 								DateTimeKind.Utc);
 			}
-        }
+		}
 
-        public bool CanQuery
-        {
-            get { return _primary.CanQuery; }
-        }
+		public bool CanQuery
+		{
+			get { return _primary.CanQuery; }
+		}
 
-        public bool CanPersist
-        {
-            get { return _primary.CanPersist || _secondary.CanPersist; }
-        }
+		public bool CanPersist
+		{
+			get { return _primary.CanPersist || _secondary.CanPersist; }
+		}
 
 		public T CreateItem()
-        {
-            T item = _primary.CreateItem();
-            T item2 = _secondary.CreateItem();
-            _primarySecondaryMap.Add(_primary.GetId(item), _secondary.GetId(item2));
-            return item;
-        }
+		{
+			T item = _primary.CreateItem();
+			T item2 = _secondary.CreateItem();
+			_primarySecondaryMap.Add(_primary.GetId(item), _secondary.GetId(item2));
+			return item;
+		}
 
-        public int CountAllItems()
-        {
-            return _primary.CountAllItems();
-        }
+		public int CountAllItems()
+		{
+			return _primary.CountAllItems();
+		}
 
-        public RepositoryId GetId(T item)
-        {
-            return _primary.GetId(item);
-        }
+		public RepositoryId GetId(T item)
+		{
+			return _primary.GetId(item);
+		}
 
-        public T GetItem(RepositoryId id)
-        {
-            return _primary.GetItem(id);
-        }
+		public T GetItem(RepositoryId id)
+		{
+			return _primary.GetItem(id);
+		}
 
-        public void DeleteItem(T item)
-        {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
-            DeleteItem(_primary.GetId(item));
-        }
+		public void DeleteItem(T item)
+		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
+			DeleteItem(_primary.GetId(item));
+		}
 
-        public void DeleteItem(RepositoryId id)
-        {
+		public void DeleteItem(RepositoryId id)
+		{
 			if (id == null)
 			{
 				throw new ArgumentNullException("id");
 			}
-            if (!_primarySecondaryMap.ContainsKey(id))
-            {
-                throw new ArgumentOutOfRangeException("id", "Item does not exist in repository");
-            }
-            _secondary.DeleteItem(_primarySecondaryMap[id]);
-            _primary.DeleteItem(id);
-            _primarySecondaryMap.Remove(id);
-        }
+			if (!_primarySecondaryMap.ContainsKey(id))
+			{
+				throw new ArgumentOutOfRangeException("id", "Item does not exist in repository");
+			}
+			_secondary.DeleteItem(_primarySecondaryMap[id]);
+			_primary.DeleteItem(id);
+			_primarySecondaryMap.Remove(id);
+		}
 
 		public void DeleteAllItems()
 		{
@@ -176,52 +176,52 @@ namespace WeSay.Data
 			_secondary.DeleteAllItems();
 		}
 
-        public RepositoryId[] GetAllItems()
-        {
-            return _primary.GetAllItems();
-        }
+		public RepositoryId[] GetAllItems()
+		{
+			return _primary.GetAllItems();
+		}
 
-        public void SaveItem(T item)
-        {
-            T secondaryItem = CopyItemToSecondary(item);
-            _primary.SaveItem(item);
-            _secondary.SaveItem(secondaryItem);
-        }
+		public void SaveItem(T item)
+		{
+			T secondaryItem = CopyItemToSecondary(item);
+			_primary.SaveItem(item);
+			_secondary.SaveItem(secondaryItem);
+		}
 
-        private T CopyItemToSecondary(T item)
-        {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
-            T item2 = _secondary.GetItem(_primarySecondaryMap[_primary.GetId(item)]);
-            _copyStrategy(item2, item);
-            return item2;
-        }
+		private T CopyItemToSecondary(T item)
+		{
+			if (item == null)
+			{
+				throw new ArgumentNullException("item");
+			}
+			T item2 = _secondary.GetItem(_primarySecondaryMap[_primary.GetId(item)]);
+			_copyStrategy(item2, item);
+			return item2;
+		}
 
-        public void SaveItems(IEnumerable<T> items)
-        {
-            if (items == null)
-            {
-                throw new ArgumentNullException("items");
-            }
-            List<T> secondaryItems = new List<T>();
-            foreach (T item in items)
-            {
-                secondaryItems.Add(CopyItemToSecondary(item));
-            }
-            _primary.SaveItems(items);
-            _secondary.SaveItems(secondaryItems);
-        }
+		public void SaveItems(IEnumerable<T> items)
+		{
+			if (items == null)
+			{
+				throw new ArgumentNullException("items");
+			}
+			List<T> secondaryItems = new List<T>();
+			foreach (T item in items)
+			{
+				secondaryItems.Add(CopyItemToSecondary(item));
+			}
+			_primary.SaveItems(items);
+			_secondary.SaveItems(secondaryItems);
+		}
 
 		public ResultSet<T> GetItemsMatching(IQuery<T> query)
-        {
-            return _primary.GetItemsMatching(query);
-        }
+		{
+			return _primary.GetItemsMatching(query);
+		}
 
-        #endregion
+		#endregion
 
-        #region IDisposable Members
+		#region IDisposable Members
 
 #if DEBUG
 		~SynchronicRepository()
@@ -236,8 +236,8 @@ namespace WeSay.Data
 
 		private bool _disposed;
 
-        public void Dispose()
-        {
+		public void Dispose()
+		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
@@ -270,8 +270,8 @@ namespace WeSay.Data
 			{
 				throw new ObjectDisposedException("SynchronicRepository");
 			}
-        }
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

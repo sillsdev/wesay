@@ -1,22 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
 using SIL.DictionaryServices.Model;
-using SIL.i18n;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Reporting;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.ConfigTool
 {
-	public partial class OptionListControl: ConfigurationControlBase
+	public partial class OptionListControl : ConfigurationControlBase
 	{
 		private OptionsList _currentList;
 		private Option _currentOption;
@@ -27,7 +24,7 @@ namespace WeSay.ConfigTool
 		private readonly List<Option> _newlyCreatedOptions = new List<Option>();
 
 		public OptionListControl(ILogger logger)
-			: base("set up choices for option fields", logger,"optionLists")
+			: base("set up choices for option fields", logger, "optionLists")
 		{
 			InitializeComponent();
 			VisibleChanged += OptionListControl_VisibleChanged;
@@ -161,11 +158,11 @@ namespace WeSay.ConfigTool
 		private void OnSelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (_listBox.SelectedIndex > -1 &&
-				((Option.OptionDisplayProxy) _listBox.SelectedItem).UnderlyingOption !=
+				((Option.OptionDisplayProxy)_listBox.SelectedItem).UnderlyingOption !=
 				_currentOption)
 			{
 				SaveEditsToCurrentItem();
-				var proxy = (Option.OptionDisplayProxy) _listBox.SelectedItem;
+				var proxy = (Option.OptionDisplayProxy)_listBox.SelectedItem;
 				splitContainer1.Panel2.Controls.Remove(_nameMultiTextControl);
 
 				_currentOption = proxy.UnderlyingOption;
@@ -307,10 +304,10 @@ namespace WeSay.ConfigTool
 
 		private void UpdateDisplay()
 		{
-			_btnDelete.Enabled = _listBox.SelectedItem != null && _listBox.Items.Count>1;
+			_btnDelete.Enabled = _listBox.SelectedItem != null && _listBox.Items.Count > 1;
 			UpdateKeyLabel();
 			_nameMultiTextControl.Visible = _listBox.SelectedItem != null;
-			_btnAdd.Enabled = (null != _currentField) ;
+			_btnAdd.Enabled = (null != _currentField);
 		}
 
 		private void OnFieldChooser_SelectedIndexChanged(object sender, EventArgs e)

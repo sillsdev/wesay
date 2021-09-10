@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using Exortech.NetReflector;
+﻿using Exortech.NetReflector;
 using NUnit.Framework;
+using System.Drawing;
 using WeSay.Project.ConfigMigration.WritingSystem;
 
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
@@ -81,9 +81,9 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			string s = NetReflector.Write(ws);
 
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof (WritingSystem_V1));
+			t.Add(typeof(WritingSystem_V1));
 			NetReflectorReader r = new NetReflectorReader(t);
-			WritingSystem_V1 wsRead = (WritingSystem_V1) r.Read(s);
+			WritingSystem_V1 wsRead = (WritingSystem_V1)r.Read(s);
 			Assert.IsNotNull(wsRead);
 			Assert.AreEqual(rules, ws.CustomSortRules);
 		}
@@ -92,7 +92,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		public void DeserializeOne_CustomSortRules_Before_SortUsing()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof (WritingSystem_V1));
+			t.Add(typeof(WritingSystem_V1));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem_V1 ws =
 				(WritingSystem_V1)
@@ -107,7 +107,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		public void DeserializeOne_SortUsing_Before_CustomSortRules()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof (WritingSystem_V1));
+			t.Add(typeof(WritingSystem_V1));
 			NetReflectorReader r = new NetReflectorReader(t);
 			WritingSystem_V1 ws =
 				(WritingSystem_V1)

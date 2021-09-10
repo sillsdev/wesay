@@ -1,19 +1,19 @@
 
+using Autofac;
+using Microsoft.Practices.ServiceLocation;
+using NUnit.Framework;
+using SIL.DictionaryServices.Model;
+using SIL.Reporting;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Microsoft.Practices.ServiceLocation;
-using NUnit.Framework;
-using Autofac;
-using SIL.WritingSystems;
-using WeSay.Project;
-using WeSay.UI;
 using WeSay.LexicalModel;
-using SIL.DictionaryServices.Model;
-using SIL.Reporting;
-using SIL.TestUtilities;
+using WeSay.Project;
 using WeSay.TestUtilities;
+using WeSay.UI;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -60,7 +60,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		[Test]
-		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
+		[Platform(Exclude = "Linux", Reason = "does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
 		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void LexEntry_Unassigned_Focused_Throws()
 		{
@@ -68,7 +68,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.Throws<ArgumentNullException>(() => HtmlRenderer.ToHtml(_entry, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen));
 		}
 		[Test]
-		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, mono when run after DictionaryControlTests")]
+		[Platform(Exclude = "Linux", Reason = "does not close progess dialog, and hangs, mono when run after DictionaryControlTests")]
 		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void NullEntryReturnsEmptyString()
 		{
@@ -76,7 +76,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsEmpty(html);
 		}
 		[Test]
-		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
+		[Platform(Exclude = "Linux", Reason = "does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
 		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void ConversionTest()
 		{
@@ -84,7 +84,7 @@ namespace WeSay.LexicalTools.Tests
 			Assert.IsTrue(html.Contains("contentEditable='false'"));
 		}
 		[Test]
-		[Platform(Exclude="Linux", Reason="does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
+		[Platform(Exclude = "Linux", Reason = "does not close progess dialog, and hangs, on mono when run after DictionaryControlTests")]
 		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void HomographEntryTest()
 		{
@@ -109,7 +109,7 @@ namespace WeSay.LexicalTools.Tests
 						WeSayWordsProject.Project.ServiceLocator.GetService(typeof(ViewTemplate));
 
 			List<String> headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
-			string wsA = headwordWritingSystemIds[0] ;
+			string wsA = headwordWritingSystemIds[0];
 			string wsB = _viewTemplate.GetDefaultWritingSystemForField(definition).LanguageTag;
 			HtmlRenderer.HeadWordWritingSystemId = _viewTemplate.HeadwordWritingSystem.LanguageTag;
 

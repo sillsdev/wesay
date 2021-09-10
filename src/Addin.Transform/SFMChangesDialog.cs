@@ -1,12 +1,11 @@
+using SIL.WritingSystems;
 using System;
 using System.Windows.Forms;
-using SIL.WritingSystems;
 using WeSay.AddinLib;
-using WeSay.LexicalModel.Foundation;
 
 namespace Addin.Transform
 {
-	public partial class SFMChangesDialog: Form
+	public partial class SFMChangesDialog : Form
 	{
 		private readonly SfmTransformSettings _settings;
 		private readonly ProjectInfo _projectInfo;
@@ -60,10 +59,10 @@ namespace Addin.Transform
 			Close();
 		}
 
-		private void _pairsText_TextChanged(object sender, EventArgs e) {}
+		private void _pairsText_TextChanged(object sender, EventArgs e) { }
 
-		private void textBox1_TextChanged(object sender, EventArgs e) {}
+		private void textBox1_TextChanged(object sender, EventArgs e) { }
 
-		private void SFMChangesDialog_Load(object sender, EventArgs e) {}
+		private void SFMChangesDialog_Load(object sender, EventArgs e) { }
 	}
 }

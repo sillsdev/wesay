@@ -1,10 +1,10 @@
+using SIL.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using SIL.Data;
 
 namespace WeSay.Data
 {
@@ -12,18 +12,18 @@ namespace WeSay.Data
 	public class Query : IQuery<object>
 	{
 		[Obsolete]
-		public sealed class PredicateQuery<T>: Query
+		public sealed class PredicateQuery<T> : Query
 		{
 			private readonly Predicate<T> _predicate;
 
-			public PredicateQuery(Predicate<T> predicate): base(typeof (T))
+			public PredicateQuery(Predicate<T> predicate) : base(typeof(T))
 			{
 				_predicate = predicate;
 			}
 
 			protected override void GetResultsCore(List<Dictionary<string, object>> results, object o)
 			{
-				bool matches = _predicate((T) o);
+				bool matches = _predicate((T)o);
 				Dictionary<string, object> dict = new Dictionary<string, object>();
 				dict["Matches"] = matches;
 				results.Add(dict);
@@ -31,7 +31,7 @@ namespace WeSay.Data
 			}
 		}
 
-		private sealed class ForEachQuery: Query
+		private sealed class ForEachQuery : Query
 		{
 			private readonly MethodInfo _property;
 
@@ -49,7 +49,7 @@ namespace WeSay.Data
 				{
 					List<Dictionary<string, object>> oneResultPerRow =
 							new List<Dictionary<string, object>>();
-					foreach (Object item in (IEnumerable) value)
+					foreach (Object item in (IEnumerable)value)
 					{
 						List<Dictionary<string, object>> subresults =
 								new List<Dictionary<string, object>>();
@@ -72,11 +72,11 @@ namespace WeSay.Data
 			}
 		}
 
-		private sealed class InQuery: Query
+		private sealed class InQuery : Query
 		{
 			private readonly MethodInfo _property;
 
-			public InQuery(Query root, MethodInfo p): base(root, p.ReturnType)
+			public InQuery(Query root, MethodInfo p) : base(root, p.ReturnType)
 			{
 				_property = p;
 			}
@@ -196,21 +196,21 @@ namespace WeSay.Data
 			if (_showFieldProperties != null)
 			{
 
-					foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
+				foreach (KeyValuePair<string, FieldProperties> pair in _showFieldProperties)
+				{
+					haveAtLeastOneResult = true;
+					MethodInfo getProperty = pair.Value.Method;
+					object propertyValue = getProperty.Invoke(o, null);
+					if (pair.Value.IsEnumerable)
 					{
-						haveAtLeastOneResult = true;
-						MethodInfo getProperty = pair.Value.Method;
-						object propertyValue = getProperty.Invoke(o, null);
-						if (pair.Value.IsEnumerable)
-						{
-							IEnumerable enumerableResult = propertyValue as IEnumerable;
-							Permuter.Permute(results, pair.Key, enumerableResult);
-						}
-						else
-						{
-							Permuter.Permute(results, pair.Key, propertyValue);
-						}
+						IEnumerable enumerableResult = propertyValue as IEnumerable;
+						Permuter.Permute(results, pair.Key, enumerableResult);
 					}
+					else
+					{
+						Permuter.Permute(results, pair.Key, propertyValue);
+					}
+				}
 			}
 			return haveAtLeastOneResult;
 		}
@@ -272,7 +272,7 @@ namespace WeSay.Data
 		private readonly Query _root;
 		private bool _requireAtLeastOneResult;
 
-		internal Query(Query root, Type t): this(t)
+		internal Query(Query root, Type t) : this(t)
 		{
 			if (root == null)
 			{
@@ -354,7 +354,7 @@ namespace WeSay.Data
 
 		public Query Where(string fieldName, Functor whereCondition)
 		{
-			return Where(new string[] {fieldName}, whereCondition);
+			return Where(new string[] { fieldName }, whereCondition);
 		}
 
 		public Query Where(string[] fieldNames, Functor whereCondition)
@@ -520,7 +520,7 @@ namespace WeSay.Data
 			// if our return type is string we want
 			// to act on the string not the IEnumerable<char>
 			Type returnType = methodInfo.ReturnType;
-			if (returnType == typeof (string))
+			if (returnType == typeof(string))
 			{
 				return null;
 			}
@@ -531,13 +531,13 @@ namespace WeSay.Data
 				if (interfaceType.IsGenericType)
 				{
 					Type[] arguments = interfaceType.GetGenericArguments();
-					if (interfaceType == typeof (IEnumerable<>).MakeGenericType(arguments))
+					if (interfaceType == typeof(IEnumerable<>).MakeGenericType(arguments))
 					{
 						type = arguments[0];
 					}
 				}
 			}
-				return type;
+			return type;
 		}
 
 	}

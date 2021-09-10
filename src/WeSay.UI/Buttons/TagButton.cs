@@ -13,7 +13,7 @@ namespace WeSay.UI.Buttons
 	}
 
 	[Description("Tag Button Control")]
-	public class TagButton: RegionButton
+	public class TagButton : RegionButton
 	{
 		private PointingDirection _pointingDirection;
 		private int _arrowHeadHeight;

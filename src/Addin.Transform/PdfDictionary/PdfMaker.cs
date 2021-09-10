@@ -1,3 +1,9 @@
+using Mono.Addins;
+using SIL.i18n;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,12 +11,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Mono.Addins;
-using SIL.i18n;
-using SIL.Progress;
-using SIL.Reporting;
-using SIL.Windows.Forms.Progress;
-using SIL.WritingSystems;
 using WeSay.AddinLib;
 using WeSay.Project;
 
@@ -89,9 +89,9 @@ namespace Addin.Transform.PdfDictionary
 
 		private void OnDoWork(object sender, DoWorkEventArgs e)
 		{
-			ProgressState progressState = (ProgressState) e.Argument;
+			ProgressState progressState = (ProgressState)e.Argument;
 
-			ProjectInfo projectInfo = (ProjectInfo) progressState.Arguments;
+			ProjectInfo projectInfo = (ProjectInfo)progressState.Arguments;
 
 			progressState.StatusLabel = "Converting dictionary to XHTML...";
 
@@ -122,7 +122,7 @@ namespace Addin.Transform.PdfDictionary
 				CreateAutoFontsStyleSheet(autoFonts,
 										  (PublicationFontStyleProvider)
 										  projectInfo.ServiceProvider.GetService(
-											  typeof (PublicationFontStyleProvider)), projectInfo.WritingSystems);
+											  typeof(PublicationFontStyleProvider)), projectInfo.WritingSystems);
 
 				var customLayout = Path.Combine(projectInfo.PathToExportDirectory, "customLayout.css");
 				if (!File.Exists(customLayout))
@@ -172,7 +172,7 @@ namespace Addin.Transform.PdfDictionary
 			{
 				foreach (var writingSystem in writingSystemCollection.AllWritingSystems)
 				{
-					f.WriteLine(":lang("+writingSystem.Id+") {");
+					f.WriteLine(":lang(" + writingSystem.Id + ") {");
 					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(writingSystem));
 					f.WriteLine("}");
 					f.WriteLine();

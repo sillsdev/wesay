@@ -1,11 +1,11 @@
+using SIL.DictionaryServices.Model;
+using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using SIL.DictionaryServices.Model;
-using SIL.Reporting;
 using WeSay.AddinLib;
 
 namespace Addin.Transform
@@ -88,7 +88,7 @@ namespace Addin.Transform
 				Replace,
 				Regex
 			};
-			private Method _method ;
+			private Method _method;
 
 			private ChangePair(Method method, string sfrom, string sto)
 			{
@@ -100,7 +100,7 @@ namespace Addin.Transform
 				{
 					//can throw exception
 					regex = new Regex(_from, RegexOptions.Compiled);
-				 }
+				}
 			}
 
 			public static ChangePair CreateFullMarkerReplacement(string fromMarkerNoSlash,
@@ -108,7 +108,7 @@ namespace Addin.Transform
 			{
 				string from = @"\" + fromMarkerNoSlash + " ";
 				string to = @"\" + toMarkerNoSlash + " ";
-				ChangePair p = new ChangePair(Method.Replace,  from, to);
+				ChangePair p = new ChangePair(Method.Replace, from, to);
 
 				return p;
 			}
@@ -223,7 +223,7 @@ namespace Addin.Transform
 						string line = reader.ReadLine();
 						if (line != null)
 						{
-							string[] parts = line.Split(new char[] {' '});
+							string[] parts = line.Split(new char[] { ' ' });
 							if (parts.Length != 2)
 							{
 								//hmmmm

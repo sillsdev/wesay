@@ -1,12 +1,11 @@
+using Chorus.sync;
+using SIL.Reporting;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using Chorus.sync;
-using Chorus.VcsDrivers.Mercurial;
-using SIL.Reporting;
 
 
 namespace WeSay.ConfigTool
@@ -16,7 +15,7 @@ namespace WeSay.ConfigTool
 		private readonly ProjectFolderConfiguration _projectFolderConfiguration;
 
 		public ChorusControl(ILogger logger, Chorus.sync.ProjectFolderConfiguration projectFolderConfiguration)
-			: base("set up synchronization with team members", logger,"chorus")
+			: base("set up synchronization with team members", logger, "chorus")
 		{
 			_projectFolderConfiguration = projectFolderConfiguration;
 			this.Font = SystemFonts.MessageBoxFont;//use the default OS UI font
@@ -30,7 +29,7 @@ namespace WeSay.ConfigTool
 		private void _launchChorus_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
 		{
 			var path = Path.Combine(DirectoryOfTheApplicationExecutable, "Chorus.exe");
-			var projectFolderPath = '"'+_projectFolderConfiguration.FolderPath+'"';
+			var projectFolderPath = '"' + _projectFolderConfiguration.FolderPath + '"';
 			try
 			{
 #if __MonoCS__

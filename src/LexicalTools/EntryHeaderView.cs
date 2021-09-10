@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Chorus.UI.Notes.Bar;
+using SIL.DictionaryServices.Model;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Chorus.UI.Notes.Bar;
-using SIL.DictionaryServices.Model;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -13,11 +13,11 @@ namespace WeSay.LexicalTools
 	public partial class EntryHeaderView : UserControl
 	{
 		private const int kNotesBarHeight = 30;//we want 16pixel icons
-		//autofac generates a factory which comes up with all the other needed parameters from its container
+											   //autofac generates a factory which comes up with all the other needed parameters from its container
 		public delegate EntryHeaderView Factory();
 
 		private NotesBarView _notesBar;
-		private LexEntry _currentRecord=null;
+		private LexEntry _currentRecord = null;
 		private string _formattedTextOfEntry;
 		private bool _geckoOption;
 
@@ -173,7 +173,7 @@ namespace WeSay.LexicalTools
 		{
 			if (_notesBar == null)
 				return;
-			_notesBar.Location=new Point(0, Height-_notesBar.Height);
+			_notesBar.Location = new Point(0, Height - _notesBar.Height);
 			int height = Height - _notesBar.Height;
 			_entryPreview.Visible = (height > 20);
 			_entryPreview.Height = height;

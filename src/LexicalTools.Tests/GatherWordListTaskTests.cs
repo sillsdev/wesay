@@ -1,32 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using NUnit.Framework;
 using SIL.Data;
-using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Reporting;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System.Collections.Generic;
+using System.IO;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.GatherByWordList;
 using WeSay.Project;
-using SIL.DictionaryServices.Model;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class GatherWordListTaskTests: TaskBaseTests
+	public class GatherWordListTaskTests : TaskBaseTests
 	{
 		private TemporaryFolder _tempFolder;
 		private LexEntryRepository _lexEntryRepository;
 		private string _simpleWordListFilePath;
 		private string _filePath;
-		private readonly string[] _words = new string[] {"one", "two", "three"};
+		private readonly string[] _words = new string[] { "one", "two", "three" };
 		private ViewTemplate _viewTemplate;
 		private string _glossingLanguageWSId;
 		private string _vernacularLanguageWSId;
@@ -54,7 +50,7 @@ namespace WeSay.LexicalTools.Tests
 
 			_tempFolder = new TemporaryFolder();
 			_simpleWordListFilePath = _tempFolder.GetTemporaryFile();
-//            _liftWordListFile = new TempLiftFile("wordlist.lift",_tempFolder, LiftXml, LiftIO.Validation.Validator.LiftVersion);
+			//            _liftWordListFile = new TempLiftFile("wordlist.lift",_tempFolder, LiftXml, LiftIO.Validation.Validator.LiftVersion);
 			_filePath = _tempFolder.GetTemporaryFile();
 
 			_lexEntryRepository = new LexEntryRepository(_filePath); // InMemoryRecordListManager();
@@ -91,8 +87,8 @@ namespace WeSay.LexicalTools.Tests
 						 )
 					 );
 			_catalog = new WordListCatalog();
-			_catalog.Add(_simpleWordListFilePath, new WordListDescription("en","label","longLabel", "description"));
-			_task = new GatherWordListTask( GatherWordListConfig.CreateForTests( _simpleWordListFilePath,_glossingLanguageWSId, _catalog),
+			_catalog.Add(_simpleWordListFilePath, new WordListDescription("en", "label", "longLabel", "description"));
+			_task = new GatherWordListTask(GatherWordListConfig.CreateForTests(_simpleWordListFilePath, _glossingLanguageWSId, _catalog),
 											_lexEntryRepository,
 										   _viewTemplate, new TaskMemoryRepository());
 		}
@@ -238,7 +234,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private void NextToEnd()
 		{
-			for (int i = 0;i < _words.Length;i++)
+			for (int i = 0; i < _words.Length; i++)
 			{
 				Task.NavigateNext();
 			}
@@ -246,7 +242,7 @@ namespace WeSay.LexicalTools.Tests
 
 		[Test]
 		[Ignore("Can't be tested on task, make sure it is correct on view.")]
-		public void GoingToNextWordSavesCurrentGloss() {}
+		public void GoingToNextWordSavesCurrentGloss() { }
 
 		[Test]
 		public void IsTaskComplete_AtEnd_True()
@@ -437,7 +433,7 @@ namespace WeSay.LexicalTools.Tests
 				{
 					_task.Activate();
 				}
-				return ((GatherWordListTask) _task);
+				return ((GatherWordListTask)_task);
 			}
 		}
 
@@ -583,7 +579,7 @@ namespace WeSay.LexicalTools.Tests
 					</lexical-unit>
 				</entry>";
 
-			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"en"}), entries);
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "en" }), entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentPromptingForm);
 			task.Deactivate();
@@ -703,7 +699,7 @@ namespace WeSay.LexicalTools.Tests
 					</sense>
 				</entry>";
 
-			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"fr","en"}), entries);
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "fr", "en" }), entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("corps", task.CurrentPromptingForm);
 			task.Deactivate();
@@ -753,7 +749,7 @@ namespace WeSay.LexicalTools.Tests
 					</lexical-unit>
 				</entry>";
 
-			var task = CreateAndActivateLiftTask(new List<string>(new string[]{"en"}),
+			var task = CreateAndActivateLiftTask(new List<string>(new string[] { "en" }),
 								entries);
 			task.NavigateFirstToShow();
 			Assert.AreEqual("apple", task.CurrentPromptingForm);
@@ -768,7 +764,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			var wsWhichIsValidButIsntInTheWordList = WritingSystemsIdsForTests.VernacularIdForTest;
 
-			var entries =@"
+			var entries = @"
 				<entry id='one'>
 					<lexical-unit>
 					  <form lang='glossWS'>
@@ -811,7 +807,7 @@ namespace WeSay.LexicalTools.Tests
 					firstSense.GetProperty<OptionRefCollection>(
 							LexSense.WellKnownProperties.SemanticDomainDdp4);
 			Assert.AreEqual(1, domains.Count);
-			Assert.AreEqual("fruit",domains.KeyAtIndex(0));
+			Assert.AreEqual("fruit", domains.KeyAtIndex(0));
 		}
 
 		[Test]
@@ -862,7 +858,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.NavigateAbsoluteFirst();
 			Task.WordCollected(GetMultiText("test"));
 			var token = Task.GetRecordsWithMatchingMeaning()[0];
-			var senseToModify = token.RealObject.Senses[(int) token["SenseNumber"]];
+			var senseToModify = token.RealObject.Senses[(int)token["SenseNumber"]];
 			senseToModify.GetOrCreateProperty<MultiText>("ExtraProperty");
 			Assert.That(Task.GetRecordsWithMatchingMeaning().Count, Is.EqualTo(1));
 			Task.TryToRemoveAssociationWithListWordFromEntry(token);
@@ -891,7 +887,7 @@ namespace WeSay.LexicalTools.Tests
 				LiftXml
 			);
 			task.NavigateFirstToShow();
-			task.WordCollected( GetMultiText("apun"));
+			task.WordCollected(GetMultiText("apun"));
 			var entries = task.GetRecordsWithMatchingMeaning();
 			Assert.AreEqual(1, entries.Count);
 

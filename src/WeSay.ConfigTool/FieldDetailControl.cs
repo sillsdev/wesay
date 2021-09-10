@@ -1,16 +1,16 @@
-using System;
-using System.IO;
-using System.Windows.Forms;
 using Enchant;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Reporting;
-using WeSay.Project;
+using System;
+using System.IO;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
+using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class FieldDetailControl: UserControl
+	public partial class FieldDetailControl : UserControl
 	{
 		private Field _field;
 		private bool _loading;
@@ -46,7 +46,7 @@ namespace WeSay.ConfigTool
 			bool enchantInstalled = true;
 			try
 			{
-				using (new Broker()) {}
+				using (new Broker()) { }
 			}
 			catch
 			{
@@ -98,7 +98,7 @@ namespace WeSay.ConfigTool
 		{
 			int i = combo.Items.Add(new ComboItemProxy(choiceValue, choiceLabel));
 			if (choiceValue.ToString() == currentValue.ToString())
-					//tostring defeats the generality, but the == failed without it
+			//tostring defeats the generality, but the == failed without it
 			{
 				combo.SelectedIndex = i;
 			}
@@ -109,7 +109,7 @@ namespace WeSay.ConfigTool
 			foreach (ComboItemProxy proxy in combo.Items)
 			{
 				if (proxy.UnderlyingValue.ToString() == desiredValueName)
-						//tostring defeats the generality, but the == failed without it
+				//tostring defeats the generality, but the == failed without it
 				{
 					combo.SelectedItem = proxy;
 					break;
@@ -238,7 +238,7 @@ namespace WeSay.ConfigTool
 			}
 			if (_field.FieldName != oldValue)
 			{
-				if(!WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue))
+				if (!WeSayWordsProject.Project.MakeFieldNameChange(_field, oldValue))
 				{
 					//we couldn't do it, so back out
 					_field.FieldName = oldValue;
@@ -337,14 +337,14 @@ namespace WeSay.ConfigTool
 		{
 			bool validChange = true;
 			string newClassName =
-				((ComboItemProxy) _classNameCombo.SelectedItem).UnderlyingValue.ToString();
+				((ComboItemProxy)_classNameCombo.SelectedItem).UnderlyingValue.ToString();
 			if (_field.DataTypeName == Field.BuiltInDataType.Picture.ToString()
 				&& (newClassName != "LexSense"))
-				{
-					ErrorReport.NotifyUserOfProblem("Sorry, WeSay cannot set the type of this field to '{0}'. Pictures are only supported on Sense",
-						newClassName);
-					validChange = false;
-				}
+			{
+				ErrorReport.NotifyUserOfProblem("Sorry, WeSay cannot set the type of this field to '{0}'. Pictures are only supported on Sense",
+					newClassName);
+				validChange = false;
+			}
 			return validChange;
 		}
 
@@ -386,7 +386,7 @@ namespace WeSay.ConfigTool
 		private bool CheckDataTypeChange()
 		{
 			string newDataTypeName =
-					((ComboItemProxy) _dataTypeCombo.SelectedItem).UnderlyingValue.ToString();
+					((ComboItemProxy)_dataTypeCombo.SelectedItem).UnderlyingValue.ToString();
 			string oldDataTypeName = _field.DataTypeName;
 
 			bool conflictFound = false;

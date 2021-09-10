@@ -1,6 +1,6 @@
-using System.IO;
 using NUnit.Framework;
 using SIL.TestUtilities;
+using System.IO;
 
 
 namespace WeSay.LexicalTools.Tests
@@ -11,13 +11,13 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void CreateAndDispose_NoExistingFile_LeavesFile()
 		{
-			using(var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
+			using (var dir = new TemporaryFolder("TaskMemoryRepositoryTests"))
 			{
-				using(var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo",dir.Path))
+				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
 					Assert.IsNotNull(repo);
 				}
-				Assert.IsTrue(File.Exists(dir.Combine("foo"+TaskMemoryRepository.FileExtensionWithDot)));
+				Assert.IsTrue(File.Exists(dir.Combine("foo" + TaskMemoryRepository.FileExtensionWithDot)));
 			}
 		}
 
@@ -78,7 +78,7 @@ namespace WeSay.LexicalTools.Tests
 				}
 				using (var repo = TaskMemoryRepository.CreateOrLoadTaskMemoryRepository("foo", dir.Path))
 				{
-					Assert.AreEqual( "blue", repo.FindOrCreateSettingsByTaskId("NewGuy").Get("color", "blah"));
+					Assert.AreEqual("blue", repo.FindOrCreateSettingsByTaskId("NewGuy").Get("color", "blah"));
 				}
 			}
 		}

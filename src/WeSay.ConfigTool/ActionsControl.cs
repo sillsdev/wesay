@@ -1,15 +1,14 @@
+using Mono.Addins;
+using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Mono.Addins;
-using SIL.Reporting;
 using WeSay.AddinLib;
-using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class ActionsControl: ConfigurationControlBase
+	public partial class ActionsControl : ConfigurationControlBase
 	{
 		public ActionsControl(ILogger logger)
 			: base("setup and use plug-in actions", logger, "actions")
@@ -40,14 +39,14 @@ namespace WeSay.ConfigTool
 				}
 				catch
 				{
-					SIL.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, something went wrong collecting up the available addins.  Please go to this folder:\r\n"+ Application.UserAppDataPath +"\r\nand delete any folders which begin with \"addin-db\", then quit this program and try again.");
+					SIL.Reporting.ErrorReport.NotifyUserOfProblem("Sorry, something went wrong collecting up the available addins.  Please go to this folder:\r\n" + Application.UserAppDataPath + "\r\nand delete any folders which begin with \"addin-db\", then quit this program and try again.");
 					return;
 				}
 
 			}
 
 			foreach (IWeSayAddin addin in
-					AddinManager.GetExtensionObjects(typeof (IWeSayAddin)))
+					AddinManager.GetExtensionObjects(typeof(IWeSayAddin)))
 			{
 				//this alreadyFound business is a hack to prevent duplication in some
 				// situation I haven't tracked down yet.
@@ -96,23 +95,23 @@ namespace WeSay.ConfigTool
 
 		private void OnLaunchAction(object sender, EventArgs e)
 		{
-			IWeSayAddin addin = (IWeSayAddin) sender;
+			IWeSayAddin addin = (IWeSayAddin)sender;
 
 			try
 			{
 				addin.Launch(ParentForm,
 
-					//working on fixing ws-1026, found that creating this repository just locked the
-					//file, and no existing actions appear to need it anyhow
+			 //working on fixing ws-1026, found that creating this repository just locked the
+			 //file, and no existing actions appear to need it anyhow
 			 WeSayWordsProject.Project.GetProjectInfoForAddin());
 
-//                using (
-//                        LexEntryRepository lexEntryRepository =
-//                                new LexEntryRepository(WeSayWordsProject.Project.PathToRepository))
-//                {
-//                    addin.Launch(ParentForm,
-//                                 WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));
-//                }
+				//                using (
+				//                        LexEntryRepository lexEntryRepository =
+				//                                new LexEntryRepository(WeSayWordsProject.Project.PathToRepository))
+				//                {
+				//                    addin.Launch(ParentForm,
+				//                                 WeSayWordsProject.Project.GetProjectInfoForAddin(lexEntryRepository));
+				//                }
 			}
 			catch (Exception error)
 			{

@@ -1,23 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using SIL.Linq;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
+using SIL.Extensions;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Text;
 using SIL.UiBindings;
 using SIL.WritingSystems;
-using SIL.Extensions;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
-	public class PLiftExporter: LiftWriter
+	public class PLiftExporter : LiftWriter
 	{
 		private readonly ViewTemplate _viewTemplate;
 		private readonly LexEntryRepository _lexEntryRepository;
@@ -27,7 +25,7 @@ namespace WeSay.Project
 		public PLiftExporter(StringBuilder builder,
 							 bool produceFragmentOnly,
 							 LexEntryRepository lexEntryRepository,
-							 ViewTemplate viewTemplate): base(builder, produceFragmentOnly)
+							 ViewTemplate viewTemplate) : base(builder, produceFragmentOnly)
 		{
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
@@ -40,11 +38,11 @@ namespace WeSay.Project
 			: base(path, LiftWriter.ByteOrderStyle.BOM)
 		{
 			_path = path;
-//			_disposed = true; // In case we throw in the constructor
+			//			_disposed = true; // In case we throw in the constructor
 			_lexEntryRepository = lexEntryRepository;
 			_viewTemplate = viewTemplate;
 			_headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
-//			_disposed = false;
+			//			_disposed = false;
 		}
 
 		public override void Dispose()
@@ -72,7 +70,7 @@ namespace WeSay.Project
 			DereferenceOptions = 2,
 			DetermineHeadword = 4,
 			ExportPartOfSpeechAsGrammaticalInfoElement = 8 //this just means export it as normal lift, rather than making it look like a custom fied.
-		} ;
+		};
 
 		/// <summary>
 		/// Set this if you want the output filtered to the visible fields and the writing system orders respected
@@ -111,7 +109,7 @@ namespace WeSay.Project
 				}
 
 				LanguageForm[] labelForms =
-//                        posOption.Name.GetOrderedAndFilteredForms(
+					   //                        posOption.Name.GetOrderedAndFilteredForms(
 					   posOption.Abbreviation.GetOrderedAndFilteredForms(
 								_viewTemplate.GetField(fieldName).WritingSystemIds);
 
@@ -167,11 +165,11 @@ namespace WeSay.Project
 		/// </summary>
 		protected override void WriteFormsThatNeedToBeTheirOwnFields(MultiText text, string name)
 		{
-			foreach(var path in GetAudioForms(text, _viewTemplate.WritingSystems))
+			foreach (var path in GetAudioForms(text, _viewTemplate.WritingSystems))
 			{
 				Writer.WriteStartElement("trait");
 
-			   //nb: <media> not allowed by 0.12 schema, so we're just using trait[name='audio' value='...']
+				//nb: <media> not allowed by 0.12 schema, so we're just using trait[name='audio' value='...']
 				Writer.WriteAttributeString("name", "audio");
 				Writer.WriteAttributeString("value", string.Format("..{0}audio{0}" + path.Form, System.IO.Path.DirectorySeparatorChar));
 				Writer.WriteEndElement();
@@ -186,7 +184,7 @@ namespace WeSay.Project
 
 		protected override bool EntryDoesExist(string id)
 		{
-			return null!= _lexEntryRepository.GetLexEntryWithMatchingId(id);
+			return null != _lexEntryRepository.GetLexEntryWithMatchingId(id);
 		}
 
 		protected override void WriteRelationTarget(LexRelation relation)
@@ -197,7 +195,7 @@ namespace WeSay.Project
 			}
 
 			string key = relation.Key;
-			if(string.IsNullOrEmpty(key))
+			if (string.IsNullOrEmpty(key))
 			{
 				return;
 			}
@@ -216,7 +214,7 @@ namespace WeSay.Project
 			foreach (string writingSystemId in _headwordWritingSystemIds)
 			{
 				var headWordForm = entry.GetHeadWordForm(writingSystemId);
-				if(!string.IsNullOrEmpty(headWordForm))
+				if (!string.IsNullOrEmpty(headWordForm))
 				{
 					headword.SetAlternative(writingSystemId, headWordForm);
 					break;//we only want the first non-empty one
@@ -228,7 +226,7 @@ namespace WeSay.Project
 		protected override string GetOutputRelationName(LexRelation relation)
 		{
 			//Enhance: add "printed-dictionary-label" to fielddefns, so that people have control over this from wesay config.
-			var s= relation.FieldId.Replace("confer", "see");
+			var s = relation.FieldId.Replace("confer", "see");
 			s = s.Replace("BaseForm", "from");
 			return s;
 		}
@@ -248,11 +246,11 @@ namespace WeSay.Project
 		/// <summary>
 		/// add a pronunciation if we have an audio writing system alternative on the lexical unit
 		/// </summary>
-		 protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
+		protected override void InsertPronunciationIfNeeded(LexEntry entry, List<string> propertiesAlreadyOutput)
 		{
-//            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
-//                return;
-//
+			//            if(!_viewTemplate.WritingSystems.Any(p=>p.Value.IsAudio))
+			//                return;
+			//
 			IList<LanguageForm> paths = GetAudioForms(entry.LexicalForm, _viewTemplate.WritingSystems);
 			if (paths.Count == 0)
 				return;
@@ -261,7 +259,7 @@ namespace WeSay.Project
 			SIL.Linq.Enumerable.ForEach(paths, path =>
 							  {
 								  Writer.WriteStartElement("media");
-								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}"+path.Form, System.IO.Path.DirectorySeparatorChar));
+								  Writer.WriteAttributeString("href", string.Format("..{0}audio{0}" + path.Form, System.IO.Path.DirectorySeparatorChar));
 								  Writer.WriteEndElement();
 							  });
 			/*

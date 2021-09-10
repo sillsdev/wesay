@@ -1,7 +1,7 @@
-using System.IO;
-using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.Reporting;
+using System.IO;
+using System.Windows.Forms;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests
@@ -15,7 +15,7 @@ namespace WeSay.ConfigTool.Tests
 		public void Setup()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-			_window = new ConfigurationWindow(new string[] {});
+			_window = new ConfigurationWindow(new string[] { });
 			_window.Show();
 		}
 
@@ -41,7 +41,7 @@ namespace WeSay.ConfigTool.Tests
 					WeSayWordsProject.Project.PathToConfigFile,
 					true);
 
-			ToolStrip toolstrip = (ToolStrip) _window.Controls.Find("_areasToolStrip", true)[0];
+			ToolStrip toolstrip = (ToolStrip)_window.Controls.Find("_areasToolStrip", true)[0];
 			foreach (ToolStripButton button in toolstrip.Items)
 			{
 				button.PerformClick();

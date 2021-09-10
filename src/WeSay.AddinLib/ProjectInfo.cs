@@ -1,5 +1,5 @@
-using System;
 using SIL.WritingSystems;
+using System;
 
 namespace WeSay.AddinLib
 {
@@ -28,7 +28,7 @@ namespace WeSay.AddinLib
 						   IServiceProvider serviceProvider,
 						   // these signatures were to reduce the dependencies on addins that didn't need this stuff
 						   object project)
-				// these signatures were to reduce the dependencies on addins that didn't need this stuff
+		// these signatures were to reduce the dependencies on addins that didn't need this stuff
 
 		{
 			ServiceProvider = serviceProvider;

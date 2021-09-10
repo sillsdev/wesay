@@ -1,7 +1,7 @@
-using System;
-using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using SIL.Reporting;
+using System;
+using System.IO;
 
 namespace Addin.Backup
 {
@@ -47,7 +47,7 @@ namespace Addin.Backup
 			//A particular case where this exception will be thrown is when we try to zip a file
 			//that we cannot get readaccess to. This is the case for locking in WeSay 0.4 and was
 			//the cause for WS-1205
-			if(zipFile.Count != numFilesToBeWritten)
+			if (zipFile.Count != numFilesToBeWritten)
 			{
 				throw new ZipException("The number of files written to the archive is not equal to the number of files that were to be backed up! This may be because one of the files is being used by another program.");
 			}

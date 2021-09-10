@@ -1,8 +1,8 @@
+using NUnit.Framework;
+using SIL.DictionaryServices.Model;
 using System;
 using System.ComponentModel;
 using System.Threading;
-using NUnit.Framework;
-using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -43,7 +43,7 @@ namespace WeSay.LexicalModel.Tests
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
 			_entry.LexicalForm["foo"] = "hello";
-			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 
@@ -53,7 +53,7 @@ namespace WeSay.LexicalModel.Tests
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
 			_entry.Senses.Add(new LexSense());
-			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 
@@ -65,7 +65,7 @@ namespace WeSay.LexicalModel.Tests
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
 			sense.Gloss["foo"] = "hello";
-			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 
@@ -77,7 +77,7 @@ namespace WeSay.LexicalModel.Tests
 			long start = _entry.ModificationTime.Ticks;
 			Thread.Sleep(1000); //else modtime doesn't change
 			sense.ExampleSentences.Add(new LexExampleSentence());
-			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 
@@ -91,7 +91,7 @@ namespace WeSay.LexicalModel.Tests
 			var example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
 			example.Sentence["foo"] = "hello";
-			Assert.Greater((decimal) _entry.ModificationTime.Ticks, start);
+			Assert.Greater((decimal)_entry.ModificationTime.Ticks, start);
 			Assert.IsTrue(_didNotify);
 		}
 	}

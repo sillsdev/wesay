@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using SIL.Lift.Options;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
-using SIL.Lift.Options;
 
 namespace WeSay.LexicalModel.Foundation.Options
 {
@@ -18,7 +18,7 @@ namespace WeSay.LexicalModel.Foundation.Options
 
 			using (XmlReader reader = XmlReader.Create(path))
 			{
-				OptionsList list = (OptionsList) serializer.Deserialize(reader);
+				OptionsList list = (OptionsList)serializer.Deserialize(reader);
 				reader.Close();
 
 				foreach (Option option in list.Options)

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using SIL.DictionaryServices.Model;
+﻿using SIL.DictionaryServices.Model;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
-using System.Linq;
 
 namespace WeSay.ConfigTool.Tasks
 {
@@ -17,14 +16,14 @@ namespace WeSay.ConfigTool.Tasks
 		private Field _field;
 
 		public MissingInfoTaskConfigControl(MissingInfoConfiguration config, ViewTemplate viewTemplate)
-			:base(config, true)
+			: base(config, true)
 		{
 			_viewTemplate = viewTemplate;
 			InitializeComponent();
 
 			_showExampleFieldBox.Visible = Configuration.IncludesField(LexExampleSentence.WellKnownProperties.ExampleSentence);
 			//these are separated to get the long label to show in mono
-			 _showExampleLabel.Visible = _showExampleFieldBox.Visible;
+			_showExampleLabel.Visible = _showExampleFieldBox.Visible;
 			_showExampleFieldBox.Checked = Configuration.IncludesField(LexExampleSentence.WellKnownProperties.Translation);
 		}
 		private MissingInfoConfiguration Configuration

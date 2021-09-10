@@ -1,3 +1,5 @@
+using SIL.i18n;
+using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,17 +7,15 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using SIL.Reporting;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
-using SIL.i18n;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public partial class Dash: UserControl, ITask, IFinishCacheSetup
+	public partial class Dash : UserControl, ITask, IFinishCacheSetup
 	{
 		private const double GoldRatio = 4.0;
 		// arbitrary ratio we think looks the best for button sizes
@@ -162,7 +162,7 @@ namespace WeSay.LexicalTools.Dashboard
 			// Buttons were being slightly resized when you went to another tab and came back during the
 			// call to add the Dash control to the tab page.  The change appears to be from something in
 			// windows forms that I couldn't figure out, so this just sets the size back to what we want.
-			Control control = (Control) sender;
+			Control control = (Control)sender;
 			if (_bestButtonSize != Size.Empty && _bestButtonSize != control.Size)
 			{
 				control.Size = _bestButtonSize;
@@ -171,7 +171,7 @@ namespace WeSay.LexicalTools.Dashboard
 
 		private void OnButtonClick(object sender, EventArgs e)
 		{
-			DashboardButton b = (DashboardButton) sender;
+			DashboardButton b = (DashboardButton)sender;
 			ITask task = b.ThingToShowOnDashboard as ITask;
 			if (task != null && _currentWorkTaskProvider != null)
 			{
@@ -358,14 +358,14 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			RemoveDuplicates(result,
 							 CompareSizesByHeightThenWidth,
-							 delegate(Size x, Size y) { return x.Height.Equals(y.Height); });
+							 delegate (Size x, Size y) { return x.Height.Equals(y.Height); });
 		}
 
 		private static void RemoveDuplicateWidths(List<Size> result)
 		{
 			RemoveDuplicates(result,
 							 CompareSizesByWidthThenHeight,
-							 delegate(Size x, Size y) { return x.Width.Equals(y.Width); });
+							 delegate (Size x, Size y) { return x.Width.Equals(y.Width); });
 		}
 
 		private static void RemoveDuplicates(List<Size> result,
@@ -453,7 +453,7 @@ namespace WeSay.LexicalTools.Dashboard
 													availableSpaceForButtons,
 													GetButtonsPerGroup());
 			_buttonsPerRow = Math.Max(1,
-									  availableSpaceForButtons.Width/(_bestButtonSize.Width + _buttonMargin.Horizontal));
+									  availableSpaceForButtons.Width / (_bestButtonSize.Width + _buttonMargin.Horizontal));
 		}
 
 		internal static Size ComputeBestButtonSize(List<Size> smallestPossibleSizes,
@@ -482,7 +482,7 @@ namespace WeSay.LexicalTools.Dashboard
 			double bestRatio = double.PositiveInfinity;
 			foreach (Size size in possibleSizes)
 			{
-				double ratio = (double) size.Width / size.Height;
+				double ratio = (double)size.Width / size.Height;
 				if (Math.Abs(ratio - targetRatio) <= Math.Abs(bestRatio - targetRatio))
 				{
 					bestRatio = ratio;
@@ -534,13 +534,13 @@ namespace WeSay.LexicalTools.Dashboard
 			const int heightBetweenRows = 6;
 			int maxButtonsInRow =
 				(int)
-				Math.Floor((double) availableWidthForButtons /
+				Math.Floor((double)availableWidthForButtons /
 						   (size.Width + widthBetweenButtons));
 			maxButtonsInRow = Math.Max(maxButtonsInRow, 1); // always at least one button in a row
 			int heightNeeded = 0;
 			foreach (int buttonsInGroup in buttonsPerGroup)
 			{
-				int rowsNeeded = (int) Math.Ceiling((double) buttonsInGroup / maxButtonsInRow);
+				int rowsNeeded = (int)Math.Ceiling((double)buttonsInGroup / maxButtonsInRow);
 				heightNeeded += rowsNeeded * (size.Height + heightBetweenRows);
 			}
 			return heightNeeded;
@@ -598,7 +598,7 @@ namespace WeSay.LexicalTools.Dashboard
 				sizeForButtons.Height -= control.Margin.Vertical + control.Height;
 				sizeForButtons.Height -= control.Height;
 			}
-			sizeForButtons.Height -= _buttonRows.Count*_buttonRowMargin.Vertical;
+			sizeForButtons.Height -= _buttonRows.Count * _buttonRowMargin.Vertical;
 			sizeForButtons.Width -= _buttonRowMargin.Horizontal;
 			// If we're already scrolling, the width of the scrollbar is already figured in to _panel.ClientRectangle.Width
 			// Otherwise, pretend like we will need a scrollbar to may sizing work better when we do
@@ -639,8 +639,8 @@ namespace WeSay.LexicalTools.Dashboard
 		{
 			if (IsActive)
 			{
-//                throw new InvalidOperationException(
-//                    "Activate should not be called when object is active.");
+				//                throw new InvalidOperationException(
+				//                    "Activate should not be called when object is active.");
 
 				//jdh, because of WS-15018, which is that if for some strange reason (like you're a tester)
 				//you switch back and forth fast enough, this with through, becuase of the "activateAfterScreenRedraw"
@@ -734,10 +734,10 @@ namespace WeSay.LexicalTools.Dashboard
 			ResumeLayout();
 			_suspendLayout = false;
 			_isActive = false;
-  //          Debug.Fail("stop");
+			//          Debug.Fail("stop");
 		}
 
-		public void GoToUrl(string url) {}
+		public void GoToUrl(string url) { }
 
 		public bool IsActive
 		{
@@ -871,8 +871,8 @@ namespace WeSay.LexicalTools.Dashboard
 
 		protected override void OnPaintBackground(PaintEventArgs e)
 		{
-		   if(!_suspendLayout)
-			   DisplaySettings.Default.PaintBackground(this, e);
+			if (!_suspendLayout)
+				DisplaySettings.Default.PaintBackground(this, e);
 		}
 
 		protected override void OnMouseWheel(MouseEventArgs e)
@@ -935,7 +935,7 @@ namespace WeSay.LexicalTools.Dashboard
 
 		private void _toolTip_Popup(object sender, PopupEventArgs e)
 		{
-		   //todo: This code can take 30 seconds or more to complete! if you make the dash small and then drag the window,
+			//todo: This code can take 30 seconds or more to complete! if you make the dash small and then drag the window,
 			//it goes navel-gazing for a long time. (JH noticed Oct 2011).
 
 			//This is also implicated in involvement in WS-34187) "Better feedback for slower computers"

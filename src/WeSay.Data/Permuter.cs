@@ -54,7 +54,7 @@ namespace WeSay.Data
 			{
 				// we have to have at least one item if we are going to do the
 				// foreach loop below
-				original = new Dictionary<string, T>[] {new Dictionary<string, T>()};
+				original = new Dictionary<string, T>[] { new Dictionary<string, T>() };
 			}
 			foreach (Dictionary<string, T> row in original)
 			{
@@ -62,7 +62,7 @@ namespace WeSay.Data
 				{
 					// duplicate the original results for each new item
 					Dictionary<string, T> columns = new Dictionary<string, T>(row);
-					columns.Add(key, (T) newItem);
+					columns.Add(key, (T)newItem);
 					results.Add(columns);
 				}
 			}
@@ -99,7 +99,7 @@ namespace WeSay.Data
 			{
 				// we have to have at least one item if we are going to do the
 				// foreach loop below
-				original = new Dictionary<string, T>[] {new Dictionary<string, T>()};
+				original = new Dictionary<string, T>[] { new Dictionary<string, T>() };
 			}
 			foreach (Dictionary<string, T> row in original)
 			{

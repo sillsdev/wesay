@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Field field = new Field(Field.FieldNames.ExampleTranslation.ToString(),
 									"LexExampleSentence",
-									new string[] {"analysis"});
+									new string[] { "analysis" });
 			_missingExampleTranslationFilter = new MissingFieldQuery(field, null, null);
 		}
 
@@ -42,7 +42,7 @@ namespace WeSay.LexicalTools.Tests
 								   "LexExampleSentence",
 								   new string[] { "one", "two" });
 
-			var filter = new MissingFieldQuery(field, new[]{"one"}, null);//notice, we don't want to search in "two"
+			var filter = new MissingFieldQuery(field, new[] { "one" }, null);//notice, we don't want to search in "two"
 
 			Assert.AreEqual(false, filter.FilteringPredicate(entry));
 		}

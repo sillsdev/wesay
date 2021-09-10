@@ -1,13 +1,13 @@
-using System.IO;
-using System.Diagnostics;
+using Addin.Transform.PdfDictionary;
 using NUnit.Framework;
+using SIL.WritingSystems;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.TestUtilities;
-using Addin.Transform.PdfDictionary;
-using System.Threading;
-using SIL.WritingSystems;
 
 namespace Addin.Transform.Tests
 {

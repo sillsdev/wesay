@@ -1,9 +1,8 @@
+using SIL.WritingSystems;
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
@@ -183,10 +182,10 @@ namespace WeSay.UI
 
 		private void ComputeItemHeight()
 		{
-			ItemHeight = (int) (Math.Ceiling(WritingSystemInfo.CreateFont(_formWritingSystem).GetHeight()));
+			ItemHeight = (int)(Math.Ceiling(WritingSystemInfo.CreateFont(_formWritingSystem).GetHeight()));
 			if (_meaningWritingSystem != null)
 			{
-				ItemHeight += (int) (Math.Ceiling(WritingSystemInfo.CreateFont(_meaningWritingSystem).GetHeight()));
+				ItemHeight += (int)(Math.Ceiling(WritingSystemInfo.CreateFont(_meaningWritingSystem).GetHeight()));
 				ItemHeight += 10; //margin
 			}
 		}

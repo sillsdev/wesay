@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Windows.Forms;
 using SIL.i18n;
 using SIL.Lexicon;
 using SIL.Reporting;
 using SIL.Windows.Forms.Progress;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace WeSay.Project
 {
@@ -31,7 +31,7 @@ namespace WeSay.Project
 		}
 	}
 
-	public class BasilProject: IDisposable
+	public class BasilProject : IDisposable
 	{
 		private static BasilProject _singleton;
 
@@ -117,14 +117,14 @@ There are problems in:
 		{
 			throw new ApplicationException("Input system migration should have been done by now, but it seems it hasn't.");
 		}
-//        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
-  //      {
-//            _projectDirectoryPath = projectDirectoryPath;
-//            //  Directory.CreateDirectory(ProjectCommonDirectory);
-//            InitStringCatalog();
-//            InitWritingSystems();
-//            Save();
-	//    }
+		//        public virtual void CreateEmptyProjectFiles(string projectDirectoryPath)
+		//      {
+		//            _projectDirectoryPath = projectDirectoryPath;
+		//            //  Directory.CreateDirectory(ProjectCommonDirectory);
+		//            InitStringCatalog();
+		//            InitWritingSystems();
+		//            Save();
+		//    }
 
 		public virtual void Save()
 		{
@@ -214,7 +214,8 @@ There are problems in:
 
 		public static string WeSaySharedDirectory
 		{
-			get {
+			get
+			{
 				string dir = "wesay";
 #if ALPHA
 				dir += "-alpha";
@@ -229,7 +230,8 @@ There are problems in:
 
 		public static string ApplicationCommonDirectory
 		{
-			get {
+			get
+			{
 				var appCommonDir = Path.Combine(DirectoryOfTheApplicationExecutable, "common");
 				if (!Directory.Exists(appCommonDir))
 				{
@@ -251,11 +253,12 @@ There are problems in:
 
 		public static string ApplicationSharedDirectory
 		{
-			get {
+			get
+			{
 				string shareddir;
-						bool unitTesting = Assembly.GetEntryAssembly() == null;
-						if (unitTesting)
-						{
+				bool unitTesting = Assembly.GetEntryAssembly() == null;
+				if (unitTesting)
+				{
 					shareddir = DirectoryOfTheApplicationExecutable;
 				}
 				else
@@ -280,15 +283,15 @@ There are problems in:
 				bool unitTesting = Assembly.GetEntryAssembly() == null;
 				if (unitTesting)
 				{
-				   path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
-				   path = Uri.UnescapeDataString(path);
+					path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
+					path = Uri.UnescapeDataString(path);
 				}
 				else
 				{
-				   //was suspect in WS1156, where it seemed to start looking in the,
+					//was suspect in WS1156, where it seemed to start looking in the,
 					//outlook express program folder after sending an email from wesay...
 					//so maybe it doesn't always mean *this* executing assembly?
-				  //  path = Assembly.GetExecutingAssembly().Location;
+					//  path = Assembly.GetExecutingAssembly().Location;
 					path = Application.ExecutablePath;
 				}
 				return Directory.GetParent(path).FullName;

@@ -68,7 +68,7 @@ namespace WeSay.UI
 		{
 			if (obj != null && _startBackgroundColors.Contains(obj.GetType().Name))
 			{
-				return (Color) _startBackgroundColors[obj.GetType().Name];
+				return (Color)_startBackgroundColors[obj.GetType().Name];
 			}
 			return _startBackgroundColorDefault;
 		}
@@ -77,7 +77,7 @@ namespace WeSay.UI
 		{
 			if (obj != null && _endBackgroundColors.Contains(obj.GetType().Name))
 			{
-				return (Color) _endBackgroundColors[obj.GetType().Name];
+				return (Color)_endBackgroundColors[obj.GetType().Name];
 			}
 			return _endBackgroundColorDefault;
 		}
@@ -203,7 +203,7 @@ namespace WeSay.UI
 			int stepSize = 40;
 			int kAsWideAsWeWouldWant = 500;
 			maxWidth = Math.Min(sizeNeeded.Width, kAsWideAsWeWouldWant);
-			for (int i = minWidth;i < maxWidth; i=i+stepSize)
+			for (int i = minWidth; i < maxWidth; i = i + stepSize)
 			{
 				sizeNeeded = TextRenderer.MeasureText(dc,
 													  text,

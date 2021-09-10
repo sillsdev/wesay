@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace WeSay.LexicalModel
 {
@@ -34,7 +34,7 @@ namespace WeSay.LexicalModel
 			foreach (RecordToken<LexEntry> token in Items)
 			{
 				string stringToDisplay;
-				if(token[FieldLabel] == null)
+				if (token[FieldLabel] == null)
 				{
 					stringToDisplay = "";
 				}

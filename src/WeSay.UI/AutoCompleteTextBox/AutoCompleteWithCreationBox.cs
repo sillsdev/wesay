@@ -1,14 +1,13 @@
+using SIL.Lift;
+using SIL.UiBindings;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.Lift;
-using SIL.UiBindings;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.AutoCompleteTextBox
 {
-	public partial class AutoCompleteWithCreationBox<KV, ValueT>: UserControl,
+	public partial class AutoCompleteWithCreationBox<KV, ValueT> : UserControl,
 																  IBindableControl<ValueT>
 			where ValueT : class
 	{
@@ -123,7 +122,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private static KV CastValueToKeyValue(ValueT v)
 		{
-			return (KV) ((object) v);
+			return (KV)((object)v);
 		}
 
 		internal Button AddNewButton
@@ -133,7 +132,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		private static ValueT CastKeyValueToValue(KV t)
 		{
-			return (ValueT) ((object) t);
+			return (ValueT)((object)t);
 		}
 
 		private void OnFocusChanged(object sender, EventArgs e)
@@ -202,7 +201,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 				}
 				else
 				{
-					return GetValueFromKeyValue.Invoke((KV) Box.SelectedItem);
+					return GetValueFromKeyValue.Invoke((KV)Box.SelectedItem);
 				}
 			}
 			set { Box.SelectedItem = GetKeyValueFromValue.Invoke(value); }
@@ -374,7 +373,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 	/// Use to make a new object from a simple form, and to notify the control of what
 	/// object was created.
 	/// </summary>
-	public class CreateNewArgs: EventArgs
+	public class CreateNewArgs : EventArgs
 	{
 		public string LabelOfNewItem;
 		private object _newlyCreatedItem;

@@ -1,8 +1,8 @@
+using SIL.Progress;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
-using SIL.Progress;
 using WeSay.Project;
 
 namespace SampleDataProcessor

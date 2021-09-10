@@ -1,3 +1,8 @@
+using SIL.Keyboarding;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.Windows.Forms.Spelling;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,11 +10,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using SIL.Keyboarding;
-using SIL.Reporting;
-using SIL.Windows.Forms.Spelling;
-using SIL.WritingSystems;
-using SIL.Text;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -64,7 +64,7 @@ namespace WeSay.UI.TextBoxes
 	}
 
 
-	public partial class WeSayTextBox: TextBox, IControlThatKnowsWritingSystem, IWeSayTextBox
+	public partial class WeSayTextBox : TextBox, IControlThatKnowsWritingSystem, IWeSayTextBox
 	{
 		private WritingSystemDefinition _writingSystem;
 		private string _previousText;
@@ -155,7 +155,7 @@ namespace WeSay.UI.TextBoxes
 					Object toolboxboxJumper = Activator.CreateInstance(toolboxJumperType);
 					if ((toolboxboxJumper != null))
 					{
-						object[] args = new object[] {word};
+						object[] args = new object[] { word };
 						toolboxJumperType.InvokeMember("Jump",
 													   BindingFlags.InvokeMethod,
 													   null,
@@ -310,7 +310,7 @@ namespace WeSay.UI.TextBoxes
 			}
 		}
 
-		public WeSayTextBox(WritingSystemDefinition ws, string nameForLogging): this()
+		public WeSayTextBox(WritingSystemDefinition ws, string nameForLogging) : this()
 		{
 			_nameForLogging = nameForLogging;
 			if (_nameForLogging == null)

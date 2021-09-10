@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using SIL.WritingSystems;
-using SIL.WritingSystems.Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
@@ -29,7 +29,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 		public void MigrateIfNecassary()
 		{
-			if(!File.Exists(_sourceFilePath))
+			if (!File.Exists(_sourceFilePath))
 			{
 				return;
 			}
@@ -58,11 +58,11 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			var filesInTempFolder = Directory.GetFiles(tempFolderPath);
 			if (filesInTempFolder.Length != 0)
 			{
-				if(!Directory.Exists(writingSystemFolderPath))
+				if (!Directory.Exists(writingSystemFolderPath))
 				{
 					Directory.CreateDirectory(writingSystemFolderPath);
 				}
-				if(!Directory.Exists(sharedSettingsFolderPath))
+				if (!Directory.Exists(sharedSettingsFolderPath))
 				{
 					Directory.CreateDirectory(sharedSettingsFolderPath);
 				}
@@ -72,7 +72,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			{
 				var fileName = Path.GetFileName(ldmlFilePath);
 				var destinationFilePath = Path.Combine(writingSystemFolderPath, fileName);
-				if(!File.Exists(destinationFilePath))
+				if (!File.Exists(destinationFilePath))
 				{
 					File.Move(ldmlFilePath, destinationFilePath);
 				}

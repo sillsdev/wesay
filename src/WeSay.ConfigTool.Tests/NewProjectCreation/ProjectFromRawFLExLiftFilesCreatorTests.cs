@@ -1,8 +1,8 @@
-﻿using System.IO;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SIL.IO;
 using SIL.Reporting;
 using SIL.TestUtilities;
+using System.IO;
 using WeSay.ConfigTool.NewProjectCreation;
 
 namespace WeSay.ConfigTool.Tests.NewProjectCreation
@@ -13,9 +13,9 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		[Test]
 		public void Create_JustLiftFound_CreatesProjectAndCopiesLIFT()
 		{
-			using(var testDir = new TemporaryFolder("NormalSituation_CreatesProject"))
+			using (var testDir = new TemporaryFolder("NormalSituation_CreatesProject"))
 			{
-				using (var lift = new TempLiftFile(testDir,  "<entry id='foo'></entry>", "0.12"))
+				using (var lift = new TempLiftFile(testDir, "<entry id='foo'></entry>", "0.12"))
 				{
 					var targetDir = testDir.Combine("target");
 
@@ -38,12 +38,12 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 			{
 				using (var lift = new TempLiftFile(testDir, "", "0.12"))
 				{
-					File.WriteAllText(lift.Path+"-ranges", "hello");
+					File.WriteAllText(lift.Path + "-ranges", "hello");
 					var targetDir = testDir.Combine("target");
 					Assert.IsTrue(ProjectFromRawFLExLiftFilesCreator.Create(targetDir, lift.Path));
 
 					var projectName = Path.GetFileNameWithoutExtension(targetDir);
-					 AssertFileExistsInTargetDir(targetDir, projectName + ".lift-ranges");
+					AssertFileExistsInTargetDir(targetDir, projectName + ".lift-ranges");
 				}
 			}
 		}
@@ -89,13 +89,13 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 		[Test]
 		public void Create_SourceLiftLocked_GivesMessageReturnsFalse()
 		{
-			using(var lift = new TempLiftFile(""))
+			using (var lift = new TempLiftFile(""))
 			{
 				using (var stream = File.OpenWrite(lift.Path))
 				{
 					var targetDir = Path.Combine(Path.GetTempPath(), "ProjectFromFLExCreatorTests");
 
-					using(var x = new ErrorReport.NonFatalErrorReportExpected())
+					using (var x = new ErrorReport.NonFatalErrorReportExpected())
 					{
 						Assert.IsFalse(ProjectFromRawFLExLiftFilesCreator.Create(targetDir, lift.Path));
 					}

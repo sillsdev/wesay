@@ -1,9 +1,9 @@
-using System.IO;
 using NUnit.Framework;
 using SIL.DictionaryServices.Lift;
 using SIL.Reporting;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System.IO;
 using WeSay.Project;
 
 namespace Addin.Transform.Tests

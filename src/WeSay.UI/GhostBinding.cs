@@ -1,11 +1,10 @@
+using SIL.Lift;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
-using SIL.Lift;
-using SIL.Reporting;
-using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
@@ -58,7 +57,7 @@ namespace WeSay.UI
 			_propertyName = propertyName;
 			_writingSystem = writingSystem;
 
-			_textBoxTarget = (Control) textBoxTarget;
+			_textBoxTarget = (Control)textBoxTarget;
 			_textBoxTarget.KeyDown += _textBoxTarget_KeyDown;
 			// Lost Focus doesn't seem to fire for the GeckoBox so added leaving
 			_textBoxTarget.LostFocus += _textBoxTarget_LostFocus;
@@ -274,7 +273,7 @@ namespace WeSay.UI
 													   string value)
 		{
 			PropertyInfo info = o.GetType().GetProperty(propertyName);
-			MultiText text = (MultiText) info.GetValue(o, null);
+			MultiText text = (MultiText)info.GetValue(o, null);
 			text.SetAlternative(writingSystem.LanguageTag, value);
 		}
 	}

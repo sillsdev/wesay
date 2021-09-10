@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Xml;
-using System.Xml.Linq;
-using System.Linq;
-using System.Text;
-using Chorus.Utilities;
-using SIL.Keyboarding;
+﻿using SIL.Keyboarding;
 using SIL.Migration;
 using SIL.WritingSystems;
 using SIL.Xml;
+using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace WeSay.Project.ConfigMigration.UserConfig
 {
@@ -34,12 +28,12 @@ namespace WeSay.Project.ConfigMigration.UserConfig
 			{
 				foreach (XElement keyboardElem in keyboardsElem.Elements("keyboard"))
 				{
-					var wsId = (string) keyboardElem.Attribute("ws");
+					var wsId = (string)keyboardElem.Attribute("ws");
 					WritingSystemDefinition ws;
 					if (_wsRepo.TryGet(wsId, out ws))
 					{
-						var layout = (string) keyboardElem.Attribute("layout");
-						var locale = (string) keyboardElem.Attribute("locale");
+						var layout = (string)keyboardElem.Attribute("layout");
+						var locale = (string)keyboardElem.Attribute("locale");
 						string keyboardId = string.IsNullOrEmpty(locale) ? layout : string.Format("{0}_{1}", locale, layout);
 						IKeyboardDefinition keyboard;
 						if (!Keyboard.Controller.TryGetKeyboard(keyboardId, out keyboard))

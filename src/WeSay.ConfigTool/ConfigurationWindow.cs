@@ -1,23 +1,18 @@
+using Autofac;
+using SIL.Reporting;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Autofac;
-using SIL.IO;
-using SIL.Reporting;
-using SIL.WritingSystems;
-using SIL.WritingSystems.Migration;
 using WeSay.ConfigTool.NewProjectCreation;
 using WeSay.ConfigTool.Properties;
 using WeSay.ConfigTool.Tasks;
 using WeSay.Project;
-using WeSay.Project.ConfigMigration.WritingSystem;
 
 namespace WeSay.ConfigTool
 {
-	public partial class ConfigurationWindow: Form
+	public partial class ConfigurationWindow : Form
 	{
 		private WelcomeControl _welcomePage;
 		private SettingsControl _projectSettingsControl;
@@ -54,7 +49,7 @@ namespace WeSay.ConfigTool
 
 			if (args.Length > 0)
 			{
-				OpenProject(args[0].Trim(new[] {'"'}));
+				OpenProject(args[0].Trim(new[] { '"' }));
 			}
 
 			if (!DesignMode)
@@ -82,14 +77,14 @@ namespace WeSay.ConfigTool
 			if (toolStrip2.InvokeRequired)
 			{
 				UpdateStuffCallback d = UpdateEnabledStates;
-				Invoke(d, new object[] {});
+				Invoke(d, new object[] { });
 			}
 			else
 			{
 				toolStrip2.Visible = (_project != null);
 
-//                _saveACopyForFLEx54ToolStripMenuItem.Enabled = (_project != null);
-//                openProjectInWeSayToolStripMenuItem.Enabled = (_project != null);
+				//                _saveACopyForFLEx54ToolStripMenuItem.Enabled = (_project != null);
+				//                openProjectInWeSayToolStripMenuItem.Enabled = (_project != null);
 			}
 		}
 
@@ -162,17 +157,17 @@ namespace WeSay.ConfigTool
 
 		private void PointOutOpenWeSayButton()
 		{
-//            try
-//            {
-//                var effects = new BigMansStuff.LocusEffects.LocusEffectsProvider();
-//                {
-//                    effects.Initialize();
-//                    effects.ShowLocusEffect(this, RectangleToScreen(this.openProjectInWeSayToolStripMenuItem.Bounds), LocusEffectsProvider.DefaultLocusEffectArrow);
-//                }
-//            }
-//            catch (Exception e)
-//            {
-//            }
+			//            try
+			//            {
+			//                var effects = new BigMansStuff.LocusEffects.LocusEffectsProvider();
+			//                {
+			//                    effects.Initialize();
+			//                    effects.ShowLocusEffect(this, RectangleToScreen(this.openProjectInWeSayToolStripMenuItem.Bounds), LocusEffectsProvider.DefaultLocusEffectArrow);
+			//                }
+			//            }
+			//            catch (Exception e)
+			//            {
+			//            }
 		}
 
 		private void OnCreateProjectFromFLEx(object sender, EventArgs e)
@@ -217,21 +212,21 @@ namespace WeSay.ConfigTool
 			CreateNewProject(directoryPath, languageTag);
 			OpenProject(directoryPath);
 
-			if(_project != null)
-			 {
-				 var logger = _project.Container.Resolve<ILogger>();
-				 logger.WriteConciseHistoricalEvent("Created New Project");
+			if (_project != null)
+			{
+				var logger = _project.Container.Resolve<ILogger>();
+				logger.WriteConciseHistoricalEvent("Created New Project");
 
 
-				 if (ErrorReport.IsOkToInteractWithUser)
-				 {
-					 using (var dlg = new NewProjectInformationDialog(directoryPath))
-					 {
-						 dlg.ShowDialog();
-					 }
-				 }
+				if (ErrorReport.IsOkToInteractWithUser)
+				{
+					using (var dlg = new NewProjectInformationDialog(directoryPath))
+					{
+						dlg.ShowDialog();
+					}
+				}
 
-			 }
+			}
 		}
 
 		private static void CreateNewProject(string directoryPath, string languageTag)
@@ -268,7 +263,7 @@ namespace WeSay.ConfigTool
 		/// <returns>true if the project was sucessfully opened</returns>
 		public bool OpenProject(string path, bool newClone = false)
 		{
-			Logger.WriteEvent("OpenProject("+path+")");
+			Logger.WriteEvent("OpenProject(" + path + ")");
 			//System.Configuration.ConfigurationManager.AppSettings["LastConfigFilePath"] = path;
 
 			//strip off any trailing '\'
@@ -311,10 +306,10 @@ namespace WeSay.ConfigTool
 						return false;
 					}
 				}
-						//                else if (path.Contains(".WeSayConfig"))
-						//                {
-						//                    this.Project.LoadFromConfigFilePath(path);
-						//                }
+				//                else if (path.Contains(".WeSayConfig"))
+				//                {
+				//                    this.Project.LoadFromConfigFilePath(path);
+				//                }
 				else if (Directory.Exists(path))
 				{
 					Project.LoadFromProjectDirectoryPath(path);
@@ -373,9 +368,9 @@ namespace WeSay.ConfigTool
 			var scope = _project.Container.BeginLifetimeScope(containerBuilder =>
 								{
 									containerBuilder.RegisterType(
-										typeof (TaskListView));
+										typeof(TaskListView));
 									containerBuilder.RegisterType(
-										typeof (TaskListPresentationModel));
+										typeof(TaskListPresentationModel));
 
 									containerBuilder
 										.RegisterType
@@ -480,7 +475,7 @@ namespace WeSay.ConfigTool
 			Focus();
 
 			SaveAndDisposeProject();
-			if(_openWeSayAfterSaving)
+			if (_openWeSayAfterSaving)
 			{
 				RunWeSay();
 			}

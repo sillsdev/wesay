@@ -38,7 +38,7 @@ namespace WeSay.UI.Buttons
 		public string ToolTip
 		{
 			get { return toolTip1.GetToolTip(_button); }
-			set { toolTip1.SetToolTip(_button, value);}
+			set { toolTip1.SetToolTip(_button, value); }
 		}
 
 		public void PerformClick()

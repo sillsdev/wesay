@@ -1,14 +1,14 @@
+using Chorus;
+using Chorus.VcsDrivers.Mercurial;
+using NUnit.Framework;
+using SIL.Progress;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
+using SIL.Xml;
 using System;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Chorus;
-using Chorus.VcsDrivers.Mercurial;
-using NUnit.Framework;
-using SIL.TestUtilities;
-using SIL.Progress;
-using SIL.WritingSystems;
-using SIL.Xml;
 
 namespace WeSay.Project.Tests
 {
@@ -37,7 +37,7 @@ namespace WeSay.Project.Tests
 
 			private string PathToBackupProjectDir
 			{
-				get { return Path.Combine(_backupDir.Path, _projDir.ProjectDirectoryName);}
+				get { return Path.Combine(_backupDir.Path, _projDir.ProjectDirectoryName); }
 			}
 
 			private ChorusBackupMaker BackupMaker
@@ -63,13 +63,13 @@ namespace WeSay.Project.Tests
 
 			public void AssertDirExistsInWorkingDirectory(string s)
 			{
-				string  expectedDir = Path.Combine(PathToBackupProjectDir, s);
+				string expectedDir = Path.Combine(PathToBackupProjectDir, s);
 				Assert.IsTrue(Directory.Exists(expectedDir), $"{expectedDir} was not found.");
 			}
 
 			public void AssertFileExistsInWorkingDirectory(string s)
 			{
-				string  path = Path.Combine(PathToBackupProjectDir, s);
+				string path = Path.Combine(PathToBackupProjectDir, s);
 				Assert.IsTrue(File.Exists(path));
 			}
 
@@ -81,7 +81,7 @@ namespace WeSay.Project.Tests
 
 			public void AssertFileExistsInRepo(string s)
 			{
-				var  r = new HgRepository(PathToBackupProjectDir, new NullProgress());
+				var r = new HgRepository(PathToBackupProjectDir, new NullProgress());
 				Assert.IsTrue(r.GetFileExistsInRepo(s));
 			}
 			public void AssertFileDoesNotExistInRepo(string s)

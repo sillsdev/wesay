@@ -1,17 +1,16 @@
+using Addin.Transform.OpenOffice;
+using Mono.Addins;
+using SIL.i18n;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Mono.Addins;
-using SIL.IO;
-using SIL.i18n;
-using SIL.Progress;
-using SIL.Reporting;
-using SIL.Windows.Forms.Progress;
 using WeSay.AddinLib;
-using Addin.Transform.OpenOffice;
 using WeSay.Foundation;
 
 namespace Addin.Transform.PdfDictionary
@@ -165,9 +164,10 @@ namespace Addin.Transform.PdfDictionary
 
 		private string UserConfigDir
 		{
-// Note that libreoffice 3.5.0 and newer use homedir/.config/libreoffice
-// so will need to update this file to handle that DG: 02/2012
-			get {
+			// Note that libreoffice 3.5.0 and newer use homedir/.config/libreoffice
+			// so will need to update this file to handle that DG: 02/2012
+			get
+			{
 				if (!Available) return null;
 
 				string ucdir;
@@ -179,7 +179,7 @@ namespace Addin.Transform.PdfDictionary
 				else
 				{
 					string homedir = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-					ucdir = Path.Combine (homedir, "libreoffice");
+					ucdir = Path.Combine(homedir, "libreoffice");
 				}
 				return ucdir;
 			}
@@ -227,23 +227,23 @@ namespace Addin.Transform.PdfDictionary
 
 			if (succeeded)
 			{
-			using (ProgressDialog dlg = new ProgressDialog())
+				using (ProgressDialog dlg = new ProgressDialog())
 				{
-				dlg.BarStyle = ProgressBarStyle.Marquee; //we have no idea how much progress we've made
+					dlg.BarStyle = ProgressBarStyle.Marquee; //we have no idea how much progress we've made
 
-				dlg.Overview = "Creating PDF Dictionary";
-				BackgroundWorker worker = new BackgroundWorker();
-				worker.DoWork += OnDoWork;
-				dlg.BackgroundWorker = worker;
-				dlg.CanCancel = true;
-				dlg.ProgressState.Arguments = projectInfo;
+					dlg.Overview = "Creating PDF Dictionary";
+					BackgroundWorker worker = new BackgroundWorker();
+					worker.DoWork += OnDoWork;
+					dlg.BackgroundWorker = worker;
+					dlg.CanCancel = true;
+					dlg.ProgressState.Arguments = projectInfo;
 
-				dlg.ShowDialog();
-				if (dlg.ProgressStateResult != null &&
-					dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
+					dlg.ShowDialog();
+					if (dlg.ProgressStateResult != null &&
+						dlg.ProgressStateResult.ExceptionThatWasEncountered != null)
 					{
-					ErrorReport.ReportNonFatalException(
-						dlg.ProgressStateResult.ExceptionThatWasEncountered);
+						ErrorReport.ReportNonFatalException(
+							dlg.ProgressStateResult.ExceptionThatWasEncountered);
 					}
 				}
 			}
@@ -256,9 +256,9 @@ namespace Addin.Transform.PdfDictionary
 
 		private void OnDoWork(object sender, DoWorkEventArgs e)
 		{
-			ProgressState progressState = (ProgressState) e.Argument;
+			ProgressState progressState = (ProgressState)e.Argument;
 
-			ProjectInfo projectInfo = (ProjectInfo) progressState.Arguments;
+			ProjectInfo projectInfo = (ProjectInfo)progressState.Arguments;
 
 			progressState.StatusLabel = "Converting document to PDF...";
 

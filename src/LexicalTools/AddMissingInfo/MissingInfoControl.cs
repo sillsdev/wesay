@@ -1,3 +1,9 @@
+using SIL.Code;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Windows.Forms.Miscellaneous;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,22 +11,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SIL.Data;
-using SIL.Code;
-using SIL.DictionaryServices.Model;
-using SIL.i18n;
-using SIL.Windows.Forms.Miscellaneous;
-using SIL.Reporting;
-using SIL.WritingSystems;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
-using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
-	public partial class MissingInfoControl: UserControl
+	public partial class MissingInfoControl : UserControl
 	{
 		private readonly List<RecordToken<LexEntry>> _completedRecords;
 		private readonly List<RecordToken<LexEntry>> _todoRecords;
@@ -104,7 +101,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				Debug.Assert(sender == _completedRecordsListBox);
 				recordToken = _completedRecords[e.ItemIndex];
 			}
-			var displayString = (string) recordToken["Form"];
+			var displayString = (string)recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 			if (!string.IsNullOrEmpty(displayString))
 			{
@@ -204,10 +201,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				CurrentRecord = null;
 				if (_todoRecords.Count == 0)
 				{
-				   ShowCompletedMessage();
+					ShowCompletedMessage();
 				}
 			}
-			AdjustSplitter ();
+			AdjustSplitter();
 
 		}
 
@@ -244,10 +241,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		private void SaveNow()
 		{
 
-					if (TimeToSaveRecord != null)
-					{
-						TimeToSaveRecord.Invoke(this, null);
-					}
+			if (TimeToSaveRecord != null)
+			{
+				TimeToSaveRecord.Invoke(this, null);
+			}
 
 		}
 
@@ -266,7 +263,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 				{
 					_todoRecordsListBox.SelectedIndex = _todoRecords.FindIndex(r => r == _nextRecord);
 				}
-				else if(!_isNotComplete(CurrentEntry))
+				else if (!_isNotComplete(CurrentEntry))
 				{
 					_todoRecordsListBox.SelectedIndex = _todoRecords.Count - 2;
 				}

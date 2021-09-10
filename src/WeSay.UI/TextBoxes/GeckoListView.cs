@@ -1,3 +1,10 @@
+using Gecko;
+using Gecko.DOM;
+using Gecko.Events;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.WritingSystems;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,14 +14,6 @@ using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Gecko;
-using Gecko.DOM;
-using Gecko.Events;
-using SIL.DictionaryServices.Model;
-using SIL.Data;
-using SIL.i18n;
-using SIL.Reporting;
-using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -174,7 +173,7 @@ namespace WeSay.UI.TextBoxes
 
 		private void SetIndexAndNotify(bool notify)
 		{
-			var content = (GeckoSelectElement) _browser.Document.GetElementById("main");
+			var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 			if (content != null)
 			{
 				content.SelectedIndex = _currentIndex;
@@ -294,7 +293,7 @@ namespace WeSay.UI.TextBoxes
 			// if it's already loaded, change it
 			if (_initialSelectLoad)
 			{
-				var content = (GeckoSelectElement) _browser.Document.GetElementById("main");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					content.SetAttribute("style", SelectStyle());
@@ -322,23 +321,23 @@ namespace WeSay.UI.TextBoxes
 
 		protected override void AdjustHeight()
 		{
-			if ((_browser == null) ||(_browser.Document == null))
+			if ((_browser == null) || (_browser.Document == null))
 			{
 				return;
 			}
 
-			var content = (GeckoOptionElement) _browser.Document.GetElementById("optionElement");
+			var content = (GeckoOptionElement)_browser.Document.GetElementById("optionElement");
 			if (content != null)
 			{
-				_optionElement = (GeckoOptionElement) content;
+				_optionElement = (GeckoOptionElement)content;
 				_optionHeight = _optionElement.ClientHeight;
-				_selectElement = (GeckoSelectElement) _optionElement.Parent;
+				_selectElement = (GeckoSelectElement)_optionElement.Parent;
 			}
 
-			var selectElement = (GeckoSelectElement) _browser.Document.GetElementById("main");
+			var selectElement = (GeckoSelectElement)_browser.Document.GetElementById("main");
 			if (selectElement != null)
 			{
-				int numberOfEntries = (Height/(_optionHeight + 1)) - 1;
+				int numberOfEntries = (Height / (_optionHeight + 1)) - 1;
 				if (numberOfEntries <= 0)
 				{
 					numberOfEntries = 10;
@@ -408,7 +407,7 @@ namespace WeSay.UI.TextBoxes
 					}
 					else if (recordEntry is RecordToken<LexEntry>)
 					{
-						entry = ((RecordToken<LexEntry>) recordEntry).RealObject;
+						entry = ((RecordToken<LexEntry>)recordEntry).RealObject;
 					}
 					if (entry != null)
 					{
@@ -421,11 +420,11 @@ namespace WeSay.UI.TextBoxes
 								form = "(";
 								form += StringCatalog.Get("~Empty",
 																	"This is what shows for a word in a list when the user hasn't yet typed anything in for the word.  Like if you click the 'New Word' button repeatedly.");
-								form += ")";								//this is only going to come up with something in two very unusual cases:
-								//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
-								//2) the SIL CAWL list, where the translator adds glosses, and fails to add
-								//lexical entries.
-								//form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.LanguageTag);
+								form += ")";                                //this is only going to come up with something in two very unusual cases:
+																			//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
+																			//2) the SIL CAWL list, where the translator adds glosses, and fails to add
+																			//lexical entries.
+																			//form = entry.GetSomeMeaningToUseInAbsenseOfHeadWord(_writingSystem.LanguageTag);
 							}
 						}
 						AddItem(form);
@@ -471,7 +470,7 @@ namespace WeSay.UI.TextBoxes
 				}
 				return 100;
 			}
-		 }
+		}
 
 	}
 }

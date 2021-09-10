@@ -110,7 +110,7 @@
       <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
     </Reference>
     <Reference Include="Geckofx-Winforms">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\45.0.34\lib\net45\Geckofx-Winforms.dll</HintPath>
+      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <None Include="app.config" />
     <None Include="packages.config" />

@@ -1,12 +1,12 @@
+using Mono.Addins;
+using SIL.Reporting;
+using SIL.Xml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using Mono.Addins;
-using SIL.Reporting;
-using SIL.Xml;
 
 namespace WeSay.AddinLib
 {
@@ -180,7 +180,7 @@ namespace WeSay.AddinLib
 
 		private static void LoadAddins(List<string> alreadyFound, List<IWeSayAddin> addins)
 		{
-			foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof (IWeSayAddin)))
+			foreach (IWeSayAddin addin in AddinManager.GetExtensionObjects(typeof(IWeSayAddin)))
 			{
 				if (Singleton.DoShowInWeSay(addin.ID))
 				{

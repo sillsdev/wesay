@@ -1,13 +1,13 @@
-using System;
-using System.Windows.Forms;
 using SIL.Reporting;
 using SIL.Windows.Forms.WritingSystems;
 using SIL.WritingSystems;
+using System;
+using System.Windows.Forms;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public class WritingSystemSetup: ConfigurationControlBase
+	public class WritingSystemSetup : ConfigurationControlBase
 	{
 		private WritingSystemSetupView _view;
 
@@ -24,10 +24,10 @@ namespace WeSay.ConfigTool
 
 			this.SuspendLayout();
 			_view = new WritingSystemSetupView(writingSystemSetupModel)
-						{
-							LeftColumnWidth = 350,
-							Dock = DockStyle.Fill
-						};
+			{
+				LeftColumnWidth = 350,
+				Dock = DockStyle.Fill
+			};
 			writingSystemSetupModel.AskIfOkToConflateWritingSystems += OnAskIfOkToConflateWritingSystems;
 			writingSystemSetupModel.AskIfOkToDeleteWritingSystems += OnAskIfOkToDeleteWritingSystems;
 			writingSystemSetupModel.ItemAddedOrDeleted += OnWritingSystemAddOrDelete;

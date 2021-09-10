@@ -1,12 +1,12 @@
+using Microsoft.Win32;
+using Mono.Addins;
+using SIL.DictionaryServices.Lift;
+using SIL.i18n;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.Win32;
-using Mono.Addins;
-using SIL.DictionaryServices.Lift;
-using SIL.i18n;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.Project;
@@ -23,8 +23,11 @@ namespace Addin.Transform.LexiquePro
 
 		public override bool Available
 		{
-			get { return Environment.OSVersion.Platform != PlatformID.Unix &&
-						 !string.IsNullOrEmpty(GetPathToLexiquePro()); }
+			get
+			{
+				return Environment.OSVersion.Platform != PlatformID.Unix &&
+					   !string.IsNullOrEmpty(GetPathToLexiquePro());
+			}
 		}
 
 		public override string LocalizedLabel
@@ -72,7 +75,7 @@ namespace Addin.Transform.LexiquePro
 
 			try
 			{
-				var startInfo= new ProcessStartInfo(GetPathToLexiquePro(), "/f " + "\"" + pliftPath + "\"");
+				var startInfo = new ProcessStartInfo(GetPathToLexiquePro(), "/f " + "\"" + pliftPath + "\"");
 				startInfo.WorkingDirectory = Path.GetDirectoryName(GetPathToLexiquePro());
 				Process.Start(startInfo);
 			}
@@ -113,16 +116,16 @@ namespace Addin.Transform.LexiquePro
 									 bool linkToUserCss)
 		{
 			LexEntryRepository lexEntryRepository =
-				projectInfo.ServiceProvider.GetService(typeof (LexEntryRepository)) as LexEntryRepository;
+				projectInfo.ServiceProvider.GetService(typeof(LexEntryRepository)) as LexEntryRepository;
 			{
 				//In Oct 2008, LP didn't understand "plift" yet.
 				var pliftPath = Path.Combine(projectInfo.PathToExportDirectory, projectInfo.Name + "-plift.lift");
 				using (var dlg = new LameProgressDialog("Exporting to PLift..."))
 				{
 					dlg.Show();
-					var maker = new PLiftMaker() {Options = PLiftExporter.DefaultOptions | PLiftExporter.Options.ExportPartOfSpeechAsGrammaticalInfoElement};
+					var maker = new PLiftMaker() { Options = PLiftExporter.DefaultOptions | PLiftExporter.Options.ExportPartOfSpeechAsGrammaticalInfoElement };
 					maker.MakePLiftTempFile(pliftPath, lexEntryRepository,
-														projectInfo.ServiceProvider.GetService(typeof (ViewTemplate)) as
+														projectInfo.ServiceProvider.GetService(typeof(ViewTemplate)) as
 														ViewTemplate,
 														LiftWriter.ByteOrderStyle.BOM);
 				}

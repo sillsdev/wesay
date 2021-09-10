@@ -1,12 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Windows.Forms;
-using Mono.Addins;
-using SIL.Reporting;
-using SIL.Windows.Forms.i18n;
-using WeSay.AddinLib;
-
 namespace Addin.Transform
 {
 #if REMOVED // after several months, we can really remove this file

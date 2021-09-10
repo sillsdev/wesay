@@ -9,7 +9,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 	/// Summary description for TextLengthTrigger.
 	/// </summary>
 	[Serializable]
-	public class ShortCutTrigger: AutoCompleteTrigger
+	public class ShortCutTrigger : AutoCompleteTrigger
 	{
 		private Keys shortCut = Keys.None;
 
@@ -27,7 +27,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			set { result = value; }
 		}
 
-		public ShortCutTrigger() {}
+		public ShortCutTrigger() { }
 
 		public ShortCutTrigger(Keys shortCutKeys, TriggerState resultState)
 		{

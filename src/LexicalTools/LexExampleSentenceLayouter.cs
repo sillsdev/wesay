@@ -1,11 +1,11 @@
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Lift;
+using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
-using SIL.DictionaryServices.Model;
-using SIL.i18n;
-using SIL.Reporting;
-using SIL.Lift;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -15,7 +15,7 @@ namespace WeSay.LexicalTools
 	/// <summary>
 	/// <see cref="Layouter"/>
 	/// </summary>
-	public class LexExampleSentenceLayouter: Layouter
+	public class LexExampleSentenceLayouter : Layouter
 	{
 		public LexExampleSentenceLayouter(DetailList parentDetailList, int parentRow, ViewTemplate viewTemplate,
 			IServiceProvider serviceProvider, LexExampleSentence exampleToLayout)
@@ -25,7 +25,7 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
-			LexExampleSentence example = (LexExampleSentence) wsdo;
+			LexExampleSentence example = (LexExampleSentence)wsdo;
 			FirstRow = insertAtRow;
 
 			DetailList.SuspendLayout();
@@ -70,7 +70,7 @@ namespace WeSay.LexicalTools
 			}
 
 			DetailList.ResumeLayout(false);
-			LastRow = insertAtRow + rowCount - 1;	// want index of last row owned, not a limit value
+			LastRow = insertAtRow + rowCount - 1;   // want index of last row owned, not a limit value
 			return rowCount;
 		}
 
@@ -109,7 +109,7 @@ namespace WeSay.LexicalTools
 			Debug.Assert(parentEntryLayouter is LexEntryLayouter);
 			int first = parentEntryLayouter.ChildLayouts.IndexOf(senseLayouter);
 			Debug.Assert(first >= 0);
-			for (int i = first+1; i < parentEntryLayouter.ChildLayouts.Count; ++i)
+			for (int i = first + 1; i < parentEntryLayouter.ChildLayouts.Count; ++i)
 			{
 				var layouter = parentEntryLayouter.ChildLayouts[i];
 				layouter.FirstRow = layouter.FirstRow + rowCount;

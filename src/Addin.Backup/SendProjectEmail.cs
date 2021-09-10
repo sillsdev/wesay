@@ -1,16 +1,16 @@
+using Mono.Addins;
+using SIL.i18n;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Mono.Addins;
-using SIL.i18n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
 namespace Addin.Backup
 {
 	[Extension]
-	public class SendProjectEmail: IWeSayAddin, IWeSayAddinHasSettings
+	public class SendProjectEmail : IWeSayAddin, IWeSayAddinHasSettings
 	{
 		private SendProjectEmailSettings _settings;
 
@@ -140,7 +140,7 @@ namespace Addin.Backup
 		public object Settings
 		{
 			get { return _settings; }
-			set { _settings = (SendProjectEmailSettings) value; }
+			set { _settings = (SendProjectEmailSettings)value; }
 		}
 
 		#endregion
