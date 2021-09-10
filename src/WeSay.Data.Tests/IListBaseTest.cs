@@ -1,7 +1,7 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
@@ -13,7 +13,7 @@ namespace WeSay.Data.Tests
 		protected bool _isSorted;
 
 		[SetUp]
-		public virtual void SetUp() {}
+		public virtual void SetUp() { }
 
 		[Test]
 		public void GetItem()
@@ -28,14 +28,14 @@ namespace WeSay.Data.Tests
 		public void GetItemNegativeIndex()
 		{
 			T item;
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  item = (T) _list[-1]);
+			Assert.Throws<ArgumentOutOfRangeException>(() => item = (T)_list[-1]);
 		}
 
 		[Test]
 		public void GetItemPastTheEnd()
 		{
 			T item;
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  item =(T) _list[_list.Count]);
+			Assert.Throws<ArgumentOutOfRangeException>(() => item = (T)_list[_list.Count]);
 		}
 
 		[Test]
@@ -238,7 +238,7 @@ namespace WeSay.Data.Tests
 		#endregion
 	}
 
-	public abstract class IListVariableSizeReadWriteBaseTest<T>: IListBaseTest<T>
+	public abstract class IListVariableSizeReadWriteBaseTest<T> : IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
@@ -325,7 +325,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public abstract class IListVariableSizeReadOnlyBaseTest<T>: IListBaseTest<T>
+	public abstract class IListVariableSizeReadOnlyBaseTest<T> : IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
@@ -366,7 +366,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public new void Remove()
 		{
-			Assert.Throws<NotSupportedException>(()=>base.Remove());
+			Assert.Throws<NotSupportedException>(() => base.Remove());
 		}
 
 		[Test]
@@ -376,7 +376,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public abstract class IListFixedSizeReadWriteBaseTest<T>: IListBaseTest<T>
+	public abstract class IListFixedSizeReadWriteBaseTest<T> : IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
@@ -399,19 +399,19 @@ namespace WeSay.Data.Tests
 		[Test]
 		public new void SetItemNegativeIndex()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  base.SetItemNegativeIndex());
+			Assert.Throws<ArgumentOutOfRangeException>(() => base.SetItemNegativeIndex());
 		}
 
 		[Test]
 		public new void SetItemPastTheEnd()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() =>  base.SetItemPastTheEnd());
+			Assert.Throws<ArgumentOutOfRangeException>(() => base.SetItemPastTheEnd());
 		}
 
 		[Test]
 		public new void Add()
 		{
-			Assert.Throws<NotSupportedException>(() =>  base.Add());
+			Assert.Throws<NotSupportedException>(() => base.Add());
 		}
 
 		[Test]
@@ -439,7 +439,7 @@ namespace WeSay.Data.Tests
 		}
 	}
 
-	public abstract class IListFixedSizeReadOnlyBaseTest<T>: IListBaseTest<T>
+	public abstract class IListFixedSizeReadOnlyBaseTest<T> : IListBaseTest<T>
 	{
 		[Test]
 		public void IsFixedSize()
@@ -491,7 +491,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IListTest: IListVariableSizeReadWriteBaseTest<int>
+	public class IListTest : IListVariableSizeReadWriteBaseTest<int>
 	{
 		[SetUp]
 		public override void SetUp()
@@ -511,7 +511,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IListStringTest: IListVariableSizeReadWriteBaseTest<string>
+	public class IListStringTest : IListVariableSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
 		public override void SetUp()
@@ -531,7 +531,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IListNoDataTest: IListVariableSizeReadWriteBaseTest<string>
+	public class IListNoDataTest : IListVariableSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
 		public override void SetUp()
@@ -543,7 +543,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IListFixedSizeReadOnlyTest: IListFixedSizeReadOnlyBaseTest<string>
+	public class IListFixedSizeReadOnlyTest : IListFixedSizeReadOnlyBaseTest<string>
 	{
 		[SetUp]
 		public override void SetUp()
@@ -563,7 +563,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IListFixedSizeReadWriteTest: IListFixedSizeReadWriteBaseTest<string>
+	public class IListFixedSizeReadWriteTest : IListFixedSizeReadWriteBaseTest<string>
 	{
 		[SetUp]
 		public override void SetUp()

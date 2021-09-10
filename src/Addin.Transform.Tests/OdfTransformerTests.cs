@@ -1,16 +1,15 @@
+using Addin.Transform.OpenOffice;
+using ICSharpCode.SharpZipLib.Zip;
+using NUnit.Framework;
+using SIL.Reporting;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
 using System;
 using System.IO;
 using System.Xml;
-using SIL.Reporting;
-using SIL.TestUtilities;
-using Addin.Transform.OpenOffice;
-using SIL.WritingSystems;
+using WeSay.AddinLib;
 using WeSay.Project;
 using WeSay.Project.Tests;
-using WeSay.AddinLib;
-using ICSharpCode.SharpZipLib.Zip;
-
-using NUnit.Framework;
 
 namespace Addin.Transform.Tests
 {
@@ -70,7 +69,7 @@ namespace Addin.Transform.Tests
 
 			public string OdtStyles => Path.Combine(_projectInfo.PathToExportDirectory, "styles.xml");
 
-			public void Dispose ()
+			public void Dispose()
 			{
 				_project.Dispose();
 				_testProject.Dispose();
@@ -103,16 +102,16 @@ namespace Addin.Transform.Tests
 		{
 			using (var e = new EnvironmentForTest())
 			{
-				var addin = new OpenOfficeAddin {LaunchAfterExport = false};
+				var addin = new OpenOfficeAddin { LaunchAfterExport = false };
 
-				addin.Launch(null,  e.ProjectInfo);
+				addin.Launch(null, e.ProjectInfo);
 				Assert.IsTrue(File.Exists(e.OdtFile));
 				bool succeeded = (new FileInfo(e.OdtFile).Length > 0);
 				Assert.IsTrue(succeeded);
 
 				var nsManager = new XmlNamespaceManager(new NameTable());
 				nsManager.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
-				nsManager.AddNamespace("style","urn:oasis:names:tc:opendocument:xmlns:style:1.0" );
+				nsManager.AddNamespace("style", "urn:oasis:names:tc:opendocument:xmlns:style:1.0");
 				AssertThatXmlIn.File(e.OdtContent).HasAtLeastOneMatchForXpath("//text:p", nsManager);
 				AssertThatXmlIn.File(e.OdtStyles).HasAtLeastOneMatchForXpath("//style:font-face", nsManager);
 

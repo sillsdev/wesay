@@ -1,5 +1,9 @@
 // Derived from code by Peter Femiani available on CodeProject http://www.codeproject.com/csharp/AutoCompleteTextBox.asp
 
+using Gecko;
+using SIL.Code;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,10 +11,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Gecko;
-using SIL.Code;
-using SIL.UiBindings;
-using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
@@ -182,9 +182,9 @@ namespace WeSay.UI.AutoCompleteTextBox
 			get { return base.Text; }
 			set
 			{
-//				TriggersEnabled = false;
+				//				TriggersEnabled = false;
 				base.Text = value;
-//				TriggersEnabled = true;
+				//				TriggersEnabled = true;
 			}
 		}
 
@@ -312,7 +312,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
-			using (var detect = Detect.Reentry(this,"OnSizeChanged"))
+			using (var detect = Detect.Reentry(this, "OnSizeChanged"))
 			{
 				if (detect.DidReenter)
 				{
@@ -384,43 +384,43 @@ namespace WeSay.UI.AutoCompleteTextBox
 				switch (Triggers.OnCommandKey(keyData))
 				{
 					case TriggerState.ShowAndConsume:
-					{
-						val = true;
-						ShowList();
-					}
-						break;
-					case TriggerState.Show:
-					{
-						ShowList();
-					}
-						break;
-					case TriggerState.HideAndConsume:
-					{
-						val = true;
-						HideList();
-					}
-						break;
-					case TriggerState.Hide:
-					{
-						HideList();
-					}
-						break;
-					case TriggerState.SelectAndConsume:
-					{
-						if (_listBox.Visible)
 						{
 							val = true;
-							SelectCurrentItemAndHideList();
+							ShowList();
 						}
-					}
+						break;
+					case TriggerState.Show:
+						{
+							ShowList();
+						}
+						break;
+					case TriggerState.HideAndConsume:
+						{
+							val = true;
+							HideList();
+						}
+						break;
+					case TriggerState.Hide:
+						{
+							HideList();
+						}
+						break;
+					case TriggerState.SelectAndConsume:
+						{
+							if (_listBox.Visible)
+							{
+								val = true;
+								SelectCurrentItemAndHideList();
+							}
+						}
 						break;
 					case TriggerState.Select:
-					{
-						if (_listBox.Visible)
 						{
-							SelectCurrentItemAndHideList();
+							if (_listBox.Visible)
+							{
+								SelectCurrentItemAndHideList();
+							}
 						}
-					}
 						break;
 					default:
 						break;
@@ -437,43 +437,43 @@ namespace WeSay.UI.AutoCompleteTextBox
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
-			uint keyValue = (uint) keyData;
+			uint keyValue = (uint)keyData;
 			switch (keyData)
 			{
 				case Keys.Up:
-				{
-					TriggersEnabled = false;
-					Mode = EntryMode.List;
-					TriggersEnabled = true;
-					if (_listBox.Visible == false)
 					{
-						ShowList();
+						TriggersEnabled = false;
+						Mode = EntryMode.List;
+						TriggersEnabled = true;
+						if (_listBox.Visible == false)
+						{
+							ShowList();
+						}
+						if (_listBox.SelectedIndex > 0)
+						{
+							_listBox.SelectedIndex--;
+						}
+						return true;
 					}
-					if (_listBox.SelectedIndex > 0)
-					{
-						_listBox.SelectedIndex--;
-					}
-					return true;
-				}
 				case Keys.Down:
-				{
-					TriggersEnabled = false;
-					Mode = EntryMode.List;
-					TriggersEnabled = true;
-					if (_listBox.Visible == false)
 					{
-						ShowList();
+						TriggersEnabled = false;
+						Mode = EntryMode.List;
+						TriggersEnabled = true;
+						if (_listBox.Visible == false)
+						{
+							ShowList();
+						}
+						if (_listBox.SelectedIndex < _listBox.Items.Count - 1)
+						{
+							_listBox.SelectedIndex++;
+						}
+						return true;
 					}
-					if (_listBox.SelectedIndex < _listBox.Items.Count - 1)
-					{
-						_listBox.SelectedIndex++;
-					}
-					return true;
-				}
 				default:
-				{
-					return DefaultCmdKey(ref msg, keyData);
-				}
+					{
+						return DefaultCmdKey(ref msg, keyData);
+					}
 			}
 		}
 
@@ -491,19 +491,19 @@ namespace WeSay.UI.AutoCompleteTextBox
 				switch (Triggers.OnTextChanged(Text))
 				{
 					case TriggerState.Show:
-					{
-						ShowList();
-					}
+						{
+							ShowList();
+						}
 						break;
 					case TriggerState.Hide:
-					{
-						HideList();
-					}
+						{
+							HideList();
+						}
 						break;
 					default:
-					{
-						UpdateList();
-					}
+						{
+							UpdateList();
+						}
 						break;
 				}
 			}
@@ -709,15 +709,15 @@ namespace WeSay.UI.AutoCompleteTextBox
 				switch (BorderStyle)
 				{
 					case BorderStyle.FixedSingle:
-					{
-						_listBox.Height += 2;
-						break;
-					}
+						{
+							_listBox.Height += 2;
+							break;
+						}
 					case BorderStyle.Fixed3D:
-					{
-						_listBox.Height += 4;
-						break;
-					}
+						{
+							_listBox.Height += 4;
+							break;
+						}
 				}
 
 				if (_autoSizePopup)

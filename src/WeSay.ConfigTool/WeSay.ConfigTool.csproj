@@ -97,7 +97,7 @@
     </Reference>
     <Reference Include="Chorus, Version=3.1.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Chorus.App.4.0.1-beta0001\lib\net461Chorus.exe</HintPath>
+      <HintPath>..\packages\SIL.Chorus.App.4.0.1-beta0001\lib\net461\Chorus.exe</HintPath>
     </Reference>
     <Reference Include="DialogAdapters, Version=0.1.9.0, Culture=neutral, PublicKeyToken=7dc842182b0626dc, processorArchitecture=MSIL">
       <HintPath>..\packages\DialogAdapters.Gtk2.0.1.9\lib\net461\DialogAdapters.dll</HintPath>
@@ -119,7 +119,7 @@
     </Reference>
     <Reference Include="icu.net, Version=2.7.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\icu.net.2.7.2-beta.1\lib\net451\icu.net.dll</HintPath>
+      <HintPath>..\packages\icu.net.2.7.1\lib\net451\icu.net.dll</HintPath>
     </Reference>
     <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -141,7 +141,7 @@
     </Reference>
     <Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Chorus.LibChorus.4.0.1-beta0001\lib\net461LibChorus.dll</HintPath>
+      <HintPath>..\packages\SIL.Chorus.LibChorus.4.0.1-beta0001\lib\net461\LibChorus.dll</HintPath>
     </Reference>
     <Reference Include="Markdig.Signed, Version=0.22.0.0, Culture=neutral, PublicKeyToken=870da25a133885f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Markdig.Signed.0.22.0\lib\net452\Markdig.Signed.dll</HintPath>

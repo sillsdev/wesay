@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using Autofac;
+﻿using Autofac;
+using System.Windows.Forms;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
 
@@ -16,7 +16,7 @@ namespace WeSay.ConfigTool.Tasks
 
 			if (config.GetType() == typeof(MissingInfoConfiguration))
 			{
-				return diContainer.Resolve<MissingInfoTaskConfigControl>(new TypedParameter(config.GetType(),config) );
+				return diContainer.Resolve<MissingInfoTaskConfigControl>(new TypedParameter(config.GetType(), config));
 			}
 			if (config.TaskName == "GatherWordsBySemanticDomains")
 			{

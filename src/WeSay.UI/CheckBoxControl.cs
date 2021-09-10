@@ -1,11 +1,11 @@
+using SIL.Reporting;
+using SIL.UiBindings;
 using System;
 using System.Windows.Forms;
-using SIL.UiBindings;
-using SIL.Reporting;
 
 namespace WeSay.UI
 {
-	public partial class CheckBoxControl: UserControl, IBindableControl<bool>
+	public partial class CheckBoxControl : UserControl, IBindableControl<bool>
 	{
 		private readonly string _nameForLogging;
 		public event EventHandler ValueChanged;

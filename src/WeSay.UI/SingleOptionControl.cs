@@ -1,18 +1,18 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using SIL.i18n;
 using SIL.Lift;
 using SIL.Lift.Options;
-using SIL.UiBindings;
 using SIL.Reporting;
+using SIL.UiBindings;
 using SIL.WritingSystems;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI
 {
-	public partial class SingleOptionControl: UserControl, IBindableControl<string>
+	public partial class SingleOptionControl : UserControl, IBindableControl<string>
 	{
 		private readonly OptionsList _list;
 		private readonly IWeSayComboBox _control = null;
@@ -45,7 +45,7 @@ namespace WeSay.UI
 
 		}
 
-		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem, IServiceProvider serviceProvider )
+		public SingleOptionControl(IValueHolder<string> optionRef, OptionsList list, string nameForLogging, WritingSystemDefinition preferredWritingSystem, IServiceProvider serviceProvider)
 		{
 			AutoSize = true;
 			AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -73,11 +73,11 @@ namespace WeSay.UI
 					string key = "";
 					if (ConfiguredListItem(_control.SelectedItem))
 					{
-						key = ((Option.OptionDisplayProxy) _control.SelectedItem).Key;
+						key = ((Option.OptionDisplayProxy)_control.SelectedItem).Key;
 					}
 					else
 					{
-						key = (String) _control.SelectedItem;
+						key = (String)_control.SelectedItem;
 					}
 					// todo: something like this                   if (String.IsNullOrEmpty(key))
 					//                    {
@@ -164,7 +164,7 @@ namespace WeSay.UI
 		{
 
 			_control.Font = (Font)StringCatalog.LabelFont.Clone();
-			if (!_list.Options.Exists(delegate(Option o) { return (o.Key == string.Empty || o.Key == "unknown"); }))
+			if (!_list.Options.Exists(delegate (Option o) { return (o.Key == string.Empty || o.Key == "unknown"); }))
 			{
 				MultiText unspecifiedMultiText = new MultiText();
 				unspecifiedMultiText.SetAlternative(_preferredWritingSystem.LanguageTag,
@@ -187,7 +187,8 @@ namespace WeSay.UI
 			_control.SelectedValueChanged += OnSelectedValueChanged;
 
 			//don't let the mousewheel do the scrolling, as it's likely an accident (http://jira.palaso.org/issues/browse/WS-34670)
-			((Control)_control).MouseWheel += (sender, e) => {
+			((Control)_control).MouseWheel += (sender, e) =>
+			{
 				HandledMouseEventArgs he = e as HandledMouseEventArgs;
 				if (he != null)
 				{

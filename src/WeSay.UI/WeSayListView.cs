@@ -1,11 +1,11 @@
+using SIL.DictionaryServices.Model;
+using SIL.WritingSystems;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.DictionaryServices.Model;
-using SIL.WritingSystems;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
@@ -48,7 +48,7 @@ namespace WeSay.UI
 		event KeyEventHandler KeyDown;
 	}
 
-	public partial class WeSayListView: ListView, IWeSayListView
+	public partial class WeSayListView : ListView, IWeSayListView
 	{
 		private const int WM_HSCROLL = 0x114;
 		private WritingSystemDefinition _writingSystem;
@@ -141,7 +141,7 @@ namespace WeSay.UI
 		{
 			_itemsCache.Clear();
 			base.OnCacheVirtualItems(e);
-			for (int i = e.StartIndex;i <= e.EndIndex;++i)
+			for (int i = e.StartIndex; i <= e.EndIndex; ++i)
 			{
 				_itemsCache[i] = GetVirtualItem(i);
 			}
@@ -166,10 +166,10 @@ namespace WeSay.UI
 			if (e.Item == null)
 			{
 				var entry = _dataSource[e.ItemIndex] as LexEntry;
-				if(entry!=null)
+				if (entry != null)
 				{
 					var form = entry.GetHeadWordForm(_writingSystem.LanguageTag);
-					if(string.IsNullOrEmpty(form))
+					if (string.IsNullOrEmpty(form))
 					{
 						//this is only going to come up with something in two very unusual cases:
 						//1) a monolingual dictionary (well, one with meanings in the same WS as the lexical units)
@@ -181,7 +181,7 @@ namespace WeSay.UI
 				}
 				else
 				{
-					e.Item = new ListViewItem( _dataSource[e.ItemIndex].ToString());
+					e.Item = new ListViewItem(_dataSource[e.ItemIndex].ToString());
 				}
 			}
 
@@ -202,7 +202,7 @@ namespace WeSay.UI
 			{
 				if (_writingSystem == null)
 				{
-					if(DesignMode)
+					if (DesignMode)
 						return new WritingSystemDefinition();
 					throw new InvalidOperationException(
 							"Input system must be initialized prior to use.");
@@ -258,21 +258,21 @@ namespace WeSay.UI
 
 				if (value is IBindingList)
 				{
-					((IBindingList) value).ListChanged += OnListChanged;
+					((IBindingList)value).ListChanged += OnListChanged;
 				}
-			 }
-		 }
+			}
+		}
 
-		 private void RemoveBindingListNotifiers()
-		 {
-			 if (_dataSource != null && _dataSource is IBindingList)
-			 {
-				 ((IBindingList) _dataSource).ListChanged -= OnListChanged;
-			 }
-		 }
+		private void RemoveBindingListNotifiers()
+		{
+			if (_dataSource != null && _dataSource is IBindingList)
+			{
+				((IBindingList)_dataSource).ListChanged -= OnListChanged;
+			}
+		}
 
-		 private void OnListChanged(object sender, ListChangedEventArgs e)
-		 {
+		private void OnListChanged(object sender, ListChangedEventArgs e)
+		{
 			_itemsCache.Clear();
 			// this needs to be at the beginning so we don't make an invalid
 			// reference past the end when an item is deleted
@@ -281,7 +281,7 @@ namespace WeSay.UI
 			// will get called to update the old selection and the new
 			// unless we lower the size.
 			VirtualListSize = _dataSource.Count;
-		 }
+		}
 
 		protected override void OnItemSelectionChanged(ListViewItemSelectionChangedEventArgs e)
 		{
@@ -472,7 +472,7 @@ namespace WeSay.UI
 			}
 			else
 			{
-				string textMinusAccelerators = e.Item.Text.Replace("&","&&");
+				string textMinusAccelerators = e.Item.Text.Replace("&", "&&");
 				TextRenderer.DrawText(e.Graphics, textMinusAccelerators, Font, bounds, textColor, flags);
 			}
 
@@ -538,7 +538,7 @@ namespace WeSay.UI
 					{
 						_selectedIndexForUseBeforeSelectedIndicesAreInitialized = -1;
 						SelectedIndices.Clear();
-						OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(null,value,true));
+						OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(null, value, true));
 					}
 					else
 					{
@@ -554,7 +554,7 @@ namespace WeSay.UI
 							if (_selectedIndexForUseBeforeSelectedIndicesAreInitialized != SelectedIndex)
 							{
 								_selectedIndexForUseBeforeSelectedIndicesAreInitialized = SelectedIndex;
-								OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(SelectedIndex),SelectedIndex, true));
+								OnItemSelectionChanged(new ListViewItemSelectionChangedEventArgs(GetVirtualItem(SelectedIndex), SelectedIndex, true));
 							}
 
 						}
@@ -671,7 +671,7 @@ namespace WeSay.UI
 			{
 				return Width;
 			}
-		 }
+		}
 
 		public int MinLength { get; set; }
 		public int MaxLength { get; set; }

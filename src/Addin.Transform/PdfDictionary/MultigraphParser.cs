@@ -1,8 +1,6 @@
-﻿using System;
+﻿using SIL.Code;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using SIL.Code;
 
 namespace Addin.Transform.PdfDictionary
 {
@@ -13,7 +11,7 @@ namespace Addin.Transform.PdfDictionary
 	/// </summary>
 	public class MultigraphParser
 	{
-		private readonly List<string>_multigraphsLongestToShortest;
+		private readonly List<string> _multigraphsLongestToShortest;
 
 		/// <summary>
 		/// Contrstuctor
@@ -22,7 +20,7 @@ namespace Addin.Transform.PdfDictionary
 		public MultigraphParser(IEnumerable<string> multigraphs)
 		{
 			_multigraphsLongestToShortest = new List<string>();
-			foreach(var m in multigraphs.OrderByDescending(s=>s.Length))
+			foreach (var m in multigraphs.OrderByDescending(s => s.Length))
 			{
 				var x = m.Trim();
 				if (!string.IsNullOrEmpty(x))
@@ -38,12 +36,12 @@ namespace Addin.Transform.PdfDictionary
 		/// <returns></returns>
 		public string GetFirstMultigraph(string word)
 		{
-			Guard.Against(string.IsNullOrEmpty(word),"Word cannot be empty");
+			Guard.Against(string.IsNullOrEmpty(word), "Word cannot be empty");
 
 			var trimmedUpper = word.Substring(GetOffsetOfFirstLetterOrDigit(word)).ToUpperInvariant();
 			foreach (var multigraph in _multigraphsLongestToShortest)
 			{
-				if(trimmedUpper.StartsWith(multigraph))
+				if (trimmedUpper.StartsWith(multigraph))
 					return multigraph;
 			}
 			//wasn't listed, that's ok, just return the upperchase of the first character (skipping hyphens and such)
@@ -64,7 +62,7 @@ namespace Addin.Transform.PdfDictionary
 				if (char.IsLetterOrDigit(c))
 				{
 					return offset;
-				 }
+				}
 				//safe to assume it's a letter... someday the writing system could tell us
 				if (System.Globalization.UnicodeCategory.PrivateUse == char.GetUnicodeCategory(c)) //see WS-1412
 				{

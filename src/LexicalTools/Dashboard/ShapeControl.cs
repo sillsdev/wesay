@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools.Dashboard
 		CustomPie
 	}
 
-	public class ShapeControl: Control
+	public class ShapeControl : Control
 	{
 		private GraphicsPath _outline;
 		private bool _istextset;
@@ -62,7 +62,7 @@ namespace WeSay.LexicalTools.Dashboard
 		[Description("Back Color")]
 		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
-			public override Color BackColor
+		public override Color BackColor
 		{
 			get { return base.BackColor; }
 			set
@@ -89,7 +89,7 @@ namespace WeSay.LexicalTools.Dashboard
 		[Description("Color at center")]
 		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
-			public Color CenterColor
+		public Color CenterColor
 		{
 			get { return _centercolor; }
 			set
@@ -104,7 +104,7 @@ namespace WeSay.LexicalTools.Dashboard
 		[Description("Color at the edges of the Shape")]
 		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
-			public Color SurroundColor
+		public Color SurroundColor
 		{
 			get { return _surroundcolor; }
 			set
@@ -135,7 +135,7 @@ namespace WeSay.LexicalTools.Dashboard
 		[Description("Border Color")]
 		[Browsable(true)]
 		//        [EditorAttribute(typeof(ColorEditor), typeof(System.Drawing.Design.UITypeEditor))]
-			public Color BorderColor
+		public Color BorderColor
 		{
 			get { return _bordercolor; }
 			set
@@ -161,7 +161,7 @@ namespace WeSay.LexicalTools.Dashboard
 		[Description("Select Shape")]
 		[Browsable(true)]
 		//        [EditorAttribute(typeof(ShapeTypeEditor), typeof(System.Drawing.Design.UITypeEditor))]
-			public ShapeType Shape
+		public ShapeType Shape
 		{
 			get { return _shape; }
 			set
@@ -267,16 +267,16 @@ namespace WeSay.LexicalTools.Dashboard
 					outline.AddLine(0, height - radius / 2, 0, radius / 2);
 					break;
 
-					//                case ShapeType.RoundedRectangle:
-					//                    outline.AddArc(0, 0, width / 4, width / 4, 180, 90);
-					//                    outline.AddLine(width / 8, 0, width - width / 8, 0);
-					//                    outline.AddArc(width - width / 4, 0, width / 4, width / 4, 270, 90);
-					//                    outline.AddLine(width, width / 8, width, height - width / 8);
-					//                    outline.AddArc(width - width / 4, height - width / 4, width / 4, width / 4, 0, 90);
-					//                    outline.AddLine(width - width / 8, height, width / 8, height);
-					//                    outline.AddArc(0, height - width / 4, width / 4, width / 4, 90, 90);
-					//                    outline.AddLine(0, height - width / 8, 0, width / 8);
-					//                    break;
+				//                case ShapeType.RoundedRectangle:
+				//                    outline.AddArc(0, 0, width / 4, width / 4, 180, 90);
+				//                    outline.AddLine(width / 8, 0, width - width / 8, 0);
+				//                    outline.AddArc(width - width / 4, 0, width / 4, width / 4, 270, 90);
+				//                    outline.AddLine(width, width / 8, width, height - width / 8);
+				//                    outline.AddArc(width - width / 4, height - width / 4, width / 4, width / 4, 0, 90);
+				//                    outline.AddLine(width - width / 8, height, width / 8, height);
+				//                    outline.AddArc(0, height - width / 4, width / 4, width / 4, 90, 90);
+				//                    outline.AddLine(0, height - width / 8, 0, width / 8);
+				//                    break;
 
 				case ShapeType.BallonSW:
 					outline.AddArc(0, 0, width / 4, width / 4, 180, 90);
@@ -403,7 +403,7 @@ namespace WeSay.LexicalTools.Dashboard
 				using (PathGradientBrush br = new PathGradientBrush(_outline))
 				{
 					br.CenterColor = _centercolor;
-					br.SurroundColors = new Color[] {_surroundcolor};
+					br.SurroundColors = new Color[] { _surroundcolor };
 					pe.Graphics.FillPath(br, _outline);
 				}
 			}

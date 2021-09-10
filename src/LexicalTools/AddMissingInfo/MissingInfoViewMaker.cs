@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SIL.DictionaryServices.Model;
 using SIL.i18n;
 using SIL.Lift;
+using System;
+using System.Collections.Generic;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
@@ -40,7 +40,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 																  string fieldsToShow,
 																	string fieldsToShowReadOnly)
 		{
-			string[] fields = SplitUpFieldNames(fieldsToShow+","+fieldsToShowReadOnly);
+			string[] fields = SplitUpFieldNames(fieldsToShow + "," + fieldsToShowReadOnly);
 			ViewTemplate viewTemplate = new ViewTemplate();
 			foreach (Field field in fieldList)
 			{

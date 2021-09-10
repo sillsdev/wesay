@@ -6,7 +6,7 @@ using WeSay.Foundation;
 namespace WeSay.AddinLib
 {
 	//nb: not really an addin that is discoverable.
-	public class ComingSomedayAddin: IWeSayAddin
+	public class ComingSomedayAddin : IWeSayAddin
 	{
 		private readonly string _name;
 		private readonly string _longName;
@@ -96,7 +96,7 @@ namespace WeSay.AddinLib
 
 		#endregion
 
-		public void Launch(Form parentForm, ProjectInfo projectInfo) {}
+		public void Launch(Form parentForm, ProjectInfo projectInfo) { }
 
 		public bool Deprecated
 		{

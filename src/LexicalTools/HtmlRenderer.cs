@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Text;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -85,7 +85,7 @@ namespace WeSay.LexicalTools
 
 			if (entry.Senses.Count > 1 ||
 				(currentItem != null &&
-				 ( (glossField.IsMeaningField && currentItem.PropertyName == LexSense.WellKnownProperties.Gloss) ||
+				 ((glossField.IsMeaningField && currentItem.PropertyName == LexSense.WellKnownProperties.Gloss) ||
 					(!glossField.IsMeaningField && currentItem.PropertyName == LexSense.WellKnownProperties.Definition))
 				 ))
 			{
@@ -213,7 +213,7 @@ namespace WeSay.LexicalTools
 				"<span lang='{5}' style='font-family:{0}; font-size:{1}pt;font-weight:{2};font-style:{3};text-decoration:{4}'>",
 				font.Name,
 				fontSize.ToString(),
-				boldText ? "bold": "normal",
+				boldText ? "bold" : "normal",
 				italicsOn ? "italic" : "normal",
 				underline ? "underline" : "none",
 				lang);
@@ -247,7 +247,7 @@ namespace WeSay.LexicalTools
 
 				if (field == null) // show them all
 				{
-					foreach (string id in WritingSystems.FilterForTextLanguageTags(text.Forms.Select(f=>f.WritingSystemId)))
+					foreach (string id in WritingSystems.FilterForTextLanguageTags(text.Forms.Select(f => f.WritingSystemId)))
 					{
 
 						var form = text.Forms.First(f => f.WritingSystemId == id);
@@ -256,7 +256,7 @@ namespace WeSay.LexicalTools
 				}
 				else // show all forms turned on in the field
 				{
-					foreach (string id in field.WritingSystemIds.Intersect(text.Forms.Select(f=>f.WritingSystemId)))
+					foreach (string id in field.WritingSystemIds.Intersect(text.Forms.Select(f => f.WritingSystemId)))
 					{
 						var form = text.Forms.First(f => f.WritingSystemId == id);
 						RenderForm(text, currentItem, htmlBuilder, form, sizeBoost);
@@ -287,7 +287,7 @@ namespace WeSay.LexicalTools
 												int? number)
 		{
 			string html = string.Empty;
-			if (currentItem != null && property == currentItem.PropertyName && parent==currentItem.Parent)
+			if (currentItem != null && property == currentItem.PropertyName && parent == currentItem.Parent)
 			{
 				//REVIEW: is a ws switch needed for a blank? html += SwitchToWritingSystem(WritingSystems.AnalysisWritingSystemDefault.Id);
 				if (number != null)

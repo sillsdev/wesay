@@ -1,15 +1,15 @@
+using Mono.Addins;
+using SIL.i18n;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Mono.Addins;
-using SIL.i18n;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
 namespace Addin.Backup
 {
 	[Extension]
-	public class BackupToDevice: IWeSayAddin //, IWeSayProjectAwareAddin
+	public class BackupToDevice : IWeSayAddin //, IWeSayProjectAwareAddin
 	{
 		#region IWeSayAddin Members
 

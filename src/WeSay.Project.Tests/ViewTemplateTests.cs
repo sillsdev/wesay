@@ -1,17 +1,17 @@
-using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
+using System;
+using System.Collections.Generic;
 using WeSay.Data.Tests;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
 {
 	[TestFixture]
-	public class ViewTemplateTests: IEnumerableBaseTest<Field>
+	public class ViewTemplateTests : IEnumerableBaseTest<Field>
 	{
 		[SetUp]
 		public override void SetUp()
@@ -94,9 +94,9 @@ namespace WeSay.Project.Tests
 		private static ViewTemplate PopulateViewTemplate()
 		{
 			var f = new ViewTemplate();
-			f.Add(new Field("field1", "LexEntry", new[] {"en", "br", "th"}));
-			f.Add(new Field("field2", "LexEntry", new[] {"th"}));
-			f.Add(new Field("field2", "LexEntry", new[] {"en", "br"}));
+			f.Add(new Field("field1", "LexEntry", new[] { "en", "br", "th" }));
+			f.Add(new Field("field2", "LexEntry", new[] { "th" }));
+			f.Add(new Field("field2", "LexEntry", new[] { "en", "br" }));
 			return f;
 		}
 
@@ -164,7 +164,7 @@ namespace WeSay.Project.Tests
 			var simple = new ViewTemplate();
 			simple.Add(new Field(Field.FieldNames.ExampleTranslation.ToString(),
 								 "LexExampleSentence",
-								 new[] {"en"}));
+								 new[] { "en" }));
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
 
 			Assert.AreEqual(count, master.Count);
@@ -177,7 +177,7 @@ namespace WeSay.Project.Tests
 			ViewTemplate master = MakeMasterInventory();
 			int count = master.Count;
 			var usersTemplate = new ViewTemplate();
-			usersTemplate.Add(new Field("dummy", "LexEntry", new[] {"en"}));
+			usersTemplate.Add(new Field("dummy", "LexEntry", new[] { "en" }));
 			ViewTemplate.UpdateUserViewTemplate(master, usersTemplate);
 			Assert.IsTrue(usersTemplate.Contains("dummy"));
 		}
@@ -199,7 +199,7 @@ namespace WeSay.Project.Tests
 			var simple = new ViewTemplate();
 			var definitionField = new Field(LexSense.WellKnownProperties.Definition,
 											  "LexSense",
-											  new[] {"en"});
+											  new[] { "en" });
 			definitionField.Enabled = false;
 			simple.Add(definitionField);
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
@@ -213,12 +213,12 @@ namespace WeSay.Project.Tests
 			ViewTemplate simple = new ViewTemplate();
 			Field definitionField = new Field(LexSense.WellKnownProperties.Definition,
 											  "LexSense",
-											  new[] {"en", "a", "b"});
+											  new[] { "en", "a", "b" });
 			definitionField.Enabled = false;
 			simple.Add(definitionField);
 			Field glossField = new Field(LexSense.WellKnownProperties.Gloss,
 										 "LexSense",
-										 new[] {"b", "c"});
+										 new[] { "b", "c" });
 			simple.Add(glossField);
 			ViewTemplate.UpdateUserViewTemplate(master, simple);
 			Assert.AreEqual(4, definitionField.WritingSystemIds.Count);

@@ -1,12 +1,11 @@
+using SIL.IO;
+using SIL.Reporting;
+using SIL.Windows.Forms.Reporting;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using SIL.IO;
-using SIL.Reporting;
 using WeSay.ConfigTool.Properties;
-using Gecko;
-using SIL.Windows.Forms.Reporting;
 
 namespace WeSay.ConfigTool
 {

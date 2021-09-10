@@ -1,21 +1,21 @@
-using System.Collections.Generic;
-using System.Xml;
 using SIL.Reporting;
 using SIL.Xml;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace WeSay.LexicalTools
 {
 	public abstract class TaskConfigurationBase
 	{
 		protected XmlDocument _xmlDoc;
-		public bool IsVisible { get; set;}
+		public bool IsVisible { get; set; }
 
 		public TaskConfigurationBase(string xml)
 		{
 			_xmlDoc = new XmlDocument();
 			_xmlDoc.LoadXml(xml);
 
-			IsVisible =  XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
+			IsVisible = XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
 		}
 		public string TaskName
 		{
@@ -24,7 +24,7 @@ namespace WeSay.LexicalTools
 
 		public virtual bool IsOptional
 		{
-			get{ return true;}
+			get { return true; }
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace WeSay.LexicalTools
 
 		protected string GetStringFromConfigNode(string elementName)
 		{
-			var name = _xmlDoc.SelectSingleNode("task/"+elementName);
+			var name = _xmlDoc.SelectSingleNode("task/" + elementName);
 			if (name == null || string.IsNullOrEmpty(name.InnerText))
 			{
 				throw new ConfigurationException("Missing the element '{0}'", elementName);
@@ -57,8 +57,9 @@ namespace WeSay.LexicalTools
 			return name.InnerText;
 		}
 
-		protected  abstract IEnumerable<KeyValuePair<string, string>> ValuesToSave
-		{ get;
+		protected abstract IEnumerable<KeyValuePair<string, string>> ValuesToSave
+		{
+			get;
 		}
 
 		public void Write(XmlWriter writer)

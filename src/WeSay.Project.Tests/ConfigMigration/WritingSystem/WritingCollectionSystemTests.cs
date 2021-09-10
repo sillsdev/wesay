@@ -1,9 +1,9 @@
-﻿using System.Drawing;
+﻿using Exortech.NetReflector;
+using NUnit.Framework;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Exortech.NetReflector;
-using NUnit.Framework;
 using WeSay.Project.ConfigMigration.WritingSystem;
 
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
@@ -86,11 +86,11 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 
 		private static NetReflectorWriter NetReflectorWriter(XmlWriter writer)
 		{
-				NetReflectorTypeTable t = new NetReflectorTypeTable();
-				t.Add(typeof(WritingSystemCollection_V1));
-				t.Add(typeof(WritingSystem_V1));
+			NetReflectorTypeTable t = new NetReflectorTypeTable();
+			t.Add(typeof(WritingSystemCollection_V1));
+			t.Add(typeof(WritingSystem_V1));
 
-				return new NetReflectorWriter(writer);
+			return new NetReflectorWriter(writer);
 		}
 
 		private static NetReflectorReader NetReflectorReader

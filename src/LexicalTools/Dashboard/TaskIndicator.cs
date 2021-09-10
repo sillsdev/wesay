@@ -1,13 +1,13 @@
+using SIL.i18n;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.i18n;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public partial class TaskIndicator: UserControl
+	public partial class TaskIndicator : UserControl
 	{
 		public event EventHandler Selected = delegate { };
 

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SIL.i18n;
+using SIL.UiBindings;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.i18n;
-using SIL.UiBindings;
 using WeSay.App.Properties;
 using WeSay.LexicalTools.Dashboard;
 
@@ -20,13 +20,13 @@ namespace WeSay.App
 			_countGiver = counterGiver;
 
 			_launchConfigToolLink = new ToolStripButton()
-										{
-											Text = "Configure This Project...",
-											//doesn't work Alignment = ToolStripItemAlignment.Right
+			{
+				Text = "Configure This Project...",
+				//doesn't work Alignment = ToolStripItemAlignment.Right
 
 
-										};
-			_launchConfigToolLink.Margin = new Padding(100,0,0,0);
+			};
+			_launchConfigToolLink.Margin = new Padding(100, 0, 0, 0);
 			_launchConfigToolLink.Image = Resources.WeSayConfigMenuSized;
 			_launchConfigToolLink.Click += Dash.OnRunConfigureTool;
 			_wordCountLabel = new ToolStripStatusLabel();
@@ -62,7 +62,7 @@ namespace WeSay.App
 
 		public StatusStrip StatusStrip
 		{
-			get { return null;}
+			get { return null; }
 			set
 			{
 				value.Items.AddRange(new ToolStripItem[] { _wordCountLabel, _launchConfigToolLink });
@@ -71,7 +71,7 @@ namespace WeSay.App
 
 		public void Dispose()
 		{
-			if(_timer!=null)
+			if (_timer != null)
 			{
 				_timer.Dispose();
 			}

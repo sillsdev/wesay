@@ -1,6 +1,6 @@
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Drawing;
-using NUnit.Framework;
 using WeSay.LexicalTools.Dashboard;
 
 namespace WeSay.LexicalTools.Tests

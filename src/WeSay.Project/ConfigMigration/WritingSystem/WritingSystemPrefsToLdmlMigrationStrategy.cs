@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using SIL.Migration;
+﻿using SIL.Migration;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Migration;
 using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
@@ -122,7 +122,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 			string sourceFileName = Path.GetFileName(sourceFilePath);
 
 			var migrationInfo = new List<LdmlMigrationInfo>();
-			if(!Directory.Exists(destinationFilePath))
+			if (!Directory.Exists(destinationFilePath))
 			{
 				Directory.CreateDirectory(destinationFilePath);
 			}
@@ -136,7 +136,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 					LanguageTagBeforeMigration = writingSystem.ISO
 				};
 				var wsDef = new WritingSystemDefinitionV0();
-				if(writingSystem.IsAudio)
+				if (writingSystem.IsAudio)
 				{
 					wsDef.Script = WellKnownSubTags.Audio.Script;
 					wsDef.Variant = WellKnownSubTags.Audio.PrivateUseSubtag;

@@ -1,10 +1,10 @@
-﻿using System;
-using System.IO;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SIL.DictionaryServices.Model;
-using SIL.TestUtilities;
 using SIL.Reporting;
+using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System;
+using System.IO;
 using WeSay.TestUtilities;
 
 namespace WeSay.Project.Tests

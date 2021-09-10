@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SIL.i18n;
+using System;
 using System.Collections.Generic;
-using SIL.i18n;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
@@ -13,7 +13,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		/// <summary>
 		/// Allow user to enter a meaning for each word as it is gathered (this is a little controversial)
 		/// </summary>
-		public bool ShowMeaningField{get;set;}
+		public bool ShowMeaningField { get; set; }
 
 		public GatherBySemanticDomainConfig(string xml)
 			: base(xml)

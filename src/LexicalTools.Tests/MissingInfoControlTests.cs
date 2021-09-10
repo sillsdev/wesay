@@ -1,16 +1,13 @@
-using System;
-using System.Drawing;
+using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
+using SIL.IO;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalTools.AddMissingInfo;
 using WeSay.Project;
-
-using NUnit.Framework;
-using SIL.IO;
 using WeSay.TestUtilities;
 
 namespace WeSay.LexicalTools.Tests
@@ -71,7 +68,7 @@ namespace WeSay.LexicalTools.Tests
 			_tempFile = _tempFolder.GetNewTempFile(true);
 			_lexEntryRepository = new LexEntryRepository(_tempFile.Path);
 
-			_writingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
+			_writingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest) { DefaultCollation = new IcuRulesCollationDefinition("standard") };
 
 			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
 			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
@@ -81,7 +78,7 @@ namespace WeSay.LexicalTools.Tests
 			CreateTestEntry("dog", "animal with four legs; man's best friend", "He walked his dog.");
 
 			string[] analysisWritingSystemIds = new[] { WritingSystemsIdsForTests.AnalysisIdForTest };
-			string[] vernacularWritingSystemIds = new[] {_writingSystem.LanguageTag};
+			string[] vernacularWritingSystemIds = new[] { _writingSystem.LanguageTag };
 			RtfRenderer.HeadWordWritingSystemId = vernacularWritingSystemIds[0];
 
 			_viewTemplate = new ViewTemplate
@@ -248,7 +245,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository, new TaskMemory()))
 			{
 				int count = _missingTranslationRecordList.Count;
-				for (int i = 0;i <= count;i++)
+				for (int i = 0; i <= count; i++)
 				{
 					missingInfoControl.SetCurrentRecordToNext();
 				}
@@ -339,7 +336,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository, new TaskMemory()))
 			{
 				int count = _missingTranslationRecordList.Count;
-				for (int i = 0;i < count;i++)
+				for (int i = 0; i < count; i++)
 				{
 					missingInfoControl.SetCurrentRecordToNext();
 				}
@@ -364,7 +361,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository, new TaskMemory()))
 			{
 				int count = _missingTranslationRecordList.Count;
-				for (int i = 0;i < count - 2;i++)
+				for (int i = 0; i < count - 2; i++)
 				{
 					missingInfoControl.SetCurrentRecordToNext();
 				}
@@ -387,7 +384,7 @@ namespace WeSay.LexicalTools.Tests
 												   _lexEntryRepository, new TaskMemory()))
 			{
 				int count = _missingTranslationRecordList.Count;
-				for (int i = 0;i < count;i++)
+				for (int i = 0; i < count; i++)
 				{
 					missingInfoControl.SetCurrentRecordToNext();
 				}
@@ -479,9 +476,9 @@ namespace WeSay.LexicalTools.Tests
 			{
 				missingInfoControl.SetCurrentRecordToNext();
 
-				LexEntry toldToSave=null;
+				LexEntry toldToSave = null;
 				missingInfoControl.TimeToSaveRecord += ((sender, e) => toldToSave = missingInfoControl.CurrentEntry);
-				LexEntry guyThatNeedsToBeSaved=missingInfoControl.CurrentEntry;
+				LexEntry guyThatNeedsToBeSaved = missingInfoControl.CurrentEntry;
 
 				AddTranslationToEntry(missingInfoControl.CurrentEntry,
 								  "a bogus translation of example");

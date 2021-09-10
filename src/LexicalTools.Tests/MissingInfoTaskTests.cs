@@ -11,7 +11,7 @@ using WeSay.TestUtilities;
 namespace WeSay.LexicalTools.Tests
 {
 	[TestFixture]
-	public class MissingInfoTaskTests: TaskBaseTests
+	public class MissingInfoTaskTests : TaskBaseTests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
@@ -69,13 +69,13 @@ namespace WeSay.LexicalTools.Tests
 			_viewTemplate = new ViewTemplate();
 			_viewTemplate.Add(new Field(LexEntry.WellKnownProperties.LexicalUnit,
 										"LexEntry",
-										new string[] {_vernacularWritingSystemId}));
+										new string[] { _vernacularWritingSystemId }));
 			_viewTemplate.Add(new Field(LexSense.WellKnownProperties.Definition,
 										"LexSense",
-										new string[] {"en"}));
+										new string[] { "en" }));
 			_viewTemplate.Add(new Field(Field.FieldNames.ExampleSentence.ToString(),
 										"LexExampleSentence",
-										new string[] {"th"}));
+										new string[] { "th" }));
 			_task = CreateMissingInfoTask(_lexEntryRepository,
 										_missingFieldName,
 										_label,
@@ -89,7 +89,7 @@ namespace WeSay.LexicalTools.Tests
 
 		private MissingInfoTask CreateMissingInfoTask(LexEntryRepository repository, string missingInfoField, string label, string longLabel, string description, string remainingCountText, string referenceCountText, ViewTemplate template, string fieldsToShow, string writingSystemsToMatchCommaSeparated)
 		{
-			MissingInfoConfiguration config = MissingInfoConfiguration.CreateForTests( missingInfoField,  label,  longLabel,  description,  remainingCountText,  referenceCountText,  fieldsToShow, writingSystemsToMatchCommaSeparated);
+			MissingInfoConfiguration config = MissingInfoConfiguration.CreateForTests(missingInfoField, label, longLabel, description, remainingCountText, referenceCountText, fieldsToShow, writingSystemsToMatchCommaSeparated);
 			return new MissingInfoTask(config, repository, template, new TaskMemoryRepository());
 		}
 
@@ -119,7 +119,7 @@ namespace WeSay.LexicalTools.Tests
 		[Test, Ignore("broken test which is based on some unwritten assumption...")]
 		public void Activate_Refreshes()
 		{
-			MissingInfoTask task = (MissingInfoTask) _task;
+			MissingInfoTask task = (MissingInfoTask)_task;
 			task.Activate();
 			try
 			{
@@ -133,12 +133,12 @@ namespace WeSay.LexicalTools.Tests
 				task.Deactivate();
 			}
 			_lexEntryRepository.CreateItem();  //REVIEW: So, connect the dots for me...  Why should creating an
-												// item here make the list switch to that item after the Activate()? (JH)
+											   // item here make the list switch to that item after the Activate()? (JH)
 			task.Activate();
 			try
 			{
 				Assert.IsTrue(
-						((MissingInfoControl) task.Control).EntryViewControl.DataSource.LexicalForm.
+						((MissingInfoControl)task.Control).EntryViewControl.DataSource.LexicalForm.
 								Empty);
 				Assert.AreEqual(2, _lexEntryRepository.CountAllItems());
 			}
@@ -152,7 +152,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FieldsToShow_SingleField_InitializedFromCreate()
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
-			string[] writingSystemIds = new string[] {"en"};
+			string[] writingSystemIds = new string[] { "en" };
 			viewTemplate.Add(new Field("Single", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("SingleField", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("Field", "LexSense", writingSystemIds));
@@ -175,7 +175,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FieldsToShow_TwoFields_InitializedFromCreate()
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
-			string[] writingSystemIds = new string[] {"en"};
+			string[] writingSystemIds = new string[] { "en" };
 			viewTemplate.Add(new Field("First", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("Second", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("FirstSecond", "LexSense", writingSystemIds));
@@ -198,7 +198,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FieldsToShow_ThreeFields_InitializedFromCreate()
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
-			string[] writingSystemIds = new string[] {"en"};
+			string[] writingSystemIds = new string[] { "en" };
 			viewTemplate.Add(new Field("First", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("Second", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("Third", "LexSense", writingSystemIds));
@@ -226,7 +226,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FieldsToShow_HidingField_InitializedFromCreate()
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
-			string[] writingSystemIds = new string[] {"en"};
+			string[] writingSystemIds = new string[] { "en" };
 			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
@@ -247,7 +247,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FieldsToShow_PrefixedField_InitializedFromCreate()
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
-			string[] writingSystemIds = new string[] {"en"};
+			string[] writingSystemIds = new string[] { "en" };
 			viewTemplate.Add(new Field("Dummy", "LexSense", writingSystemIds));
 			viewTemplate.Add(new Field("PrefixDummy", "LexSense", writingSystemIds));
 
@@ -268,7 +268,7 @@ namespace WeSay.LexicalTools.Tests
 		public void FieldsToShow_RequiredFields_ShownEvenIfDisabledInDefaultTemplate()
 		{
 			ViewTemplate viewTemplate = new ViewTemplate();
-			string[] writingSystemIds = new string[] {"en"};
+			string[] writingSystemIds = new string[] { "en" };
 			Field field = new Field("Dummy", "LexSense", writingSystemIds);
 			field.Enabled = false;
 			viewTemplate.Add(field);
@@ -314,16 +314,16 @@ namespace WeSay.LexicalTools.Tests
 			}
 		}
 
-//  in progress      [Test]
-//        public void OneSenseFromGatherBySemDom_ShowsOnlyOneMeaning()
-//        {
-//            LexEntry entry = CreateEmptyEntryWithOneSense();
-//            LexSense sense = entry.Senses[0];
-//            var sds = sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-//            var list = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(LexSense.WellKnownProperties.SemanticDomainsDdp4);
-//            sds.Add(list.Options[0].Key);
-//
-//
-//        }
+		//  in progress      [Test]
+		//        public void OneSenseFromGatherBySemDom_ShowsOnlyOneMeaning()
+		//        {
+		//            LexEntry entry = CreateEmptyEntryWithOneSense();
+		//            LexSense sense = entry.Senses[0];
+		//            var sds = sense.GetOrCreateProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		//            var list = WeSay.Project.WeSayWordsProject.Project.GetOptionsList(LexSense.WellKnownProperties.SemanticDomainsDdp4);
+		//            sds.Add(list.Options[0].Key);
+		//
+		//
+		//        }
 	}
 }

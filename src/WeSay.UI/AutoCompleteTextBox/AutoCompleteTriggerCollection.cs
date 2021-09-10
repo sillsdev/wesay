@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.ComponentModel.Design;
 using System.Windows.Forms;
 
 namespace WeSay.UI.AutoCompleteTextBox
@@ -11,7 +10,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 	/// Summary description for AutoCompleteTriggerCollection.
 	/// </summary>
 	[Serializable]
-	public class AutoCompleteTriggerCollection: CollectionBase
+	public class AutoCompleteTriggerCollection : CollectionBase
 	{
 		public AutoCompleteTrigger this[int index]
 		{

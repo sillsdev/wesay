@@ -1,13 +1,13 @@
-using System;
-using System.Windows.Forms;
 using Autofac;
 using SIL.i18n;
 using SIL.Reporting;
+using System;
+using System.Windows.Forms;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
 {
-	public partial class TaskListView: ConfigurationControlBase
+	public partial class TaskListView : ConfigurationControlBase
 	{
 		private readonly IComponentContext _diContainer;
 		public TaskListPresentationModel Model { get; set; }
@@ -68,21 +68,21 @@ namespace WeSay.ConfigTool.Tasks
 				return;
 			}
 
-//      autofac's generated factory stuff wasn't working with our version of autofac, so
-//  i abandoned this
-//            Control c = null;
-//            try
-//            {
-//                //look for a factory that makes controls for this kind of task configuration
-//                  _context.Resolve(configuration.TaskName);
-//            }
-//            catch (Exception)
-//            {
-//            }
-//            if(c!=null)
-//            {
-//                splitContainer1.Panel2.Controls.Add(c);
-//            }
+			//      autofac's generated factory stuff wasn't working with our version of autofac, so
+			//  i abandoned this
+			//            Control c = null;
+			//            try
+			//            {
+			//                //look for a factory that makes controls for this kind of task configuration
+			//                  _context.Resolve(configuration.TaskName);
+			//            }
+			//            catch (Exception)
+			//            {
+			//            }
+			//            if(c!=null)
+			//            {
+			//                splitContainer1.Panel2.Controls.Add(c);
+			//            }
 			var control = ConfigTaskControlFactory.Create(_diContainer, configuration);
 			control.Dock = DockStyle.Fill;
 			splitContainer1.Panel2.Controls.Add(control);

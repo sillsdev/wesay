@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Xml;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SIL.IO;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
 using SIL.WritingSystems.Tests;
+using System;
+using System.IO;
+using System.Xml;
 using WeSay.Project.ConfigMigration.WritingSystem;
 using WeSay.TestUtilities;
 
@@ -109,7 +109,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 		</lexical-unit>
 	</entry>
 </lift>".Replace("'", "\"");
-#endregion
+			#endregion
 
 			public string ProjectPath
 			{
@@ -331,7 +331,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 				string ldmlFilePath = Path.Combine(writingSystemsPath, "blah.ldml");
 				string idChangeLogFilePath = Path.Combine(writingSystemsPath, "idchangelog.xml");
 				Directory.CreateDirectory(writingSystemsPath);
-				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0("blah","","",""));
+				File.WriteAllText(ldmlFilePath, LdmlContentForTests.Version0("blah", "", "", ""));
 				var migrator = new WritingSystemsMigrator(e.ProjectPath);
 				migrator.MigrateIfNecessary();
 

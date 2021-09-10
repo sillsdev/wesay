@@ -1,14 +1,14 @@
+using SIL.Lift.Options;
+using SIL.UiBindings;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using SIL.Lift.Options;
-using SIL.UiBindings;
 
 namespace WeSay.LexicalModel.Foundation.Options
 {
-	[CLSCompliant (false)]
-	public class OptionDisplayAdaptor: IChoiceSystemAdaptor<Option, string, OptionRef>
+	[CLSCompliant(false)]
+	public class OptionDisplayAdaptor : IChoiceSystemAdaptor<Option, string, OptionRef>
 	{
 		protected readonly OptionsList _allOptions;
 		protected readonly string _preferredWritingSystemId;
@@ -34,7 +34,7 @@ namespace WeSay.LexicalModel.Foundation.Options
 
 			if (option == null)
 			{
-				return (string) item; // no matching object, just show the key
+				return (string)item; // no matching object, just show the key
 			}
 
 			return option.Name.GetBestAlternative(_preferredWritingSystemId);
@@ -42,13 +42,13 @@ namespace WeSay.LexicalModel.Foundation.Options
 
 		public string GetToolTip(object item)
 		{
-			Option option = (Option) item;
+			Option option = (Option)item;
 			return option.Description.GetBestAlternative(_preferredWritingSystemId);
 		}
 
 		public string GetToolTipTitle(object item)
 		{
-			Option option = (Option) item;
+			Option option = (Option)item;
 			return option.Abbreviation.GetBestAlternative(_preferredWritingSystemId);
 		}
 
@@ -67,7 +67,7 @@ namespace WeSay.LexicalModel.Foundation.Options
 		/// <returns></returns>
 		public Option GetOptionFromKey(string s) //review: is this the key?
 		{
-			Option result = _allOptions.Options.Find(delegate(Option opt) { return opt.Key == s; });
+			Option result = _allOptions.Options.Find(delegate (Option opt) { return opt.Key == s; });
 
 			// string name = " no match";
 			//                if (result != null)
@@ -159,7 +159,7 @@ namespace WeSay.LexicalModel.Foundation.Options
 			foreach (Option option in _allOptions.Options)
 			{
 				//todo: make this prefferd script(s) savvy
-				if (option.Abbreviation.GetFirstAlternative().StartsWith(text,StringComparison.CurrentCultureIgnoreCase))
+				if (option.Abbreviation.GetFirstAlternative().StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
 				{
 					if (!show.Contains(option))
 					{

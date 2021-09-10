@@ -1,13 +1,11 @@
-using System;
-using System.Threading;
-using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift.Options;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System.Threading;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI;
@@ -208,7 +206,7 @@ namespace WeSay.LexicalTools.Tests
 				Label labelControl = entryDetailControl.GetLabelControlFromRow(0);
 				Assert.AreEqual("Meaning 1", labelControl.Text);
 				MultiTextControl editControl =
-						(MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
+						(MultiTextControl)entryDetailControl.GetEditControlFromRow(0);
 				editControl.TextBoxes[0].Focus();
 				editControl.TextBoxes[0].Text = "test";
 				entryDetailControl.GetEditControlFromRow(2).Focus();
@@ -231,7 +229,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 				MultiTextControl editControl =
-						(MultiTextControl) entryDetailControl.GetEditControlFromRow(0);
+						(MultiTextControl)entryDetailControl.GetEditControlFromRow(0);
 				editControl.TextBoxes[0].Text = "test";
 				Assert.IsTrue(entryViewControl.RtfContentsOfPreviewForTests.Contains("test"));
 			}
@@ -262,12 +260,12 @@ namespace WeSay.LexicalTools.Tests
 		private static MultiTextControl GetEditControl(DetailList detailList, string labelText)
 		{
 			MultiTextControl editControl = null;
-			for (int i = 0;i < detailList.RowCount;i++)
+			for (int i = 0; i < detailList.RowCount; i++)
 			{
 				Label label = detailList.GetLabelControlFromRow(i);
 				if (label != null && label.Text == labelText)
 				{
-					editControl = (MultiTextControl) detailList.GetEditControlFromRow(i);
+					editControl = (MultiTextControl)detailList.GetEditControlFromRow(i);
 					break;
 				}
 			}
@@ -302,14 +300,14 @@ namespace WeSay.LexicalTools.Tests
 																		   WritingSystemsIdsForTests.VernacularIdForTest)
 					)
 			{
-			   // entryViewControl.ControlFormattedView.Select();
+				// entryViewControl.ControlFormattedView.Select();
 				string rtfOriginal = entryViewControl.RtfContentsOfPreviewForTests;
 
 				DetailList entryDetailControl = entryViewControl.ControlEntryDetail;
 				Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
 				//JDH added after we added multiple ws's per field. Was: editControl.Select();
-				((MultiTextControl) editControl).TextBoxes[0].Select();
+				((MultiTextControl)editControl).TextBoxes[0].Select();
 
 				Assert.AreNotEqual(rtfOriginal, entryViewControl.RtfContentsOfPreviewForTests);
 			}
@@ -317,7 +315,7 @@ namespace WeSay.LexicalTools.Tests
 
 		[Test]
 		[Ignore("Not implemented yet.")]
-		public void DoSomethingSensibleWhenWSInFieldWasntListedInProjectCollection() {}
+		public void DoSomethingSensibleWhenWSInFieldWasntListedInProjectCollection() { }
 
 		[Test]
 		[Ignore("RTF View is on its way out anyways")]
@@ -339,7 +337,7 @@ namespace WeSay.LexicalTools.Tests
 				Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
 				//JDH added after we added multiple ws's per field. Was: editControl.Select();
-				((MultiTextControl) editControl).TextBoxes[0].Select();
+				((MultiTextControl)editControl).TextBoxes[0].Select();
 
 				Assert.AreNotEqual(rtfAppleNothingHighlighted,
 								   entryViewControl.RtfContentsOfPreviewForTests);
@@ -373,7 +371,7 @@ namespace WeSay.LexicalTools.Tests
 				Control editControl = entryDetailControl.GetEditControlFromRow(0);
 
 				//JDH added after we added multiple ws's per field. Was: editControl.Select();
-				((MultiTextControl) editControl).TextBoxes[0].Select();
+				((MultiTextControl)editControl).TextBoxes[0].Select();
 
 				Assert.AreNotEqual(rtfEmptyNothingHighlighted,
 								   entryViewControl.RtfContentsOfPreviewForTests);
@@ -436,12 +434,12 @@ namespace WeSay.LexicalTools.Tests
 
 		private EntryViewControl CreateForm(LexEntry entry, bool requiresVisibleForm)
 		{
-			EntryViewControl entryViewControl = new EntryViewControl(()=>new EntryHeaderView(), ()=>new TestConfirmDelete());
+			EntryViewControl entryViewControl = new EntryViewControl(() => new EntryHeaderView(), () => new TestConfirmDelete());
 			entryViewControl.LexEntryRepository = _lexEntryRepository;
 			entryViewControl.ViewTemplate = _viewTemplate;
 			entryViewControl.DataSource = entry;
 
-			if(requiresVisibleForm)
+			if (requiresVisibleForm)
 			{
 				Form window = new Form();
 				window.Controls.Add(entryViewControl);

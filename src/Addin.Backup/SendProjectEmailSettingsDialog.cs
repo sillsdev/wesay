@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Addin.Backup
 {
-	public partial class SendProjectEmailSettingsDialog: Form
+	public partial class SendProjectEmailSettingsDialog : Form
 	{
 		private readonly SendProjectEmailSettings _settings;
 
@@ -29,6 +29,6 @@ namespace Addin.Backup
 			Close();
 		}
 
-		private void textBox2_TextChanged(object sender, EventArgs e) {}
+		private void textBox2_TextChanged(object sender, EventArgs e) { }
 	}
 }

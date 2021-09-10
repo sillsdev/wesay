@@ -1,4 +1,4 @@
 namespace WeSay.UI
 {
-	public interface ISkin {}
+	public interface ISkin { }
 }

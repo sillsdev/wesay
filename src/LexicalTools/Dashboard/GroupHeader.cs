@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public partial class GroupHeader: UserControl
+	public partial class GroupHeader : UserControl
 	{
 		public GroupHeader()
 		{

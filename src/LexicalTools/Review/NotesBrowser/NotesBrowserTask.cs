@@ -1,8 +1,5 @@
-using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Autofac;
-using Chorus;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
@@ -10,7 +7,7 @@ using WeSay.LexicalTools.Properties;
 
 namespace WeSay.LexicalTools.Review.NotesBrowser
 {
-	public class NotesBrowserTask: TaskBase
+	public class NotesBrowserTask : TaskBase
 	{
 		//   private readonly IContainer _diContainer;
 		private Control _control;
@@ -88,11 +85,11 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 		public override void Deactivate()
 		{
 			base.Deactivate();
-//            if (_control != null)
-//            {
-//                _control.Dispose();
-//            }
-//            _control = null;
+			//            if (_control != null)
+			//            {
+			//                _control.Dispose();
+			//            }
+			//            _control = null;
 		}
 
 

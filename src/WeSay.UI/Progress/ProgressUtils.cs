@@ -1,8 +1,8 @@
 using System;
-using System.Windows.Forms;
-using System.Threading;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace WeSay.UI.Progress
 {

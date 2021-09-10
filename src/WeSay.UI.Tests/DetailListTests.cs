@@ -1,8 +1,8 @@
+using NUnit.Framework;
+using SIL.WritingSystems;
 using System;
 using System.Threading;
 using System.Windows.Forms;
-using NUnit.Framework;
-using SIL.WritingSystems;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
@@ -91,7 +91,7 @@ namespace WeSay.UI.Tests
 
 		private void box_GotFocus(object sender, EventArgs e)
 		{
-			_focussedControl = (Control) sender;
+			_focussedControl = (Control)sender;
 		}
 
 		[Test]

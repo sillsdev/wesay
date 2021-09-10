@@ -1,7 +1,7 @@
+using SIL.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using SIL.IO;
 
 namespace Addin.Transform.PdfDictionary
 {
@@ -36,15 +36,15 @@ namespace Addin.Transform.PdfDictionary
 			{
 				p = new Prince(); //maybe it would look in %path%?
 			}
-		   // no: this makes princexml think we're putting out ascii:  p.SetHTML(true);
+			// no: this makes princexml think we're putting out ascii:  p.SetHTML(true);
 			using (var log = new TempFile())
 			{
 				p.SetLog(log.Path);
-			foreach (string styleSheetPath in styleSheetPaths)
-			{
-				p.AddStyleSheet(styleSheetPath);
-			}
-				if(!p.Convert(htmlPath, pdfPath))
+				foreach (string styleSheetPath in styleSheetPaths)
+				{
+					p.AddStyleSheet(styleSheetPath);
+				}
+				if (!p.Convert(htmlPath, pdfPath))
 				{
 					string errorString = File.ReadAllText(log.Path);
 					if (errorString.Contains("error: can't open output file: Permission denied"))

@@ -1,6 +1,6 @@
+using Microsoft.Samples.Windows.Forms.RegistrySettingsProvider;
 using System.ComponentModel;
 using System.Configuration;
-using Microsoft.Samples.Windows.Forms.RegistrySettingsProvider;
 
 namespace WeSay.App.Properties
 {
@@ -12,7 +12,7 @@ namespace WeSay.App.Properties
 
 	//problems with user.config: http://blogs.msdn.com/rprabhu/articles/433979.aspx
 	//registry sample: http://www.sellsbrothers.com/writing/default.aspx?content=dotnet2customsettingsprovider.htm
-	[SettingsProvider(typeof (RegistrySettingsProvider))]
+	[SettingsProvider(typeof(RegistrySettingsProvider))]
 	internal sealed partial class Settings
 	{
 		public Settings()

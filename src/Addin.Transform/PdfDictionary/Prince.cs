@@ -54,25 +54,30 @@ public class PrinceFilter : System.IO.Stream
 		this.memStream = new MemoryStream();
 	}
 
-	public override bool CanSeek {
+	public override bool CanSeek
+	{
 		get { return false; }
 	}
 
-	public override bool CanWrite {
+	public override bool CanWrite
+	{
 		get { return true; }
 	}
 
-	public override bool CanRead {
+	public override bool CanRead
+	{
 		get { return false; }
 	}
 
-	public override long Position {
+	public override long Position
+	{
 		get { return 0; }
-			// do nothing
+		// do nothing
 		set { }
 	}
 
-	public override long Length {
+	public override long Length
+	{
 		get { return 0; }
 	}
 
@@ -191,9 +196,12 @@ public class Prince : IPrince
 	}
 	public void SetHTML(bool html)
 	{
-		if (html) {
+		if (html)
+		{
 			mInputType = "html";
-		} else {
+		}
+		else
+		{
 			mInputType = "xml";
 		}
 	}
@@ -258,25 +266,32 @@ public class Prince : IPrince
 	{
 		mEncrypt = true;
 
-		if ((keyBits != 40) & (keyBits != 128)) {
+		if ((keyBits != 40) & (keyBits != 128))
+		{
 			mEncryptInfo = "";
 			throw new ApplicationException("Invalid value for keyBits: must be 40 or 128");
-		} else {
+		}
+		else
+		{
 			mEncryptInfo = "--encrypt " + " --key-bits " + keyBits + " --user-password=" + "\"" + cmdline_arg_escape_2(cmdline_arg_escape_1(userPassword)) + "\"" + " --owner-password=" + "\"" + cmdline_arg_escape_2(cmdline_arg_escape_1(ownerPassword)) + "\"" + " ";
 
-			if (disallowPrint) {
+			if (disallowPrint)
+			{
 				mEncryptInfo = mEncryptInfo + "--disallow-print ";
 			}
 
-			if (disallowModify) {
+			if (disallowModify)
+			{
 				mEncryptInfo = mEncryptInfo + "--disallow-modify ";
 			}
 
-			if (disallowCopy) {
+			if (disallowCopy)
+			{
 				mEncryptInfo = mEncryptInfo + "--disallow-copy ";
 			}
 
-			if (disallowAnnotate) {
+			if (disallowAnnotate)
+			{
 				mEncryptInfo = mEncryptInfo + "--disallow-annotate ";
 			}
 		}
@@ -311,69 +326,87 @@ public class Prince : IPrince
 
 		args = "--server " + mStyleSheets + mJavaScripts + mFileAttachments;
 
-		if (mEncrypt) {
+		if (mEncrypt)
+		{
 			args = args + mEncryptInfo;
 		}
 
 
-		if (mInputType == "auto") {
-		} else {
+		if (mInputType == "auto")
+		{
+		}
+		else
+		{
 			args = args + "-i " + "\"" + mInputType + "\"" + " ";
 		}
 
-		if (mJavaScript) {
+		if (mJavaScript)
+		{
 			args = args + "--javascript ";
 		}
 
-		if (!string.IsNullOrEmpty(mHttpUser)) {
+		if (!string.IsNullOrEmpty(mHttpUser))
+		{
 			args = args + "--http-user=\"" + cmdline_arg_escape_2(cmdline_arg_escape_1(mHttpUser)) + "\" ";
 		}
 
-		if (!string.IsNullOrEmpty(mHttpPassword)) {
+		if (!string.IsNullOrEmpty(mHttpPassword))
+		{
 			args = args + "--http-password=\"" + cmdline_arg_escape_2(cmdline_arg_escape_1(mHttpPassword)) + "\" ";
 		}
 
-		if (!string.IsNullOrEmpty(mHttpProxy)) {
+		if (!string.IsNullOrEmpty(mHttpProxy))
+		{
 			args = args + "--http-proxy=\"" + mHttpProxy + "\" ";
 		}
 
-		if (mInsecure) {
+		if (mInsecure)
+		{
 			args = args + "--insecure ";
 		}
 
-		if (!string.IsNullOrEmpty(mLog)) {
+		if (!string.IsNullOrEmpty(mLog))
+		{
 			args = args + "--log=\"" + mLog + "\" ";
 		}
 
-		if (!string.IsNullOrEmpty(mBaseURL)) {
+		if (!string.IsNullOrEmpty(mBaseURL))
+		{
 			args = args + "--baseurl=\"" + mBaseURL + "\" ";
 		}
 
-		if (!string.IsNullOrEmpty(mFileRoot)) {
+		if (!string.IsNullOrEmpty(mFileRoot))
+		{
 			args = args + "--fileroot=\"" + mFileRoot + "\" ";
 		}
 
-		if (!string.IsNullOrEmpty(mLicenseFile)) {
+		if (!string.IsNullOrEmpty(mLicenseFile))
+		{
 			args = args + "--license-file=\"" + mLicenseFile + "\" ";
 		}
 
-		if (!string.IsNullOrEmpty(mLicenseKey)) {
+		if (!string.IsNullOrEmpty(mLicenseKey))
+		{
 			args = args + "--license-key=\"" + mLicenseKey + "\" ";
 		}
 
-		if (!mXInclude) {
+		if (!mXInclude)
+		{
 			args = args + "--no-xinclude ";
 		}
 
-		if (!mEmbedFonts) {
+		if (!mEmbedFonts)
+		{
 			args = args + "--no-embed-fonts ";
 		}
 
-		if (!mSubsetFonts) {
+		if (!mSubsetFonts)
+		{
 			args = args + "--no-subset-fonts ";
 		}
 
-		if (!mCompress) {
+		if (!mCompress)
+		{
 			args = args + "--no-compress ";
 		}
 
@@ -402,7 +435,8 @@ public class Prince : IPrince
 		string docPaths = null;
 
 		docPaths = "";
-		foreach (string doc_loopVariable in xmlPaths) {
+		foreach (string doc_loopVariable in xmlPaths)
+		{
 			doc = doc_loopVariable;
 			docPaths = docPaths + "\"" + doc + "\"" + " ";
 		}
@@ -419,24 +453,31 @@ public class Prince : IPrince
 		Process prs = new Process();
 		string args = null;
 
-		if (!pdfOutput.CanWrite) {
+		if (!pdfOutput.CanWrite)
+		{
 			throw new ApplicationException("The pdfOutput stream is not writable");
-		} else {
+		}
+		else
+		{
 			args = getArgs() + "--silent " + "\"" + xmlPath + "\" -o -";
 			prs = StartPrince(args);
 
 			prs.StandardInput.Close();
 
 			bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
-			while (bytesRead != 0) {
+			while (bytesRead != 0)
+			{
 				pdfOutput.Write(buf, 0, bytesRead);
 				bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
 			}
 			prs.StandardOutput.Close();
 
-			if (ReadMessages(prs) == "success") {
+			if (ReadMessages(prs) == "success")
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -449,14 +490,18 @@ public class Prince : IPrince
 		Process prs = new Process();
 		string args = null;
 
-		if (!xmlInput.CanRead) {
+		if (!xmlInput.CanRead)
+		{
 			throw new ApplicationException("The xmlInput stream is not readable");
-		} else {
+		}
+		else
+		{
 			args = getArgs() + "--silent - -o \"" + pdfPath + "\"";
 			prs = StartPrince(args);
 
 			bytesRead = xmlInput.Read(buf, 0, 4096);
-			while (bytesRead != 0) {
+			while (bytesRead != 0)
+			{
 				prs.StandardInput.BaseStream.Write(buf, 0, bytesRead);
 				bytesRead = xmlInput.Read(buf, 0, 4096);
 			}
@@ -464,9 +509,12 @@ public class Prince : IPrince
 
 			prs.StandardOutput.Close();
 
-			if (ReadMessages(prs) == "success") {
+			if (ReadMessages(prs) == "success")
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -479,31 +527,41 @@ public class Prince : IPrince
 		Process prs = new Process();
 		string args = null;
 
-		if (!xmlInput.CanRead) {
+		if (!xmlInput.CanRead)
+		{
 			throw new ApplicationException("The xmlInput stream is not readable");
-		} else if (!pdfOutput.CanWrite) {
+		}
+		else if (!pdfOutput.CanWrite)
+		{
 			throw new ApplicationException("The pdfOutput stream is not writable");
-		} else {
+		}
+		else
+		{
 			args = getArgs() + "--silent -";
 			prs = StartPrince(args);
 
 			bytesRead = xmlInput.Read(buf, 0, 4096);
-			while (bytesRead != 0) {
+			while (bytesRead != 0)
+			{
 				prs.StandardInput.BaseStream.Write(buf, 0, bytesRead);
 				bytesRead = xmlInput.Read(buf, 0, 4096);
 			}
 			prs.StandardInput.Close();
 
 			bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
-			while (bytesRead != 0) {
+			while (bytesRead != 0)
+			{
 				pdfOutput.Write(buf, 0, bytesRead);
 				bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
 			}
 			prs.StandardOutput.Close();
 
-			if (ReadMessages(prs) == "success") {
+			if (ReadMessages(prs) == "success")
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -516,9 +574,12 @@ public class Prince : IPrince
 		Process prs = new Process();
 		string args = null;
 
-		if (!pdfOutput.CanWrite) {
+		if (!pdfOutput.CanWrite)
+		{
 			throw new ApplicationException("The pdfOutput stream is not writable");
-		} else {
+		}
+		else
+		{
 			args = getArgs() + "--silent -";
 			prs = StartPrince(args);
 
@@ -526,15 +587,19 @@ public class Prince : IPrince
 			prs.StandardInput.Close();
 
 			bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
-			while (bytesRead != 0) {
+			while (bytesRead != 0)
+			{
 				pdfOutput.Write(buf, 0, bytesRead);
 				bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
 			}
 			prs.StandardOutput.Close();
 
-			if (ReadMessages(prs) == "success") {
+			if (ReadMessages(prs) == "success")
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -547,9 +612,12 @@ public class Prince : IPrince
 		Process prs = new Process();
 		string args = null;
 
-		if (!pdfOutput.CanWrite) {
+		if (!pdfOutput.CanWrite)
+		{
 			throw new ApplicationException("The pdfOutput stream is not writable");
-		} else {
+		}
+		else
+		{
 			args = getArgs() + "--silent -";
 			prs = StartPrince(args);
 
@@ -559,15 +627,19 @@ public class Prince : IPrince
 			prs.StandardInput.Close();
 
 			bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
-			while (bytesRead != 0) {
+			while (bytesRead != 0)
+			{
 				pdfOutput.Write(buf, 0, bytesRead);
 				bytesRead = prs.StandardOutput.BaseStream.Read(buf, 0, 4096);
 			}
 			prs.StandardOutput.Close();
 
-			if (ReadMessages(prs) == "success") {
+			if (ReadMessages(prs) == "success")
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
 		}
@@ -577,13 +649,19 @@ public class Prince : IPrince
 	{
 		Process pr = StartPrince(args);
 
-		if ((pr != null)) {
-			if (ReadMessages(pr) == "success") {
+		if ((pr != null))
+		{
+			if (ReadMessages(pr) == "success")
+			{
 				return true;
-			} else {
+			}
+			else
+			{
 				return false;
 			}
-		} else {
+		}
+		else
+		{
 			return false;
 		}
 
@@ -604,25 +682,38 @@ public class Prince : IPrince
 		pr.StartInfo.RedirectStandardOutput = true;
 		pr.StartInfo.RedirectStandardError = true;
 
-		try {
+		try
+		{
 			pr.Start();
 
-			if (!pr.HasExited) {
+			if (!pr.HasExited)
+			{
 				return pr;
-			} else {
+			}
+			else
+			{
 				throw new ApplicationException("Error starting Prince: " + mPrincePath);
 			}
 
-		} catch (System.ComponentModel.Win32Exception ex) {
+		}
+		catch (System.ComponentModel.Win32Exception ex)
+		{
 			string msg = null;
 			msg = ex.Message;
-			if (ex.NativeErrorCode == ERROR_FILE_NOT_FOUND) {
+			if (ex.NativeErrorCode == ERROR_FILE_NOT_FOUND)
+			{
 				msg = msg + " -- Please verify that Prince.exe is in the directory";
-			} else if (ex.NativeErrorCode == ERROR_ACCESS_DENIED) {
+			}
+			else if (ex.NativeErrorCode == ERROR_ACCESS_DENIED)
+			{
 				msg = msg + " -- Please check system permission to run Prince.";
-			} else if (ex.NativeErrorCode == ERROR_PATH_NOT_FOUND) {
+			}
+			else if (ex.NativeErrorCode == ERROR_PATH_NOT_FOUND)
+			{
 				msg = msg + " -- Please check Prince path.";
-			} else {
+			}
+			else
+			{
 				// just use ex.Message
 			}
 
@@ -638,8 +729,10 @@ public class Prince : IPrince
 		line = "";
 		result = "";
 		line = stdErrFromPr.ReadLine();
-		while ((line != null)) {
-			if (line.Substring(0, 4) == "fin|") {
+		while ((line != null))
+		{
+			if (line.Substring(0, 4) == "fin|")
+			{
 				result = line.Substring(4, (line.Length - 4));
 			}
 			line = stdErrFromPr.ReadLine();
@@ -656,22 +749,31 @@ public class Prince : IPrince
 		string middleSubstring = null;
 
 
-		if (arg.Length == 0) {
+		if (arg.Length == 0)
+		{
 			//return empty string
 			return arg;
 
-		} else {
+		}
+		else
+		{
 			//chr(34) is character double quote ( " ), chr(92) is character backslash ( \ )
 
-			for (pos = (arg.Length - 1); pos >= 0; pos += -1) {
-				if (arg[pos] == '\"') {
+			for (pos = (arg.Length - 1); pos >= 0; pos += -1)
+			{
+				if (arg[pos] == '\"')
+				{
 					//if there is a double quote in the arg string
 					//find number of backslashes preceding the double quote ( " )
 					numSlashes = 0;
-					while (((pos - 1 - numSlashes) >= 0)) {
-						if (arg[pos - 1 - numSlashes] == '\\') {
+					while (((pos - 1 - numSlashes) >= 0))
+					{
+						if (arg[pos - 1 - numSlashes] == '\\')
+						{
 							numSlashes += 1;
-						} else {
+						}
+						else
+						{
 							break; // TODO: might not be correct. Was : Exit Do
 						}
 					}
@@ -680,7 +782,8 @@ public class Prince : IPrince
 					leftSubstring = arg.Substring(0, (pos - numSlashes));
 
 					middleSubstring = "\\";
-					for (int i = 1; i <= numSlashes; i += 1) {
+					for (int i = 1; i <= numSlashes; i += 1)
+					{
 						middleSubstring = middleSubstring + "\\" + "\\";
 					}
 
@@ -702,15 +805,20 @@ public class Prince : IPrince
 		int numEndingSlashes = 0;
 
 		numEndingSlashes = 0;
-		for (pos = (arg.Length - 1); pos >= 0; pos += -1) {
-			if (arg[pos] == '\\') {
+		for (pos = (arg.Length - 1); pos >= 0; pos += -1)
+		{
+			if (arg[pos] == '\\')
+			{
 				numEndingSlashes += 1;
-			} else {
+			}
+			else
+			{
 				break; // TODO: might not be correct. Was : Exit For
 			}
 		}
 
-		for (int i = 1; i <= numEndingSlashes; i += 1) {
+		for (int i = 1; i <= numEndingSlashes; i += 1)
+		{
 			arg = arg + '\\';
 		}
 

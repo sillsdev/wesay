@@ -1,3 +1,23 @@
+using Autofac;
+using Chorus;
+using Chorus.FileTypeHandlers.lift;
+using Chorus.sync;
+using Chorus.UI.Notes;
+using Chorus.UI.Notes.Bar;
+using Microsoft.Practices.ServiceLocation;
+using SIL.Data;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.IO;
+using SIL.Lexicon;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.UiBindings;
+using SIL.Windows.Forms.Progress;
+using SIL.WritingSystems;
+using SIL.Xml;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,33 +26,11 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using Autofac;
-using Chorus;
-using Chorus.FileTypeHandlers.lift;
-using Chorus.UI.Notes;
-using Chorus.sync;
-using Chorus.UI.Notes.Bar;
-using Microsoft.Practices.ServiceLocation;
-using SIL.Data;
-using SIL.DictionaryServices.Lift;
-using SIL.DictionaryServices.Model;
-using SIL.IO;
-using SIL.Lift;
-using SIL.Lift.Options;
-using SIL.Lift.Validation;
-using SIL.Lexicon;
-using SIL.Progress;
-using SIL.Reporting;
-using SIL.Windows.Forms.Progress;
-using SIL.UiBindings;
-using SIL.WritingSystems;
-using SIL.Xml;
 using WeSay.AddinLib;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation.Options;
@@ -74,7 +72,7 @@ namespace WeSay.Project
 
 		public event EventHandler EditorsSaveNow;
 
-		public class StringPair: EventArgs
+		public class StringPair : EventArgs
 		{
 			public string from;
 			public string to;
@@ -93,7 +91,7 @@ namespace WeSay.Project
 			_addins = AddinSet.Create(GetAddinNodes, LocateFile);
 			_optionLists = new Dictionary<string, OptionsList>();
 			DataFormat = WeSayDataFormat.Lift;
-//            BackupMaker = new ChorusBackupMaker();
+			//            BackupMaker = new ChorusBackupMaker();
 		}
 
 		public WeSayDataFormat DataFormat { get; internal set; }
@@ -136,7 +134,7 @@ namespace WeSay.Project
 					throw new InvalidOperationException(
 							"WeSayWordsProject Not initialized. For tests, call BasilProject.InitializeForTests().");
 				}
-				return (WeSayWordsProject) Singleton;
+				return (WeSayWordsProject)Singleton;
 			}
 		}
 
@@ -196,14 +194,15 @@ namespace WeSay.Project
 		public bool LoadFromLiftLexiconPath(string liftPath,
 			IProgressNotificationProvider progressProvider = null)
 		{
-			try{
+			try
+			{
 				PathToLiftFile = LiftFileLocator.LocateAt(liftPath);
 
 				if (!File.Exists(PathToConfigFile))
 				{
 					var result = MessageBox.Show(
 						"This project does not have the WeSay-specific configuration files.  A new set of files will be created, and later you can use the WeSayConfiguration Tool to set up things the way you want.",
-						"WeSay",MessageBoxButtons.OKCancel);
+						"WeSay", MessageBoxButtons.OKCancel);
 
 					if (result != DialogResult.OK)
 						return false;
@@ -273,7 +272,7 @@ namespace WeSay.Project
 			Debug.Assert(File.Exists(liftPath));
 			string parentName = Directory.GetParent(liftPath).FullName;
 			DirectoryInfo parent = Directory.GetParent(parentName);
-			if(parent==null)//like if the file was at c:\foo.lift
+			if (parent == null)//like if the file was at c:\foo.lift
 			{
 				return false;
 			}
@@ -411,7 +410,7 @@ namespace WeSay.Project
 				OnWritingSystemMigration,
 				OnWritingSystemLoadProblem);
 
-			var wf = (LdmlInFolderWritingSystemFactory) writingSystemRepository.WritingSystemFactory;
+			var wf = (LdmlInFolderWritingSystemFactory)writingSystemRepository.WritingSystemFactory;
 			wf.TemplateFolder = GetPathToLdmlWritingSystemsFolder(ApplicationCommonDirectory);
 
 			//migrate the project config file
@@ -441,7 +440,7 @@ namespace WeSay.Project
 		}
 
 		[Serializable]
-	//    [ComVisible(true)]
+		//    [ComVisible(true)]
 		public delegate object ServiceCreatorCallback(
 		   IServiceContainer container,
 		   Type serviceType
@@ -534,9 +533,9 @@ namespace WeSay.Project
 			).SingleInstance();
 
 			builder.RegisterType<LexEntryRepository>().SingleInstance();
-//            builder.Register<LexEntryRepository>(
-//                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
-//                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
+			//            builder.Register<LexEntryRepository>(
+			//                 c => c.Resolve<IProgressNotificationProvider>().Go<LexEntryRepository>("Loading Dictionary",
+			//                         progressState => new LexEntryRepository(_pathToLiftFile, progressState)));
 
 
 			builder.Register<ICountGiver>(c => c.Resolve<LexEntryRepository>());
@@ -561,11 +560,11 @@ namespace WeSay.Project
 			});
 
 
-			builder.Register<PictureControl>(c=> new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).InstancePerDependency();
+			builder.Register<PictureControl>(c => new PictureControl(Path.GetDirectoryName(PathToLiftFile), PathToPictures, GetFileLocator())).InstancePerDependency();
 
-		  //  builder.Register<ViewTemplate>(DefaultViewTemplate);
+			//  builder.Register<ViewTemplate>(DefaultViewTemplate);
 
-		  //  builder.Register(DefaultViewTemplate);
+			//  builder.Register(DefaultViewTemplate);
 			// can't currently get at the instance
 			//someday: builder.Register<StringCatalog>(new StringCatalog()).ExternallyOwned();
 
@@ -591,12 +590,12 @@ namespace WeSay.Project
 										  }).SingleInstance();
 
 			//            var ap = new AudioPathProvider(Project.WeSayWordsProject.Project.PathToAudio,
-//                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
+			//                        () => entry.LexicalForm.GetBestAlternativeString(lexicalUnitField.WritingSystemIds));
 
-//            var x = _defaultViewTemplate.GetField(
-//            builder.Register<AudioPathProvider>(c=>new AudioPathProvider(PathToAudio, )));
+			//            var x = _defaultViewTemplate.GetField(
+			//            builder.Register<AudioPathProvider>(c=>new AudioPathProvider(PathToAudio, )));
 
-			builder.Register(c=>
+			builder.Register(c =>
 				new MediaNamingHelper(c.Resolve<ViewTemplate>().GetField(LexEntry.WellKnownProperties.LexicalUnit).WritingSystemIds)).InstancePerLifetimeScope();
 
 			RegisterTextObjects(builder);
@@ -756,10 +755,10 @@ namespace WeSay.Project
 					OnTouchCrossReferences(null, null);
 				}
 				else using (SIL.Windows.Forms.SimpleMessageDialog msgdialog = new SIL.Windows.Forms.SimpleMessageDialog("Migrating cross references.", "Cross reference migration"))
-				{
-					msgdialog.Show();
-					OnTouchCrossReferences(null, null);
-				}
+					{
+						msgdialog.Show();
+						OnTouchCrossReferences(null, null);
+					}
 #else // doesn't work, shows dialog but doesn't get workerended event so it hangs until you kill it
 				if (SIL.Reporting.ErrorReport.IsOkToInteractWithUser)
 				{
@@ -793,11 +792,11 @@ namespace WeSay.Project
 
 		}
 
-//        //provide an IServiceProvider facade around our DI Container
-//        public object GetService(Type serviceType)
-//        {
-//            return _container.Resolve(serviceType);
-//        }
+		//        //provide an IServiceProvider facade around our DI Container
+		//        public object GetService(Type serviceType)
+		//        {
+		//            return _container.Resolve(serviceType);
+		//        }
 
 		private void LoadUserConfig()
 		{
@@ -1014,7 +1013,7 @@ namespace WeSay.Project
 		/// <param name="projectName"></param>
 		public static void CreateEmptyProjectFiles(string projectDirectoryPath, string projectName, string languageTag)
 		{
-			if(!Directory.Exists(projectDirectoryPath))
+			if (!Directory.Exists(projectDirectoryPath))
 			{
 				Directory.CreateDirectory(projectDirectoryPath);
 			}
@@ -1081,7 +1080,7 @@ namespace WeSay.Project
 			doc.Load(pathToConfigFile);
 			var old_components = doc.SelectSingleNode("configuration").SelectSingleNode("components");
 			var new_components = doc.CreateElement("components");
-			if(old_components == null)
+			if (old_components == null)
 			{
 				//add node
 				var elem = doc.SelectSingleNode("configuration").AppendChild(doc.CreateElement("components"));
@@ -1133,7 +1132,7 @@ namespace WeSay.Project
 		public override void Dispose()
 		{
 			base.Dispose();
-			if(_container !=null)
+			if (_container != null)
 			{
 				_container.Dispose();//this will dispose of objects in the container (at least those with the normal "lifetype" setting)
 			}
@@ -1262,7 +1261,7 @@ namespace WeSay.Project
 		/// <returns></returns>
 		private FileLocator GetFileLocator()
 		{
-			return new FileLocator(new [] { PathToWeSaySpecificFilesDirectoryInProject,
+			return new FileLocator(new[] { PathToWeSaySpecificFilesDirectoryInProject,
 												  ApplicationCommonDirectory, DirectoryOfTheApplicationExecutable, TopDevDirectory});
 		}
 
@@ -1391,8 +1390,8 @@ namespace WeSay.Project
 			get { return _backupMaker; }
 			set
 			{
-				if(!PreventBackupForTests)
-						_backupMaker = value;
+				if (!PreventBackupForTests)
+					_backupMaker = value;
 			}
 		}
 
@@ -1416,9 +1415,9 @@ namespace WeSay.Project
 
 			var defaultWs = DefaultViewTemplate.GetMeaningField().WritingSystemIds.FirstOrDefault();
 			//this adds a writing system to any enabled fields that don't have one
-			foreach (var field in ViewTemplates.SelectMany(x=>x.Fields))
+			foreach (var field in ViewTemplates.SelectMany(x => x.Fields))
 			{
-				if(field.Enabled && field.WritingSystemIds.Count == 0)
+				if (field.Enabled && field.WritingSystemIds.Count == 0)
 				{
 					field.WritingSystemIds.Add(defaultWs);
 				}
@@ -1441,7 +1440,7 @@ namespace WeSay.Project
 			writer.WriteEndElement();
 
 			TaskCollection tasks;
-			if(_container.TryResolve<TaskCollection>(out tasks))
+			if (_container.TryResolve<TaskCollection>(out tasks))
 				tasks.Write(writer);
 
 
@@ -1458,21 +1457,21 @@ namespace WeSay.Project
 			{
 				var fileAssociatedWithOptionsList =
 					_optionLists.Where(opt => opt.Value == modifiedOptionsList).Select(opt => opt.Key).First();
-					//notice that we always save to the project directory, even if we started with the
-					//one in the program files directory.
-					string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileAssociatedWithOptionsList);
+				//notice that we always save to the project directory, even if we started with the
+				//one in the program files directory.
+				string path = Path.Combine(PathToWeSaySpecificFilesDirectoryInProject, fileAssociatedWithOptionsList);
 
-					try
-					{
-						_optionLists[fileAssociatedWithOptionsList].SaveToFile(path);
-					}
-					catch (Exception error)
-					{
-						ErrorReport.NotifyUserOfProblem(
-							"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
-							path,
-							error.Message);
-					}
+				try
+				{
+					_optionLists[fileAssociatedWithOptionsList].SaveToFile(path);
+				}
+				catch (Exception error)
+				{
+					ErrorReport.NotifyUserOfProblem(
+						"WeSay Config could not save the options list {0}.  Please make sure it is not marked as 'read-only'.  The error was: {1}",
+						path,
+						error.Message);
+				}
 			}
 
 			//Now let's replace and delete writing systems in OptionLists
@@ -1492,7 +1491,7 @@ namespace WeSay.Project
 							helper.ReplaceWritingSystemId(kvp.Key, kvp.Value);
 						}
 					}
-					catch(IOException e)
+					catch (IOException e)
 					{
 						ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
 					}
@@ -1507,7 +1506,7 @@ namespace WeSay.Project
 			{
 				CommitWritingSystemIdChangesToLiftFile();
 			}
-			catch(IOException e)
+			catch (IOException e)
 			{
 				ErrorReport.NotifyUserOfProblem(e.Message + " " + PathToLiftFile);
 			}
@@ -1617,7 +1616,7 @@ namespace WeSay.Project
 			}
 		}
 
-		private void LoadOptionsList(string fieldName,string pathToOptionsList)
+		private void LoadOptionsList(string fieldName, string pathToOptionsList)
 		{
 			OptionsList list;
 			string name = Path.GetFileName(pathToOptionsList);
@@ -1632,7 +1631,7 @@ namespace WeSay.Project
 				IOptionListReader reader;
 				object r;
 				//first, try for a reader named after the field
-				if (_container.TryResolveNamed(fieldName, typeof (IOptionListReader), out r))
+				if (_container.TryResolveNamed(fieldName, typeof(IOptionListReader), out r))
 				{
 					reader = r as IOptionListReader;
 				}
@@ -1679,7 +1678,7 @@ namespace WeSay.Project
 
 		private bool DoSomethingToLiftFile(DelegateThatTouchesLiftFile doSomething)
 		{
-			if(!File.Exists(PathToLiftFile))
+			if (!File.Exists(PathToLiftFile))
 				return false;
 			try
 			{
@@ -1801,17 +1800,17 @@ namespace WeSay.Project
 				MarkOptionListAsUpdated(optionlist);
 			}
 
-			foreach (var multiText in multiTextsToChange.Where(mt=>mt.ContainsAlternative(oldId)))
+			foreach (var multiText in multiTextsToChange.Where(mt => mt.ContainsAlternative(oldId)))
 			{
 				var existingLanguageFormWithOldId = multiText.Find(oldId);
 				var existingLanguageFormWithNewId = multiText.Find(newId);
 
 				//If a non empty languageForm with the newId already exists, keep it around. Else delete it and change the writing system in the language form with the oldId
-				if(existingLanguageFormWithNewId == null)
+				if (existingLanguageFormWithNewId == null)
 				{
 					existingLanguageFormWithOldId.WritingSystemId = newId;
 				}
-				else if(String.IsNullOrEmpty(existingLanguageFormWithNewId.Form))
+				else if (String.IsNullOrEmpty(existingLanguageFormWithNewId.Form))
 				{
 					multiText.RemoveLanguageForm(existingLanguageFormWithNewId);
 					existingLanguageFormWithOldId.WritingSystemId = newId;
@@ -1873,27 +1872,27 @@ namespace WeSay.Project
 		/// </summary>
 		/// <param name="pathToLift"></param>
 		/// <returns>true if it displayed an error message</returns>
-//        public static bool CheckLiftAndReportErrors(string pathToLift)
-//        {
-//            try
-//            {
-//                string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
-//                if (!String.IsNullOrEmpty(errors))
-//                {
-//                    ErrorReport.NotifyUserOfProblem(
-//                            "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
-//                            pathToLift,
-//                            errors);
-//                    return true;
-//                }
-//            }
-//            catch (Exception e)
-//            {
-//                ErrorReport.ReportNonFatalException(e);
-//                return true;
-//            }
-//            return false;
-//        }
+		//        public static bool CheckLiftAndReportErrors(string pathToLift)
+		//        {
+		//            try
+		//            {
+		//                string errors = Validator.GetAnyValidationErrors(Project.PathToLiftFile);
+		//                if (!String.IsNullOrEmpty(errors))
+		//                {
+		//                    ErrorReport.NotifyUserOfProblem(
+		//                            "The dictionary file at {0} does not conform to the LIFT format used by this version of WeSay.  The RNG validator said: {1}.",
+		//                            pathToLift,
+		//                            errors);
+		//                    return true;
+		//                }
+		//            }
+		//            catch (Exception e)
+		//            {
+		//                ErrorReport.ReportNonFatalException(e);
+		//                return true;
+		//            }
+		//            return false;
+		//        }
 
 		public bool LiftHasMatchingElement(string element, string attribute, string attributeValue)
 		{
@@ -1913,7 +1912,7 @@ namespace WeSay.Project
 
 		public bool IsWritingSystemUsedInLiftFile(string id)
 		{
-			if(!File.Exists(PathToLiftFile))
+			if (!File.Exists(PathToLiftFile))
 			{
 				return false;
 			}
@@ -1960,7 +1959,7 @@ namespace WeSay.Project
 		{
 			try
 			{
-				if(BackupMaker!=null)//it will for many tests, which don't need to be slowed down by all this
+				if (BackupMaker != null)//it will for many tests, which don't need to be slowed down by all this
 					BackupMaker.BackupNow(ProjectDirectoryPath, UiOptions.Language, PathToLiftFile);
 			}
 			catch (Exception error)
@@ -1984,13 +1983,13 @@ namespace WeSay.Project
 
 			//this is a temporary hack... we don't want to backup on startup,
 			//it slows the startup time too much
-			if(BackupMaker.TimeOfLastBackupAttempt == default(DateTime))
+			if (BackupMaker.TimeOfLastBackupAttempt == default(DateTime))
 			{
 				BackupMaker.ResetTimeOfLastBackup();
 			}
 
 			TimeSpan diff = DateTime.Now - BackupMaker.TimeOfLastBackupAttempt;
-			if(diff.TotalMinutes > 20)
+			if (diff.TotalMinutes > 20)
 			{
 				BackupNow();
 			}

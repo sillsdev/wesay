@@ -17,13 +17,13 @@
 // I'm working on it)
 //---------------------------------------------------------------------
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 // NOTE: This provider uses Assembly metadata such as ProductName, etc.
 // to determine a workable registry path in which to store settings.
@@ -40,7 +40,7 @@ using Microsoft.Win32;
 
 namespace Microsoft.Samples.Windows.Forms.RegistrySettingsProvider
 {
-	internal class RegistrySettingsProvider: SettingsProvider, IApplicationSettingsProvider
+	internal class RegistrySettingsProvider : SettingsProvider, IApplicationSettingsProvider
 	{
 		public override string ApplicationName
 		{
@@ -136,13 +136,13 @@ namespace Microsoft.Samples.Windows.Forms.RegistrySettingsProvider
 		// Looks in the "attribute bag" for a given property to determine if it is app-scoped
 		private bool IsApplicationScoped(SettingsProperty prop)
 		{
-			return HasSettingScope(prop, typeof (ApplicationScopedSettingAttribute));
+			return HasSettingScope(prop, typeof(ApplicationScopedSettingAttribute));
 		}
 
 		// Looks in the "attribute bag" for a given property to determine if it is user-scoped
 		private bool IsUserScoped(SettingsProperty prop)
 		{
-			return HasSettingScope(prop, typeof (UserScopedSettingAttribute));
+			return HasSettingScope(prop, typeof(UserScopedSettingAttribute));
 		}
 
 		// Checks for app or user-scoped based on the attributeType argument
@@ -151,10 +151,10 @@ namespace Microsoft.Samples.Windows.Forms.RegistrySettingsProvider
 		private bool HasSettingScope(SettingsProperty prop, Type attributeType)
 		{
 			// TODO: add support for roaming
-			Debug.Assert((attributeType == typeof (ApplicationScopedSettingAttribute)) ||
-						 (attributeType == typeof (UserScopedSettingAttribute)));
-			bool isAppScoped = prop.Attributes[typeof (ApplicationScopedSettingAttribute)] != null;
-			bool isUserScoped = prop.Attributes[typeof (UserScopedSettingAttribute)] != null;
+			Debug.Assert((attributeType == typeof(ApplicationScopedSettingAttribute)) ||
+						 (attributeType == typeof(UserScopedSettingAttribute)));
+			bool isAppScoped = prop.Attributes[typeof(ApplicationScopedSettingAttribute)] != null;
+			bool isUserScoped = prop.Attributes[typeof(UserScopedSettingAttribute)] != null;
 
 			// Check constraints
 			if (isUserScoped && isAppScoped)
@@ -169,11 +169,11 @@ namespace Microsoft.Samples.Windows.Forms.RegistrySettingsProvider
 			}
 
 			// Return scope check result
-			if (attributeType == typeof (ApplicationScopedSettingAttribute))
+			if (attributeType == typeof(ApplicationScopedSettingAttribute))
 			{
 				return isAppScoped;
 			}
-			else if (attributeType == typeof (UserScopedSettingAttribute))
+			else if (attributeType == typeof(UserScopedSettingAttribute))
 			{
 				return isUserScoped;
 			}

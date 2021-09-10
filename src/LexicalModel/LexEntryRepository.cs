@@ -1,21 +1,17 @@
+using SIL.Code;
+using SIL.Data;
+using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
+using SIL.Lift.Options;
+using SIL.Progress;
+using SIL.Text;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using SIL.Data;
-using SIL.Code;
-using SIL.DictionaryServices.Lift;
-using SIL.DictionaryServices.Model;
-using SIL.Lift;
-using SIL.Lift.Options;
-using SIL.UiBindings;
-using SIL.Progress;
-using SIL.Text;
-using SIL.Windows.Forms.WritingSystems;
-using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 
 //#if __MonoCS__
-using SIL.Linq;
 //#else
 
 //#endif
@@ -50,9 +46,9 @@ namespace WeSay.LexicalModel
 
 		private readonly IDataMapper<LexEntry> _decoratedDataMapper;
 
-		#if DEBUG
+#if DEBUG
 		private readonly StackTrace _constructionStackTrace;
-		#endif
+#endif
 
 		// review: this constructor is only used for tests, and causes grief with
 		// the dispose pattern.  Remove and refactor tests to use the other constructor
@@ -60,11 +56,11 @@ namespace WeSay.LexicalModel
 		public LexEntryRepository(string path)
 		{
 			_disposed = true;
-			#if DEBUG
+#if DEBUG
 			_constructionStackTrace = new StackTrace();
-			#endif
+#endif
 			LiftDataMapper mapper = new LiftDataMapper(
-				path, null, new string[] {}, new ProgressState()
+				path, null, new string[] { }, new ProgressState()
 			);
 			//mapper.Init();
 			_decoratedDataMapper = mapper;
@@ -76,9 +72,9 @@ namespace WeSay.LexicalModel
 		public LexEntryRepository(LiftDataMapper decoratedDataMapper)
 		{
 			Guard.AgainstNull(decoratedDataMapper, "decoratedDataMapper");
-			#if DEBUG
+#if DEBUG
 			_constructionStackTrace = new StackTrace();
-			#endif
+#endif
 			_decoratedDataMapper = decoratedDataMapper;
 			_disposed = false;
 		}
@@ -213,7 +209,7 @@ namespace WeSay.LexicalModel
 			_caches.DeleteItemFromCaches(item);
 			_decoratedDataMapper.DeleteItem(item);
 
-			if(AfterEntryDeleted !=null)
+			if (AfterEntryDeleted != null)
 			{
 				AfterEntryDeleted(this, args);
 			}
@@ -226,7 +222,7 @@ namespace WeSay.LexicalModel
 			_caches.DeleteItemFromCaches(repositoryId);
 			_decoratedDataMapper.DeleteItem(repositoryId);
 
-			if(AfterEntryDeleted !=null)
+			if (AfterEntryDeleted != null)
 			{
 				AfterEntryDeleted(this, args);
 			}
@@ -240,7 +236,7 @@ namespace WeSay.LexicalModel
 
 		public void NotifyThatLexEntryHasBeenUpdated(LexEntry updatedLexEntry)
 		{
-			if(updatedLexEntry == null)
+			if (updatedLexEntry == null)
 			{
 				throw new ArgumentNullException("updatedLexEntry");
 			}
@@ -265,9 +261,9 @@ namespace WeSay.LexicalModel
 			{
 				throw new ArgumentOutOfRangeException("entry", entry, "Entry not in repository");
 			}
-			if ((bool) first["HasHomograph"])
+			if ((bool)first["HasHomograph"])
 			{
-				return (int) first["HomographNumber"];
+				return (int)first["HomographNumber"];
 			}
 			return 0;
 		}
@@ -291,15 +287,15 @@ namespace WeSay.LexicalModel
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> headWordQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entryToQuery)
+					delegate (LexEntry entryToQuery)
 						 {
 							 IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 							 string headWord = entryToQuery.VirtualHeadWord[writingSystem.LanguageTag];
 							 if (String.IsNullOrEmpty(headWord))
 							 {
-									 headWord = null;
+								 headWord = null;
 							 }
-							 tokenFieldsAndValues.Add("Form",headWord);
+							 tokenFieldsAndValues.Add("Form", headWord);
 							 return new[] { tokenFieldsAndValues };
 						 });
 
@@ -323,7 +319,7 @@ namespace WeSay.LexicalModel
 				// A null Form indicates there is no HeadWord in this writing system.
 				// However, we need to ensure that we return all entries, so the AtLeastOne in the query
 				// above ensures that we keep it in the result set with a null Form and null WritingSystemId.
-				string currentHeadWord = (string) token["Form"];
+				string currentHeadWord = (string)token["Form"];
 				if (string.IsNullOrEmpty(currentHeadWord))
 				{
 					token["HasHomograph"] = false;
@@ -378,7 +374,7 @@ namespace WeSay.LexicalModel
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormWithAlternativeQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entryToQuery)
+					delegate (LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 						string lexicalform = entryToQuery.LexicalForm[writingSystem.LanguageTag];
@@ -388,7 +384,7 @@ namespace WeSay.LexicalModel
 							lexicalform = entryToQuery.LexicalForm.GetBestAlternative(writingSystem.LanguageTag);
 							foreach (LanguageForm form in entryToQuery.LexicalForm.Forms)
 							{
-								if(form.Form == lexicalform)
+								if (form.Form == lexicalform)
 								{
 									writingSystemOfForm = form.WritingSystemId;
 								}
@@ -430,12 +426,13 @@ namespace WeSay.LexicalModel
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entryToQuery)
+					delegate (LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 						string headWord = entryToQuery.LexicalForm[writingSystem.LanguageTag];
-						if (String.IsNullOrEmpty(headWord)){
-								headWord = null;
+						if (String.IsNullOrEmpty(headWord))
+						{
+							headWord = null;
 						}
 						tokenFieldsAndValues.Add("Form", headWord);
 						return new IDictionary<string, object>[] { tokenFieldsAndValues };
@@ -458,7 +455,7 @@ namespace WeSay.LexicalModel
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> guidQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entryToQuery)
+					delegate (LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 						tokenFieldsAndValues.Add("Guid", entryToQuery.Guid);
@@ -482,7 +479,7 @@ namespace WeSay.LexicalModel
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> IdQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entryToQuery)
+					delegate (LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 						tokenFieldsAndValues.Add("Id", entryToQuery.Id);
@@ -518,7 +515,7 @@ namespace WeSay.LexicalModel
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> definitionQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entryToQuery)
+					delegate (LexEntry entryToQuery)
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
 
@@ -538,7 +535,7 @@ namespace WeSay.LexicalModel
 							List<string> definitionAndGlosses = new List<string>();
 							definitionAndGlosses = MergeListsWhileExcludingDoublesAndEmptyStrings(definitions, glosses);
 
-							if(definitionAndGlosses.Count == 0)
+							if (definitionAndGlosses.Count == 0)
 							{
 								IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
 								tokenFieldsAndValues.Add("Form", null);
@@ -575,7 +572,7 @@ namespace WeSay.LexicalModel
 			List<string> mergedList = new List<string>();
 			foreach (string definitionElement in list1)
 			{
-				if((!mergedList.Contains(definitionElement)) && (definitionElement != ""))
+				if ((!mergedList.Contains(definitionElement)) && (definitionElement != ""))
 				{
 					mergedList.Add(definitionElement);
 				}
@@ -626,7 +623,7 @@ namespace WeSay.LexicalModel
 			if (_caches[cachename] == null)
 			{
 				DelegateQuery<LexEntry> semanticDomainsQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entry)
+					delegate (LexEntry entry)
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
 						foreach (LexSense sense in entry.Senses)
@@ -635,7 +632,7 @@ namespace WeSay.LexicalModel
 							{
 								if (pair.Key == fieldName)
 								{
-									OptionRefCollection semanticDomains = (OptionRefCollection) pair.Value;
+									OptionRefCollection semanticDomains = (OptionRefCollection)pair.Value;
 									foreach (string semanticDomain in semanticDomains.Keys)
 									{
 										IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
@@ -672,7 +669,7 @@ namespace WeSay.LexicalModel
 		{
 			foreach (var tokenInfo in fieldsandValuesForRecordTokens)
 			{
-				if((string)tokenInfo["SemanticDomain"] == domain)
+				if ((string)tokenInfo["SemanticDomain"] == domain)
 				{
 					return true;
 				}
@@ -691,7 +688,7 @@ namespace WeSay.LexicalModel
 			if (_caches[cachename] == null)
 			{
 				DelegateQuery<LexEntry> MatchingMeaningQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entry)
+					delegate (LexEntry entry)
 					{
 						List<IDictionary<string, object>> fieldsandValuesForRecordTokens = new List<IDictionary<string, object>>();
 						int senseNumber = 0;
@@ -753,7 +750,7 @@ namespace WeSay.LexicalModel
 				 LanguageForm meaningForm, WritingSystemDefinition lexicalUnitWritingSystem, bool glossMeaningField)
 		{
 
-			if (null== meaningForm || string.IsNullOrEmpty(meaningForm.Form))
+			if (null == meaningForm || string.IsNullOrEmpty(meaningForm.Form))
 			{
 				throw new ArgumentNullException("meaningForm");
 			}
@@ -765,8 +762,8 @@ namespace WeSay.LexicalModel
 			List<RecordToken<LexEntry>> filteredResultSet = new List<RecordToken<LexEntry>>();
 			foreach (RecordToken<LexEntry> recordToken in allMeaningsResultSet)
 			{
-				if (((string) recordToken["Meaning"] == meaningForm.Form)
-					&& ((string) recordToken["MeaningWritingSystem"] == meaningForm.WritingSystemId))
+				if (((string)recordToken["Meaning"] == meaningForm.Form)
+					&& ((string)recordToken["MeaningWritingSystem"] == meaningForm.WritingSystemId))
 				{
 					filteredResultSet.Add(recordToken);
 				}
@@ -815,7 +812,7 @@ namespace WeSay.LexicalModel
 		/// <returns></returns>
 		public LexEntry GetLexEntryWithMatchingGuid(Guid guid)
 		{
-			if(guid == Guid.Empty)
+			if (guid == Guid.Empty)
 			{
 				throw new ArgumentOutOfRangeException("guid", "Guids should not be empty!");
 			}
@@ -823,16 +820,16 @@ namespace WeSay.LexicalModel
 			List<RecordToken<LexEntry>> filteredResultSet = new List<RecordToken<LexEntry>>();
 			foreach (RecordToken<LexEntry> recordToken in allGlossesResultSet)
 			{
-				if (((Guid) recordToken["Guid"] == guid))
+				if (((Guid)recordToken["Guid"] == guid))
 				{
 					filteredResultSet.Add(recordToken);
 				}
 			}
-			if(filteredResultSet.Count > 1)
+			if (filteredResultSet.Count > 1)
 			{
 				throw new ApplicationException("More than one entry exists with the guid " + guid);
 			}
-			if(filteredResultSet.Count == 0)
+			if (filteredResultSet.Count == 0)
 			{
 				return null;
 			}
@@ -869,7 +866,7 @@ namespace WeSay.LexicalModel
 
 		private static string GetFormForMatchingStrategy(object item)
 		{
-			return (string) ((RecordToken<LexEntry>) item)["Form"];
+			return (string)((RecordToken<LexEntry>)item)["Form"];
 		}
 
 		/// <summary>
@@ -911,9 +908,9 @@ namespace WeSay.LexicalModel
 		/// <returns></returns>
 		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(Field field, string[] searchWritingSystemIds, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
-			 var query = new MissingFieldQuery(field, searchWritingSystemIds, null);
+			var query = new MissingFieldQuery(field, searchWritingSystemIds, null);
 			return GetEntriesWithMissingFieldSortedByLexicalUnit(query, lexicalUnitWritingSystem);
-	  }
+		}
 
 		public ResultSet<LexEntry> GetEntriesWithMissingFieldSortedByLexicalUnit(MissingFieldQuery query, WritingSystemDefinition lexicalUnitWritingSystem)
 		{
@@ -926,10 +923,10 @@ namespace WeSay.LexicalModel
 			if (_caches[cacheName] == null)
 			{
 				DelegateQuery<LexEntry> lexicalFormQuery = new DelegateQuery<LexEntry>(
-					delegate(LexEntry entryToQuery)
+					delegate (LexEntry entryToQuery)
 					{
 						IDictionary<string, object> tokenFieldsAndValues = new Dictionary<string, object>();
-						if(query.FilteringPredicate(entryToQuery))
+						if (query.FilteringPredicate(entryToQuery))
 						{
 							string lexicalForm = null;
 							if (!String.IsNullOrEmpty(entryToQuery.LexicalForm[lexicalUnitWritingSystem.LanguageTag]))
@@ -954,15 +951,15 @@ namespace WeSay.LexicalModel
 		}
 
 
-//
-//        private string MakeSafeForFileName(string fileName)
-//        {
-//            foreach (char invalChar in Path.GetInvalidFileNameChars())
-//            {
-//                fileName = fileName.Replace(invalChar.ToString(), "");
-//            }
-//            return fileName;
-//        }
+		//
+		//        private string MakeSafeForFileName(string fileName)
+		//        {
+		//            foreach (char invalChar in Path.GetInvalidFileNameChars())
+		//            {
+		//                fileName = fileName.Replace(invalChar.ToString(), "");
+		//            }
+		//            return fileName;
+		//        }
 
 		#region IDisposable Members
 

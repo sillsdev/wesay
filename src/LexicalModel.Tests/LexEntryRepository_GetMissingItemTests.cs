@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -71,7 +69,7 @@ namespace WeSay.LexicalModel.Tests
 			entry.Senses.Add(new LexSense());
 			foreach (var id in populatedWritingSystems)
 			{
-				entry.Senses[0].Definition.SetAlternative(id, "the definition for "+ id);
+				entry.Senses[0].Definition.SetAlternative(id, "the definition for " + id);
 			}
 			foreach (var id in emptyWritingSystems)
 			{
@@ -169,7 +167,7 @@ namespace WeSay.LexicalModel.Tests
 
 		private void TestWritingSystemSearch(int expectedCount, string[] fieldWritingSystems, string[] populatedWritingSystems, string[] searchInWritingSystems)
 		{
-			CreateEntryWithDefinition(populatedWritingSystems, new string[]{});
+			CreateEntryWithDefinition(populatedWritingSystems, new string[] { });
 			Field fieldToFill = new Field(LexSense.WellKnownProperties.Definition, "LexSense", fieldWritingSystems);
 			ResultSet<LexEntry> sortedResults =
 				_lexEntryRepository.GetEntriesWithMissingFieldSortedByLexicalUnit(fieldToFill, searchInWritingSystems, _lexicalFormWritingSystem);
@@ -189,14 +187,14 @@ namespace WeSay.LexicalModel.Tests
 		{
 			TestWritingSystemSearch(1, new[] { "de", "en" },  //field spec
 								   new[] { "de" },           //fill these in
-								   new string[]{});          // search on these
+								   new string[] { });          // search on these
 		}
 
 		[Test]
 		public void Get_NullSearchWs_MissingInOne_Returned()
 		{
 			TestWritingSystemSearch(1, new[] { "de", "en" },  //field spec
-								   new[] { "en"},           //fill these in
+								   new[] { "en" },           //fill these in
 								   null);                   // search on these
 		}
 
@@ -208,9 +206,9 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void Get_1SearchWs_NotMissingData_NotReturned()
 		{
-			TestWritingSystemSearch(0, new[] {"de", "en" },  //field spec
-								   new[] {"de"},             //fill these in
-								   new[] {"de"});            // search on these
+			TestWritingSystemSearch(0, new[] { "de", "en" },  //field spec
+								   new[] { "de" },             //fill these in
+								   new[] { "de" });            // search on these
 		}
 
 
@@ -238,7 +236,7 @@ namespace WeSay.LexicalModel.Tests
 								   new[] { "de", "en" });          // search on these
 		}
 
-		private class TestEnvironment:IDisposable
+		private class TestEnvironment : IDisposable
 		{
 			private LexEntryRepository _repository;
 			private TemporaryFolder _temporaryFolder;
@@ -299,7 +297,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(1, new string[] {"en", "de"}, new string[] {}, new string[] {}, new string[] {});
+				e.TestFilter(1, new string[] { "en", "de" }, new string[] { }, new string[] { }, new string[] { });
 			}
 		}
 
@@ -317,7 +315,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(0, new string[] { }, new string[] {"en", "de" }, new string[] { }, new string[] { });
+				e.TestFilter(0, new string[] { }, new string[] { "en", "de" }, new string[] { }, new string[] { });
 			}
 		}
 		#endregion
@@ -327,7 +325,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(1, new string[] { "en", "de" }, new string[] { }, new [] { "en" }, new string[] { });
+				e.TestFilter(1, new string[] { "en", "de" }, new string[] { }, new[] { "en" }, new string[] { });
 			}
 		}
 
@@ -336,7 +334,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(0, new string[] { "de" }, new string[] { "en" }, new [] { "en" }, new string[] { });
+				e.TestFilter(0, new string[] { "de" }, new string[] { "en" }, new[] { "en" }, new string[] { });
 			}
 		}
 
@@ -345,7 +343,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(1, new string[] { "en" }, new string[] { "de" }, new [] { "en" }, new string[] { });
+				e.TestFilter(1, new string[] { "en" }, new string[] { "de" }, new[] { "en" }, new string[] { });
 			}
 		}
 
@@ -354,7 +352,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(0, new string[] { }, new string[] { "en", "de" }, new [] { "en" }, new string[] { });
+				e.TestFilter(0, new string[] { }, new string[] { "en", "de" }, new[] { "en" }, new string[] { });
 			}
 		}
 		#endregion
@@ -365,7 +363,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(0, new string[] { "en", "de" }, new string[] { }, new string[] { }, new [] { "de" });
+				e.TestFilter(0, new string[] { "en", "de" }, new string[] { }, new string[] { }, new[] { "de" });
 			}
 		}
 
@@ -413,7 +411,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(0, new string[] { "en", "de" }, new string[] { }, new [] { "en" }, new [] { "de" });
+				e.TestFilter(0, new string[] { "en", "de" }, new string[] { }, new[] { "en" }, new[] { "de" });
 			}
 		}
 
@@ -440,7 +438,7 @@ namespace WeSay.LexicalModel.Tests
 		{
 			using (var e = new TestEnvironment())
 			{
-				e.TestFilter(1, new string[] {"en" }, new string[] { "de" }, new[] { "en" }, new[] { "de" });
+				e.TestFilter(1, new string[] { "en" }, new string[] { "de" }, new[] { "en" }, new[] { "de" });
 			}
 		}
 

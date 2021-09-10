@@ -1,21 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 using SIL.i18n;
 using SIL.Reporting;
-using SIL.WritingSystems;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 using WeSay.ConfigTool.Properties;
 using WeSay.LexicalModel;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class FieldsControl: ConfigurationControlBase
+	public partial class FieldsControl : ConfigurationControlBase
 	{
 		private bool _loading = false;
 
-		public FieldsControl(ILogger logger): base("set up the fields for the dictionary", logger,"fields")
+		public FieldsControl(ILogger logger) : base("set up the fields for the dictionary", logger, "fields")
 		{
 			InitializeComponent();
 			_btnAddField.Image = Resources.genericLittleNewButton;
@@ -51,7 +49,7 @@ namespace WeSay.ConfigTool
 				return;
 			}
 
-			var f = (Field) _fieldsListBox.SelectedItems[0].Tag;
+			var f = (Field)_fieldsListBox.SelectedItems[0].Tag;
 			_fieldsListBox.SelectedItems[0].Text = f.DisplayName;
 		}
 
@@ -72,7 +70,7 @@ namespace WeSay.ConfigTool
 		{
 			foreach (ListViewItem item in _fieldsListBox.Items)
 			{
-				Field field = (Field) item.Tag;
+				Field field = (Field)item.Tag;
 				item.Text = field.DisplayName;
 			}
 		}
@@ -85,7 +83,7 @@ namespace WeSay.ConfigTool
 			_loading = true;
 			_fieldsListBox.Items.Clear();
 
-			foreach (Field field in  ViewTemplate)
+			foreach (Field field in ViewTemplate)
 			{
 				var item = new ListViewItem(field.DisplayName);
 				item.Tag = field;
@@ -122,7 +120,7 @@ namespace WeSay.ConfigTool
 			}
 
 			//nb: this is not necessarily the Current Field!  you can click check boxes without selecting a different item
-			var touchedField = (Field) _fieldsListBox.Items[e.Index].Tag;
+			var touchedField = (Field)_fieldsListBox.Items[e.Index].Tag;
 			if (e.NewValue == CheckState.Checked)
 			{
 				touchedField.Enabled = true;
@@ -220,7 +218,7 @@ namespace WeSay.ConfigTool
 		private static string MakeUniqueFieldName()
 		{
 			string baseName = Field.NewFieldNamePrefix;
-			for (int count = 0;count < 1000;count++)
+			for (int count = 0; count < 1000; count++)
 			{
 				string check = baseName;
 				if (count > 0)

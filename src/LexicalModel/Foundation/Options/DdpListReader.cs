@@ -1,8 +1,7 @@
-using System.Xml;
-using System.Xml.Serialization;
 using SIL.Lift;
 using SIL.Lift.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace WeSay.LexicalModel.Foundation.Options
 {
@@ -76,7 +75,7 @@ namespace WeSay.LexicalModel.Foundation.Options
 		{
 			s = s.TrimEnd(new char[] { ',', ' ' });//fieldworks has extra commas
 			string existing = GetExactAlternative(ws);
-			if(existing != string.Empty)
+			if (existing != string.Empty)
 			{
 				existing += ", ";
 			}

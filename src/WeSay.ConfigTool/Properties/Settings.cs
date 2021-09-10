@@ -1,8 +1,8 @@
+using SIL.Reporting;
 using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
-using SIL.Reporting;
 
 namespace WeSay.ConfigTool.Properties
 {
@@ -25,17 +25,17 @@ namespace WeSay.ConfigTool.Properties
 			Initialize();
 		}
 
-		public Settings(string settingsKey): base(settingsKey)
+		public Settings(string settingsKey) : base(settingsKey)
 		{
 			Initialize();
 		}
 
-		public Settings(IComponent owner): base(owner)
+		public Settings(IComponent owner) : base(owner)
 		{
 			Initialize();
 		}
 
-		public Settings(IComponent owner, string settingsKey): base(owner, settingsKey)
+		public Settings(IComponent owner, string settingsKey) : base(owner, settingsKey)
 		{
 			Initialize();
 		}
@@ -45,7 +45,7 @@ namespace WeSay.ConfigTool.Properties
 			string lastConfigFilePath = null;
 			try
 			{
-				lastConfigFilePath = (string) GetPreviousVersion("LastConfigFilePath");
+				lastConfigFilePath = (string)GetPreviousVersion("LastConfigFilePath");
 			}
 			catch
 			{

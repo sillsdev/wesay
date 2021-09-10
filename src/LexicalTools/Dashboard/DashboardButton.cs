@@ -9,7 +9,7 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public partial class DashboardButton: UserControl, IButtonControl
+	public partial class DashboardButton : UserControl, IButtonControl
 	{
 		private DialogResult _dialogResult;
 		private Color _borderColor = Color.Blue;
@@ -80,10 +80,10 @@ namespace WeSay.LexicalTools.Dashboard
 		/// <param name="lw"></param>
 		/// <returns></returns>
 		public static GraphicsPath RoundRect(int x, int y, int width, int height, int radius, int lw)
-				// x,y - top left corner of rounded rectangle
-				// width, height - width and height of round rect
-				// radius - radius for corners
-				// lw - line width (for Graphics.Pen)
+		// x,y - top left corner of rounded rectangle
+		// width, height - width and height of round rect
+		// radius - radius for corners
+		// lw - line width (for Graphics.Pen)
 		{
 			GraphicsPath g = new GraphicsPath();
 			int diameter = radius * 2;
@@ -221,13 +221,13 @@ namespace WeSay.LexicalTools.Dashboard
 			int rightEdge = ClientRectangle.Right - RightMarginWidth;
 			int progressBarTop = ClientRectangle.Bottom - BottomMarginWidth -
 								 (HasProgressBar() ? ProgressBarHeight : 0);
-			float percentDone = (float) 100.0 *
+			float percentDone = (float)100.0 *
 								(task.GetReferenceCount() - task.GetRemainingCount()) /
 								task.GetReferenceCount();
 			percentDone = Math.Max(Math.Min(percentDone, 100), 0);
-					// ensure that 0 <= percentDone <= 100
+			// ensure that 0 <= percentDone <= 100
 
-			float rightEdgeOfDonePart = (float) (percentDone / 100.0) *
+			float rightEdgeOfDonePart = (float)(percentDone / 100.0) *
 										(rightEdge - left - ProgressBarLeftMargin -
 										 ProgressBarRightMargin) + left + ProgressBarLeftMargin;
 			graphics.DrawLine(pen,
@@ -398,14 +398,14 @@ namespace WeSay.LexicalTools.Dashboard
 			get { return _dialogResult; }
 			set
 			{
-				if (Enum.IsDefined(typeof (DialogResult), value))
+				if (Enum.IsDefined(typeof(DialogResult), value))
 				{
 					_dialogResult = value;
 				}
 			}
 		}
 
-		public void NotifyDefault(bool value) {}
+		public void NotifyDefault(bool value) { }
 
 		public void PerformClick()
 		{

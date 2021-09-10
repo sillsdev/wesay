@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.Xml;
-using System.IO;
 using Exortech.NetReflector;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
 	[ReflectorType("WritingSystemCollection")]
-	public class WritingSystemCollection_V1: Dictionary<string, WritingSystem_V1>
+	public class WritingSystemCollection_V1 : Dictionary<string, WritingSystem_V1>
 	{
 		public void LoadFromLegacyWeSayFile(string PathToWritingSystemPrefsFile)
 		{
@@ -43,8 +43,8 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 		private static NetReflectorTypeTable MakeTypeTable()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof (WritingSystemCollection_V1));
-			t.Add(typeof (WritingSystem_V1));
+			t.Add(typeof(WritingSystemCollection_V1));
+			t.Add(typeof(WritingSystem_V1));
 			return t;
 		}
 

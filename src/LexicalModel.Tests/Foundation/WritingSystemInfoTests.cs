@@ -1,6 +1,6 @@
-﻿using System.Drawing;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SIL.WritingSystems;
+using System.Drawing;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.LexicalModel.Tests.Foundation
@@ -22,9 +22,9 @@ namespace WeSay.LexicalModel.Tests.Foundation
 		public void CreateFont_WithFontName_NameSetToFontName()
 		{
 			var ws = new WritingSystemDefinition
-						 {
-							 DefaultFont = new FontDefinition((FontFamily.GenericSerif.Name))
-						 };
+			{
+				DefaultFont = new FontDefinition((FontFamily.GenericSerif.Name))
+			};
 			// Assert the precondition
 			Assert.AreNotEqual(FontFamily.GenericSansSerif.Name, ws.DefaultFont.Name);
 			// Assert the test

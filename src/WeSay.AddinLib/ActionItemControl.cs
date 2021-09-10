@@ -1,3 +1,5 @@
+using SIL.i18n;
+using SIL.Reporting;
 using System;
 using System.Drawing;
 using System.IO;
@@ -5,12 +7,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using SIL.i18n;
-using SIL.Reporting;
 
 namespace WeSay.AddinLib
 {
-	public partial class ActionItemControl: UserControl //, IControlForListBox
+	public partial class ActionItemControl : UserControl //, IControlForListBox
 	{
 		private readonly IWeSayAddin _addin;
 		private readonly bool _inAdminMode;
@@ -65,7 +65,7 @@ namespace WeSay.AddinLib
 			//Maybe that's *why it's unavailable*.. it may need to be set up first.
 
 			_setupButton.Visible = inAdminMode && _addin is IWeSayAddinHasSettings &&
-								   ((IWeSayAddinHasSettings) _addin).Settings != null;
+								   ((IWeSayAddinHasSettings)_addin).Settings != null;
 
 
 			_moreInfoButton.Visible = inAdminMode && _addin is IWeSayAddinHasMoreInfo;
@@ -93,11 +93,11 @@ namespace WeSay.AddinLib
 
 		private void LoadSettings()
 		{
-			if (! (_addin is IWeSayAddinHasSettings))
+			if (!(_addin is IWeSayAddinHasSettings))
 			{
 				return;
 			}
-			IWeSayAddinHasSettings addin = (IWeSayAddinHasSettings) _addin;
+			IWeSayAddinHasSettings addin = (IWeSayAddinHasSettings)_addin;
 			object existingSettings = addin.Settings;
 			if (existingSettings == null)
 			{
@@ -121,7 +121,7 @@ namespace WeSay.AddinLib
 			try
 			{
 				LoadSettings();
-				IWeSayAddinHasSettings addin = (IWeSayAddinHasSettings) _addin;
+				IWeSayAddinHasSettings addin = (IWeSayAddinHasSettings)_addin;
 				if (!addin.DoShowSettingsDialog(ParentForm, _projectInfo))
 				{
 					return;
@@ -149,7 +149,7 @@ namespace WeSay.AddinLib
 					}
 					string settingsXml = builder.ToString();
 					stringWriter.Close();
-					AddinSet.Singleton.SetSettingsForAddin(((IWeSayAddin) addin).ID, settingsXml);
+					AddinSet.Singleton.SetSettingsForAddin(((IWeSayAddin)addin).ID, settingsXml);
 				}
 			}
 			catch (Exception error)
@@ -175,11 +175,11 @@ namespace WeSay.AddinLib
 
 		protected override void OnResize(EventArgs e)
 		{
-			if(flowLayoutPanel1.Height > flowLayoutPanel1.ClientSize.Height)
+			if (flowLayoutPanel1.Height > flowLayoutPanel1.ClientSize.Height)
 				flowLayoutPanel1.Size = new Size(flowLayoutPanel1.ClientSize.Width, flowLayoutPanel1.Height);
-			if(flowLayoutPanel1.Height > this.ClientSize.Height)
+			if (flowLayoutPanel1.Height > this.ClientSize.Height)
 				this.Size = new Size(this.ClientSize.Width, flowLayoutPanel1.Height);
-			base.OnResize (e);
+			base.OnResize(e);
 		}
 
 		protected void UpdateVisualThings()
@@ -238,12 +238,12 @@ namespace WeSay.AddinLib
 	}
 
 	//lets us serialize to an xml fragment
-	internal class FragmentXmlTextWriter: XmlTextWriter
+	internal class FragmentXmlTextWriter : XmlTextWriter
 	{
-		public FragmentXmlTextWriter(TextWriter w): base(w) {}
-		public FragmentXmlTextWriter(Stream w, Encoding encoding): base(w, encoding) {}
-		public FragmentXmlTextWriter(string filename, Encoding encoding): base(filename, encoding) {}
+		public FragmentXmlTextWriter(TextWriter w) : base(w) { }
+		public FragmentXmlTextWriter(Stream w, Encoding encoding) : base(w, encoding) { }
+		public FragmentXmlTextWriter(string filename, Encoding encoding) : base(filename, encoding) { }
 
-		public override void WriteStartDocument() {}
+		public override void WriteStartDocument() { }
 	}
 }

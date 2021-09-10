@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Autofac;
 using Autofac.Builder;
-using WeSay.UI;
+using System;
+using System.Collections.Generic;
 
 namespace WeSay.Project
 {
@@ -67,27 +66,27 @@ namespace WeSay.Project
 			Type typeInterface = GetType("WeSay.LexicalTools.IConfirmDelete", "LexicalTools");
 			builder.RegisterType(type).As(typeInterface).InstancePerDependency();
 
-//            Type type = GetType( "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryControl", assembly);
-//            TaskNameToTaskType.Add(name, type);
-//            builder.Register(type).Named(name).FactoryScoped();
+			//            Type type = GetType( "WeSay.LexicalTools.Review.AdvancedHistory.AdvancedHistoryControl", assembly);
+			//            TaskNameToTaskType.Add(name, type);
+			//            builder.Register(type).Named(name).FactoryScoped();
 
 		}
-//
-//        private void RegisterDictionaryTask(ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
-//        {
-//            // _taskNameToClassPath.Add(name, classPath);
-//            Type type = GetType(classPath, assembly);
-//            TaskNameToTaskType.Add(name, type);
-//
-//            //review: there's probably a cleaner way to do this, is it even necessary?
-//
-//            var interfaces = new Type[] {typeof(ITask), typeof(ITaskForExternalNavigateToEntry) };
-//
-//            builder.Register(type).Named(name).As(interfaces).FactoryScoped();
-//
-//            //register the class that holds the configuration for this task
-//            RegisterConfigurationClass(assembly, name, builder, configClassPath);
-//        }
+		//
+		//        private void RegisterDictionaryTask(ContainerBuilder builder, string name, string classPath, string configClassPath, string assembly)
+		//        {
+		//            // _taskNameToClassPath.Add(name, classPath);
+		//            Type type = GetType(classPath, assembly);
+		//            TaskNameToTaskType.Add(name, type);
+		//
+		//            //review: there's probably a cleaner way to do this, is it even necessary?
+		//
+		//            var interfaces = new Type[] {typeof(ITask), typeof(ITaskForExternalNavigateToEntry) };
+		//
+		//            builder.Register(type).Named(name).As(interfaces).FactoryScoped();
+		//
+		//            //register the class that holds the configuration for this task
+		//            RegisterConfigurationClass(assembly, name, builder, configClassPath);
+		//        }
 
 		/// <summary>
 		/// this is a hack fo now (root problem is that this assumbly can't point directly at

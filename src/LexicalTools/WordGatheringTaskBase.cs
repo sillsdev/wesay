@@ -1,15 +1,15 @@
-using System;
 using SIL.DictionaryServices.Model;
 using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.Linq;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.Project;
-using System.Linq;
 
 namespace WeSay.LexicalTools
 {
-	public abstract class WordGatheringTaskBase: TaskBase
+	public abstract class WordGatheringTaskBase : TaskBase
 	{
 		protected WritingSystemDefinition _lexicalFormWritingSystem;
 		protected readonly ViewTemplate _viewTemplate;
@@ -19,7 +19,7 @@ namespace WeSay.LexicalTools
 										LexEntryRepository lexEntryRepository,
 										ViewTemplate viewTemplate,
 										TaskMemoryRepository taskMemoryRepository)
-				: base( config,
+				: base(config,
 						lexEntryRepository, taskMemoryRepository)
 		{
 			if (viewTemplate == null)
@@ -45,7 +45,7 @@ namespace WeSay.LexicalTools
 		protected WritingSystemDefinition GetFirstTextWritingSystemOfField(Field field)
 		{
 			var ids = BasilProject.Project.WritingSystems.FilterForTextLanguageTags(field.WritingSystemIds);
-			if(ids.Count()==0)
+			if (ids.Count() == 0)
 			{
 				throw new ConfigurationException(string.Format("The field {0} must have at least one non-audio input system.", field.DisplayName));
 			}

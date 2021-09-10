@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using NUnit.Framework;
-using SIL.DictionaryServices.Lift;
+using SIL.DictionaryServices.Model;
 using SIL.Extensions;
 using SIL.Tests.Data;
 using SIL.TestUtilities;
-using SIL.DictionaryServices.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -111,7 +110,7 @@ namespace WeSay.LexicalModel.Tests
 			Item.LexicalForm["de"] = "Sonne";
 		}
 
-		protected override void  LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
+		protected override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()
 		{
 			SetState();
 			Assert.AreEqual(Item.ModificationTime, DataMapperUnderTest.LastModified);

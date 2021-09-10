@@ -8,7 +8,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 	/// Summary description for TextLengthTrigger.
 	/// </summary>
 	[Serializable]
-	public class TextLengthTrigger: AutoCompleteTrigger
+	public class TextLengthTrigger : AutoCompleteTrigger
 	{
 		private int textLength = 2;
 
@@ -18,7 +18,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			set { textLength = value; }
 		}
 
-		public TextLengthTrigger() {}
+		public TextLengthTrigger() { }
 
 		public TextLengthTrigger(int length)
 		{

@@ -1,20 +1,20 @@
+using Autofac;
+using SIL.Code;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.DictionaryServices.Processors;
+using SIL.i18n;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Autofac;
-using SIL.Data;
-using SIL.Code;
-using SIL.DictionaryServices.Model;
-using SIL.DictionaryServices.Processors;
-using SIL.Progress;
-using SIL.Text;
-using SIL.i18n;
-using SIL.Lift;
-using SIL.Lift.Options;
-using SIL.Reporting;
-using SIL.WritingSystems;
 using WeSay.LexicalModel;
 using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
@@ -22,11 +22,11 @@ using WeSay.Project.LocalizedList;
 
 namespace WeSay.LexicalTools.GatherBySemanticDomains
 {
-	public class GatherBySemanticDomainTask: WordGatheringTaskBase
+	public class GatherBySemanticDomainTask : WordGatheringTaskBase
 	{
 		public ViewTemplate ViewTemplate { get; set; }
 		internal const string DomainIndexTaskMemoryKey = "DomainIndex";
-		internal const string QuestionIndexTaskMemoryKey= "QuestionIndex";
+		internal const string QuestionIndexTaskMemoryKey = "QuestionIndex";
 		private readonly string _semanticDomainQuestionsFileName;
 		private GatherBySemanticDomainsControl _gatherControl;
 		private Dictionary<string, List<string>> _domainQuestions;
@@ -161,7 +161,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				return key;
 			}
 			string prefix = "";
-			string number = option.Abbreviation.GetBestAlternativeString(new[]{SemanticDomainWritingSystemLanguageTag, "en"});
+			string number = option.Abbreviation.GetBestAlternativeString(new[] { SemanticDomainWritingSystemLanguageTag, "en" });
 			var indentLevel = 0;
 			if (!string.IsNullOrEmpty(number))
 			{
@@ -318,23 +318,23 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 									CurrentDomainIndex,
 									out beginIndex,
 									out pastEndIndex);
-					for (int i = beginIndex;i < pastEndIndex;i++)
+					for (int i = beginIndex; i < pastEndIndex; i++)
 					{
 						LexEntry entry = recordTokens[i].RealObject;
 						//was _words.Add(entry.LexicalForm.GetBestAlternative(WordWritingSystemId, "*"));
-						LanguageForm form = entry.LexicalForm.GetBestAlternative(new string[] {WordWritingSystemLanguageTag});
+						LanguageForm form = entry.LexicalForm.GetBestAlternative(new string[] { WordWritingSystemLanguageTag });
 						if (form == null)
 							continue; //happens if there is a word with this domain, but no lexeme form
 
 						var wordDisplay = new WordDisplay()
-											  {
-												  Vernacular = form
-											  };
+						{
+							Vernacular = form
+						};
 						var firstSenseMatchingCurrentDomain =
 							entry.Senses.
-									Where(s=>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
-										FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey));
-						if(firstSenseMatchingCurrentDomain != null)
+									Where(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
+										FirstOrDefault(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey));
+						if (firstSenseMatchingCurrentDomain != null)
 						{
 							if (_glossMeaningField)
 							{
@@ -349,7 +349,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 					}
 				}
-			   // TODO: figure out how to do sorting on complex objects using this collator:    _words.Sort(FormWritingSystem.Collator);
+				// TODO: figure out how to do sorting on complex objects using this collator:    _words.Sort(FormWritingSystem.Collator);
 				_words.Sort(new Comparison<WordDisplay>(CompareForms));
 				return _words;
 			}
@@ -403,8 +403,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			{
 				_currentQuestionIndex++;
 			}
-		  RecordLocationInTaskMemory();
-		   UpdateCurrentWords();
+			RecordLocationInTaskMemory();
+			UpdateCurrentWords();
 		}
 
 
@@ -495,7 +495,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				{
 					LexEntry entry = LexEntryRepository.CreateItem();
 					entry.LexicalForm.SetAlternative(WordWritingSystemLanguageTag, lexicalForm);
-					AddCurrentSemanticDomainToEntry(entry,gloss);
+					AddCurrentSemanticDomainToEntry(entry, gloss);
 					LexEntryRepository.SaveItem(entry);
 					modifiedEntries.Add(entry);
 
@@ -506,7 +506,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					var entriesMatchingWord = new List<LexEntry>(from RecordToken<LexEntry> x in recordTokens select x.RealObject);
 					foreach (var entry in entriesMatchingWord)
 					{
-						if(HasMatchingSense(entry, gloss))
+						if (HasMatchingSense(entry, gloss))
 						{
 							modifiedEntries.Add(entry);
 							AddCurrentSemanticDomainToEntry(entry, gloss);
@@ -553,7 +553,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		[Obsolete("for retrofitting tests only")]
 		public void PrepareToMoveWordToEditArea(string form)
 		{
-			PrepareToMoveWordToEditArea(new WordDisplay(){Vernacular = new LanguageForm(FormWritingSystem.LanguageTag, form, null)});
+			PrepareToMoveWordToEditArea(new WordDisplay() { Vernacular = new LanguageForm(FormWritingSystem.LanguageTag, form, null) });
 		}
 
 		public void PrepareToMoveWordToEditArea(WordDisplay wordDisplay)
@@ -600,8 +600,8 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				{
 					var firstSenseMatchingSemDomAndMeaning =
 						entry.Senses.
-							Where(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
-								FirstOrDefault(s =>s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
+							Where(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4) != null).
+								FirstOrDefault(s => s.GetProperty<OptionRefCollection>(LexSense.WellKnownProperties.SemanticDomainDdp4).Contains(CurrentDomainKey)
 														&& (_glossMeaningField ? s.Gloss.GetBestAlternative(new[] { DefinitionWritingSystem.LanguageTag }) :
 														s.Definition.GetBestAlternative(new[] { DefinitionWritingSystem.LanguageTag })) == wordDisplay.Meaning);
 					if (firstSenseMatchingSemDomAndMeaning != null)
@@ -624,7 +624,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			UpdateCurrentWords();
 		}
 
-		private List<LexSense> _savedSensesDuringMoveToEditArea ;
+		private List<LexSense> _savedSensesDuringMoveToEditArea;
 
 		//when we pull a word out of the list, we remembered its meaning, so that we can make that available
 		//down in the edit area.
@@ -674,7 +674,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 			else
 			{
-				if ((_savedSensesDuringMoveToEditArea!=null) && (_savedSensesDuringMoveToEditArea.Count > 0))  //we are editing a word we entered previously
+				if ((_savedSensesDuringMoveToEditArea != null) && (_savedSensesDuringMoveToEditArea.Count > 0))  //we are editing a word we entered previously
 				{
 					//in this case, we have this saved sense we want to put back,
 					//which could conceivably have example sentences and other stuff
@@ -709,7 +709,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 						if (sense != null)
 						{
 							//now, can we merge this sense in?
-							if (!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, lexSense, new string[]{}, new NullProgress()))
+							if (!SenseMerger.TryMergeSenseWithSomeExistingSense(sense, lexSense, new string[] { }, new NullProgress()))
 							{
 								//ah well, they'll have to hand-merge at some point
 								//Enhance: add a chorus note
@@ -736,7 +736,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 					}
 				}
 			}
-			if(sense==null)
+			if (sense == null)
 			{
 				if (_glossMeaningField)
 				{
@@ -771,7 +771,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			string domainKey = DomainKeys[domainIndex];
 
-			beginIndex = recordTokens.FindFirstIndex(token => ((string) token["SemanticDomain"]) == domainKey);
+			beginIndex = recordTokens.FindFirstIndex(token => ((string)token["SemanticDomain"]) == domainKey);
 			if (beginIndex < 0)
 			{
 				pastEndIndex = beginIndex;
@@ -779,7 +779,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			}
 			pastEndIndex = beginIndex + 1;
 			while (pastEndIndex < recordTokens.Count &&
-				   (string) recordTokens[pastEndIndex]["SemanticDomain"] == domainKey)
+				   (string)recordTokens[pastEndIndex]["SemanticDomain"] == domainKey)
 			{
 				++pastEndIndex;
 			}
@@ -838,7 +838,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 				}
 				catch (Exception error)
 				{
-					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(),  error,
+					ErrorReport.NotifyUserOfProblem(new ShowOncePerSessionBasedOnExactMessagePolicy(), error,
 																	 "There was a problem getting the font for the meaning field, using Typeface {0} and Size {1}.  See if you can fix this using the Input Systems tab of theConfiguration Tool.", MeaningWritingSystem.DefaultFont.Name,
 									defaultFontSize);
 					return SystemFonts.DefaultFont;
@@ -930,7 +930,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		public override void Deactivate()
 		{
-			if(_gatherControl != null)
+			if (_gatherControl != null)
 			{
 				_gatherControl.Cleanup();
 			}
@@ -954,7 +954,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			string lastDomain = null;
 			foreach (RecordToken<LexEntry> token in GetAllEntriesSortedBySemanticDomain())
 			{
-				var semanticDomain = (string) token["SemanticDomain"];
+				var semanticDomain = (string)token["SemanticDomain"];
 				if (semanticDomain != lastDomain)
 				{
 					lastDomain = semanticDomain;
@@ -982,7 +982,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		public void GotoLastDomainWithAnswers()
 		{
 			VerifyTaskActivated();
-			for (int i = 0;i < DomainKeys.Count;i++)
+			for (int i = 0; i < DomainKeys.Count; i++)
 			{
 				CurrentDomainIndex = i;
 				int beginIndex;
@@ -1005,7 +1005,7 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		{
 			VerifyTaskActivated();
 			var entries = GetAllEntriesSortedBySemanticDomain();
-			for (int i = _currentDomainIndex+1; i < DomainKeys.Count; i++)
+			for (int i = _currentDomainIndex + 1; i < DomainKeys.Count; i++)
 			{
 				if (GetHasWords(i, entries))
 				{
@@ -1028,12 +1028,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 
 		private bool GetHasWords(int domainIndex, ResultSet<LexEntry> entries)
 		{
-				int beginIndex;
-				int pastEndIndex;
-				GetWordsIndexes(entries,
-								domainIndex,
-								out beginIndex,
-								out pastEndIndex);
+			int beginIndex;
+			int pastEndIndex;
+			GetWordsIndexes(entries,
+							domainIndex,
+							out beginIndex,
+							out pastEndIndex);
 			return (pastEndIndex == beginIndex);
 		}
 

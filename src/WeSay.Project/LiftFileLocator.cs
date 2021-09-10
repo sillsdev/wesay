@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SIL.Reporting;
+using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using SIL.Reporting;
 
 namespace WeSay.Project
 {

@@ -1,5 +1,5 @@
-﻿using System.Xml.XPath;
-using SIL.IO;
+﻿using SIL.IO;
+using System.Xml.XPath;
 
 namespace WeSay.Project.ConfigMigration.WeSayConfig
 {

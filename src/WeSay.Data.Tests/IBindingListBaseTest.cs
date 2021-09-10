@@ -1,6 +1,6 @@
+using NUnit.Framework;
 using System;
 using System.ComponentModel;
-using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
@@ -26,7 +26,7 @@ namespace WeSay.Data.Tests
 		}
 
 		[OneTimeSetUp]
-		public virtual void OneTimeSetUp() {}
+		public virtual void OneTimeSetUp() { }
 
 		[SetUp]
 		public virtual void SetUp()
@@ -69,7 +69,7 @@ namespace WeSay.Data.Tests
 					_bindingList.AddNew();
 					Assert.Fail();
 				}
-				catch (NotSupportedException) {}
+				catch (NotSupportedException) { }
 				catch
 				{
 					Assert.Fail("When AddNew is not supported, should throw not supported exception");
@@ -77,9 +77,9 @@ namespace WeSay.Data.Tests
 			}
 		}
 
-		protected virtual void VerifySortAscending() {}
+		protected virtual void VerifySortAscending() { }
 
-		protected virtual void VerifySortDescending() {}
+		protected virtual void VerifySortDescending() { }
 
 		protected virtual void VerifySort(ListSortDirection direction)
 		{
@@ -112,7 +112,7 @@ namespace WeSay.Data.Tests
 			{
 				if (_property == null)
 				{
-					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (T));
+					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(T));
 					_property = pdc[0];
 				}
 				Assert.IsFalse(_listChanged);
@@ -140,7 +140,7 @@ namespace WeSay.Data.Tests
 					_bindingList.ApplySort(_property, direction);
 					Assert.Fail();
 				}
-				catch (NotSupportedException) {}
+				catch (NotSupportedException) { }
 				catch
 				{
 					Assert.Fail(
@@ -172,7 +172,7 @@ namespace WeSay.Data.Tests
 					_bindingList.Find(_property, _key);
 					Assert.Fail();
 				}
-				catch (NotSupportedException) {}
+				catch (NotSupportedException) { }
 				catch
 				{
 					Assert.Fail(
@@ -206,7 +206,7 @@ namespace WeSay.Data.Tests
 				}
 				if (_property == null)
 				{
-					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof (T));
+					PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(typeof(T));
 					_property = pdc[0];
 				}
 				_bindingList.ApplySort(_property, ListSortDirection.Descending);
@@ -229,7 +229,7 @@ namespace WeSay.Data.Tests
 					_bindingList.RemoveSort();
 					Assert.Fail();
 				}
-				catch (NotSupportedException) {}
+				catch (NotSupportedException) { }
 				catch
 				{
 					Assert.Fail(
@@ -336,7 +336,7 @@ namespace WeSay.Data.Tests
 		private string _s;
 		private int _i;
 
-		public SimpleClass() {}
+		public SimpleClass() { }
 
 		public SimpleClass(string s, int i)
 		{
@@ -358,7 +358,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IBindingListStringTest: IBindingListBaseTest<SimpleClass, string>
+	public class IBindingListStringTest : IBindingListBaseTest<SimpleClass, string>
 	{
 		[OneTimeSetUp]
 		public override void OneTimeSetUp()
@@ -390,7 +390,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IBindingListNoDataTest: IBindingListBaseTest<SimpleClass, string>
+	public class IBindingListNoDataTest : IBindingListBaseTest<SimpleClass, string>
 	{
 		[SetUp]
 		public override void SetUp()

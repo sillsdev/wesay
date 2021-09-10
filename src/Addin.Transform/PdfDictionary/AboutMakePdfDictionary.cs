@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Addin.Transform.PdfDictionary
@@ -22,7 +18,7 @@ namespace Addin.Transform.PdfDictionary
 			{
 				System.Diagnostics.Process.Start(((LinkLabel)sender).Text);
 			}
-			catch(Exception error)
+			catch (Exception error)
 			{
 				SIL.Reporting.ErrorReport.NotifyUserOfProblem("Your operating system could not follow the link.\r\n\r\n{0}", error.Message);
 			}

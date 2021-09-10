@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Gecko;
+using SIL.Text;
+using SIL.WritingSystems;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Gecko;
-using Gecko.DOM;
-using Gecko.Events;
-using SIL.WritingSystems;
-using SIL.Text;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes

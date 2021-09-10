@@ -1,11 +1,11 @@
+using NUnit.Framework;
+using SIL.TestUtilities;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.TestUtilities;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Dashboard;
-using NUnit.Framework;
 
 namespace WeSay.LexicalTools.Tests
 {
@@ -46,7 +46,7 @@ namespace WeSay.LexicalTools.Tests
 
 		[Test]
 		[Ignore("not really a test")]
-		public void Run() {}
+		public void Run() { }
 
 		private static List<IThingOnDashboard> GetButtonItems()
 		{
@@ -99,7 +99,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 	}
 
-	internal class ThingThatGetsAButton: IThingOnDashboard
+	internal class ThingThatGetsAButton : IThingOnDashboard
 	{
 		private readonly DashboardGroup _group;
 		private readonly string _localizedLabel;
@@ -135,7 +135,8 @@ namespace WeSay.LexicalTools.Tests
 				localizedLongLabel,
 				description,
 				ButtonStyle.VariableAmount,
-				null) {}
+				null)
+		{ }
 
 		//todo: this belongs on the button, which knows better what it has planned
 		public int WidthToDisplayFullSizeLabel

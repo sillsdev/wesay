@@ -1,15 +1,11 @@
-﻿using System;
+﻿using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.Reporting;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
-using SIL.DictionaryServices.Model;
-using SIL.Lift;
-using SIL.Lift.Options;
-using SIL.Reporting;
-using WeSay.LexicalModel;
 
 namespace WeSay.Project.LocalizedList
 {
@@ -26,7 +22,7 @@ namespace WeSay.Project.LocalizedList
 		private string _pathToList = "";
 		public Dictionary<string, List<string>> QuestionDictionary
 		{
-			get { return _questionDictionary;  }
+			get { return _questionDictionary; }
 		}
 
 		public List<String> Keys
@@ -77,7 +73,7 @@ namespace WeSay.Project.LocalizedList
 				else
 				{
 					//what are we going to do when the file is bad?
-					Logger.WriteEvent("Bad lists file format, expected Lists element: " + _pathToList );
+					Logger.WriteEvent("Bad lists file format, expected Lists element: " + _pathToList);
 					Debug.Fail("Bad lists file format, expected Lists element: " + _pathToList);
 				}
 			}

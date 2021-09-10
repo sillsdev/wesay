@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Enchant;
+using SIL.i18n;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using Enchant;
-using SIL.i18n;
 
 namespace WeSay.LexicalModel.Foundation
 {

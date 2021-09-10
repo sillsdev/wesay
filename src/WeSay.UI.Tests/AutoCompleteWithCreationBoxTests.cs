@@ -1,13 +1,13 @@
+using NUnit.Framework;
+using SIL.Lift;
+using SIL.Lift.Options;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using NUnit.Framework;
-using SIL.WritingSystems;
-using SIL.Lift;
 using WeSay.LexicalModel.Foundation;
 using WeSay.LexicalModel.Foundation.Options;
 using WeSay.UI.AutoCompleteTextBox;
-using SIL.Lift.Options;
 
 namespace WeSay.UI.Tests
 {
@@ -36,7 +36,7 @@ namespace WeSay.UI.Tests
 		{
 			_ws = new WritingSystemDefinition("qaa");
 			_ws.DefaultFont = new FontDefinition("Arial");
-			_ws.DefaultFontSize = (float) 55.9;
+			_ws.DefaultFontSize = (float)55.9;
 			//            _createNewClickedFired=false;
 			//            _valueChangedFired = false;
 			_sourceChoices = new OptionsList();

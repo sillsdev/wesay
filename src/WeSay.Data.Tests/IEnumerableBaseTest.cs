@@ -1,7 +1,7 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 
 namespace WeSay.Data.Tests
 {
@@ -14,10 +14,10 @@ namespace WeSay.Data.Tests
 		protected int _itemCount;
 
 		[OneTimeSetUp]
-		public virtual void OneTimeSetUp() {}
+		public virtual void OneTimeSetUp() { }
 
 		[SetUp]
-		public virtual void SetUp() {}
+		public virtual void SetUp() { }
 
 		[Test]
 		public void Enumerator()
@@ -43,10 +43,10 @@ namespace WeSay.Data.Tests
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
 			T prevCurrent = default(T);
-			for (int i = 0;i < _itemCount;++i)
+			for (int i = 0; i < _itemCount; ++i)
 			{
 				Assert.IsTrue(enumerator.MoveNext());
-				T current = (T) enumerator.Current;
+				T current = (T)enumerator.Current;
 				Assert.IsNotNull(current);
 				Assert.AreNotSame(prevCurrent, current);
 				prevCurrent = current;
@@ -75,7 +75,7 @@ namespace WeSay.Data.Tests
 			{
 				Assert.IsTrue(enumerator.MoveNext());
 
-				T first = (T) enumerator.Current;
+				T first = (T)enumerator.Current;
 				enumerator.Reset();
 				Assert.IsTrue(enumerator.MoveNext());
 				Assert.AreEqual(first, enumerator.Current);
@@ -96,7 +96,7 @@ namespace WeSay.Data.Tests
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
 			T current;
-			Assert.Throws<InvalidOperationException>(() =>  current = (T) enumerator.Current);
+			Assert.Throws<InvalidOperationException>(() => current = (T)enumerator.Current);
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace WeSay.Data.Tests
 			enumerator.MoveNext();
 			enumerator.Reset();
 			T current;
-			Assert.Throws<InvalidOperationException>(() =>  current= (T) enumerator.Current);
+			Assert.Throws<InvalidOperationException>(() => current = (T)enumerator.Current);
 		}
 
 		/// <summary>
@@ -122,14 +122,14 @@ namespace WeSay.Data.Tests
 		public void CurrentThrowsAtEndOfCollection()
 		{
 			IEnumerator enumerator = _enumerable.GetEnumerator();
-			while (enumerator.MoveNext()) {}
+			while (enumerator.MoveNext()) { }
 			T current;
-			Assert.Throws<InvalidOperationException>(() =>  current = (T) enumerator.Current);
+			Assert.Throws<InvalidOperationException>(() => current = (T)enumerator.Current);
 		}
 	}
 
 	[TestFixture]
-	public class IEnumerableTest: IEnumerableBaseTest<int>
+	public class IEnumerableTest : IEnumerableBaseTest<int>
 	{
 		[OneTimeSetUp]
 		public override void OneTimeSetUp()
@@ -148,7 +148,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IEnumerableStringListTest: IEnumerableBaseTest<string>
+	public class IEnumerableStringListTest : IEnumerableBaseTest<string>
 	{
 		[OneTimeSetUp]
 		public override void OneTimeSetUp()
@@ -167,7 +167,7 @@ namespace WeSay.Data.Tests
 	}
 
 	[TestFixture]
-	public class IEnumerableNoDataTest: IEnumerableBaseTest<string>
+	public class IEnumerableNoDataTest : IEnumerableBaseTest<string>
 	{
 		[SetUp]
 		public override void SetUp()

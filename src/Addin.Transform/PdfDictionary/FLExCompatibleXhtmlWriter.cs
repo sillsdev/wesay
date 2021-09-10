@@ -1,12 +1,10 @@
-﻿using System;
+﻿using SIL.Xml;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using System.Linq;
-using SIL.Xml;
 using WeSay.Project;
 
 namespace Addin.Transform.PdfDictionary
@@ -21,7 +19,7 @@ namespace Addin.Transform.PdfDictionary
 		private bool _linkToUserCss;
 		private readonly ViewTemplate _viewTemplate;
 
-		public FLExCompatibleXhtmlWriter():this(false, new ViewTemplate())
+		public FLExCompatibleXhtmlWriter() : this(false, new ViewTemplate())
 		{
 		}
 
@@ -29,7 +27,7 @@ namespace Addin.Transform.PdfDictionary
 		{
 			_linkToUserCss = linkToUserCss;
 			_viewTemplate = viewTemplate;
-			Grouper = new MultigraphParser(new string[]{} );//property needs to be set by the client to get anything interesting
+			Grouper = new MultigraphParser(new string[] { });//property needs to be set by the client to get anything interesting
 		}
 
 		public MultigraphParser Grouper { get; set; }
@@ -44,8 +42,8 @@ namespace Addin.Transform.PdfDictionary
 				_writer.WriteStartElement("head");
 				_writer.WriteStartElement("meta");
 				_writer.WriteAttributeString("charset", "UTF-8");
-//            	_writer.WriteAttributeString("http-equiv", "content-type");
-//				_writer.WriteAttributeString("content","text/html; charset=utf-8");
+				//            	_writer.WriteAttributeString("http-equiv", "content-type");
+				//				_writer.WriteAttributeString("content","text/html; charset=utf-8");
 				_writer.WriteEndElement();
 
 
@@ -68,7 +66,7 @@ namespace Addin.Transform.PdfDictionary
 				foreach (XPathNavigator entryNav in entryIterator)
 				{
 					XPathNavigator headwordFieldNode = entryNav.SelectSingleNode("field[@type='headword']");
-					if(headwordFieldNode==null || string.IsNullOrEmpty(headwordFieldNode.Value))
+					if (headwordFieldNode == null || string.IsNullOrEmpty(headwordFieldNode.Value))
 						continue;
 					var lang = headwordFieldNode.SelectSingleNode("form").GetAttribute("lang", "");
 					AddLetterSectionIfNeeded(headwordFieldNode.Value, lang);
@@ -116,8 +114,8 @@ namespace Addin.Transform.PdfDictionary
 			StartSpan("crossrefs");
 			WriteSpan("crossref-type", "en", rtype);
 			StartSpan("crossref-targets");
-			XPathNodeIterator relationsOfOneType = entryNav.Select("relation[@type='"+rtype+"']");
-			while(relationsOfOneType.MoveNext())
+			XPathNodeIterator relationsOfOneType = entryNav.Select("relation[@type='" + rtype + "']");
+			while (relationsOfOneType.MoveNext())
 			{
 				DoRelation(relationsOfOneType.Current);
 			}
@@ -127,11 +125,11 @@ namespace Addin.Transform.PdfDictionary
 
 		private void DoRelation(XPathNavigator relation)
 		{
-			XPathNavigator target=  relation.SelectSingleNode("field[@type='headword-of-target']");
+			XPathNavigator target = relation.SelectSingleNode("field[@type='headword-of-target']");
 			if (target == null)
 				return;
 
-////span[@class='crossrefs']/span[@class='crossref-targets' and count(span[@class='xitem']) == 2]");
+			////span[@class='crossrefs']/span[@class='crossref-targets' and count(span[@class='xitem']) == 2]");
 			//string rtype = relation.GetAttribute("type",string.Empty);
 			StartSpan("xitem");
 			WriteSpan("crossref", GetLang(target), target.Value);
@@ -142,7 +140,7 @@ namespace Addin.Transform.PdfDictionary
 		private void OutputHomographNumberIfNeeded(XPathNavigator headwordFieldNav)
 		{
 			var homographNumber = headwordFieldNav.SelectSingleNode("parent::entry").GetAttribute("order", string.Empty);
-			if(!string.IsNullOrEmpty(homographNumber))
+			if (!string.IsNullOrEmpty(homographNumber))
 			{
 				WriteSpan("xhomographnumber", "en"/*todo*/, homographNumber);
 			}
@@ -210,9 +208,9 @@ namespace Addin.Transform.PdfDictionary
 
 				var nodes = senses.Current.Select("*");
 				bool handledExamples = false;
-				while(nodes.MoveNext())
+				while (nodes.MoveNext())
 				{
-					switch(nodes.Current.Name)
+					switch (nodes.Current.Name)
 					{
 						case "illustration":
 							DoIllustration(nodes.Current, headwordFieldNode);
@@ -242,7 +240,7 @@ namespace Addin.Transform.PdfDictionary
 		private void DoIllustration(XPathNavigator pictureNode, XPathNavigator headwordFieldNode)
 		{
 
-				var href = pictureNode.GetAttribute("href", string.Empty);
+			var href = pictureNode.GetAttribute("href", string.Empty);
 			var caption = pictureNode.GetAttribute("label", string.Empty);
 			StartSpan("pictureRight");
 			try
@@ -291,7 +289,7 @@ namespace Addin.Transform.PdfDictionary
 		{
 			StartSpan("examples");
 			XPathNodeIterator example = senseNav.Select("example");
-			Debug.Assert(example.Count>0);
+			Debug.Assert(example.Count > 0);
 
 			while (example.MoveNext())
 			{
@@ -311,7 +309,7 @@ namespace Addin.Transform.PdfDictionary
 				{
 					foreach (XPathNavigator transForm in translation.SelectChildren("form", string.Empty))
 					{
-						if(!foundTranslation)
+						if (!foundTranslation)
 						{
 							foundTranslation = true;
 							StartSpan("translations");
@@ -320,7 +318,7 @@ namespace Addin.Transform.PdfDictionary
 					}
 				}
 			}
-			if(foundTranslation)
+			if (foundTranslation)
 			{
 				EndSpan();
 			}
@@ -351,10 +349,10 @@ namespace Addin.Transform.PdfDictionary
 			</span>
 			 */
 
-		  //  StartSpan("definition_L2", "en");//todo: (en) we don't yet understand this weird lang followed by more lang specs.
+			//  StartSpan("definition_L2", "en");//todo: (en) we don't yet understand this weird lang followed by more lang specs.
 			StartSpan("definition_L2");//todo: (en) we don't yet understand this weird lang followed by more lang specs.
 
-			foreach (XPathNavigator form in defNode.SelectChildren("form",string.Empty))
+			foreach (XPathNavigator form in defNode.SelectChildren("form", string.Empty))
 			{
 				WriteSpan("xitem", GetLang(form), form.Value);
 			}
@@ -369,13 +367,13 @@ namespace Addin.Transform.PdfDictionary
 
 		private void AddLetterSectionIfNeeded(string headword, string lang)
 		{
-			if(string.IsNullOrEmpty(headword))
+			if (string.IsNullOrEmpty(headword))
 				return;
 
 			var group = Grouper.GetFirstMultigraph(headword);
-			if(group != _currentLetterGroup)
+			if (group != _currentLetterGroup)
 			{
-				if(_currentLetterGroup != string.Empty)
+				if (_currentLetterGroup != string.Empty)
 				{
 					EndDiv();//finish off the previous letData
 					EndDiv();//finish off the previous letHead
@@ -384,7 +382,7 @@ namespace Addin.Transform.PdfDictionary
 				StartDiv("letHead");
 
 				string value;
-				if(group.ToLowerInvariant() == group.ToUpperInvariant())
+				if (group.ToLowerInvariant() == group.ToUpperInvariant())
 				{
 					value = group.ToString();
 				}
@@ -400,7 +398,7 @@ namespace Addin.Transform.PdfDictionary
 		private string CapitalizeFirstOnly(string multigraph)
 		{
 			string output = multigraph.Substring(0, 1);
-			if(multigraph.Length>1)
+			if (multigraph.Length > 1)
 				output += multigraph.Substring(1).ToLowerInvariant();
 			return output;
 		}
@@ -477,14 +475,14 @@ namespace Addin.Transform.PdfDictionary
 
 			XPathNodeIterator forms = headwordFieldNav.SelectChildren("form", string.Empty);
 
-			if(!forms.MoveNext())
+			if (!forms.MoveNext())
 				return;
 
 			StartSpan("headword", GetLang(forms.Current), forms.Current.Value);
 			OutputHomographNumberIfNeeded(headwordFieldNav);
 			EndSpan();
 
-			while(forms.MoveNext())
+			while (forms.MoveNext())
 			{
 				//NB: had to make up this style name, wasn't in FLEx yet.
 				WriteSpan("headword-secondary", GetLang(forms.Current), forms.Current.Value);
@@ -516,26 +514,26 @@ namespace Addin.Transform.PdfDictionary
 
 		private void WriteSpan(string className, string lang, string text)
 		{
-			StartSpan(className,lang,text);
-			_writer.WriteEndElement();
-		}
-/*
-		private void WriteSpn(string className, string lang, string text)
-		{
 			StartSpan(className, lang, text);
 			_writer.WriteEndElement();
 		}
+		/*
+				private void WriteSpn(string className, string lang, string text)
+				{
+					StartSpan(className, lang, text);
+					_writer.WriteEndElement();
+				}
 
-		private void StartSpan(string className, string lang)
-		{
-			_writer.WriteStartElement("span");
-			_writer.WriteAttributeString("class", className);
-			_writer.WriteAttributeString("lang", lang);
-		}
-		private string GetAttribute(XPathNavigator current, string name)
-		{
-			return current.GetAttribute(name, string.Empty);
-		}
-*/
+				private void StartSpan(string className, string lang)
+				{
+					_writer.WriteStartElement("span");
+					_writer.WriteAttributeString("class", className);
+					_writer.WriteAttributeString("lang", lang);
+				}
+				private string GetAttribute(XPathNavigator current, string name)
+				{
+					return current.GetAttribute(name, string.Empty);
+				}
+		*/
 	}
 }

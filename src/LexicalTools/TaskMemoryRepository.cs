@@ -1,11 +1,9 @@
+using SIL.Windows.Forms.Miscellaneous;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using SIL.Code;
-using SIL.Windows.Forms.Miscellaneous;
 
 namespace WeSay.LexicalTools
 {
@@ -37,27 +35,27 @@ namespace WeSay.LexicalTools
 
 		public static TaskMemoryRepository CreateOrLoadTaskMemoryRepository(string projectName, string settingsDirectory)
 		{
-			var path = System.IO.Path.Combine(settingsDirectory, projectName+FileExtensionWithDot);
-			TaskMemoryRepository repo=null;
-			if(File.Exists(path))
+			var path = System.IO.Path.Combine(settingsDirectory, projectName + FileExtensionWithDot);
+			TaskMemoryRepository repo = null;
+			if (File.Exists(path))
 			{
 				try
 				{
 
-					var x = new XmlSerializer(typeof (TaskMemoryRepository));
+					var x = new XmlSerializer(typeof(TaskMemoryRepository));
 					using (FileStream stream = File.OpenRead(path))
 					{
 						repo = x.Deserialize(stream) as TaskMemoryRepository;
 					}
 				}
-				catch(Exception error)
+				catch (Exception error)
 				{
-					SIL.Reporting.Logger.WriteEvent("Error trying to read task memory: "+error.Message);
+					SIL.Reporting.Logger.WriteEvent("Error trying to read task memory: " + error.Message);
 					//now just make a new one, this is the kind of data we can through away
 				}
 			}
 
-			if(repo==null)
+			if (repo == null)
 			{
 				repo = new TaskMemoryRepository();
 			}
@@ -68,7 +66,7 @@ namespace WeSay.LexicalTools
 		public TaskMemory FindOrCreateSettingsByTaskId(string id)
 		{
 			TaskMemory memory;
-			if(!Memories.TryGetValue(id, out memory))
+			if (!Memories.TryGetValue(id, out memory))
 			{
 				memory = new TaskMemory();
 				Memories.Add(id, memory);
@@ -79,7 +77,7 @@ namespace WeSay.LexicalTools
 		public void Dispose()
 		{
 			var x = new XmlSerializer(typeof(TaskMemoryRepository));
-			if(File.Exists(Path))
+			if (File.Exists(Path))
 			{
 				File.Delete(Path);
 			}
@@ -104,9 +102,9 @@ namespace WeSay.LexicalTools
 			set { _pairs = value; }
 		}
 
-		public  void Set(string key, string value)
+		public void Set(string key, string value)
 		{
-			if(Pairs.ContainsKey(key))
+			if (Pairs.ContainsKey(key))
 			{
 				Pairs[key] = value;
 			}
@@ -121,10 +119,10 @@ namespace WeSay.LexicalTools
 			Set(key, value.ToString());
 		}
 
-		public  string Get(string key, string defaultValue)
+		public string Get(string key, string defaultValue)
 		{
 			string v;
-			if( Pairs.TryGetValue(key, out v))
+			if (Pairs.TryGetValue(key, out v))
 				return v;
 			return defaultValue;
 		}
@@ -148,7 +146,7 @@ namespace WeSay.LexicalTools
 			 */
 
 			container.LostFocus += (splitContainer, e) => Set(key,
-															  ((SplitContainer) splitContainer).SplitterDistance);
+															  ((SplitContainer)splitContainer).SplitterDistance);
 
 			container.Resize += (splitContainer, e) =>
 								container.SplitterDistance = Get(key, container.SplitterDistance);
@@ -186,7 +184,7 @@ namespace WeSay.LexicalTools
 			return new TaskMemorySection(this, sectionName);
 		}
 
-		public  void Set(string key, string value)
+		public void Set(string key, string value)
 		{
 			_memory.Set(RealKey(key), value);
 		}
@@ -196,14 +194,14 @@ namespace WeSay.LexicalTools
 			_memory.Set(RealKey(key), value);
 		}
 
-		public  string Get(string key, string defaultValue)
+		public string Get(string key, string defaultValue)
 		{
 			return _memory.Get(RealKey(key), defaultValue);
 		}
 
 		private string RealKey(string key)
 		{
-			return _sectionName+"."+key;
+			return _sectionName + "." + key;
 		}
 
 		public int Get(string key, int defaultValue)

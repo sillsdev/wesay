@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SIL.DictionaryServices.Model;
 using SIL.Extensions;
 using SIL.i18n;
+using System;
+using System.Collections.Generic;
 using WeSay.Foundation;
-using WeSay.LexicalModel;
 using WeSay.Project;
-using System.Linq;
-using SIL.DictionaryServices.Model;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
@@ -62,7 +60,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					_writingSystemsWhichAreRequired.Add(to);
 				}
 			}
-			if(WritingSystemIdChanged != null)
+			if (WritingSystemIdChanged != null)
 			{
 				WritingSystemIdChanged(this, new EventArgs());
 			}
@@ -171,7 +169,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		public string LongLabel
 		{
-			get { return "Add " + GetStringFromConfigNode("label") ; }
+			get { return "Add " + GetStringFromConfigNode("label"); }
 		}
 
 		public string Description
@@ -197,13 +195,13 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		public bool AreEquivalent(ITaskConfiguration taskConfiguration)
 		{
 			var task = taskConfiguration as MissingInfoConfiguration;
-			if(task ==null)
+			if (task == null)
 				return false;
 
-			if(task.TaskName != TaskName)
+			if (task.TaskName != TaskName)
 				return false;
 
-			if(task.MissingInfoFieldName != MissingInfoFieldName)
+			if (task.MissingInfoFieldName != MissingInfoFieldName)
 			{
 				// The field of "Add Meanings" will be definition or gloss depending what the meaning field is
 				// the default config has it as definition so must be considered as equivalent to gloss
@@ -268,18 +266,18 @@ namespace WeSay.LexicalTools.AddMissingInfo
 		{
 			get { return _writingSystemsWeWantToFillIn.ToArray(); }
 		}
-	   public string[] WritingSystemsWhichAreRequiredArray
+		public string[] WritingSystemsWhichAreRequiredArray
 		{
 			get { return _writingSystemsWhichAreRequired.ToArray(); }
 		}
-	   public IList<string> WritingSystemsWhichAreRequired
-	   {
-		   get { return _writingSystemsWhichAreRequired; }
-	   }
-	   public IList<string> WritingSystemsWeWantToFillIn
-	   {
-		   get { return _writingSystemsWeWantToFillIn; }
-	   }
+		public IList<string> WritingSystemsWhichAreRequired
+		{
+			get { return _writingSystemsWhichAreRequired; }
+		}
+		public IList<string> WritingSystemsWeWantToFillIn
+		{
+			get { return _writingSystemsWeWantToFillIn; }
+		}
 
 		public static MissingInfoConfiguration CreateForTests(string missingInfoField,
 			string label, string longLabel, string description, string remainingCountText,
@@ -294,9 +292,9 @@ namespace WeSay.LexicalTools.AddMissingInfo
 					  <writingSystemsToMatch>{5}</writingSystemsToMatch>
 					  <writingSystemsWhichAreRequired></writingSystemsWhichAreRequired>
 					</task>
-				", missingInfoField,label,description, fieldsToShow,fieldsToShow, writingSystemsToMatch);
+				", missingInfoField, label, description, fieldsToShow, fieldsToShow, writingSystemsToMatch);
 
-			 return new MissingInfoConfiguration(x);
+			return new MissingInfoConfiguration(x);
 		}
 
 

@@ -56,7 +56,7 @@ namespace WeSay.LexicalModel.Tests
 			{
 				using (LexEntryRepository r = new LexEntryRepository(f.GetPathForNewTempFile(true)))
 				{
-					r.AfterEntryDeleted +=OnEvent;
+					r.AfterEntryDeleted += OnEvent;
 
 					LexEntry entry = r.CreateItem();
 					r.SaveItem(entry);

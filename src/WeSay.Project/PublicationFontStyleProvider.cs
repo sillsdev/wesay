@@ -1,8 +1,7 @@
-using System.Text;
 using SIL.DictionaryServices.Model;
 using SIL.WritingSystems;
+using System.Text;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.Project
 {
@@ -27,16 +26,16 @@ namespace WeSay.Project
 		public string GetAutoFontsCascadingStyleSheetLinesForWritingSystem(WritingSystemDefinition ws)
 		{
 			var builder = new StringBuilder();
-//            var family = FontFamily.Families.FirstOrDefault(f => f.Name == ws.FontName);
+			//            var family = FontFamily.Families.FirstOrDefault(f => f.Name == ws.FontName);
 
 			builder.AppendLine("font-family: '" + ws.DefaultFont.Name + "';");
 
 			var word = FindFieldWithFieldName(LexEntry.WellKnownProperties.LexicalUnit);
 
 			//make the first vernacular field bold
-			if(word.WritingSystemIds.Count > 0 && word.WritingSystemIds[0] == ws.Id)
+			if (word.WritingSystemIds.Count > 0 && word.WritingSystemIds[0] == ws.Id)
 			{
-					builder.AppendLine("font-weight: bold");
+				builder.AppendLine("font-weight: bold");
 			}
 			else
 			{
@@ -50,10 +49,10 @@ namespace WeSay.Project
 
 				if (meaningField.WritingSystemIds.Count > 1 && meaningField.WritingSystemIds[1] == ws.Id)
 				{
-//                    if(family != default(FontFamily))
-//                    {
-//                        family.IsStyleAvailable(FontStyle.Italic)
-//                    }
+					//                    if(family != default(FontFamily))
+					//                    {
+					//                        family.IsStyleAvailable(FontStyle.Italic)
+					//                    }
 
 					builder.AppendLine("font-style: italic");
 				}

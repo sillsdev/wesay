@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Autofac;
-using System.Linq;
+﻿using Autofac;
 using Autofac.Core;
-using Autofac.Core.Registration;
 using Microsoft.Practices.ServiceLocation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.Practices.ServiceLocation
 {
@@ -86,7 +85,7 @@ namespace WeSay.Project
 		{
 			// go through all the registrations and find TypedService instances that
 			// equal the serviceType.
-			var servicesToActivate = _container.ComponentRegistry.Registrations.Select(reg => reg.Services.OfType<TypedService>().Where(svc=>svc.ServiceType.Equals(serviceType)));
+			var servicesToActivate = _container.ComponentRegistry.Registrations.Select(reg => reg.Services.OfType<TypedService>().Where(svc => svc.ServiceType.Equals(serviceType)));
 
 			// where we'll collect them....
 			var result = new List<object>();
@@ -108,7 +107,7 @@ namespace WeSay.Project
 		/// <summary>
 		/// Create a new service locator which contains a new service
 		/// </summary>
-		 /// <returns></returns>
+		/// <returns></returns>
 		public IServiceLocator CreateNewUsing(ContainerAdder adder)
 		{
 			var scope = _container.BeginLifetimeScope(containerBuilder => adder.Invoke(containerBuilder));

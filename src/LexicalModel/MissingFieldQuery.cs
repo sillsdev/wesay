@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using SIL.Code;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Text;
-
-using Enumerable=SIL.Linq.Enumerable;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Enumerable = SIL.Linq.Enumerable;
 
 namespace WeSay.LexicalModel
 {
@@ -16,7 +15,7 @@ namespace WeSay.LexicalModel
 	/// A query to identify entries which have some field which needs work, based on the emptiness
 	/// of specified writing system alternatives, and the non-emptiness of other ones.
 	/// </summary>
-	public class MissingFieldQuery: IFieldQuery<LexEntry>
+	public class MissingFieldQuery : IFieldQuery<LexEntry>
 	{
 		private readonly Field _field;
 		private readonly string[] _writingSystemsWhichAreRequired;
@@ -114,14 +113,14 @@ namespace WeSay.LexicalModel
 			switch (Field.DataTypeName)
 			{
 				case "Option":
-					return ((OptionRef) content).IsEmpty;
+					return ((OptionRef)content).IsEmpty;
 				case "OptionCollection":
-					return ((OptionRefCollection) content).IsEmpty;
+					return ((OptionRefCollection)content).IsEmpty;
 				case "MultiText":
-					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn((MultiText) content);
+					return HasAllRequiredButMissingAtLeastOneWeWantToFillIn((MultiText)content);
 
 				case "RelationToOneEntry":
-					LexRelationCollection collection = (LexRelationCollection) content;
+					LexRelationCollection collection = (LexRelationCollection)content;
 					if (IsSkipped(collection.Parent, Field.FieldName))
 					{
 						return false;
@@ -134,7 +133,7 @@ namespace WeSay.LexicalModel
 						}
 					}
 					return true;
-					//collection is empty or all its members don't really have targets
+				//collection is empty or all its members don't really have targets
 				default:
 					Debug.Fail("unknown DataTypeName");
 					return false;
@@ -177,7 +176,7 @@ namespace WeSay.LexicalModel
 							}
 							if (sense.ExampleSentences.Count == 0 &&
 								(Field.FieldName == Field.FieldNames.ExampleSentence.ToString()) &&
-								_writingSystemsWhichAreRequired.Length==0)
+								_writingSystemsWhichAreRequired.Length == 0)
 							{
 								//ghost field
 								return true;
@@ -278,9 +277,9 @@ namespace WeSay.LexicalModel
 					return false;
 				return true;
 			}
-			if(Field.FieldName == "POS")
+			if (Field.FieldName == "POS")
 			{
-				if(IsPosUnknown(palasoData))
+				if (IsPosUnknown(palasoData))
 				{
 					return true;
 				}
@@ -290,7 +289,7 @@ namespace WeSay.LexicalModel
 
 		private bool IsPosUnknown(PalasoDataObject sense)
 		{
-			return sense.Properties.Any(property => property.Key == "POS" && (((OptionRef) property.Value).Key == "unknown"));
+			return sense.Properties.Any(property => property.Key == "POS" && (((OptionRef)property.Value).Key == "unknown"));
 		}
 
 

@@ -12,7 +12,7 @@ namespace WeSay.UI.audio
 		{
 			_pathToAudioFiles = pathToAudioFiles;
 			_entryNameFunction = entryNameFunction;
-			if(!Directory.Exists(pathToAudioFiles))
+			if (!Directory.Exists(pathToAudioFiles))
 			{
 				Directory.CreateDirectory(pathToAudioFiles);
 			}
@@ -22,13 +22,13 @@ namespace WeSay.UI.audio
 		{
 			string entryName = _entryNameFunction.Invoke();
 			string name = string.IsNullOrEmpty(entryName) ? "xunknown" : entryName;
-			return Path.Combine(_pathToAudioFiles, MakeSafeName(name + "-" + GetSomewhatRandomString())+".wav");
+			return Path.Combine(_pathToAudioFiles, MakeSafeName(name + "-" + GetSomewhatRandomString()) + ".wav");
 		}
 
 		private string GetSomewhatRandomString()
 		{
-		   // return Guid.NewGuid().ToString();
-			return (DateTime.UtcNow.Ticks/10000).ToString();//enhance... still kinda long!
+			// return Guid.NewGuid().ToString();
+			return (DateTime.UtcNow.Ticks / 10000).ToString();//enhance... still kinda long!
 		}
 
 		private static string MakeSafeName(string fileName)
@@ -60,7 +60,7 @@ namespace WeSay.UI.audio
 		{
 			string pathToAudioFiles = _pathToAudioFiles;
 			//make sure there is a trailing slash
-			if(!pathToAudioFiles.EndsWith(Path.DirectorySeparatorChar+string.Empty))
+			if (!pathToAudioFiles.EndsWith(Path.DirectorySeparatorChar + string.Empty))
 			{
 				pathToAudioFiles += Path.DirectorySeparatorChar;
 			}

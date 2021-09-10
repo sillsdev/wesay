@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using SIL.IO;
+using SIL.Reporting;
+using SIL.WritingSystems.Migration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
-using SIL.IO;
-using SIL.Reporting;
-using SIL.WritingSystems.Migration;
-using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 
 namespace WeSay.Project.ConfigMigration.WritingSystem
 {
@@ -54,7 +52,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 
 					var reader = XmlReader.Create(tempFile);
 					reader.MoveToContent();
-					while(reader.NodeType != XmlNodeType.Element && reader.Name != "lift")
+					while (reader.NodeType != XmlNodeType.Element && reader.Name != "lift")
 					{
 						reader.Read();
 					}
@@ -68,7 +66,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 					}
 
 					RenameWritingSystemTagInFile(tempFile, "WeSay Dictionary File", (pathToFileToChange) =>
-						//todo: expand the regular expression here to account for all reasonable patterns
+																					//todo: expand the regular expression here to account for all reasonable patterns
 																					FileUtils.GrepFile(
 																						pathToFileToChange,
 																						string.Format(
@@ -116,7 +114,7 @@ namespace WeSay.Project.ConfigMigration.WritingSystem
 						}
 						xmlDoc.Save(filePath);
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
 						//Do nothing. If the load failed then it's not an optionlist.
 					}

@@ -1,11 +1,11 @@
+using SIL.Reporting;
+using SIL.Xml;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using SIL.Reporting;
-using SIL.Xml;
 
 namespace WeSay.Project.ConfigMigration.WeSayConfig
 {
@@ -99,7 +99,7 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 				writer.WriteStartDocument();
 				navigator.MoveToFirstChild();
 
-				if (navigator.Name != "configuration"){throw new ApplicationException("The configuration file does not have the expected format. 'configuration' was not the first node found.");}
+				if (navigator.Name != "configuration") { throw new ApplicationException("The configuration file does not have the expected format. 'configuration' was not the first node found."); }
 
 				writer.WriteStartElement("configuration");
 				writer.WriteAttributeString("version", "8");
@@ -141,15 +141,15 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 											 string targetPath)
 		{
 			Logger.WriteEvent("Migrating Configuration File {0}", xsltName);
-			var resourceName = "ConfigMigration.WeSayConfig."+ xsltName;
+			var resourceName = "ConfigMigration.WeSayConfig." + xsltName;
 			using (
 					Stream stream =
 							Assembly.GetExecutingAssembly().GetManifestResourceStream(
 									typeof(WeSayWordsProject), resourceName))
 			{
-				if(stream==null)
+				if (stream == null)
 				{
-					throw new ApplicationException("Could not find the resource "+resourceName);
+					throw new ApplicationException("Could not find the resource " + resourceName);
 				}
 				var transform = new XslCompiledTransform();
 				using (var reader = XmlReader.Create(stream))

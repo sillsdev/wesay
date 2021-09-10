@@ -1,14 +1,14 @@
+using SIL.Windows.Forms.i18n;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using SIL.Windows.Forms.i18n;
 
 namespace WeSay.UI.Buttons
 {
 	[Description("Region Button Control")]
-	public abstract class RegionButton: Button, ILocalizableControl
+	public abstract class RegionButton : Button, ILocalizableControl
 	{
 		private Rectangle _textAndImageRectangle;
 
@@ -122,19 +122,19 @@ namespace WeSay.UI.Buttons
 				}
 			}
 
-//            using (
-//                    LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
-//                                                                        startColor,
-//                                                                        endColor,
-//                                                                        LinearGradientMode.Vertical)
-//                    )
-//            {
-//                Blend blend = new Blend();
-//                blend.Positions = new float[] {0, .1f, .35f, .7f, .9f, 1};
-//                blend.Factors = new float[] {0, 0, .5f, .5f, 1, 1};
-//                brush.Blend = blend;
-//                g.FillPath(brush, buttonPath); // 3d effect
-//            }
+			//            using (
+			//                    LinearGradientBrush brush = new LinearGradientBrush(ClientRectangle,
+			//                                                                        startColor,
+			//                                                                        endColor,
+			//                                                                        LinearGradientMode.Vertical)
+			//                    )
+			//            {
+			//                Blend blend = new Blend();
+			//                blend.Positions = new float[] {0, .1f, .35f, .7f, .9f, 1};
+			//                blend.Factors = new float[] {0, 0, .5f, .5f, 1, 1};
+			//                brush.Blend = blend;
+			//                g.FillPath(brush, buttonPath); // 3d effect
+			//            }
 
 
 			if (FlatAppearance.BorderSize != 0)
@@ -149,14 +149,14 @@ namespace WeSay.UI.Buttons
 
 
 
-//            using (
-//                    Brush brush =
-//                            new SolidBrush((IsDown)
-//                                                   ? ControlPaint.Dark(BackColor, .01f)
-//                                                   : ControlPaint.Light(BackColor, .01f)))
-//            {
-//                g.FillPath(brush, buttonPath); // top surface of button
-//            }
+			//            using (
+			//                    Brush brush =
+			//                            new SolidBrush((IsDown)
+			//                                                   ? ControlPaint.Dark(BackColor, .01f)
+			//                                                   : ControlPaint.Light(BackColor, .01f)))
+			//            {
+			//                g.FillPath(brush, buttonPath); // top surface of button
+			//            }
 
 			Rectangle buttonRect = TextAndImageRectangle;
 			if (_buttonIsDown)
@@ -169,15 +169,15 @@ namespace WeSay.UI.Buttons
 			DrawImage(g, buttonRect);
 
 			////hot bounds
-//			if (Focused)
-//			{
-//				using (Pen pen = new Pen(ControlPaint.Dark(BackColor), 1))
-//				{
-//					pen.DashStyle = DashStyle.Dash;
-//					pen.DashPattern = new float[] { 3f, 1.5f };
-//					g.DrawPath(pen, buttonPath); //outline
-//				}
-//			}
+			//			if (Focused)
+			//			{
+			//				using (Pen pen = new Pen(ControlPaint.Dark(BackColor), 1))
+			//				{
+			//					pen.DashStyle = DashStyle.Dash;
+			//					pen.DashPattern = new float[] { 3f, 1.5f };
+			//					g.DrawPath(pen, buttonPath); //outline
+			//				}
+			//			}
 		}
 
 		private static void ShrinkAndOffsetGraphicsPathByDepth(GraphicsPath buttonPath, float depth)
@@ -196,8 +196,8 @@ namespace WeSay.UI.Buttons
 			float xDepth = buttonWidth - bounds.Width;
 			float yDepth = buttonHeight - bounds.Height;
 
-			matrix.Translate((float) Math.Ceiling(xDepth / 2),
-							 (float) Math.Ceiling(yDepth / 2),
+			matrix.Translate((float)Math.Ceiling(xDepth / 2),
+							 (float)Math.Ceiling(yDepth / 2),
 							 MatrixOrder.Append);
 			buttonPath.Transform(matrix);
 		}
@@ -211,7 +211,7 @@ namespace WeSay.UI.Buttons
 				switch (ImageAlign)
 				{
 					case ContentAlignment.BottomCenter:
-						x += (buttonRect.Width - Image.Width)/2;
+						x += (buttonRect.Width - Image.Width) / 2;
 						y += buttonRect.Height - Image.Height;
 						break;
 					case ContentAlignment.BottomLeft:
@@ -223,19 +223,19 @@ namespace WeSay.UI.Buttons
 						y += buttonRect.Height - Image.Height;
 						break;
 					case ContentAlignment.MiddleCenter:
-						x += (buttonRect.Width - Image.Width)/2;
-						y += (buttonRect.Height - Image.Height)/2;
+						x += (buttonRect.Width - Image.Width) / 2;
+						y += (buttonRect.Height - Image.Height) / 2;
 						break;
 					case ContentAlignment.MiddleLeft:
 						x += 0;
-						y += (buttonRect.Height - Image.Height)/2;
+						y += (buttonRect.Height - Image.Height) / 2;
 						break;
 					case ContentAlignment.MiddleRight:
 						x += buttonRect.Width - Image.Width;
-						y += (buttonRect.Height - Image.Height)/2;
+						y += (buttonRect.Height - Image.Height) / 2;
 						break;
 					case ContentAlignment.TopCenter:
-						x += (buttonRect.Width - Image.Width)/2;
+						x += (buttonRect.Width - Image.Width) / 2;
 						y += 0;
 						break;
 					case ContentAlignment.TopLeft:
@@ -250,7 +250,7 @@ namespace WeSay.UI.Buttons
 						break;
 				}
 
-				var opacity=0.7f; //we're counting on black buttons, which will take on the color of the underlying background when made a little transparent
+				var opacity = 0.7f; //we're counting on black buttons, which will take on the color of the underlying background when made a little transparent
 				if (!Enabled)
 				{
 					opacity = 0.3f; //we're using transparency rather than grey, becuase on a non-white background, grew looks jarring but more transparent looks soothing
@@ -266,8 +266,8 @@ namespace WeSay.UI.Buttons
 
 				System.Drawing.Imaging.ImageAttributes attributes = new System.Drawing.Imaging.ImageAttributes();
 				attributes.SetColorMatrix(transparencyMatrix);
-				var r = new Rectangle(x, y,Image.Width+x,Image.Height+y);
-				g.DrawImage(Image,r, 0f,0f,Image.Width,Image.Height, GraphicsUnit.Pixel, attributes);
+				var r = new Rectangle(x, y, Image.Width + x, Image.Height + y);
+				g.DrawImage(Image, r, 0f, 0f, Image.Width, Image.Height, GraphicsUnit.Pixel, attributes);
 				//ControlPaint.DrawImageDisabled(g, Image, x, y, Color.Transparent);
 			}
 		}

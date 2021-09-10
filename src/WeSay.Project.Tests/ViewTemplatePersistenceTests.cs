@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Xml;
 using Exortech.NetReflector;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
 using SIL.Xml;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Xml;
 using WeSay.LexicalModel;
 
 namespace WeSay.Project.Tests
@@ -40,7 +40,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void SerializedFieldHasExpectedXml()
 		{
-			Field f = new Field("one", "LexEntry", new string[] {"xx", "yy"});
+			Field f = new Field("one", "LexEntry", new string[] { "xx", "yy" });
 			string s = NetReflector.Write(f);
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(s);
@@ -95,10 +95,10 @@ namespace WeSay.Project.Tests
 			ViewTemplate f = new ViewTemplate();
 			f.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 							"LexEntry",
-							new string[] {"xx", "yy"}));
+							new string[] { "xx", "yy" }));
 			Field field = new Field(LexSense.WellKnownProperties.Gloss,
 									"LexSense",
-									new string[] {"zz"});
+									new string[] { "zz" });
 			field.Enabled = false;
 			//field.Visibility = CommonEnumerations.VisibilitySetting.Invisible;
 			f.Add(field);
@@ -109,8 +109,8 @@ namespace WeSay.Project.Tests
 		public void DeserializeInventoryFromXmlString()
 		{
 			NetReflectorTypeTable t = new NetReflectorTypeTable();
-			t.Add(typeof (Field));
-			t.Add(typeof (ViewTemplate));
+			t.Add(typeof(Field));
+			t.Add(typeof(ViewTemplate));
 
 			ViewTemplate f = new ViewTemplate();
 			f.LoadFromString(TestResources.viewTemplate);

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SIL.Migration;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using SIL.Migration;
 
 namespace WeSay.Project.ConfigMigration
 {

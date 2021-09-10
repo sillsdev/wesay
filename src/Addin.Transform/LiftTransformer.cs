@@ -1,3 +1,7 @@
+using SIL.Progress;
+using SIL.Reporting;
+using SIL.Windows.Forms.Progress;
+using SIL.Xml;
 using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
@@ -9,16 +13,12 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
-using SIL.Progress;
-using SIL.Reporting;
-using SIL.Windows.Forms.Progress;
-using SIL.Xml;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 
 namespace Addin.Transform
 {
-	public abstract class LiftTransformer: IWeSayAddin
+	public abstract class LiftTransformer : IWeSayAddin
 	{
 		protected bool _launchAfterTransform = true;
 		protected string _pathToOutput;
@@ -190,12 +190,12 @@ namespace Addin.Transform
 		/// </summary>
 		private static void OnDoTransformWork(object sender, DoWorkEventArgs args)
 		{
-			ProgressState progressState = (ProgressState) args.Argument;
+			ProgressState progressState = (ProgressState)args.Argument;
 			XslCompiledTransform transform = null;
 			try
 			{
 				TransformWorkerArguments workerArguments =
-						(TransformWorkerArguments) progressState.Arguments;
+						(TransformWorkerArguments)progressState.Arguments;
 
 				transform = new XslCompiledTransform();
 
@@ -217,7 +217,7 @@ namespace Addin.Transform
 
 				progressState.StatusLabel = "Transforming...";
 				int entriesCount = workerArguments.inputDocument.SelectNodes("//entry").Count;
-				progressState.TotalNumberOfSteps = 2*(entriesCount) + workerArguments.postTransformSteps;
+				progressState.TotalNumberOfSteps = 2 * (entriesCount) + workerArguments.postTransformSteps;
 				_staticProgressStateForWorker = progressState;
 				workerArguments.xsltArguments.XsltMessageEncountered += OnXsltMessageEncountered;
 
@@ -292,7 +292,7 @@ namespace Addin.Transform
 		/// <summary>
 		/// used to break us out of the xslt transformer if the user cancels
 		/// </summary>
-		private class CancelingException: ApplicationException {}
+		private class CancelingException : ApplicationException { }
 
 		public static Stream GetXsltStream(ProjectInfo projectInfo, string xsltName)
 		{

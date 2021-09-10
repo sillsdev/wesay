@@ -1,16 +1,16 @@
+using SIL.i18n;
+using SIL.Reporting;
+using SIL.UsbDrive;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using SIL.i18n;
-using SIL.Reporting;
-using SIL.UsbDrive;
 using WeSay.AddinLib;
 
 namespace Addin.Backup
 {
-	public partial class BackupDialog: Form
+	public partial class BackupDialog : Form
 	{
 		private readonly ProjectInfo _projectInfo;
 

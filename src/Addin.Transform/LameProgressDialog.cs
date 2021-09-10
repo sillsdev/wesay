@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 namespace Addin.Transform
 {
-	public partial class LameProgressDialog: Form
+	public partial class LameProgressDialog : Form
 	{
 		public LameProgressDialog(string msg)
 		{

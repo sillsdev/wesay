@@ -1,13 +1,13 @@
-using System;
-using System.IO;
 using NUnit.Framework;
 using SIL.IO;
 using SIL.Lift.Validation;
+using SIL.WritingSystems;
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using WeSay.AddinLib;
 using WeSay.Project;
 using WeSay.TestUtilities;
-using System.Text.RegularExpressions;
-using SIL.WritingSystems;
 
 namespace Addin.Transform.Tests
 {
@@ -67,23 +67,23 @@ namespace Addin.Transform.Tests
 			LaunchWithConversionString("");
 		}
 
-/* NOMORELOCKING
-		[Test]
-		[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (IOException))]
-		public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
-		{
-			try
-			{
-				LaunchWithConversionString("g_en ge");
-				File.SetAttributes(_addin.PathToOutput, FileAttributes.ReadOnly);
-				LaunchWithConversionString("g_en ge");
-			}
-			finally
-			{
-				File.SetAttributes(_addin.PathToOutput, default(FileAttributes));
-			}
-		}
-*/
+		/* NOMORELOCKING
+				[Test]
+				[NUnit.Framework.Category("UsesObsoleteExpectedExceptionAttribute"), ExpectedException(typeof (IOException))]
+				public void ThrowsMeaningfulExceptionIfOutputFileIsLocked()
+				{
+					try
+					{
+						LaunchWithConversionString("g_en ge");
+						File.SetAttributes(_addin.PathToOutput, FileAttributes.ReadOnly);
+						LaunchWithConversionString("g_en ge");
+					}
+					finally
+					{
+						File.SetAttributes(_addin.PathToOutput, default(FileAttributes));
+					}
+				}
+		*/
 		[Test]
 		public void ConvertsGlossMarker()
 		{

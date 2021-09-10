@@ -1,11 +1,11 @@
+using NUnit.Framework;
+using SIL.Reporting;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Xml.XPath;
-using NUnit.Framework;
-using SIL.Reporting;
-using SIL.WritingSystems;
 using WeSay.Project;
 using WeSay.Project.Tests;
 using WeSay.TestUtilities;
@@ -36,7 +36,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
 			SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
-			_window = new ConfigurationWindow(new string[] {});
+			_window = new ConfigurationWindow(new string[] { });
 			_window.DisableBackupAndChorusStuffForTests();
 			_window.Show();
 
@@ -60,7 +60,7 @@ namespace WeSay.ConfigTool.Tests
 		{
 			_window.OpenProject(BasilProject.GetPretendProjectDirectory());
 			string p = WeSayWordsProject.Project.PathToConfigFile;
-			DateTime before = File.GetLastWriteTime(p);		
+			DateTime before = File.GetLastWriteTime(p);
 			File.WriteAllLines(p, File.ReadAllLines(p)); //touches file leaving it in original state
 			DateTime after = File.GetLastWriteTime(p);
 			Assert.AreNotEqual(before, after);

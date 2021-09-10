@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace WeSay.AddinLib
 {
-	public partial class ActionSetupDialog: Form
+	public partial class ActionSetupDialog : Form
 	{
 		public ActionSetupDialog(Object settings)
 		{

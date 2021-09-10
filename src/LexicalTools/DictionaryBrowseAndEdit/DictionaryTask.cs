@@ -1,10 +1,9 @@
-using System;
-using System.Drawing;
-using System.Threading;
-using System.Windows.Forms;
 using SIL.DictionaryServices.Model;
 using SIL.i18n;
 using SIL.Reporting;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.Properties;
@@ -26,7 +25,7 @@ using WeSay.UI;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
-	public class DictionaryTask: TaskBase, ITaskForExternalNavigateToEntry
+	public class DictionaryTask : TaskBase, ITaskForExternalNavigateToEntry
 	{
 		private DictionaryControl _dictionaryControl;
 		//private readonly ViewTemplate _viewTemplate;
@@ -44,12 +43,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
 			_dictionaryControlFactory = dictionaryControlFactory;
-//            if (viewTemplate == null)
-//            {
-//                throw new ArgumentNullException("viewTemplate");
-//            }
-//            _viewTemplate = viewTemplate;
-//            _logger = logger;
+			//            if (viewTemplate == null)
+			//            {
+			//                throw new ArgumentNullException("viewTemplate");
+			//            }
+			//            _viewTemplate = viewTemplate;
+			//            _logger = logger;
 			_taskMemory = taskMemoryRepository.FindOrCreateSettingsByTaskId(config.TaskName);
 
 		}
@@ -59,26 +58,26 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			try
 			{
 				base.Activate();
-			   // _dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"), _logger);
+				// _dictionaryControl = new DictionaryControl(LexEntryRepository, ViewTemplate, _taskMemory.CreateNewSection("view"), _logger);
 				var temp = _taskMemory.CreateNewSection("view");
 				_dictionaryControl = _dictionaryControlFactory(temp);
 
-				 _dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
-//   Debug.Assert(_userSettings.Get("one", "0") == "1");
+				_dictionaryControl.SelectedIndexChanged += new EventHandler(OnSelectedEntryOfDictionaryControlChanged);
+				//   Debug.Assert(_userSettings.Get("one", "0") == "1");
 
 				var url = _taskMemory.Get(LastUrlKey, null);
 				if (_taskMemory != null && url != null)
 				{
 					try
 					{
-						  _dictionaryControl.GoToUrl(url);
+						_dictionaryControl.GoToUrl(url);
 					}
 					catch (Exception error)
 					{
 						//there's no scenario where it is worth crashing or even notifying
 						Logger.WriteEvent("Error: " + error.Message);
 #if DEBUG
-						ErrorReport.NotifyUserOfProblem(error,"Could not find the entry at '{0}'\r\n{1}", url,error.Message);
+						ErrorReport.NotifyUserOfProblem(error, "Could not find the entry at '{0}'\r\n{1}", url, error.Message);
 #endif
 					}
 				}
@@ -101,7 +100,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		void OnSelectedEntryOfDictionaryControlChanged(object sender, EventArgs e)
 		{
 			LexEntry entry = _dictionaryControl.CurrentEntry;
-			if(entry !=null)
+			if (entry != null)
 			{
 				_taskMemory.Set(LastUrlKey, _dictionaryControl.CurrentUrl);
 			}
@@ -170,11 +169,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 							BasilProject.Project.Name);
 			}
 		}
-//
-//        public ViewTemplate ViewTemplate
-//        {
-//            get { return _viewTemplate; }
-//        }
+		//
+		//        public ViewTemplate ViewTemplate
+		//        {
+		//            get { return _viewTemplate; }
+		//        }
 
 		protected override int ComputeCount(bool returnResultEvenIfExpensive)
 		{

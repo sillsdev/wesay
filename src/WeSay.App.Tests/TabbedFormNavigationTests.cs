@@ -1,11 +1,11 @@
+using NUnit.Framework;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
-using NUnit.Framework;
 using WeSay.Project;
 using WeSay.Project.Tests;
-using SIL.WritingSystems;
 
 namespace WeSay.App.Tests
 {
@@ -54,7 +54,7 @@ namespace WeSay.App.Tests
 			_tabbedForm.IntializationComplete += OnTabbedForm_IntializationComplete;
 			_tabbedForm.ContinueLaunchingAfterInitialDisplay();
 			Application.DoEvents();
-			for (int i = 0;i < 50;i++)
+			for (int i = 0; i < 50; i++)
 			{
 				if (_didRaiseInitializedEvent)
 				{

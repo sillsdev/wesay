@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
-using Autofac;
-using System.Linq;
 
 namespace WeSay.Project
 {

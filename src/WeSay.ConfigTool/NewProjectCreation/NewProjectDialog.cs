@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SIL.Windows.Forms.WritingSystems;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using SIL.Windows.Forms.WritingSystems;
 using WeSay.ConfigTool.Properties;
 
 namespace WeSay.ConfigTool.NewProjectCreation
@@ -42,7 +42,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 
 		private void UpdateMessage()
 		{
-			if(NameLooksOk)
+			if (NameLooksOk)
 			{
 				string[] dirs = PathToNewProjectDirectory.Split(Path.DirectorySeparatorChar);
 				if (dirs.Length > 1)

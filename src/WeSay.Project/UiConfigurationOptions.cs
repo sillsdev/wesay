@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SIL.Reporting;
+using System;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using SIL.Reporting;
 
 namespace WeSay.Project
 {
@@ -19,7 +17,7 @@ namespace WeSay.Project
 		public string LabelFontName { get; set; }
 
 		[XmlElement("labelFontSizeInPoints")]
-		public float LabelFontSizeInPoints{get; set;}
+		public float LabelFontSizeInPoints { get; set; }
 
 		public UiConfigurationOptions()
 		{

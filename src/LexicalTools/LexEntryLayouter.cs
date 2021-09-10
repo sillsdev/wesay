@@ -1,12 +1,11 @@
-using System;
-using System.Diagnostics;
-using System.Windows.Forms;
-using System.Collections.Generic;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
 using SIL.DictionaryServices.Model;
 using SIL.i18n;
 using SIL.Lift;
+using System;
+using System.Diagnostics;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -17,7 +16,7 @@ namespace WeSay.LexicalTools
 	/// <summary>
 	/// <see cref="Layouter"/>
 	/// </summary>
-	public class LexEntryLayouter: Layouter
+	public class LexEntryLayouter : Layouter
 	{
 		private bool _sensesAreDeletable = false;
 		private readonly ConfirmDeleteFactory _confirmDeleteFactory;
@@ -49,7 +48,7 @@ namespace WeSay.LexicalTools
 			{
 				// This event handler was reported by the memory leak tool
 				// as holding the detail list from being released.
-				DetailList.LabelsChanged-= OnLabelsChanged;
+				DetailList.LabelsChanged -= OnLabelsChanged;
 			}
 			base.Dispose(disposing);
 		}
@@ -68,7 +67,7 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
-			return AddWidgets((LexEntry) wsdo, insertAtRow);
+			return AddWidgets((LexEntry)wsdo, insertAtRow);
 		}
 
 		/// <summary>
@@ -77,7 +76,7 @@ namespace WeSay.LexicalTools
 		/// </summary>
 		protected override Layouter CreateAndInsertNewLayouter(int row, PalasoDataObject wsdo)
 		{
-			return null;	// no parent layouter, so we can't insert.
+			return null;    // no parent layouter, so we can't insert.
 		}
 
 		internal int AddWidgets(LexEntry entry, int insertAtRow)
@@ -140,8 +139,8 @@ namespace WeSay.LexicalTools
 
 		internal void OnSenseDeleteClicked(object sender, EventArgs e)
 		{
-			var sendingLayouter = (Layouter) sender;
-			var sense = (LexSense) sendingLayouter.PdoToLayout;
+			var sendingLayouter = (Layouter)sender;
+			var sense = (LexSense)sendingLayouter.PdoToLayout;
 			IConfirmDelete confirmation = _confirmDeleteFactory();
 			var deletionStringToLocalize = StringCatalog.Get("This will permanently remove the meaning");
 			var meaningText = (GlossMeaningField ?
@@ -191,12 +190,12 @@ namespace WeSay.LexicalTools
 			SIL.Code.Guard.AgainstNull(serviceLocator, "serviceLocator");
 			SIL.Code.Guard.AgainstNull(entry, "entry");
 
-			var namingHelper = (MediaNamingHelper) serviceLocator.GetService(typeof (MediaNamingHelper));
+			var namingHelper = (MediaNamingHelper)serviceLocator.GetService(typeof(MediaNamingHelper));
 			var ap = new AudioPathProvider(WeSayWordsProject.Project.PathToAudio,
 						() => entry.LexicalForm.GetBestAlternativeString(namingHelper.LexicalUnitWritingSystemIds));
 
-		   return serviceLocator.CreateNewUsing(c=>c.RegisterInstance(ap));
-	   }
+			return serviceLocator.CreateNewUsing(c => c.RegisterInstance(ap));
+		}
 	}
 
 

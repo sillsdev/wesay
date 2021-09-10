@@ -1,18 +1,17 @@
+using Chorus.UI.Clone;
+using SIL.Extensions;
+using SIL.i18n;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Chorus.UI.Clone;
-using SIL.Extensions;
-using SIL.i18n;
-using SIL.IO;
 using WeSay.ConfigTool.Properties;
-using System.Collections.Generic;
 
 namespace WeSay.ConfigTool
 {
-	public partial class WelcomeControl: UserControl
+	public partial class WelcomeControl : UserControl
 	{
 		public event EventHandler NewProjectClicked;
 		public event EventHandler NewProjectFromFlexClicked;
@@ -23,7 +22,7 @@ namespace WeSay.ConfigTool
 		{
 			Font = SystemFonts.MessageBoxFont;//use the default OS UI font
 			InitializeComponent();
-		  }
+		}
 
 		private void LoadButtons()
 		{
@@ -42,7 +41,7 @@ namespace WeSay.ConfigTool
 
 		private void AddSection(string sectionName, TableLayoutPanel panel)
 		{
-			 panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+			panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			panel.RowCount++;
 			var label = new Label();
 			label.Font = new Font(StringCatalog.LabelFont.FontFamily, _templateLabel.Font.Size, _templateLabel.Font.Style);
@@ -74,12 +73,12 @@ namespace WeSay.ConfigTool
 			button.ImageKey = imageKey;
 			button.ImageList = _imageList;
 			button.Click += clickHandler;
-			button.Text = "  "+localizedLabel;
+			button.Text = "  " + localizedLabel;
 
 			button.FlatAppearance.BorderSize = _templateButton.FlatAppearance.BorderSize;
 			button.FlatStyle = _templateButton.FlatStyle;
 			button.ImageAlign = _templateButton.ImageAlign;
-			button.TextImageRelation = _templateButton.TextImageRelation ;
+			button.TextImageRelation = _templateButton.TextImageRelation;
 			button.UseVisualStyleBackColor = _templateButton.UseVisualStyleBackColor;
 			button.Enabled = enabled;
 
@@ -92,7 +91,7 @@ namespace WeSay.ConfigTool
 		{
 			AddSection("Create", panel);
 			AddChoice("Create new blank project", string.Empty, "newProject", true, createNewProject_LinkClicked, panel);
-			AddChoice("Create new project from a set of plain LIFT files","Use this after using SOLID to convert Toolbox Files to LIFT", "solid", true, OnCreateProjectFromPlainLift_LinkClicked, panel);
+			AddChoice("Create new project from a set of plain LIFT files", "Use this after using SOLID to convert Toolbox Files to LIFT", "solid", true, OnCreateProjectFromPlainLift_LinkClicked, panel);
 		}
 
 		private void AddGetChoices(TableLayoutPanel panel)
@@ -114,14 +113,14 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromInternet(object sender, EventArgs e)
 		{
-//            if (!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
-//            {
-//                using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
-//                {
-//                    dlg.ShowDialog();
-//                    return;
-//                }
-//            }
+			//            if (!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
+			//            {
+			//                using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
+			//                {
+			//                    dlg.ShowDialog();
+			//                    return;
+			//                }
+			//            }
 			if (!Directory.Exists(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay
@@ -139,14 +138,14 @@ namespace WeSay.ConfigTool
 
 		private void OnGetFromUsb(object sender, EventArgs e)
 		{
-//            if(!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
-//            {
-//                using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
-//                {
-//                    dlg.ShowDialog();
-//                    return;
-//                }
-//            }
+			//            if(!Chorus.UI.Misc.ReadinessDialog.ChorusIsReady)
+			//            {
+			//                using (var dlg = new Chorus.UI.Misc.ReadinessDialog())
+			//                {
+			//                    dlg.ShowDialog();
+			//                    return;
+			//                }
+			//            }
 			if (!Directory.Exists(Project.WeSayWordsProject.NewProjectDirectory))
 			{
 				//e.g. mydocuments/wesay
@@ -169,7 +168,7 @@ namespace WeSay.ConfigTool
 				Directory.CreateDirectory(Project.WeSayWordsProject.NewProjectDirectory);
 			}
 			var existingProjectNames = new HashSet<string>(from dir in Directory.GetDirectories(Project.WeSayWordsProject.NewProjectDirectory) select Path.GetFileName(dir));
-			Dictionary<string,string> existingRepositories;
+			Dictionary<string, string> existingRepositories;
 			try
 			{
 				existingRepositories = GetSharedProjectModel.ExtantRepoIdentifiers(Project.WeSayWordsProject.NewProjectDirectory, "");
@@ -219,7 +218,7 @@ namespace WeSay.ConfigTool
 		{
 			if (OpenSpecifiedProject != null)
 			{
-				OpenSpecifiedProject.Invoke(((Button) sender).Tag as string, false);
+				OpenSpecifiedProject.Invoke(((Button)sender).Tag as string, false);
 			}
 		}
 

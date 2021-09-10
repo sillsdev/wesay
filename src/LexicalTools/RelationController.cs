@@ -1,17 +1,16 @@
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.Lift;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.UiBindings;
+using SIL.WritingSystems;
 using System;
 using System.Collections;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using SIL.Data;
-using SIL.DictionaryServices.Model;
-using SIL.Lift;
-using SIL.UiBindings;
-using SIL.Reporting;
-using SIL.Text;
-using SIL.WritingSystems;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
@@ -134,11 +133,11 @@ namespace WeSay.LexicalTools
 					InitializeRelationControl(relation);
 
 					break;
-					//                case LexRelationType.Multiplicities.Many:
-					//                    _control = new ReferenceCollectionEditor<LexRelation>
-					//                                    (targetRelationCollection.Relations,
-					//                                     _field.WritingSystemIds);
-					//                    break;
+				//                case LexRelationType.Multiplicities.Many:
+				//                    _control = new ReferenceCollectionEditor<LexRelation>
+				//                                    (targetRelationCollection.Relations,
+				//                                     _field.WritingSystemIds);
+				//                    break;
 				default:
 					break;
 			}
@@ -219,7 +218,7 @@ namespace WeSay.LexicalTools
 		private AutoCompleteWithCreationBox<T, string> CreatePicker<T>(LexRelation relation)
 				where T : class
 		{
-			var picker = new AutoCompleteWithCreationBox<T, string> (
+			var picker = new AutoCompleteWithCreationBox<T, string>(
 				CommonEnumerations.VisibilitySetting.Visible,
 				 WeSayWordsProject.Project.ServiceLocator
 			);
@@ -279,7 +278,7 @@ namespace WeSay.LexicalTools
 		{
 			return
 					_resultSet.FindFirst(
-							delegate(RecordToken<LexEntry> token) { return (string) token["Form"] == form; });
+							delegate (RecordToken<LexEntry> token) { return (string)token["Form"] == form; });
 		}
 
 		//        #region Nested type: PalasoDataObjectLabelAdaptor

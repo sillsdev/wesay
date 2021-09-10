@@ -1,19 +1,17 @@
+using SIL.Code;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.WritingSystems;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using SIL.Data;
-using SIL.Code;
-using SIL.DictionaryServices.Model;
-using SIL.Reporting;
-using SIL.WritingSystems;
 using WeSay.Foundation;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.AddMissingInfo
 {
-	public class MissingInfoTask: TaskBase
+	public class MissingInfoTask : TaskBase
 	{
 		private readonly Field _missingInfoField;
 		private readonly ViewTemplate _viewTemplate;
@@ -26,7 +24,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 							   LexEntryRepository lexEntryRepository,
 							   ViewTemplate defaultViewTemplate,
 								TaskMemoryRepository taskMemoryRepository)
-			: base( config, lexEntryRepository, taskMemoryRepository)
+			: base(config, lexEntryRepository, taskMemoryRepository)
 		{
 			Guard.AgainstNull(config.MissingInfoFieldName, "MissingInfoFieldName");
 			Guard.AgainstNull(defaultViewTemplate, "viewTemplate");
@@ -41,7 +39,7 @@ namespace WeSay.LexicalTools.AddMissingInfo
 			_missingInfoField = defaultViewTemplate[config.MissingInfoFieldName];
 
 			_viewTemplate = config.CreateViewTemplate(defaultViewTemplate);
-		 }
+		}
 
 		private WritingSystemDefinition GetLexicalUnitWritingSystem()
 		{
@@ -82,10 +80,10 @@ namespace WeSay.LexicalTools.AddMissingInfo
 
 		private void SaveRecord()
 		{
-				   if (_missingInfoControl != null && _missingInfoControl.CurrentEntry != null)
-				{
-					LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
-				}
+			if (_missingInfoControl != null && _missingInfoControl.CurrentEntry != null)
+			{
+				LexEntryRepository.SaveItem(_missingInfoControl.CurrentEntry);
+			}
 
 		}
 

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Dashboard
 {
-	public class DashboardConfiguration: ITaskConfiguration
+	public class DashboardConfiguration : ITaskConfiguration
 	{
 		public override string ToString()
 		{

@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
 using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI.TextBoxes
@@ -155,7 +152,7 @@ namespace WeSay.UI.TextBoxes
 					if (HighlightSelect)
 					{
 						string id = _selectedIndex + "-1";
-						var content = (GeckoLIElement) _browser.Document.GetElementById(id);
+						var content = (GeckoLIElement)_browser.Document.GetElementById(id);
 						if (content != null)
 						{
 							content.SetAttribute("class", "selected");
@@ -220,7 +217,7 @@ namespace WeSay.UI.TextBoxes
 		public void ItemToHtml(string word, int index, bool useFormWS, Color textColor)
 		{
 			WritingSystemDefinition ws = useFormWS ? FormWritingSystem : MeaningWritingSystem;
-			Font font = WritingSystemInfo.CreateFont(ws );
+			Font font = WritingSystemInfo.CreateFont(ws);
 			String entry = String.IsNullOrEmpty(word) ? "&nbsp;" : System.Security.SecurityElement.Escape(word);
 			String subId = useFormWS ? "-1" : "-2";
 			String id = index.ToString() + subId;

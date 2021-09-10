@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Gecko;
+using Gecko.DOM;
+using Gecko.Events;
+using SIL.WritingSystems;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -6,11 +10,6 @@ using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Gecko;
-using Gecko.DOM;
-using Gecko.Events;
-using SIL.Reporting;
-using SIL.WritingSystems;
 
 namespace WeSay.UI.TextBoxes
 {
@@ -189,7 +188,7 @@ namespace WeSay.UI.TextBoxes
 			html.Append("</script>");
 			html.Append("</head>");
 			html.AppendFormat("<body {2} style='background:{0}; width:{1}; overflow-x:hidden; overflow-y:hidden' id='mainbody'>",
-				System.Drawing.ColorTranslator.ToHtml(Color.FromArgb(255,203,255,185)),
+				System.Drawing.ColorTranslator.ToHtml(Color.FromArgb(255, 203, 255, 185)),
 				this.Width,
 				GetLanguageHtml(_writingSystem));
 			html.Append("<select id='main' style='" + SelectStyle() + "' onchange=\"fireEvent('selectChanged','changed');\">");
@@ -211,7 +210,7 @@ namespace WeSay.UI.TextBoxes
 
 		protected override void OnDomClick(object sender, DomMouseEventArgs e)
 		{
-			_browser.Focus ();
+			_browser.Focus();
 		}
 
 		protected override void OnDomDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
@@ -236,7 +235,7 @@ namespace WeSay.UI.TextBoxes
 			// if it's already loaded, change it
 			if (_initialSelectLoad)
 			{
-				var content = (GeckoSelectElement) _browser.Document.GetElementById("main");
+				var content = (GeckoSelectElement)_browser.Document.GetElementById("main");
 				if (content != null)
 				{
 					content.SetAttribute("style", SelectStyle());

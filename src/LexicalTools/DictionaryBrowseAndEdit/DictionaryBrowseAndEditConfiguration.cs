@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SIL.i18n;
+using System;
 using System.Collections.Generic;
-using SIL.i18n;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
@@ -10,7 +10,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		public string MeaningField { get; set; }
 
 		public DictionaryBrowseAndEditConfiguration(string xml)
-			:base(xml)
+			: base(xml)
 		{
 			MeaningField = GetStringFromConfigNode("meaningField", "definition");
 		}
@@ -53,9 +53,11 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public string Description
 		{
-			get {
+			get
+			{
 				return
-					"This task allows an advanced user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay."; }
+					"This task allows an advanced user to see and edit all enabled fields of all entries in the dictionary.  He can add, delete, and search for entries.  NOTE: while this task may be very enticing to those familiar with traditional programs, this is *not* intended to be a primary way of working with WeSay.";
+			}
 		}
 
 		public string RemainingCountText

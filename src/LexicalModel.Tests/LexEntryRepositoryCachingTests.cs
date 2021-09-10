@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
 using SIL.TestUtilities;
-using NUnit.Framework;
 using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
+using System;
+using System.Collections.Generic;
 
 namespace WeSay.LexicalModel.Tests
 {
@@ -328,7 +326,7 @@ namespace WeSay.LexicalModel.Tests
 		[Test]
 		public void NotifyThatLexEntryHasBeenUpdated_Null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() =>_repository.NotifyThatLexEntryHasBeenUpdated(null));
+			Assert.Throws<ArgumentNullException>(() => _repository.NotifyThatLexEntryHasBeenUpdated(null));
 		}
 
 		[Test]

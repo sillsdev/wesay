@@ -1,16 +1,14 @@
-using System;
-using System.IO;
-using System.Diagnostics;
+using Addin.Transform.PdfDictionary;
+using NUnit.Framework;
 using SIL.Reporting;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
-using Addin.Transform.PdfDictionary;
+using System;
+using System.IO;
+using System.Threading;
+using WeSay.AddinLib;
 using WeSay.Project;
 using WeSay.Project.Tests;
-using WeSay.AddinLib;
-
-using NUnit.Framework;
-using System.Threading;
 
 namespace Addin.Transform.Tests
 {
@@ -80,7 +78,7 @@ namespace Addin.Transform.Tests
 				get { return Path.Combine(_projectInfo.PathToExportDirectory, _projectInfo.Name + ".pdf"); }
 			}
 
-			public void Dispose ()
+			public void Dispose()
 			{
 				_project.Dispose();
 				_testProject.Dispose();
@@ -110,15 +108,15 @@ namespace Addin.Transform.Tests
 
 		[Test]
 		[Category("SkipOnTeamCity")]
-		[Platform(Exclude="Win", Reason="Mono only test")]
+		[Platform(Exclude = "Win", Reason = "Mono only test")]
 		public void TestOpenDocumentPdf()
 		{
 			using (var e = new EnvironmentForTest())
 			{
 				var addin = new LibreOfficePdf();
-				addin.LaunchAfterExport= false;
+				addin.LaunchAfterExport = false;
 
-				addin.Launch(null,  e.ProjectInfo);
+				addin.Launch(null, e.ProjectInfo);
 				if (!File.Exists(e.PdfFile))
 				{
 					e.Dispose();
@@ -127,7 +125,7 @@ namespace Addin.Transform.Tests
 				bool succeeded = (new FileInfo(e.PdfFile).Length > 0);
 				if (!succeeded)
 				{
-					e.Dispose ();
+					e.Dispose();
 					throw new ApplicationException("Pdf " + e.PdfFile + " was empty");
 				}
 			}
@@ -135,14 +133,14 @@ namespace Addin.Transform.Tests
 
 		[Test]
 		[Category("SkipOnTeamCity")]
-		[Platform(Exclude="Win", Reason="Mono only test")]
+		[Platform(Exclude = "Win", Reason = "Mono only test")]
 		public void TestOpenDocumentPdfOpen()
 		{
 			using (var e = new EnvironmentForTest())
 			{
 				var addin = new LibreOfficePdf();
 
-				addin.Launch(null,  e.ProjectInfo);
+				addin.Launch(null, e.ProjectInfo);
 				Assert.IsTrue(File.Exists(e.PdfFile));
 				bool succeeded = (new FileInfo(e.PdfFile).Length > 0);
 				Assert.IsTrue(succeeded);
@@ -157,7 +155,7 @@ namespace Addin.Transform.Tests
 			{
 				var addin = new LibreOfficePdf();
 				Assert.DoesNotThrow(
-					() => { if (addin.Available) {};  }
+					() => { if (addin.Available) { }; }
 				);
 			}
 		}
@@ -172,13 +170,14 @@ namespace Addin.Transform.Tests
 				{
 					Assert.DoesNotThrow
 						(
-						() => { addin.Launch(null,  e.ProjectInfo); }
+						() => { addin.Launch(null, e.ProjectInfo); }
 					);
 				}
-				else {
+				else
+				{
 
 					Assert.Throws<ConfigurationException>(
-						() => { addin.Launch(null,  e.ProjectInfo); }
+						() => { addin.Launch(null, e.ProjectInfo); }
 					);
 				}
 			}

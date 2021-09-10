@@ -1,9 +1,9 @@
-using System;
-using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using NUnit.Framework;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System;
+using System.IO;
 using WeSay.Project;
 using WeSay.TestUtilities;
 
@@ -67,7 +67,7 @@ namespace Addin.Backup.Tests
 
 		[Test]
 		[Ignore("Not implemented yet")]
-		public void WhatIfNotEnoughRoom() {}
+		public void WhatIfNotEnoughRoom() { }
 
 		[Test]
 		public void OverwritesExistingZip()
@@ -146,7 +146,7 @@ namespace Addin.Backup.Tests
 
 				Assert.Throws<System.IO.IOException>(
 					() => BackupMaker.BackupToExternal(
-						Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new[] {fileToBackUp.Path}
+						Path.GetDirectoryName(fileToBackUp.Path), backUpFileName, new[] { fileToBackUp.Path }
 					)
 				);
 				liftFileStreamForLocking.Close();
@@ -156,7 +156,7 @@ namespace Addin.Backup.Tests
 		[Test]
 		public void OkIfNoFilesChosen()
 		{
-			BackupMaker.BackupToExternal(_sourceProjectPath, _destinationZip, new string[] {});
+			BackupMaker.BackupToExternal(_sourceProjectPath, _destinationZip, new string[] { });
 		}
 
 		private void AssertHasReasonableContents()

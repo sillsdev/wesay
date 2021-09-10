@@ -1,15 +1,12 @@
-﻿using System;
+﻿using NUnit.Framework;
+using SIL.TestUtilities;
+using SIL.WritingSystems;
+using SIL.WritingSystems.Migration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using System.Xml.Linq;
-using NUnit.Framework;
-using SIL.TestUtilities;
-using SIL.Lexicon;
-using SIL.WritingSystems;
-using SIL.WritingSystems.Migration;
-using SIL.WritingSystems.Migration.WritingSystemsLdmlV0To1Migration;
 using WeSay.Project.ConfigMigration.WritingSystem;
 
 namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
@@ -76,7 +73,7 @@ namespace WeSay.Project.Tests.ConfigMigration.WritingSystem
 			{
 				var migrationinfoForOldRfcTag =
 					_tagMigrationInfo.FirstOrDefault(info => info.LanguageTagBeforeMigration == oldRfcTag);
-				if( migrationinfoForOldRfcTag != null)
+				if (migrationinfoForOldRfcTag != null)
 				{
 					return Path.Combine(WritingSystemsPath, migrationinfoForOldRfcTag.LanguageTagAfterMigration + ".ldml");
 				}
@@ -428,8 +425,8 @@ O o";
 					environment.WsPrefsFilePath,
 					(version, oldToNewRfcTagsMap) =>
 						{
-							if(oldToNewRfcTagsMap.First(info => info.LanguageTagBeforeMigration == "en").
-								LanguageTagAfterMigration =="en-Zxxx-x-audio")
+							if (oldToNewRfcTagsMap.First(info => info.LanguageTagBeforeMigration == "en").
+								LanguageTagAfterMigration == "en-Zxxx-x-audio")
 							{
 								delegateCalledCorrectly = true;
 							}

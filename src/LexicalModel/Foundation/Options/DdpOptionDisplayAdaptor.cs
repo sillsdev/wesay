@@ -1,21 +1,20 @@
-using System;
 using SIL.Lift.Options;
-using WeSay.LexicalModel.Foundation.Options;
+using System;
 
 namespace WeSay.LexicalModel.Foundation.Options
 {
-	[CLSCompliant (false)]
+	[CLSCompliant(false)]
 	public class DdpOptionDisplayAdaptor : OptionDisplayAdaptor
 	{
 		public DdpOptionDisplayAdaptor(OptionsList allOptions, string preferredWritingSystemId)
 			: base(allOptions, preferredWritingSystemId)
 		{
 		}
-		public override string  GetDisplayLabel(object item)
+		public override string GetDisplayLabel(object item)
 		{
 			Option option = item as Option; // _allOptions.GetOptionFromKey((string)item);
-			//prefix with the domain number
-			return option.Abbreviation+" "+base.GetDisplayLabel(item);
+											//prefix with the domain number
+			return option.Abbreviation + " " + base.GetDisplayLabel(item);
 		}
 
 

@@ -1,17 +1,16 @@
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.WritingSystems;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.Data;
-using SIL.DictionaryServices.Model;
-using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 using WeSay.UI;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.GatherByWordList
 {
-	public partial class GatherWordListControl: UserControl
+	public partial class GatherWordListControl : UserControl
 	{
 		private readonly GatherWordListTask _task;
 
@@ -64,7 +63,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			if (_settingIndexInCode)
 				return;
 
-			if(_verticalWordListView.SelectedIndex==-1)
+			if (_verticalWordListView.SelectedIndex == -1)
 				return;
 
 			AddCurrentWord(); //don't throw away what they were typing
@@ -90,8 +89,8 @@ namespace WeSay.LexicalTools.GatherByWordList
 			}
 			var box = _vernacularBox.TextBoxes[0];
 			box.Focus();
-			if(box is IWeSayTextBox)
-					((IWeSayTextBox) box).SelectionStart = 1000; //go to end
+			if (box is IWeSayTextBox)
+				((IWeSayTextBox)box).SelectionStart = 1000; //go to end
 		}
 
 		private void UpdateSourceWord()
@@ -172,7 +171,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 			{
 				var recordTokenToStringAdapter = new RecordTokenToStringAdapter<LexEntry>("Form", recordToken);
 				string word = recordTokenToStringAdapter.ToString();
-				if(!string.IsNullOrEmpty(word))
+				if (!string.IsNullOrEmpty(word))
 				{
 					if (longestWord.Length < word.Length)
 					{
@@ -239,7 +238,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 					}
 					break;
 				case Keys.PageUp:
-					if ( _task.CanNavigatePrevious)
+					if (_task.CanNavigatePrevious)
 					{
 						_btnPreviousWord_Click(this, null);
 					}
@@ -272,7 +271,7 @@ namespace WeSay.LexicalTools.GatherByWordList
 				string word = _listViewOfWordsMatchingCurrentItem.SelectedItem.ToString();
 
 				RecordToken<LexEntry> recordToken =
-					((RecordTokenToStringAdapter<LexEntry>) (_listViewOfWordsMatchingCurrentItem.SelectedItem)).AdaptedRecordToken;
+					((RecordTokenToStringAdapter<LexEntry>)(_listViewOfWordsMatchingCurrentItem.SelectedItem)).AdaptedRecordToken;
 				Point start =
 						_listViewOfWordsMatchingCurrentItem.GetItemRectangle(selectedListIndex).
 								Location;

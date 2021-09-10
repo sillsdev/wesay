@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using Gecko;
+﻿using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
-using SIL.WritingSystems;
 using SIL.Keyboarding;
+using SIL.WritingSystems;
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.Windows.Forms;
 using WeSay.LexicalModel.Foundation;
 using WeSay.UI.Progress;
 
@@ -308,7 +305,7 @@ namespace WeSay.UI.TextBoxes
 					break;
 			}
 			string result = builder.ToString();
-			if (! String.IsNullOrEmpty(result))
+			if (!String.IsNullOrEmpty(result))
 			{
 				SendKeys.Send(result);
 			}

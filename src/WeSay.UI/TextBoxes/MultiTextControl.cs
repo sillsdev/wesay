@@ -1,22 +1,22 @@
+using SIL.Lift;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.Windows.Forms.Keyboarding;
+using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using SIL.Reporting;
-using SIL.Text;
-using SIL.WritingSystems;
-using SIL.Windows.Forms.Keyboarding;
 using WeSay.UI.audio;
-using SIL.Lift;
 
 namespace WeSay.UI.TextBoxes
 {
 	/// <summary>
 	/// This control presents a table of input fields, with one row for each input system. For audio input systems, it presents a control for recording and playback.
 	/// </summary>
-	public partial class MultiTextControl: TableLayoutPanel
+	public partial class MultiTextControl : TableLayoutPanel
 	{
 		private IList<WritingSystemDefinition> _writingSystemsForThisField;
 		private readonly List<Control> _inputBoxes;
@@ -32,7 +32,7 @@ namespace WeSay.UI.TextBoxes
 		public bool IsSpellCheckingEnabled { get; set; }
 		private readonly bool _isMultiParagraph;
 
-		public MultiTextControl(): this(null, null)
+		public MultiTextControl() : this(null, null)
 		{
 			//design mode only
 			if (DesignMode)
@@ -86,17 +86,17 @@ namespace WeSay.UI.TextBoxes
 								MultiText multiTextToCopyFormsFrom, string nameForTesting,
 								bool showAnnotationWidget, IWritingSystemRepository allWritingSystems,
 								CommonEnumerations.VisibilitySetting visibility, bool isSpellCheckingEnabled,
-								bool isMultiParagraph, IServiceProvider serviceProvider): this(allWritingSystems, serviceProvider)
+								bool isMultiParagraph, IServiceProvider serviceProvider) : this(allWritingSystems, serviceProvider)
 		{
 			Name = nameForTesting + "-mtc";
 			_writingSystemsForThisField = new List<WritingSystemDefinition>();
-//            foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
-//            {
-//                if (writingSystemIds.Contains(pair.Key))
-//                {
-//                    _writingSystemsForThisField.Add(pair.Value);
-//                }
-//            }
+			//            foreach (KeyValuePair<string, WritingSystem> pair in allWritingSystems)
+			//            {
+			//                if (writingSystemIds.Contains(pair.Key))
+			//                {
+			//                    _writingSystemsForThisField.Add(pair.Value);
+			//                }
+			//            }
 			foreach (var id in writingSystemIds)
 			{
 				if (allWritingSystems.Contains(id)) //why wouldn't it?
@@ -179,14 +179,14 @@ namespace WeSay.UI.TextBoxes
 
 		public MultiText GetMultiText()
 		{
-				//we don't have a binding that would keep an internal multitext up to date.
-				//This seems cleaner and sufficient, at the moment.
-				MultiText mt = new MultiText();
-				foreach (IControlThatKnowsWritingSystem box in TextBoxes)
-				{
-					mt.SetAlternative(box.WritingSystem.LanguageTag, box.Text);
-				}
-				return mt;
+			//we don't have a binding that would keep an internal multitext up to date.
+			//This seems cleaner and sufficient, at the moment.
+			MultiText mt = new MultiText();
+			foreach (IControlThatKnowsWritingSystem box in TextBoxes)
+			{
+				mt.SetAlternative(box.WritingSystem.LanguageTag, box.Text);
+			}
+			return mt;
 		}
 
 		/// <summary>
@@ -197,7 +197,7 @@ namespace WeSay.UI.TextBoxes
 		{
 			foreach (IControlThatKnowsWritingSystem box in TextBoxes)
 			{
-				var s =  text.GetExactAlternative(box.WritingSystem.LanguageTag);
+				var s = text.GetExactAlternative(box.WritingSystem.LanguageTag);
 				box.Text = s ?? string.Empty;
 			}
 		}
@@ -220,10 +220,10 @@ namespace WeSay.UI.TextBoxes
 
 
 				var box = AddTextBox(writingSystem, multiText);
-				if(box==null)
+				if (box == null)
 					continue;
 
-				Label label = AddWritingSystemLabel(((IControlThatKnowsWritingSystem) box).WritingSystem.Abbreviation);
+				Label label = AddWritingSystemLabel(((IControlThatKnowsWritingSystem)box).WritingSystem.Abbreviation);
 				label.Click += subControl_Click;
 				label.MouseWheel += subControl_MouseWheel;
 
@@ -266,7 +266,7 @@ namespace WeSay.UI.TextBoxes
 
 		private void subControl_Click(object sender, EventArgs e)
 		{
-			Control c = GetControlFromPosition(1, GetRow((Control) sender));
+			Control c = GetControlFromPosition(1, GetRow((Control)sender));
 			FocusWithInsertionPointAtEnd(c);
 		}
 
@@ -290,15 +290,15 @@ namespace WeSay.UI.TextBoxes
 			{
 				if (_widthForWritingSystemLabels == -1)
 				{
-					Size fudgeFactor= new Size(20,0);// it wasn't coming out large enough... could be because of label padding/margin
-					//null happens when this is from a hand-placed designer piece,
-					//in which case we don't really care about aligning anyhow
+					Size fudgeFactor = new Size(20, 0);// it wasn't coming out large enough... could be because of label padding/margin
+													   //null happens when this is from a hand-placed designer piece,
+													   //in which case we don't really care about aligning anyhow
 					if (_allWritingSystems != null)
 					{
 						foreach (WritingSystemDefinition ws in _allWritingSystems.AllWritingSystems)
 						{
 							Size size = TextRenderer.MeasureText(ws.Abbreviation,
-																 _writingSystemLabelFont) +fudgeFactor;
+																 _writingSystemLabelFont) + fudgeFactor;
 
 							if (size.Width > _widthForWritingSystemLabels)
 							{
@@ -333,7 +333,7 @@ namespace WeSay.UI.TextBoxes
 					//no, better to just omit it.  throw new ConfigurationException("WeSay cannot handle yet audio in this task.");
 					return null;
 				}
-				var ap =_serviceProvider.GetService(typeof (AudioPathProvider)) as AudioPathProvider;
+				var ap = _serviceProvider.GetService(typeof(AudioPathProvider)) as AudioPathProvider;
 				control = new WeSayAudioFieldBox(writingSystem, ap, _serviceProvider.GetService(typeof(ILogger)) as ILogger);
 				control.SuspendLayout();
 				((WeSayAudioFieldBox)control).PlayOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
@@ -343,7 +343,7 @@ namespace WeSay.UI.TextBoxes
 				IWeSayTextBox box = null;
 				if (_serviceProvider != null)
 				{
-					box = _serviceProvider.GetService(typeof (IWeSayTextBox)) as IWeSayTextBox;
+					box = _serviceProvider.GetService(typeof(IWeSayTextBox)) as IWeSayTextBox;
 				}
 				else
 				{
@@ -352,7 +352,7 @@ namespace WeSay.UI.TextBoxes
 				}
 				box.Init(writingSystem, Name);
 
-				control = (Control) box;
+				control = (Control)box;
 				control.SuspendLayout();
 				box.ReadOnly = (_visibility == CommonEnumerations.VisibilitySetting.ReadOnly);
 				box.Multiline = true;
@@ -367,7 +367,7 @@ namespace WeSay.UI.TextBoxes
 			_inputBoxes.Add(control);
 
 			string text = multiText.GetExactAlternative(writingSystem.LanguageTag);
-			if(_isMultiParagraph) //review... stuff was coming in with just \n, and the text box then didn't show the paragarph marks
+			if (_isMultiParagraph) //review... stuff was coming in with just \n, and the text box then didn't show the paragarph marks
 			{
 				text = text.Replace("\r\n", "\n");
 				text = text.Replace("\n", "\r\n");

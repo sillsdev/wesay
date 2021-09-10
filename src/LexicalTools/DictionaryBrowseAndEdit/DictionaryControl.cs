@@ -1,31 +1,29 @@
+using SIL.Code;
+using SIL.Data;
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Reporting;
+using SIL.Text;
+using SIL.UiBindings;
+using SIL.Windows.Forms.Miscellaneous;
+using SIL.WritingSystems;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using SIL.Data;
-using SIL.Code;
-using SIL.i18n;
-using SIL.UiBindings;
-using SIL.Windows.Forms.Miscellaneous;
-using SIL.Reporting;
-using SIL.Text;
-using SIL.WritingSystems;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.UI;
 using WeSay.UI.AutoCompleteTextBox;
-using SIL.DictionaryServices.Model;
 using WeSay.UI.TextBoxes;
 
 namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
-	public partial class DictionaryControl: UserControl
+	public partial class DictionaryControl : UserControl
 	{
 		//autofac generates a factory which comes up with all the other needed parameters from its container
 		public delegate DictionaryControl Factory(IUserInterfaceMemory memory);
@@ -239,7 +237,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public void SetListWritingSystem(WritingSystemDefinition writingSystem)
 		{
-			Guard.AgainstNull(writingSystem,"writingSystem");
+			Guard.AgainstNull(writingSystem, "writingSystem");
 
 
 			if (_listWritingSystem == writingSystem)
@@ -265,7 +263,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void ConfigureSearchBox()
 		{
-			if(DesignMode )
+			if (DesignMode)
 				return;
 
 			_searchTextBoxControl.SetWritingSystem(_listWritingSystem);
@@ -286,7 +284,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 		}
 
-		private void SaveAndCleanUpPreviousEntry() {
+		private void SaveAndCleanUpPreviousEntry()
+		{
 			LexEntry previousEntry = Control_EntryDetailPanel.DataSource;
 			if (previousEntry != null)
 			{
@@ -314,7 +313,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			{
 				_records = _lexEntryRepository.GetAllEntriesSortedByDefinitionOrGloss(_listWritingSystem);
 			}
-			 _findTextAdapter.Items = _records;
+			_findTextAdapter.Items = _records;
 
 			_recordsListBox.DataSource = new List<RecordToken<LexEntry>>(_records);
 			if (selectedItem != null)
@@ -326,12 +325,12 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private void OnRetrieveVirtualItemEvent(object sender, RetrieveVirtualItemEventArgs e)
 		{
 			RecordToken<LexEntry> recordToken = _records[e.ItemIndex];
-			var displayString = (string) recordToken["Form"];
+			var displayString = (string)recordToken["Form"];
 			e.Item = new ListViewItem(displayString);
 
-			if ((string) recordToken["WritingSystem"] != _listWritingSystem.LanguageTag)
+			if ((string)recordToken["WritingSystem"] != _listWritingSystem.LanguageTag)
 			{
-				displayString = (string) recordToken["Form"];
+				displayString = (string)recordToken["Form"];
 				e.Item.Font = new Font(e.Item.Font, FontStyle.Italic);
 				//!!! TODO: Get the correct font from the respective writingsystem and maybe put the writingsystem id behind the form!! --TA 8.9.08
 			}
@@ -366,7 +365,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnWritingSystemMenuItemClicked(object sender, EventArgs e)
 		{
-			var item = (MenuItem) sender;
+			var item = (MenuItem)sender;
 			if (_listWritingSystem != item.Tag)
 			{
 				SetListWritingSystem((WritingSystemDefinition)item.Tag);
@@ -409,7 +408,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		public void GotoFirstEntry()
 		{
-			if(_recordsListBox.Length>0)
+			if (_recordsListBox.Length > 0)
 				_recordsListBox.SelectedIndex = 0;
 
 		}
@@ -418,7 +417,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			//NB: this was written in Dec 2009 while we were discussing getting rid of non-guid ids.
 
-			Guid g=default(Guid);
+			Guid g = default(Guid);
 			try
 			{
 				g = new Guid(entryId);
@@ -428,7 +427,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			}
 			LexEntry entry;
 
-			if(g!=default(Guid))
+			if (g != default(Guid))
 			{
 				entry = _lexEntryRepository.GetLexEntryWithMatchingGuid(g);
 			}
@@ -473,7 +472,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			Logger.WriteMinorEvent("SelectItemWithDisplayString");
 			_recordsListBox.SelectedIndex = _records.FindFirstIndex(
-				token => (string) token["Form"] == text
+				token => (string)token["Form"] == text
 			);
 		}
 
@@ -547,7 +546,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			get
 			{
 				var entry = CurrentEntry;
-				if(entry==null)
+				if (entry == null)
 					return string.Empty;
 
 				try
@@ -636,13 +635,13 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private Control FindFocus(Control parent)
 		{
-			if(parent.Focused)
+			if (parent.Focused)
 				return parent;
 
 			foreach (Control child in parent.Controls)
 			{
 				var c = FindFocus(child);
-				if(c!=null)
+				if (c != null)
 					return c;
 			}
 			return null;
@@ -651,9 +650,9 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		private int GetEmptyWordIndex()
 		{
 			// empty forms will always sort to the top
-			for (int i = 0;i < _records.Count;++i)
+			for (int i = 0; i < _records.Count; ++i)
 			{
-				if (!string.IsNullOrEmpty((string) _records[i]["Form"]))
+				if (!string.IsNullOrEmpty((string)_records[i]["Form"]))
 				{
 					break;
 				}
@@ -696,7 +695,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 				_btnDeleteWord.Focus();
 			}
 
-			_logger.WriteConciseHistoricalEvent("Deleted '{0}'",CurrentEntry.GetSimpleFormForLogging());
+			_logger.WriteConciseHistoricalEvent("Deleted '{0}'", CurrentEntry.GetSimpleFormForLogging());
 			CurrentEntry.IsBeingDeleted = true;
 			// If the record hasn't been saved (newly created), then setting _recordsListBox.SelectedIndex
 			// can have a side-effect of reordering _records.  So we need to record the current id, not just
@@ -745,7 +744,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			if (WeSayWordsProject.GeckoOption)
 			{
-				if (_recordsListBox.ListWidth > _splitter.SplitPosition )
+				if (_recordsListBox.ListWidth > _splitter.SplitPosition)
 				{
 					_splitter.SplitPosition = _recordsListBox.ListWidth;
 				}
@@ -755,7 +754,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 		{
 			if (_timer == null)
 			{
-				_timer = new Timer {Interval = ms};
+				_timer = new Timer { Interval = ms };
 				_timer.Tick += action;
 				_timer.Start();
 			}

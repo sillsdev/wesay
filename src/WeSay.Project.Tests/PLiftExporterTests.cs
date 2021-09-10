@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml;
 using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
 using SIL.IO;
+using SIL.Lift;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
 using SIL.Xml;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
 using WeSay.LexicalModel;
-using SIL.Lift;
 
 namespace WeSay.Project.Tests
 {
@@ -38,7 +38,7 @@ namespace WeSay.Project.Tests
 				_outputFile = new TempFile();
 				Repo = new LexEntryRepository(_projectDir.PathToLiftFile);
 				WritingSystemIds = new List<string>(new[] { Red, Green, Blue, Voice });
-				HeadwordWritingSystem = new WritingSystemDefinition(Red) {DefaultCollation = new IcuRulesCollationDefinition("standard")};
+				HeadwordWritingSystem = new WritingSystemDefinition(Red) { DefaultCollation = new IcuRulesCollationDefinition("standard") };
 				project.WritingSystems.Set(HeadwordWritingSystem);
 				project.WritingSystems.Set(new WritingSystemDefinition(Green) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
 				project.WritingSystems.Set(new WritingSystemDefinition(Blue) { DefaultCollation = new IcuRulesCollationDefinition("standard") });
@@ -235,7 +235,7 @@ namespace WeSay.Project.Tests
 
 				environment.DoExport();
 				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
-				environment.AssertHasAtLeastOneMatch("lift/entry/pronunciation/media[@href='"+path+"']");
+				environment.AssertHasAtLeastOneMatch("lift/entry/pronunciation/media[@href='" + path + "']");
 			}
 		}
 
@@ -264,7 +264,7 @@ namespace WeSay.Project.Tests
 				environment.DoExport();
 				environment.AssertHasAtLeastOneMatchWithArgs("lift/entry/sense/example/form[@lang='{0}']", EnvironmentForTest.Green);
 				var path = string.Format("..{0}audio{0}pretendFileName", Path.DirectorySeparatorChar);
-				environment.AssertHasAtLeastOneMatch("lift/entry/sense/example/trait[@name='audio' and @value='"+path+"']");
+				environment.AssertHasAtLeastOneMatch("lift/entry/sense/example/trait[@name='audio' and @value='" + path + "']");
 			}
 		}
 

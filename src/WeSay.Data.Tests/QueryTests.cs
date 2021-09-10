@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
 using NUnit.Framework;
 using SIL.Tests.Data;
+using System;
+using System.Collections.Generic;
 
 namespace WeSay.Data.Tests
 {
-	internal class Result: Dictionary<string, object>
+	internal class Result : Dictionary<string, object>
 	{
 		public Result(params KV[] kvs)
 		{
@@ -44,91 +44,91 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void In_Null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).In(null));
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof(PalasoTestItem)).In(null));
 		}
 
 		[Test]
 		public void In_PropertyDoesNotExist_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).In("IDontExist"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).In("IDontExist"));
 		}
 
 		[Test]
 		public void In_EmptyString_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).In(string.Empty));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).In(string.Empty));
 		}
 
 		[Test]
 		public void ForEach_Null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).ForEach(null));
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof(PalasoTestItem)).ForEach(null));
 		}
 
 		[Test]
 		public void ForEach_EmptyString_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ForEach(string.Empty));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).ForEach(string.Empty));
 		}
 
 		[Test]
 		public void ForEach_PropertyDoesNotExist_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ForEach("IDontExist"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).ForEach("IDontExist"));
 		}
 
 		[Test]
 		public void ForEach_PropertyDoesNotReturnIEnumerableOfT_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ForEach("Child"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).ForEach("Child"));
 		}
 
 		[Test]
 		public void ForEach_PropertyReturnsIEnumerableOfT_Okay()
 		{
-			Assert.IsNotNull(new Query(typeof (PalasoTestItem)).ForEach("ChildItemList"));
+			Assert.IsNotNull(new Query(typeof(PalasoTestItem)).ForEach("ChildItemList"));
 		}
 
 		[Test]
 		public void Show_Null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).Show(null));
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof(PalasoTestItem)).Show(null));
 		}
 
 		[Test]
 		public void Show_EmptyString_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).Show(string.Empty));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).Show(string.Empty));
 		}
 
 		[Test]
 		public void Show_PropertyDoesNotExist_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).Show("IDontExist"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).Show("IDontExist"));
 		}
 
 		[Test]
 		public void ShowEach_Null_Throws()
 		{
-			Assert.Throws<ArgumentNullException>(() => new Query(typeof (PalasoTestItem)).ShowEach(null));
+			Assert.Throws<ArgumentNullException>(() => new Query(typeof(PalasoTestItem)).ShowEach(null));
 		}
 
 		[Test]
 		public void ShowEach_EmptyString_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ShowEach(string.Empty));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).ShowEach(string.Empty));
 		}
 
 		[Test]
 		public void ShowEach_PropertyDoesNotExist_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).ShowEach("IDontExist"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).ShowEach("IDontExist"));
 		}
 
 		[Test]
 		public void ShowEach_PropertyIsIEnumerable_GetsInnerType()
 		{
-			Assert.IsNotNull(new Query(typeof (PalasoTestItem)).ShowEach("ChildItemList"));
+			Assert.IsNotNull(new Query(typeof(PalasoTestItem)).ShowEach("ChildItemList"));
 		}
 
 		[Test]
@@ -147,13 +147,13 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void ForEach_PropertyIsIEnumerable_GetsInnerType()
 		{
-			Assert.IsNotNull(new Query(typeof (PalasoTestItem)).ForEach("ChildItemList").Show("StoredInt"));
+			Assert.IsNotNull(new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").Show("StoredInt"));
 		}
 
 		[Test]
 		public void GetResults_Null_Throws()
 		{
-			Query q = new Query(typeof (PalasoTestItem));
+			Query q = new Query(typeof(PalasoTestItem));
 			IEnumerable<IDictionary<string, object>> results = q.GetResults(null);
 			// we have to actually use the IEnumerable or it won't execute
 			// since it is generated
@@ -163,7 +163,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_NotInstanceOfType_Throws()
 		{
-			Query q = new Query(typeof (PalasoTestItem));
+			Query q = new Query(typeof(PalasoTestItem));
 			IEnumerable<IDictionary<string, object>> results = q.GetResults(new object());
 			// we have to actually use the IEnumerable or it won't execute
 			// since it is generated
@@ -173,21 +173,21 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Show_LabelAlreadyUsed_Throws()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof (PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Query(typeof(PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
 					"StoredString"));
 		}
 
 		[Test]
 		public void Show_DifferentLabel_DoesNotThrow()
 		{
-			new Query(typeof (PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
+			new Query(typeof(PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
 					"StoredString", "ChildrenStoredString");
 		}
 
 		[Test]
 		public void Show_LabelAlreadyUsedInBranch_Throws()
 		{
-			Query query = new Query(typeof (PalasoTestItem));
+			Query query = new Query(typeof(PalasoTestItem));
 			query.In("Child").Show("StoredString");
 			Assert.Throws<ArgumentOutOfRangeException>(() => query.ForEach("ChildItemList").Show("StoredString"));
 		}
@@ -195,7 +195,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void Show_DifferentLabelInBranch_Okay()
 		{
-			Query query = new Query(typeof (PalasoTestItem));
+			Query query = new Query(typeof(PalasoTestItem));
 			query.In("Child").Show("StoredString", "ChildStoredString");
 			query.ForEach("ChildItemList").Show("StoredString", "ChildrenStoredString");
 		}
@@ -204,13 +204,13 @@ namespace WeSay.Data.Tests
 		public void ShowEach_LabelAlreadyUsed_Throws()
 		{
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				new Query(typeof (TestMultiple)).ShowEach("Strings", "a").ShowEach("KeyValuePairs", "a"));
+				new Query(typeof(TestMultiple)).ShowEach("Strings", "a").ShowEach("KeyValuePairs", "a"));
 		}
 
 		[Test]
 		public void ShowEach_DifferentLabel_Okay()
 		{
-			new Query(typeof (TestMultiple)).ShowEach("Strings", "a").ShowEach("KeyValuePairs", "b");
+			new Query(typeof(TestMultiple)).ShowEach("Strings", "a").ShowEach("KeyValuePairs", "b");
 		}
 	}
 
@@ -228,7 +228,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnQuery_WithNoShow_NoItems()
 		{
-			Query all = new Query(typeof (PalasoTestItem));
+			Query all = new Query(typeof(PalasoTestItem));
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -237,7 +237,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnInQuery_WithNoShow_NoItems()
 		{
-			Query all = new Query(typeof (PalasoTestItem)).In("Child");
+			Query all = new Query(typeof(PalasoTestItem)).In("Child");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -290,7 +290,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_ForEachButNoShow_NoItems()
 		{
-			Query all = new Query(typeof (PalasoTestItem)).ForEach("ChildItemList");
+			Query all = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -300,7 +300,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowStoredIntForEachChildren_NoItems()
 		{
 			Query allStoredIntsInChildren =
-					new Query(typeof (PalasoTestItem)).ForEach("ChildItemList").Show("StoredInt");
+					new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").Show("StoredInt");
 			IEnumerable<IDictionary<string, object>> results =
 					allStoredIntsInChildren.GetResults(item);
 			Assert.IsNotNull(results);
@@ -332,7 +332,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnInQuery_WithNoShow_NoItems()
 		{
-			Query all = new Query(typeof (PalasoTestItem)).In("Child");
+			Query all = new Query(typeof(PalasoTestItem)).In("Child");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -341,7 +341,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnInQuery_WithShow_OneIntItem()
 		{
-			Query all = new Query(typeof (PalasoTestItem)).In("Child").Show("StoredInt");
+			Query all = new Query(typeof(PalasoTestItem)).In("Child").Show("StoredInt");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
@@ -355,7 +355,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResultsOnInQuery_WithShowSelectingNullItem_OneNullItem()
 		{
-			Query all = new Query(typeof (PalasoTestItem)).In("Child").Show("StoredString");
+			Query all = new Query(typeof(PalasoTestItem)).In("Child").Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
@@ -375,7 +375,7 @@ namespace WeSay.Data.Tests
 			Query all = new Query(typeof(PalasoTestItem)).In("Child").In("Child").In("Child").Show("StoredString");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 
-			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[] {};
+			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[] { };
 
 			Asserter.Assert(new DictionaryContentAsserter<string, object>(expectedResult, results));
 		}
@@ -395,7 +395,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).In("Child").
 				Where("StoredInt",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return (int)data["StoredInt"] == 24;
 					}).
@@ -414,9 +414,9 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).In("Child").
 				Where("StoredInt",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
-						int storedInt = (int) data["StoredInt"];
+						int storedInt = (int)data["StoredInt"];
 						return storedInt != 24; //will not match the item
 					}).Show("StoredInt");
 			List<IDictionary<string, object>> results = new List<IDictionary<string, object>>
@@ -432,9 +432,9 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).In("Child").
 				Where("StoredInt",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
-						int storedInt = (int) data["StoredInt"];
+						int storedInt = (int)data["StoredInt"];
 						return storedInt != 24; //will not match the item
 					}).
 				AtLeastOne().Show("StoredInt");
@@ -452,9 +452,9 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).
 				Where("StoredString",
-				delegate(IDictionary<string, object> data)
+				delegate (IDictionary<string, object> data)
 					{
-						string storedString = (string) data["StoredString"];
+						string storedString = (string)data["StoredString"];
 						return storedString == "top";
 					}).
 				Show("StoredString");
@@ -472,7 +472,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).
 				Where("StoredString",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return (string)data["StoredString"] == "cantMatchMe";
 					}).
@@ -490,7 +490,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).
 				Where("StoredString",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return (string)data["StoredString"] == "cantMatchMe";
 					}).
@@ -519,7 +519,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").
 				Where("StoredInt",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return (int)data["StoredInt"] < 2; // This will return one item
 					}).
@@ -538,7 +538,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").
 				Where("StoredInt",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return (int)data["StoredInt"] < 0; // Will filter all items
 					}).
@@ -556,7 +556,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").
 				Where("StoredInt",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return (int)data["StoredInt"] < 0; // Will filter all items;
 					}).
@@ -585,7 +585,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem))
 				.Where("StoredString",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 						{
 							return false;
 						})
@@ -601,7 +601,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).In("Child")
 				.Where("StoredString",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return false;
 					})
@@ -617,7 +617,7 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList")
 				.Where("StoredString",
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
 						return false;
 					})
@@ -633,11 +633,11 @@ namespace WeSay.Data.Tests
 		{
 			Query query = new Query(typeof(PalasoTestItem))
 				.Where(new string[] { "StoredString", "StoredInt" },
-					delegate(IDictionary<string, object> data)
+					delegate (IDictionary<string, object> data)
 					{
-						if((string)data["StoredString"] == "top")
+						if ((string)data["StoredString"] == "top")
 						{
-							if((int)data["StoredInt"] == 1)
+							if ((int)data["StoredInt"] == 1)
 							{
 								return false;
 							}
@@ -671,7 +671,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_NoShow_NoItems()
 		{
-			Query all = new Query(typeof (PalasoTestItem));
+			Query all = new Query(typeof(PalasoTestItem));
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -680,7 +680,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_ForEachButNoShow_NoItems()
 		{
-			Query all = new Query(typeof (PalasoTestItem)).ForEach("ChildItemList");
+			Query all = new Query(typeof(PalasoTestItem)).ForEach("ChildItemList");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -690,7 +690,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowStoredIntForEachChildren_ThreeItems()
 		{
 			Query allStoredIntsInChildren =
-					new Query(typeof (PalasoTestItem)).ForEach("ChildItemList").Show("StoredInt");
+					new Query(typeof(PalasoTestItem)).ForEach("ChildItemList").Show("StoredInt");
 
 			IEnumerable<IDictionary<string, object>> results =
 					allStoredIntsInChildren.GetResults(item);
@@ -709,7 +709,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowStoredStringAndStoredStringsForEachChildren_ThreeItems()
 		{
 			Query allStoredIntsInChildren =
-					new Query(typeof (PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
+					new Query(typeof(PalasoTestItem)).Show("StoredString").ForEach("ChildItemList").Show(
 							"StoredString", "ChildStoredString");
 
 			IEnumerable<IDictionary<string, object>> results =
@@ -747,7 +747,7 @@ namespace WeSay.Data.Tests
 				GetResults_ShowStoredStringChildStoredStringAndStoredStringsForEachChildren_ThreeItems
 				()
 		{
-			Query query = new Query(typeof (PalasoTestItem)).Show("StoredString");
+			Query query = new Query(typeof(PalasoTestItem)).Show("StoredString");
 			query.In("Child").Show("StoredString", "ChildStoredString");
 			query.ForEach("ChildItemList").Show("StoredString", "ChildrenStoredString");
 
@@ -810,7 +810,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_NoShow_NoItems()
 		{
-			Query all = new Query(typeof (TestMultiple));
+			Query all = new Query(typeof(TestMultiple));
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -819,7 +819,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_InButNoShow_NoItems()
 		{
-			Query all = new Query(typeof (TestMultiple)).In("String");
+			Query all = new Query(typeof(TestMultiple)).In("String");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -828,7 +828,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_ForEachButNoShow_NoItems()
 		{
-			Query all = new Query(typeof (TestMultiple)).ForEach("Strings");
+			Query all = new Query(typeof(TestMultiple)).ForEach("Strings");
 			IEnumerable<IDictionary<string, object>> results = all.GetResults(item);
 			Assert.IsNotNull(results);
 			Assert.IsFalse(results.GetEnumerator().MoveNext()); // has no items
@@ -837,7 +837,7 @@ namespace WeSay.Data.Tests
 		[Test]
 		public void GetResults_ShowEachStrings_AllStrings()
 		{
-			Query allStrings = new Query(typeof (TestMultiple)).ShowEach("Strings");
+			Query allStrings = new Query(typeof(TestMultiple)).ShowEach("Strings");
 			IEnumerable<IDictionary<string, object>> results = allStrings.GetResults(item);
 
 			Dictionary<string, object>[] expectedResult = new Dictionary<string, object>[]
@@ -855,7 +855,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowEachStringsMergedWithEachValueOfKeyValuePairs()
 		{
 			Query allStrings =
-					new Query(typeof (TestMultiple)).ShowEach("Strings").ForEach("KeyValuePairs").
+					new Query(typeof(TestMultiple)).ShowEach("Strings").ForEach("KeyValuePairs").
 							Show("Value");
 			IEnumerable<IDictionary<string, object>> results = allStrings.GetResults(item);
 
@@ -890,7 +890,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowEachStringsMergedWithEachKeyValueOfKeyValuePairs()
 		{
 			Query allStrings =
-					new Query(typeof (TestMultiple)).ShowEach("Strings").ForEach("KeyValuePairs").
+					new Query(typeof(TestMultiple)).ShowEach("Strings").ForEach("KeyValuePairs").
 							Show("Key").Show("Value");
 			IEnumerable<IDictionary<string, object>> results = allStrings.GetResults(item);
 
@@ -929,7 +929,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowEachStringsMergedWithEachKeyValueOfKeyValuePairsMergedWithString()
 		{
 			Query allStrings =
-					new Query(typeof (TestMultiple)).ShowEach("Strings").Show("String").ForEach(
+					new Query(typeof(TestMultiple)).ShowEach("Strings").Show("String").ForEach(
 							"KeyValuePairs").Show("Key").Show("Value");
 			IEnumerable<IDictionary<string, object>> results = allStrings.GetResults(item);
 
@@ -976,7 +976,7 @@ namespace WeSay.Data.Tests
 		public void GetResults_ShowStringMergedWithEachStringsMergedWithEachKeyValueOfKeyValuePairs()
 		{
 			Query allStrings =
-					new Query(typeof (TestMultiple)).Show("String").ShowEach("Strings").ForEach(
+					new Query(typeof(TestMultiple)).Show("String").ShowEach("Strings").ForEach(
 							"KeyValuePairs").Show("Key").Show("Value");
 			IEnumerable<IDictionary<string, object>> results = allStrings.GetResults(item);
 

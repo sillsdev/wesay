@@ -1,12 +1,12 @@
+using SIL.DictionaryServices.Model;
+using SIL.i18n;
+using SIL.Lift;
+using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using SIL.DictionaryServices.Model;
-using SIL.i18n;
-using SIL.Lift;
-using SIL.Reporting;
 using WeSay.LexicalModel;
 using WeSay.Project;
 using WeSay.UI;
@@ -16,7 +16,7 @@ namespace WeSay.LexicalTools
 	/// <summary>
 	/// <see cref="Layouter"/>
 	/// </summary>
-	public class LexSenseLayouter: Layouter
+	public class LexSenseLayouter : Layouter
 	{
 		public LexSenseLayouter(DetailList parentDetailList, int parentRow, ViewTemplate viewTemplate, LexEntryRepository lexEntryRepository,
 			IServiceProvider serviceProvider, LexSense senseToLayout)
@@ -26,7 +26,7 @@ namespace WeSay.LexicalTools
 
 		internal override int AddWidgets(PalasoDataObject wsdo, int insertAtRow)
 		{
-			LexSense sense = (LexSense) wsdo;
+			LexSense sense = (LexSense)wsdo;
 			FirstRow = insertAtRow;
 			int rowCount = 0;
 			DetailList.SuspendLayout();

@@ -1,6 +1,6 @@
-using System.IO;
 using NUnit.Framework;
 using SIL.IO;
+using System.IO;
 
 namespace WeSay.LexicalModel.Tests
 {

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using SIL.WritingSystems;
+using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Linq;
-using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
-using Enumerable=SIL.Linq.Enumerable;
+using System.Windows.Forms;
+using Enumerable = SIL.Linq.Enumerable;
 
 namespace WeSay.ConfigTool.Tasks
 {
@@ -40,7 +39,7 @@ namespace WeSay.ConfigTool.Tasks
 		{
 			SetMenuLabel();
 			_selectedItemIds.Clear();
-			Enumerable.ForEach(SelectedItemIds, id =>_selectedItemIds.Add(id));
+			Enumerable.ForEach(SelectedItemIds, id => _selectedItemIds.Add(id));
 		}
 
 		public IEnumerable<string> SelectedItemIds
@@ -49,7 +48,7 @@ namespace WeSay.ConfigTool.Tasks
 			{
 				foreach (ToolStripMenuItem item in _writingSystemList.DropDownItems)
 				{
-					if(item.Checked)
+					if (item.Checked)
 						yield return ((WritingSystemDefinition)item.Tag).Id;
 				}
 			}

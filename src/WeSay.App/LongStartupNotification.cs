@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 namespace WeSay.App
 {
-	public partial class LongStartupNotification: Form
+	public partial class LongStartupNotification : Form
 	{
 		public LongStartupNotification()
 		{

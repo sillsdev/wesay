@@ -1,8 +1,10 @@
-using System;
-using System.IO;
-using System.Xml;
 using SIL.Code;
 using SIL.Reporting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Xml;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.NewProjectCreation
@@ -32,6 +34,8 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				CopyOverLiftFile(pathToSourceLift, pathToNewDirectory);
 
 				CopyOverPictures(Path.GetDirectoryName(pathToSourceLift), BasilProject.GetPathToPictures(pathToNewDirectory));
+				//what about audio?
+				CopyOverAudio(Path.GetDirectoryName(pathToSourceLift), BasilProject.GetPathToPictures(pathToNewDirectory));
 
 				CopyOverRangeFileIfExists(pathToSourceLift, pathToNewDirectory);
 
@@ -45,7 +49,7 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				return true;
 
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				SIL.Reporting.ErrorReport.NotifyUserOfProblem(e, "WeSay was unable to finish importing that LIFT file.  If you cannot fix the problem yourself, please zip and send the exported folder to issues (at) wesay (dot) org");
 				try
@@ -61,30 +65,76 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 		}
 
+		public static HashSet<string> AllLangs(string str, bool ignoreCase = false)
+		{
+			string substr = "lang=\"";
+			if (string.IsNullOrWhiteSpace(str) ||
+				string.IsNullOrWhiteSpace(substr))
+			{
+				throw new ArgumentException("String or substring is not specified.");
+			}
+
+			var langs = new HashSet<string>();
+			int index = 0;
+			index = str.IndexOf(substr, index, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+			
+			while (index != -1)
+			{
+				//				indexes.Add(index++);
+				int start = index + 6;
+				int end = str.IndexOf(">", start) -1;
+				int length = end - start;
+				var alang = str.Substring(start, length);
+				langs.Add(alang);
+				index++;
+				index = str.IndexOf(substr, index, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+
+			}
+
+			return langs;
+		}
+
 		private static void CopyOverLdmlFiles(string pathToSourceLift, string pathToNewDirectory)
 		{
-			if(!Directory.Exists(pathToNewDirectory))
+			if (!Directory.Exists(pathToNewDirectory))
 			{
 				Directory.CreateDirectory(pathToNewDirectory);
 			}
 			string pathToSourceWritingSystems = Path.Combine(Path.GetDirectoryName(pathToSourceLift), "WritingSystems");
-			if(!Directory.Exists(pathToSourceWritingSystems))
+			if (!Directory.Exists(pathToSourceWritingSystems))
 			{
 				pathToSourceWritingSystems = Path.GetDirectoryName(pathToSourceLift);
 			}
-//			foreach (string pathToLdml in Directory.GetFiles(Path.GetDirectoryName(pathToSourceLift), "*.ldml"))
-			foreach (string pathToLdml in Directory.GetFiles(pathToSourceWritingSystems, "*.ldml"))
+			// make set of all writing systems used in .lift and lift-ranges(if present)
+			//			var ldml_lift = Regex.Matches(File.ReadAllText(pathToSourceLift, Encoding.UTF8), @"<[^<>]*>").Cast<Match>().Select(p => p.Value).ToList();
+			HashSet<string> uniqueLdmls = AllLangs(File.ReadAllText(pathToSourceLift, Encoding.UTF8));
+			string liftRangePath = Path.ChangeExtension(pathToSourceLift, "lift-ranges");
+			if (File.Exists(liftRangePath))
 			{
-				string fileName = Path.GetFileName(pathToLdml);
-				Logger.WriteMinorEvent(@"Copying LDML file " + fileName);
-				File.Copy(pathToLdml, Path.Combine(pathToNewDirectory, fileName), true);
+				HashSet<string> ldmlRange = AllLangs(File.ReadAllText(liftRangePath, Encoding.UTF8));
+				foreach (string alang in ldmlRange)
+				{
+					uniqueLdmls.Add(alang);
+				}
+			}
+			//remove any references to "qaa-x-spec" here so that it doesn't matter which order lift and ldml files are copied in!
+			uniqueLdmls.Remove("qaa-x-spec");
+			// then only copy used writing systems!
+			foreach (string alang in uniqueLdmls)
+			{
+				if (alang.Length > 0)
+				{
+					string fileName = alang + ".ldml";
+					Logger.WriteMinorEvent(@"Copying LDML file " + fileName);
+					File.Copy(Path.Combine(pathToSourceWritingSystems, fileName), Path.Combine(pathToNewDirectory, fileName), true);
+				}
 			}
 		}
 
 		private static void CopyOverLiftFile(string pathToSourceLift, string pathToNewDirectory)
 		{
 			var projectName = Path.GetFileNameWithoutExtension(pathToNewDirectory);
-			var pathToTargetLift = Path.Combine(pathToNewDirectory, projectName+".lift");
+			var pathToTargetLift = Path.Combine(pathToNewDirectory, projectName + ".lift");
 			//open source lift file as xml and strip out qaa-x-spec
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(pathToSourceLift);
@@ -94,6 +144,17 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				if (xn != null)
 				{
 					xn.ParentNode.RemoveChild(xn);
+				}
+			}
+			xmlDoc.Save(pathToTargetLift);
+			//change href attribute of range nodes if they exist
+			xmlDoc.Load(pathToSourceLift);
+			xnList = xmlDoc.SelectNodes("/lift/header/ranges/range");
+			foreach (XmlNode xn in xnList)  //each Field node
+			{
+				if (xn != null)
+				{
+					xn.Attributes["href"].Value = "file://" + pathToTargetLift + "-ranges";
 				}
 			}
 			Logger.WriteMinorEvent(@"Copying Lift file " + pathToSourceLift);
@@ -118,11 +179,29 @@ namespace WeSay.ConfigTool.NewProjectCreation
 			}
 		}
 
+		private static void CopyOverAudio(string pathToSourceLift, string pathToNewDirectory)
+		{
+			var pathToSourceAudio = Path.Combine(pathToSourceLift, "audio");
+			if (Directory.Exists(pathToSourceAudio))
+			{
+				if (!Directory.Exists(pathToNewDirectory))
+				{
+					Directory.CreateDirectory(pathToNewDirectory);
+				}
+				foreach (string pathToAudio in Directory.GetFiles(pathToSourceAudio))
+				{
+					string fileName = Path.GetFileName(pathToAudio);
+					Logger.WriteMinorEvent(@"Copying audio " + fileName);
+					File.Copy(pathToAudio, Path.Combine(pathToNewDirectory, fileName), true);
+				}
+			}
+		}
+
 		private static void CopyOverRangeFileIfExists(string pathToSourceLift, string pathToNewDirectory)
 		{
 			var projectName = Path.GetFileNameWithoutExtension(pathToNewDirectory);
-			var  pathToSourceRange= pathToSourceLift+ "-ranges";
-			if(File.Exists(pathToSourceRange))
+			var pathToSourceRange = pathToSourceLift + "-ranges";
+			if (File.Exists(pathToSourceRange))
 			{
 				var pathToTargetRanges = Path.Combine(pathToNewDirectory, projectName + ".lift-ranges");
 				Logger.WriteMinorEvent(@"Copying Range file " + pathToTargetRanges);

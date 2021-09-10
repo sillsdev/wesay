@@ -1,11 +1,11 @@
+using SIL.i18n;
+using SIL.Windows.Forms.i18n;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using SIL.Windows.Forms.i18n;
-using SIL.i18n;
 using WeSay.UI.Buttons;
 using WeSay.UI.TextBoxes;
 
@@ -16,7 +16,7 @@ namespace WeSay.UI
 	/// It supports dynamically removing and inserting new rows, to support
 	/// "ghost" fields
 	/// </summary>
-	public partial class DetailList: TableLayoutPanel, IMessageFilter, ILocalizableControl
+	public partial class DetailList : TableLayoutPanel, IMessageFilter, ILocalizableControl
 	{
 		/// <summary>
 		/// Can be used to track which data item the user is currently editting, to,
@@ -158,7 +158,7 @@ namespace WeSay.UI
 		{
 			base.OnGotFocus(e);
 			//we don't want to have focus, ourselves
-			if (RowCount >0 && !GeckoOption)
+			if (RowCount > 0 && !GeckoOption)
 				MoveInsertionPoint(0);
 		}
 		/// <summary>
@@ -210,12 +210,12 @@ namespace WeSay.UI
 				}
 				return null;
 			} //set
-			//{
-			//    //Keep track of the active control ourselves by storing it in a private member, note that
-			//    //that we only allow the active control to be set if it is actually a child of ours.
-			//    if (Contains(value))
-			//        _focussedImmediateChild = value;
-			//}
+			  //{
+			  //    //Keep track of the active control ourselves by storing it in a private member, note that
+			  //    //that we only allow the active control to be set if it is actually a child of ours.
+			  //    if (Contains(value))
+			  //        _focussedImmediateChild = value;
+			  //}
 		}
 
 		public void Clear()
@@ -268,9 +268,9 @@ namespace WeSay.UI
 				else
 				{
 					// move down to make space for new row
-					for (int row = RowCount;row > insertAtRow;row--)
+					for (int row = RowCount; row > insertAtRow; row--)
 					{
-						for (int col = 0;col < ColumnCount;col++)
+						for (int col = 0; col < ColumnCount; col++)
 						{
 							Control c = GetControlFromPosition(col, row - numrows);
 							if (c != null)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using WeSay.LexicalTools.Review.AdvancedHistory;
 using WeSay.Project;
 
 namespace WeSay.LexicalTools.Review.NotesBrowser
@@ -13,7 +12,7 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 	public class NotesBrowserConfig : TaskConfigurationBase, INotesBrowserConfig
 	{
 		public NotesBrowserConfig(string xml)
-			:base(xml)
+			: base(xml)
 		{
 		}
 
@@ -51,9 +50,9 @@ namespace WeSay.LexicalTools.Review.NotesBrowser
 			get
 			{
 				string d = Chorus.VcsDrivers.Mercurial.HgRepository.GetEnvironmentReadinessMessage("en");
-				if(!string.IsNullOrEmpty(d))
+				if (!string.IsNullOrEmpty(d))
 				{
-					d= "NOT AVAILABLE ON THIS COMPUTER"+Environment.NewLine + Environment.NewLine+d+Environment.NewLine + Environment.NewLine;
+					d = "NOT AVAILABLE ON THIS COMPUTER" + Environment.NewLine + Environment.NewLine + d + Environment.NewLine + Environment.NewLine;
 				}
 
 				d += "This task lets you search for and view notes attached anywhere in the dictionary project.";

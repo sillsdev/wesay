@@ -1,13 +1,12 @@
+using SIL.Lift.Options;
 using System;
 using System.Text;
 using System.Windows.Forms;
-using SIL.Lift.Options;
-using WeSay.LexicalModel.Foundation.Options;
 
 
 namespace WeSay.UI
 {
-	public partial class OptionCollectionControl: UserControl
+	public partial class OptionCollectionControl : UserControl
 	{
 		private readonly OptionRefCollection _optionRefCollection;
 		private OptionsList _list;

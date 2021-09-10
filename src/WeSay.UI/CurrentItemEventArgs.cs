@@ -1,12 +1,12 @@
+using SIL.Lift;
 using System;
 using System.ComponentModel;
-using SIL.Lift;
 
 namespace WeSay.UI
 {
-	public class CurrentItemEventArgs: EventArgs
+	public class CurrentItemEventArgs : EventArgs
 	{
-		public PalasoDataObject Parent{ get; set;}
+		public PalasoDataObject Parent { get; set; }
 		private readonly string _propertyName;
 
 		public string PropertyName

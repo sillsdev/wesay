@@ -1,9 +1,9 @@
-using System;
-using System.IO;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using SIL.Reporting;
 using SIL.TestUtilities;
+using System;
+using System.IO;
 using WeSay.Project.LocalizedList;
 
 namespace WeSay.Project.Tests

@@ -1,8 +1,6 @@
-﻿using System;
+﻿using SIL.WritingSystems;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac;
-using SIL.WritingSystems;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tasks
@@ -10,7 +8,7 @@ namespace WeSay.ConfigTool.Tasks
 	public class TaskListPresentationModel
 	{
 		private readonly TaskCollection _taskCollection;
-		public TaskListView View{ get; private set;}
+		public TaskListView View { get; private set; }
 
 		public TaskListPresentationModel(TaskListView view, TaskCollection taskCollection)
 		{

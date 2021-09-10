@@ -14,7 +14,7 @@ namespace WeSay.LexicalTools.Tests
 		{
 			Field field = new Field(LexSense.WellKnownProperties.Definition,
 									"LexSense",
-									new string[] {"analysis"});
+									new string[] { "analysis" });
 			field.IsMeaningField = true;
 			_missingMeaningFilter = new MissingFieldQuery(field, null, null);
 		}

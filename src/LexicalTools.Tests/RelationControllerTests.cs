@@ -1,4 +1,3 @@
-using System.Windows.Forms;
 using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
@@ -7,8 +6,8 @@ using SIL.Lift;
 using SIL.Reporting;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI.AutoCompleteTextBox;
@@ -87,12 +86,12 @@ namespace WeSay.LexicalTools.Tests
 		[Test]
 		public void NoWritingSystemsEnabledOnField_ThrowsConfigurationException()
 		{
-				_singleSynonymRelationField.WritingSystemIds.Clear();
-				Assert.Throws<ConfigurationException>(() => RelationController.CreateWidget(_source,
-												_singleSynonymRelationType,
-												_singleSynonymRelationField,
-												_lexEntryRepository,
-												delegate { }));
+			_singleSynonymRelationField.WritingSystemIds.Clear();
+			Assert.Throws<ConfigurationException>(() => RelationController.CreateWidget(_source,
+											_singleSynonymRelationType,
+											_singleSynonymRelationField,
+											_lexEntryRepository,
+											delegate { }));
 		}
 
 		[Test]
@@ -212,7 +211,7 @@ namespace WeSay.LexicalTools.Tests
 			c.Text = "new";
 
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
-					(AutoCompleteWithCreationBox<RecordToken<LexEntry>, string>) c;
+					(AutoCompleteWithCreationBox<RecordToken<LexEntry>, string>)c;
 			picker.CreateNewObjectFromText();
 
 			LexEntry newEntry = _lexEntryRepository.GetLexEntryWithMatchingId(relation.Key);
@@ -233,7 +232,7 @@ namespace WeSay.LexicalTools.Tests
 			Form form = new Form();
 			form.Controls.Add(c);
 			AutoCompleteWithCreationBox<RecordToken<LexEntry>, string> picker =
-					(AutoCompleteWithCreationBox<RecordToken<LexEntry>, string>) c;
+					(AutoCompleteWithCreationBox<RecordToken<LexEntry>, string>)c;
 			((WeSayAutoCompleteTextBox)(picker.Box)).Paste("text");
 		}
 

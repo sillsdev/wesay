@@ -1,3 +1,7 @@
+using Chorus.UI.Review;
+//using SIL.Code;
+using SIL.i18n;
+using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,19 +10,14 @@ using System.Diagnostics;
 //using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
-using Chorus.UI.Review;
-//using SIL.Code;
-using SIL.i18n;
-using SIL.Reporting;
 using WeSay.App.Properties;
 using WeSay.Project;
 using WeSay.UI;
-
-using Timer=System.Windows.Forms.Timer;
+using Timer = System.Windows.Forms.Timer;
 
 namespace WeSay.App
 {
-	public partial class TabbedForm: Form, ICurrentWorkTask
+	public partial class TabbedForm : Form, ICurrentWorkTask
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
@@ -51,7 +50,7 @@ namespace WeSay.App
 
 		//for tests
 		public TabbedForm(StatusBarController statusBarController)
-			:this(statusBarController, null)
+			: this(statusBarController, null)
 		{
 
 		}
@@ -257,7 +256,7 @@ namespace WeSay.App
 				{
 					return null;
 				}
-				return (ITask) _currentWorkTab.Tag;
+				return (ITask)_currentWorkTab.Tag;
 			}
 		}
 
@@ -284,10 +283,10 @@ namespace WeSay.App
 		{
 			get
 			{
-				if(_activeTask==null)
+				if (_activeTask == null)
 					return string.Empty;
 				var t = _activeTask as ITaskForExternalNavigateToEntry;
-				if(t==null)
+				if (t == null)
 					return string.Empty;
 				return t.CurrentUrl;
 			}
@@ -304,7 +303,7 @@ namespace WeSay.App
 
 		private void ActivateTab(Control page, bool okTouseTimer)
 		{
-			var task = (ITask) page.Tag;
+			var task = (ITask)page.Tag;
 			if (ActiveTask == task)
 			{
 				return; //debounce
@@ -313,7 +312,7 @@ namespace WeSay.App
 			if (ActiveTask != null)
 			{
 				ActiveTask.Deactivate();
-				_activeTask =null;
+				_activeTask = null;
 			}
 			if (task != null)
 			{
@@ -368,7 +367,7 @@ namespace WeSay.App
 
 			task.Control.Dock = DockStyle.Fill;
 
-			if(task.Control.GetType() == typeof(Chorus.UI.Notes.Browser.NotesBrowserPage))
+			if (task.Control.GetType() == typeof(Chorus.UI.Notes.Browser.NotesBrowserPage))
 			{
 				page.Controls.Add(task.Control);
 			}

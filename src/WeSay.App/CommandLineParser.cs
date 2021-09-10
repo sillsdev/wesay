@@ -259,7 +259,7 @@ namespace CommandLine
 	/// as the destination of command line argument parsing.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field)]
-	public class ArgumentAttribute: Attribute
+	public class ArgumentAttribute : Attribute
 	{
 		/// <summary>
 		/// Allows control of command line parsing.
@@ -380,13 +380,13 @@ namespace CommandLine
 	/// does not affect the usage of the argument.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Field)]
-	public sealed class DefaultArgumentAttribute: ArgumentAttribute
+	public sealed class DefaultArgumentAttribute : ArgumentAttribute
 	{
 		/// <summary>
 		/// Indicates that this argument is the default argument.
 		/// </summary>
 		/// <param name="type"> Specifies the error checking to be done on the argument. </param>
-		public DefaultArgumentAttribute(ArgumentTypes type): base(type) {}
+		public DefaultArgumentAttribute(ArgumentTypes type) : base(type) { }
 	}
 
 	/// <summary>
@@ -428,7 +428,7 @@ namespace CommandLine
 		/// <summary>
 		/// Don't ever call this.
 		/// </summary>
-		private Parser() {}
+		private Parser() { }
 
 		/// <summary>
 		/// Parses Command Line Arguments. Displays usage message to Console.Out
@@ -480,7 +480,7 @@ namespace CommandLine
 			return parser.Parse(arguments, destination);
 		}
 
-		private static void NullReportError(string message) {}
+		private static void NullReportError(string message) { }
 
 		private class HelpArgument
 		{
@@ -495,7 +495,7 @@ namespace CommandLine
 		/// <returns> Returns true if args contains /? or /help. </returns>
 		public static bool ParseHelp(string[] args)
 		{
-			Parser helpParser = new Parser(typeof (HelpArgument), NullReportError);
+			Parser helpParser = new Parser(typeof(HelpArgument), NullReportError);
 			HelpArgument helpArgument = new HelpArgument();
 			helpParser.Parse(args, helpArgument);
 			return helpArgument.help;
@@ -595,7 +595,7 @@ namespace CommandLine
 		/// <returns> The index of the first occurence of value or -1 if it is not found. </returns>
 		public static int IndexOf(StringBuilder text, char value, int startIndex)
 		{
-			for (int index = startIndex;index < text.Length;index++)
+			for (int index = startIndex; index < text.Length; index++)
 			{
 				if (text[index] == value)
 				{
@@ -615,7 +615,7 @@ namespace CommandLine
 		/// <returns>The index of the last occurence of value in text or -1 if it is not found. </returns>
 		public static int LastIndexOf(StringBuilder text, char value, int startIndex)
 		{
-			for (int index = Math.Min(startIndex, text.Length - 1);index >= 0;index --)
+			for (int index = Math.Min(startIndex, text.Length - 1); index >= 0; index--)
 			{
 				if (text[index] == value)
 				{
@@ -695,10 +695,10 @@ namespace CommandLine
 
 		private static ArgumentAttribute GetAttribute(FieldInfo field)
 		{
-			object[] attributes = field.GetCustomAttributes(typeof (ArgumentAttribute), false);
+			object[] attributes = field.GetCustomAttributes(typeof(ArgumentAttribute), false);
 			if (attributes.Length == 1)
 			{
-				return (ArgumentAttribute) attributes[0];
+				return (ArgumentAttribute)attributes[0];
 			}
 
 			Debug.Assert(attributes.Length == 0);
@@ -739,7 +739,7 @@ namespace CommandLine
 						switch (argument[0])
 						{
 							case '-':
-								int endIndex = argument.IndexOfAny(new char[] {':', '+', '-'}, 1);
+								int endIndex = argument.IndexOfAny(new char[] { ':', '+', '-' }, 1);
 								string option = argument.Substring(1,
 																   endIndex == -1
 																		   ? argument.Length - 1
@@ -759,7 +759,7 @@ namespace CommandLine
 									optionArgument = argument.Substring(option.Length + 1);
 								}
 
-								Argument arg = (Argument) argumentMap[option];
+								Argument arg = (Argument)argumentMap[option];
 								if (arg == null)
 								{
 									ReportUnrecognizedArgument(argument);
@@ -914,7 +914,7 @@ namespace CommandLine
 					// don't start a new line with spaces
 					while (index < helpStrings.help.Length && helpStrings.help[index] == ' ')
 					{
-						index ++;
+						index++;
 					}
 				}
 
@@ -1092,7 +1092,7 @@ namespace CommandLine
 				}
 			}
 
-			arguments = (string[]) argArray.ToArray(typeof (string));
+			arguments = (string[])argArray.ToArray(typeof(string));
 			return hadError;
 		}
 
@@ -1179,8 +1179,8 @@ namespace CommandLine
 		private static bool IsValidElementType(Type type)
 		{
 			return type != null &&
-				   (type == typeof (int) || type == typeof (uint) || type == typeof (string) ||
-					type == typeof (bool) || type.IsEnum);
+				   (type == typeof(int) || type == typeof(uint) || type == typeof(string) ||
+					type == typeof(bool) || type.IsEnum);
 		}
 
 		private class Argument
@@ -1308,17 +1308,17 @@ namespace CommandLine
 			{
 				// null is only valid for bool variables
 				// empty string is never valid
-				if ((stringData != null || type == typeof (bool)) &&
+				if ((stringData != null || type == typeof(bool)) &&
 					(stringData == null || stringData.Length > 0))
 				{
 					try
 					{
-						if (type == typeof (string))
+						if (type == typeof(string))
 						{
 							value = stringData;
 							return true;
 						}
-						else if (type == typeof (bool))
+						else if (type == typeof(bool))
 						{
 							if (stringData == null || stringData == "+")
 							{
@@ -1331,12 +1331,12 @@ namespace CommandLine
 								return true;
 							}
 						}
-						else if (type == typeof (int))
+						else if (type == typeof(int))
 						{
 							value = int.Parse(stringData);
 							return true;
 						}
-						else if (type == typeof (uint))
+						else if (type == typeof(uint))
 						{
 							value = int.Parse(stringData);
 							return true;
@@ -1367,12 +1367,12 @@ namespace CommandLine
 				}
 				else if (value is bool)
 				{
-					builder.Append((bool) value ? "+" : "-");
+					builder.Append((bool)value ? "+" : "-");
 				}
 				else
 				{
 					bool first = true;
-					foreach (object o in (Array) value)
+					foreach (object o in (Array)value)
 					{
 						if (!first)
 						{
@@ -1479,19 +1479,19 @@ namespace CommandLine
 						builder.Append("/");
 						builder.Append(LongName);
 						Type valueType = ValueType;
-						if (valueType == typeof (int))
+						if (valueType == typeof(int))
 						{
 							builder.Append(":<int>");
 						}
-						else if (valueType == typeof (uint))
+						else if (valueType == typeof(uint))
 						{
 							builder.Append(":<uint>");
 						}
-						else if (valueType == typeof (bool))
+						else if (valueType == typeof(bool))
 						{
 							builder.Append("[+|-]");
 						}
-						else if (valueType == typeof (string))
+						else if (valueType == typeof(string))
 						{
 							builder.Append(":<string>");
 						}

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using SIL.Reporting;
+using SIL.WritingSystems;
+using System;
 using System.IO;
 using System.Windows.Forms;
-using SIL.Reporting;
-using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
-using WeSay.UI.audio;
 
 namespace WeSay.UI.audio
 {
@@ -51,7 +49,7 @@ namespace WeSay.UI.audio
 			// if this is a new entry, we might not have had an entry form to use for the sound
 			// path name, when we were contructed.
 			// So if there isn't already a sound recorded, see if one is available yet.
-			if(!File.Exists(_shortSoundFieldControl1.Path))
+			if (!File.Exists(_shortSoundFieldControl1.Path))
 				_shortSoundFieldControl1.Path = _audioPathProvider.GetNewPath();
 		}
 

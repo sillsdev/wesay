@@ -1,9 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Xml;
-using SIL.DictionaryServices.Model;
+﻿using SIL.DictionaryServices.Model;
 using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.Text;
+using System.Xml;
 
 namespace WeSay.Project
 {
@@ -29,22 +29,22 @@ namespace WeSay.Project
 			_viewTemplate = viewTemplate;
 			_writingSystems = writingSystems;
 		}
-//
+		//
 		/// <summary>
 		/// Will create whatever files are needed for wesay to use a valid lift folder, based on what it finds.
 		/// </summary>
-//        public static void PrepareLiftFolderForWeSay(string pathToLiftFolder)
-//        {
-//            using (var project = new WeSayWordsProject())
-//            {
-//                project.LoadFromProjectDirectoryPath(pathToLiftFolder);
-//                var creator = new ProjectFromLiftFolderCreator(project.PathToLiftFile, project.DefaultViewTemplate, project.WritingSystems);
-//
-//                creator.SetWritingSystemsForFields();
-//                project.Save();
-//            }
-//
-//        }
+		//        public static void PrepareLiftFolderForWeSay(string pathToLiftFolder)
+		//        {
+		//            using (var project = new WeSayWordsProject())
+		//            {
+		//                project.LoadFromProjectDirectoryPath(pathToLiftFolder);
+		//                var creator = new ProjectFromLiftFolderCreator(project.PathToLiftFile, project.DefaultViewTemplate, project.WritingSystems);
+		//
+		//                creator.SetWritingSystemsForFields();
+		//                project.Save();
+		//            }
+		//
+		//        }
 
 
 		/// <summary>
@@ -76,9 +76,9 @@ namespace WeSay.Project
 			}
 			_writingSystems.Save();
 
-			if(missingWritingSystems.Length > 0)
+			if (missingWritingSystems.Length > 0)
 			{
-				var list = missingWritingSystems.ToString().Trim(new[]{','});
+				var list = missingWritingSystems.ToString().Trim(new[] { ',' });
 				ErrorReport.NotifyUserOfProblem(
 					"WeSay had a problem locating information on at least one input system used in the LIFT export from FLEx.  One known cause of this is an old version of FLEx. In the folder containing the LIFT file, there should have been '___.ldml' files for the following input systems: {0}.\r\nBecause these input system definitions were not found, WeSay will create blank input systems for each of these, which you will need to set up with the right fonts, keyboards, etc.", list);
 			}
@@ -105,15 +105,15 @@ namespace WeSay.Project
 				_viewTemplate.OnWritingSystemIDChange(WeSayWordsProject.AnalysisWritingSystemIdForProjectCreation, analysis);
 			}
 
-			AddWritingSystemsForField(liftDom,  "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);
-			AddWritingSystemsForField(liftDom,  "//sense/gloss/@lang", LexSense.WellKnownProperties.Gloss);
+			AddWritingSystemsForField(liftDom, "//lexical-unit/form/@lang", LexEntry.WellKnownProperties.LexicalUnit);
+			AddWritingSystemsForField(liftDom, "//sense/gloss/@lang", LexSense.WellKnownProperties.Gloss);
 
-			AddWritingSystemsForField(liftDom,  "//sense/definition/form/@lang", LexSense.WellKnownProperties.Definition);
+			AddWritingSystemsForField(liftDom, "//sense/definition/form/@lang", LexSense.WellKnownProperties.Definition);
 
 			AddAllGlossWritingSystemsToDefinition();
 
-			AddWritingSystemsForField(liftDom,  "//example/form/@lang", LexExampleSentence.WellKnownProperties.ExampleSentence);
-			AddWritingSystemsForField(liftDom,  "//translation/form/@lang", LexExampleSentence.WellKnownProperties.Translation);
+			AddWritingSystemsForField(liftDom, "//example/form/@lang", LexExampleSentence.WellKnownProperties.ExampleSentence);
+			AddWritingSystemsForField(liftDom, "//translation/form/@lang", LexExampleSentence.WellKnownProperties.Translation);
 
 			//------------ hack
 			var gloss = _viewTemplate.GetField(LexSense.WellKnownProperties.Gloss);
@@ -121,7 +121,7 @@ namespace WeSay.Project
 
 			foreach (var id in def.WritingSystemIds)
 			{
-				if(!gloss.WritingSystemIds.Contains(id))
+				if (!gloss.WritingSystemIds.Contains(id))
 					gloss.WritingSystemIds.Add(id);
 			}
 			foreach (var id in gloss.WritingSystemIds)
@@ -144,25 +144,25 @@ namespace WeSay.Project
 		/// <summary>
 		/// This is done because even if they don't use definitions, their glosses are going to be moved over the definition field.
 		/// </summary>
-		private  void AddAllGlossWritingSystemsToDefinition()
+		private void AddAllGlossWritingSystemsToDefinition()
 		{
 			var defField = _viewTemplate.GetField(LexSense.WellKnownProperties.Definition).WritingSystemIds;
 			foreach (var id in _viewTemplate.GetField(LexSense.WellKnownProperties.Gloss).WritingSystemIds)
 			{
-				if(!defField.Contains(id))
+				if (!defField.Contains(id))
 				{
 					defField.Add(id);
 				}
 			}
 		}
 
-		private  void AddWritingSystemsForField(XmlDocument doc,string xpath, string fieldName)
+		private void AddWritingSystemsForField(XmlDocument doc, string xpath, string fieldName)
 		{
 			var f = _viewTemplate.GetField(fieldName);
 
 			//now add in what we find
 			XmlNodeList nodes = doc.SelectNodes(xpath);
-			if(nodes!=null && nodes.Count > 0)
+			if (nodes != null && nodes.Count > 0)
 			{
 				//ok, so there is at least one match. Take out all of the default writing system from this
 				//field before adding in the ones that were being used in FLEx.

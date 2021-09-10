@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
-using SIL.TestUtilities;
 using SIL.Tests.Data;
+using SIL.TestUtilities;
+using System.Collections.Generic;
 
 namespace WeSay.LexicalModel.Tests
 {

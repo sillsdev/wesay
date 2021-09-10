@@ -1,5 +1,4 @@
 using SIL.WritingSystems;
-using WeSay.LexicalModel.Foundation;
 
 namespace WeSay.UI
 {

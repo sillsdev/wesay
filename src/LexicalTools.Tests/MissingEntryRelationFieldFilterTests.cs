@@ -1,7 +1,7 @@
-using System.IO;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.TestUtilities;
+using System.IO;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
@@ -27,7 +27,7 @@ namespace WeSay.LexicalTools.Tests
 
 			Field relationField = new Field("synonyms",
 											"LexEntry",
-											new string[] {"vernacular"},
+											new string[] { "vernacular" },
 											Field.MultiplicityType.ZeroOr1,
 											"RelationToOneEntry");
 			_missingRelationFieldFilter = new MissingFieldQuery(relationField, null, null);

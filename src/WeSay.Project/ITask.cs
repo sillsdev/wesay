@@ -4,7 +4,7 @@ using WeSay.Foundation;
 
 namespace WeSay.Project
 {
-	public interface ITask: IThingOnDashboard
+	public interface ITask : IThingOnDashboard
 	{
 		void Activate();
 		void Deactivate();
@@ -18,7 +18,7 @@ namespace WeSay.Project
 		int GetRemainingCount();
 
 		int ExactCount
-			// this may take awhile to get but will be correct (State may give you nothing if it takes awhile to get)
+		// this may take awhile to get but will be correct (State may give you nothing if it takes awhile to get)
 		{ get; }
 
 
@@ -50,8 +50,8 @@ namespace WeSay.Project
 		void FinishCacheSetup();
 	}
 
-	public class NavigationException: Exception
+	public class NavigationException : Exception
 	{
-		public NavigationException(string message): base(message) {}
+		public NavigationException(string message) : base(message) { }
 	}
 }

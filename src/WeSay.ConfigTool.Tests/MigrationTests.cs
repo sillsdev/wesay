@@ -1,8 +1,8 @@
-using System.IO;
 using NUnit.Framework;
 using SIL.Reporting;
-using SIL.WritingSystems;
 using SIL.TestUtilities;
+using SIL.WritingSystems;
+using System.IO;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool.Tests

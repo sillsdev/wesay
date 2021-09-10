@@ -1,13 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using Chorus.FileTypeHandlers.lift;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
 using Mono.Addins;
 using SIL.i18n;
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using WeSay.AddinLib;
 using WeSay.Foundation;
 using WeSay.Project.Properties;
@@ -81,8 +80,8 @@ namespace WeSay.Project.Synchronize
 		public void Launch(Form parentForm, ProjectInfo projectInfo)
 		{
 			var configuration = (Chorus.sync.ProjectFolderConfiguration)
-								projectInfo.ServiceProvider.GetService(typeof (Chorus.sync.ProjectFolderConfiguration));
-			using(var dlg = new SyncDialog(configuration,
+								projectInfo.ServiceProvider.GetService(typeof(Chorus.sync.ProjectFolderConfiguration));
+			using (var dlg = new SyncDialog(configuration,
 										   SyncUIDialogBehaviors.Lazy,
 										   SyncUIFeatures.NormalRecommended))
 			{
@@ -161,30 +160,30 @@ namespace WeSay.Project.Synchronize
 	[Serializable]
 	public class SendReceiveSettings
 	{
-//        private string _pathToExecutable = @"$wesayApplicationDirectory\mercurial.bat";
-//        private string _arguments = @"$projectPath";
-//
-//        public string PathToExecutable
-//        {
-//            get { return _pathToExecutable; }
-//            set { _pathToExecutable = value; }
-//        }
-//
-//        public string Arguments
-//        {
-//            get { return _arguments; }
-//            set { _arguments = value; }
-//        }
-//
-//        public string GetRuntimeProcessPath(ProjectInfo info)
-//        {
-//            return _pathToExecutable.Replace("$wesayApplicationDirectory",
-//                                             info.PathToApplicationRootDirectory);
-//        }
-//
-//        public string GetRuntimeArguments(ProjectInfo info)
-//        {
-//            return _arguments.Replace("$projectPath", info.PathToTopLevelDirectory);
-//        }
+		//        private string _pathToExecutable = @"$wesayApplicationDirectory\mercurial.bat";
+		//        private string _arguments = @"$projectPath";
+		//
+		//        public string PathToExecutable
+		//        {
+		//            get { return _pathToExecutable; }
+		//            set { _pathToExecutable = value; }
+		//        }
+		//
+		//        public string Arguments
+		//        {
+		//            get { return _arguments; }
+		//            set { _arguments = value; }
+		//        }
+		//
+		//        public string GetRuntimeProcessPath(ProjectInfo info)
+		//        {
+		//            return _pathToExecutable.Replace("$wesayApplicationDirectory",
+		//                                             info.PathToApplicationRootDirectory);
+		//        }
+		//
+		//        public string GetRuntimeArguments(ProjectInfo info)
+		//        {
+		//            return _arguments.Replace("$projectPath", info.PathToTopLevelDirectory);
+		//        }
 	}
 }

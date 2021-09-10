@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
 using Mono.Addins;
 using SIL.i18n;
 using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 using WeSay.AddinLib;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace Addin.Transform.Xhtml
@@ -83,19 +81,19 @@ namespace Addin.Transform.Xhtml
 			{
 				foreach (var writingSystem in writingSystemCollection.AllWritingSystems)
 				{
-					f.WriteLine(":lang("+writingSystem.Id+") {");
+					f.WriteLine(":lang(" + writingSystem.Id + ") {");
 					f.WriteLine(styleProvider.GetAutoFontsCascadingStyleSheetLinesForWritingSystem(writingSystem));
 					f.WriteLine("}");
 					f.WriteLine();
 				}
 			}
 		}
-/*
-		public void ShowMoreInfoDialog(Form parentForm)
-		{
-			//var dlg = new AboutMakePdfDictionary();
-			//dlg.ShowDialog();
-		}
-		*/
+		/*
+				public void ShowMoreInfoDialog(Form parentForm)
+				{
+					//var dlg = new AboutMakePdfDictionary();
+					//dlg.ShowDialog();
+				}
+				*/
 	}
 }

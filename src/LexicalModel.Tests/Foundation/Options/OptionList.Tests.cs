@@ -1,25 +1,25 @@
-using System.IO;
 using NUnit.Framework;
 using SIL.IO;
 using SIL.Lift.Options;
+using System.IO;
 using WeSay.LexicalModel.Foundation.Options;
 
 namespace WeSay.LexicalModel.Tests.Foundation.Options
 {
-    [TestFixture]
-    public class OptionListTests
-    {
-        [SetUp]
-        public void Setup() {}
+	[TestFixture]
+	public class OptionListTests
+	{
+		[SetUp]
+		public void Setup() { }
 
-        [TearDown]
-        public void TearDown() {}
+		[TearDown]
+		public void TearDown() { }
 
-        [Test]
-        public void Ddp4LoadFromFile_GetsExamples()
-        {
-            using (var file = new TempFile(
-                              @"<?xml version='1.0' encoding='utf-8'?><optionsList>
+		[Test]
+		public void Ddp4LoadFromFile_GetsExamples()
+		{
+			using (var file = new TempFile(
+							  @"<?xml version='1.0' encoding='utf-8'?><optionsList>
   <option>
          <key>1.1 Sky</key>
          <name>
@@ -48,26 +48,26 @@ namespace WeSay.LexicalModel.Tests.Foundation.Options
          </searchKeys>
       </option>
                  </optionsList>"))
-            {
+			{
 
-                OptionsList list = new DdpListReader().LoadFromFile(file.Path);
-                Assert.AreEqual("1.1 Sky", list.Options[0].Key);
-                Assert.AreEqual("Sky", list.Options[0].Name.GetBestAlternative("en"));
-                Assert.AreEqual("Ciel", list.Options[0].Name.GetBestAlternative("fr"));
-                var keys = list.Options[0].GetSearchKeys("en");
-                Assert.IsTrue(keys.Contains("sky"));
-                Assert.IsTrue(keys.Contains("canopy"));
-                Assert.IsTrue(keys.Contains("solar system"));
-                Assert.IsTrue(keys.Contains("aloft"));
+				OptionsList list = new DdpListReader().LoadFromFile(file.Path);
+				Assert.AreEqual("1.1 Sky", list.Options[0].Key);
+				Assert.AreEqual("Sky", list.Options[0].Name.GetBestAlternative("en"));
+				Assert.AreEqual("Ciel", list.Options[0].Name.GetBestAlternative("fr"));
+				var keys = list.Options[0].GetSearchKeys("en");
+				Assert.IsTrue(keys.Contains("sky"));
+				Assert.IsTrue(keys.Contains("canopy"));
+				Assert.IsTrue(keys.Contains("solar system"));
+				Assert.IsTrue(keys.Contains("aloft"));
 
-            }
-        }
+			}
+		}
 
-        [Test]//WS-1293  Ddp names not matching because of extra spaces
-        public void LoadFromile_KeyWithTrailingSpace_KeyRemoved()
-        {
-            using (var file = new TempFile(
-                @"<?xml version='1.0' encoding='utf-8'?>
+		[Test]//WS-1293  Ddp names not matching because of extra spaces
+		public void LoadFromile_KeyWithTrailingSpace_KeyRemoved()
+		{
+			using (var file = new TempFile(
+				@"<?xml version='1.0' encoding='utf-8'?>
                  <optionsList>
 		                <option>
                             <key>verb  </key>
@@ -76,19 +76,19 @@ namespace WeSay.LexicalModel.Tests.Foundation.Options
 			                </name>
 		                </option>
                  </optionsList>"))
-            {
+			{
 
-                OptionsList list = Load(file.Path);
-                Assert.AreEqual("verb", list.Options[0].Key);
-             }
-        }
+				OptionsList list = Load(file.Path);
+				Assert.AreEqual("verb", list.Options[0].Key);
+			}
+		}
 
-        [Test]
-        public void LoadFromFile()
-        {
-            string path = Path.GetTempFileName();
-            File.WriteAllText(path,
-                              @"<?xml version='1.0' encoding='utf-8'?><optionsList>
+		[Test]
+		public void LoadFromFile()
+		{
+			string path = Path.GetTempFileName();
+			File.WriteAllText(path,
+							  @"<?xml version='1.0' encoding='utf-8'?><optionsList>
 		                <option>
                             <key>verb</key>
 			                <name>
@@ -107,20 +107,20 @@ namespace WeSay.LexicalModel.Tests.Foundation.Options
 		                </option>
                  </optionsList>");
 
-            OptionsList list = Load(path); 
-            File.Delete(path);
-            Assert.AreEqual("verb", list.Options[0].Key);
-            Assert.AreEqual("verb", list.Options[0].Name.GetBestAlternative("en"));
-            Assert.AreEqual("xyverb", list.Options[0].Name.GetBestAlternative("xy"));
-            Assert.AreEqual("noun", list.Options[1].Name.GetBestAlternative("en"));
-        }
+			OptionsList list = Load(path);
+			File.Delete(path);
+			Assert.AreEqual("verb", list.Options[0].Key);
+			Assert.AreEqual("verb", list.Options[0].Name.GetBestAlternative("en"));
+			Assert.AreEqual("xyverb", list.Options[0].Name.GetBestAlternative("xy"));
+			Assert.AreEqual("noun", list.Options[1].Name.GetBestAlternative("en"));
+		}
 
-        [Test]
-        public void DeserializeWithEmptyOption()
-        {
-            string path = Path.GetTempFileName();
-            File.WriteAllText(path,
-                              @"<?xml version='1.0' encoding='utf-8'?><optionsList>
+		[Test]
+		public void DeserializeWithEmptyOption()
+		{
+			string path = Path.GetTempFileName();
+			File.WriteAllText(path,
+							  @"<?xml version='1.0' encoding='utf-8'?><optionsList>
 		                 <option>
                                 <key>abc</key>
                                 <name />
@@ -129,23 +129,23 @@ namespace WeSay.LexicalModel.Tests.Foundation.Options
                               </option>
                  </optionsList>");
 
-            OptionsList list = Load(path);
-            File.Delete(path);
-            Assert.IsNotNull(list.Options[0].Name.Forms);
-            Assert.AreEqual(string.Empty, list.Options[0].Name.GetBestAlternative("z"));
-        }
+			OptionsList list = Load(path);
+			File.Delete(path);
+			Assert.IsNotNull(list.Options[0].Name.Forms);
+			Assert.AreEqual(string.Empty, list.Options[0].Name.GetBestAlternative("z"));
+		}
 
-        private OptionsList Load(string path)
-        {
-            return new GenericOptionListReader().LoadFromFile(path);
-        }
+		private OptionsList Load(string path)
+		{
+			return new GenericOptionListReader().LoadFromFile(path);
+		}
 
-        [Test]
-        public void LoadFromOldFormatFile()
-        {
-            string path = Path.GetTempFileName();
-            File.WriteAllText(path,
-                              @"<?xml version='1.0' encoding='utf-8'?><optionsList>
+		[Test]
+		public void LoadFromOldFormatFile()
+		{
+			string path = Path.GetTempFileName();
+			File.WriteAllText(path,
+							  @"<?xml version='1.0' encoding='utf-8'?><optionsList>
 		                <options>
 <option>
                             <key>verb</key>
@@ -166,107 +166,107 @@ namespace WeSay.LexicalModel.Tests.Foundation.Options
 </options>
                  </optionsList>");
 
-            OptionsList list = Load(path); 
-            File.Delete(path);
-            Assert.AreEqual("verb", list.Options[0].Key);
-            Assert.AreEqual("verb", list.Options[0].Name.GetBestAlternative("en"));
-            Assert.AreEqual("xyverb", list.Options[0].Name.GetBestAlternative("xy"));
-            Assert.AreEqual("noun", list.Options[1].Name.GetBestAlternative("en"));
-        }
+			OptionsList list = Load(path);
+			File.Delete(path);
+			Assert.AreEqual("verb", list.Options[0].Key);
+			Assert.AreEqual("verb", list.Options[0].Name.GetBestAlternative("en"));
+			Assert.AreEqual("xyverb", list.Options[0].Name.GetBestAlternative("xy"));
+			Assert.AreEqual("noun", list.Options[1].Name.GetBestAlternative("en"));
+		}
 
-        //        [Test]
-        //        public void DeSerialize()
-        //        {
-        //            NetReflectorTypeTable t = new NetReflectorTypeTable();
-        //            t.Add(typeof(OptionsList));
-        //            t.Add(typeof(Option));
-        //            t.Add(typeof(MultiText));
-        //            t.Add(typeof(LanguageForm));
-        //
-        //            NetReflectorReader r = new NetReflectorReader(t);
-        //
-        //            OptionsList list = (OptionsList) r.Read(
-        //                @"<optionsList>
-        //	                <options>
-        //		                <option>
-        //                            <key>verb</key>
-        //			                <name>
-        //				                <form ws='en'><text>verb</text></form>
-        //			                </name>
-        //		                </option>
-        //	                </options>
-        //                </optionsList>");
-        //
-        //            Assert.AreEqual("verb", list.Options[0].Name.GetBestAlternative("en"));
-        //            
-        //        }
+		//        [Test]
+		//        public void DeSerialize()
+		//        {
+		//            NetReflectorTypeTable t = new NetReflectorTypeTable();
+		//            t.Add(typeof(OptionsList));
+		//            t.Add(typeof(Option));
+		//            t.Add(typeof(MultiText));
+		//            t.Add(typeof(LanguageForm));
+		//
+		//            NetReflectorReader r = new NetReflectorReader(t);
+		//
+		//            OptionsList list = (OptionsList) r.Read(
+		//                @"<optionsList>
+		//	                <options>
+		//		                <option>
+		//                            <key>verb</key>
+		//			                <name>
+		//				                <form ws='en'><text>verb</text></form>
+		//			                </name>
+		//		                </option>
+		//	                </options>
+		//                </optionsList>");
+		//
+		//            Assert.AreEqual("verb", list.Options[0].Name.GetBestAlternative("en"));
+		//            
+		//        }
 
-        //        [Test]
-        //        public void SaveToFile()
-        //        {
-        //            StringWriter writer = new System.IO.StringWriter();
-        //            XmlAttributeOverrides overrides = new XmlAttributeOverrides();
-        //            XmlAttributes ignoreAttr = new XmlAttributes();
-        //            ignoreAttr.XmlIgnore = true;
-        //            overrides.Add(typeof(Annotatable), "IsStarred", ignoreAttr);
-        //
-        //
-        //            System.Xml.Serialization.XmlSerializer serializer = new XmlSerializer(typeof (OptionsList), overrides);
-        //            
-        //            Option x = new Option();
-        //            x.Abbreviation.SetAlternative("a", "aabrev");
-        //            x.Abbreviation.SetAlternative("b", "babrev");
-        //            x.Key = "akey";
-        //            x.Name.SetAlternative("a", "aname");
-        //            x.Name.SetAlternative("b", "bname");
-        //
-        //            Option y = new Option();
-        //            y.Abbreviation.SetAlternative("a", "aabrev");
-        //            y.Abbreviation.SetAlternative("b", "babrev");
-        //            y.Key = "akey";
-        //            y.Name.SetAlternative("a", "aname");
-        //            y.Name.SetAlternative("b", "bname");
-        //
-        //            OptionsList list = new OptionsList();
-        //            list.Options.Add(x);
-        //            list.Options.Add(y);
-        //
-        //
-        //            serializer.Serialize(writer, list);
-        //            string xml = writer.GetStringBuilder().ToString();
-        //            Debug.WriteLine(xml);
-        //            Assert.AreEqual("", xml);
-        //        }
+		//        [Test]
+		//        public void SaveToFile()
+		//        {
+		//            StringWriter writer = new System.IO.StringWriter();
+		//            XmlAttributeOverrides overrides = new XmlAttributeOverrides();
+		//            XmlAttributes ignoreAttr = new XmlAttributes();
+		//            ignoreAttr.XmlIgnore = true;
+		//            overrides.Add(typeof(Annotatable), "IsStarred", ignoreAttr);
+		//
+		//
+		//            System.Xml.Serialization.XmlSerializer serializer = new XmlSerializer(typeof (OptionsList), overrides);
+		//            
+		//            Option x = new Option();
+		//            x.Abbreviation.SetAlternative("a", "aabrev");
+		//            x.Abbreviation.SetAlternative("b", "babrev");
+		//            x.Key = "akey";
+		//            x.Name.SetAlternative("a", "aname");
+		//            x.Name.SetAlternative("b", "bname");
+		//
+		//            Option y = new Option();
+		//            y.Abbreviation.SetAlternative("a", "aabrev");
+		//            y.Abbreviation.SetAlternative("b", "babrev");
+		//            y.Key = "akey";
+		//            y.Name.SetAlternative("a", "aname");
+		//            y.Name.SetAlternative("b", "bname");
+		//
+		//            OptionsList list = new OptionsList();
+		//            list.Options.Add(x);
+		//            list.Options.Add(y);
+		//
+		//
+		//            serializer.Serialize(writer, list);
+		//            string xml = writer.GetStringBuilder().ToString();
+		//            Debug.WriteLine(xml);
+		//            Assert.AreEqual("", xml);
+		//        }
 
-        [Test]
-        public void SaveToFile()
-        {
-            Option x = new Option();
-            x.Abbreviation.SetAlternative("a", "aabrev");
-            x.Abbreviation.SetAlternative("b", "babrev");
-            x.Key = "akey";
-            x.Name.SetAlternative("a", "aname");
-            x.Name.SetAlternative("b", "bname");
+		[Test]
+		public void SaveToFile()
+		{
+			Option x = new Option();
+			x.Abbreviation.SetAlternative("a", "aabrev");
+			x.Abbreviation.SetAlternative("b", "babrev");
+			x.Key = "akey";
+			x.Name.SetAlternative("a", "aname");
+			x.Name.SetAlternative("b", "bname");
 
-            Option y = new Option();
-            y.Abbreviation.SetAlternative("a", "aabrev");
-            y.Abbreviation.SetAlternative("b", "babrev");
-            y.Key = "akey";
-            y.Name.SetAlternative("a", "aname");
-            y.Name.SetAlternative("b", "bname");
+			Option y = new Option();
+			y.Abbreviation.SetAlternative("a", "aabrev");
+			y.Abbreviation.SetAlternative("b", "babrev");
+			y.Key = "akey";
+			y.Name.SetAlternative("a", "aname");
+			y.Name.SetAlternative("b", "bname");
 
-            OptionsList list = new OptionsList();
-            list.Options.Add(x);
-            list.Options.Add(y);
+			OptionsList list = new OptionsList();
+			list.Options.Add(x);
+			list.Options.Add(y);
 
-            string path = Path.GetTempFileName();
-            list.SaveToFile(path);
+			string path = Path.GetTempFileName();
+			list.SaveToFile(path);
 
-            // Debug.WriteLine(xml);
-            Load(path);
-            Assert.AreEqual("aname", list.Options[1].Name.GetBestAlternative("a"));
-        }
+			// Debug.WriteLine(xml);
+			Load(path);
+			Assert.AreEqual("aname", list.Options[1].Name.GetBestAlternative("a"));
+		}
 
 
-    }
+	}
 }

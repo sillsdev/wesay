@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace WeSay.Project
 {
-   public class CheckinDescriptionBuilder: SIL.Reporting.ILogger
+	public class CheckinDescriptionBuilder : SIL.Reporting.ILogger
 	{
 		private Dictionary<string, int> _actions;
 
@@ -13,10 +13,10 @@ namespace WeSay.Project
 			Clear();
 		}
 
-	   /// <summary>
-	   /// We don't store the same event over and over, just the count, which makes for a more concise description
-	   /// </summary>
-	   /// <param name="description"></param>
+		/// <summary>
+		/// We don't store the same event over and over, just the count, which makes for a more concise description
+		/// </summary>
+		/// <param name="description"></param>
 		void AddEvent(string description)
 		{
 			if (_actions.ContainsKey(description))
@@ -66,9 +66,9 @@ namespace WeSay.Project
 			_actions = new Dictionary<string, int>();
 		}
 
-	   public void WriteConciseHistoricalEvent(string message, params object[] args)
-	   {
-		   AddEvent(string.Format(message,args));
-	   }
+		public void WriteConciseHistoricalEvent(string message, params object[] args)
+		{
+			AddEvent(string.Format(message, args));
+		}
 	}
 }

@@ -1,16 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using Enchant;
 using SIL.Reporting;
 using SIL.WritingSystems;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using WeSay.LexicalModel;
-using WeSay.LexicalModel.Foundation;
 using WeSay.Project;
 
 namespace WeSay.ConfigTool
 {
-	public partial class WritingSystemForFieldControl: UserControl
+	public partial class WritingSystemForFieldControl : UserControl
 	{
 		private Field _field;
 
@@ -132,12 +131,12 @@ namespace WeSay.ConfigTool
 		private void SaveWritingSystemIdsForField(int indexOfItemWhichShouldBeConsideredChecked)
 		{
 			CurrentField.WritingSystemIds.Clear();
-			for (int i = 0;i < _writingSystemListBox.Items.Count;i++)
+			for (int i = 0; i < _writingSystemListBox.Items.Count; i++)
 			{
 				if (_writingSystemListBox.GetItemChecked(i) || i == indexOfItemWhichShouldBeConsideredChecked)
 				{
 					WritingSystemDefinition ws =
-							((WritingSystemListBoxAdaptor) _writingSystemListBox.Items[i]).
+							((WritingSystemListBoxAdaptor)_writingSystemListBox.Items[i]).
 									WritingSystem;
 					CurrentField.WritingSystemIds.Add(ws.Id);
 				}
@@ -149,7 +148,7 @@ namespace WeSay.ConfigTool
 			get
 			{
 				return
-						((WritingSystemListBoxAdaptor) _writingSystemListBox.SelectedItem).
+						((WritingSystemListBoxAdaptor)_writingSystemListBox.SelectedItem).
 								WritingSystem.ToString();
 			}
 		}
@@ -235,7 +234,7 @@ namespace WeSay.ConfigTool
 				bool hasSpellCheckerInstalled =
 						writingSystemIdsWithSpellCheckingInstalled.Contains(ws.Id);
 				int i =
-						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor( ws,
+						_writingSystemListBox.Items.Add(new WritingSystemListBoxAdaptor(ws,
 																						hasSpellCheckerInstalled));
 				_writingSystemListBox.SetItemCheckedReally(i, true);
 			}
