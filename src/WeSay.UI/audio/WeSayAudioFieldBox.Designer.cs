@@ -37,7 +37,8 @@ namespace WeSay.UI.audio
 			this._fileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 																		  | System.Windows.Forms.AnchorStyles.Right)));
 			this._fileName.Location = new System.Drawing.Point(240, 3);
-			this._fileName.Name = "_fileName";
+			//this._fileName.Name = "_fileName";
+			this._fileName.Name = "";
 			this._fileName.Size = new System.Drawing.Size(15, 20);
 			this._fileName.TabIndex = 1;
 			this._fileName.Visible = false;
@@ -49,7 +50,8 @@ namespace WeSay.UI.audio
 																						| System.Windows.Forms.AnchorStyles.Right)));
 			this._shortSoundFieldControl1.Location = new System.Drawing.Point(0, 2);
 			this._shortSoundFieldControl1.Name = "_shortSoundFieldControl1";
-			this._shortSoundFieldControl1.Path = null;
+			// this._shortSoundFieldControl1.Path = null;
+			this._shortSoundFieldControl1.Path = "";
 			this._shortSoundFieldControl1.Size = new System.Drawing.Size(234, 19);
 			this._shortSoundFieldControl1.TabIndex = 2;
 			//
