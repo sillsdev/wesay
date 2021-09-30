@@ -1,4 +1,4 @@
-﻿using SIL.i18n;
+using SIL.i18n;
 using System;
 using System.Collections.Generic;
 using WeSay.Project;
