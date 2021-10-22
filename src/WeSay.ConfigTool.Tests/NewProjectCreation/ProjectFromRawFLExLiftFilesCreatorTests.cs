@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using SIL.IO;
 using SIL.Reporting;
 using SIL.TestUtilities;
@@ -56,8 +56,9 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 <ldml>
 	<identity>
 		<version number="""" />
-		<generation date=""0001-01-01T00:00:00"" />
-		<language type=""test"" />
+		<generation date=""2011-06-15T19:35:32"" />
+		<language type=""am"" />
+		<script type=""Ethi"" />
 	</identity>
 	<collations />
 	<special xmlns:palaso=""urn://palaso.org/ldmlExtensions/v1"">
@@ -69,13 +70,13 @@ namespace WeSay.ConfigTool.Tests.NewProjectCreation
 
 			using (var testDir = new TemporaryFolder("NormalSituation_CreatesProject"))
 			{
-				var lift = new TempLiftFile(testDir, "", "0.12");
+				var lift = new TempLiftFile(testDir, "<entry id='foo'><lexical-unit>\r\n<form lang=\"am\"><text>am</text></form>\r\n</lexical-unit></entry>", "0.12");
 				using (var ldmlFile = new TempFile(ldmlText))
 				{
-					ldmlFile.MoveTo(Path.Combine(testDir.Path, "test.ldml"));
+					ldmlFile.MoveTo(Path.Combine(testDir.Path, "am.ldml"));
 					var targetDir = testDir.Combine("target");
 					Assert.IsTrue(ProjectFromRawFLExLiftFilesCreator.Create(targetDir, lift.Path));
-					AssertFileExistsInTargetDir(Path.Combine(targetDir, "WritingSystems"), "test.ldml");
+					AssertFileExistsInTargetDir(Path.Combine(targetDir, "WritingSystems"), "am.ldml");
 				}
 			}
 		}
