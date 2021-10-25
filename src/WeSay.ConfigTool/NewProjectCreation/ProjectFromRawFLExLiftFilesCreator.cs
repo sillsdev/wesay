@@ -1,6 +1,5 @@
 using SIL.Code;
 using SIL.Reporting;
-using SIL.LCModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +27,6 @@ namespace WeSay.ConfigTool.NewProjectCreation
 				if (!ReportIfLocked(pathToSourceLift))
 					return false;
 				
-				//SIL.LCModel.DomainServices.DataMigration.PerformMigration(Path.GetDirectoryName(pathToSourceLift));
 				RequireThat.Directory(pathToNewDirectory).DoesNotExist();
 
 				Directory.CreateDirectory(pathToNewDirectory);
