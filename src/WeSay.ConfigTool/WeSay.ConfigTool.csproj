@@ -1,8 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="..\packages\SIL.LCModel.10.1.0-beta0409\build\SIL.LCModel.props" Condition="Exists('..\packages\SIL.LCModel.10.1.0-beta0409\build\SIL.LCModel.props')" />
-  <Import Project="..\packages\SIL.LCModel.Core.10.1.0-beta0409\build\SIL.LCModel.Core.props" Condition="Exists('..\packages\SIL.LCModel.Core.10.1.0-beta0409\build\SIL.LCModel.Core.props')" />
-  <Import Project="..\packages\SIL.LCModel.Build.Tasks.10.1.0-beta0409\build\SIL.LCModel.Build.Tasks.props" Condition="Exists('..\packages\SIL.LCModel.Build.Tasks.10.1.0-beta0409\build\SIL.LCModel.Build.Tasks.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -197,18 +194,6 @@
     <Reference Include="SIL.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SIL.DictionaryServices.8.0.0\lib\net461\SIL.DictionaryServices.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.LCModel, Version=10.1.0.0, Culture=neutral, PublicKeyToken=f245775b81dcfaab, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.LCModel.10.1.0-beta0409\lib\net461\SIL.LCModel.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.LCModel.Core, Version=10.1.0.0, Culture=neutral, PublicKeyToken=f245775b81dcfaab, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.LCModel.Core.10.1.0-beta0409\lib\net461\SIL.LCModel.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.LCModel.Tools, Version=10.1.0.0, Culture=neutral, PublicKeyToken=f245775b81dcfaab, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.LCModel.Tools.10.1.0-beta0409\lib\net461\SIL.LCModel.Tools.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.LCModel.Utils, Version=10.1.0.0, Culture=neutral, PublicKeyToken=f245775b81dcfaab, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.LCModel.Utils.10.1.0-beta0409\lib\net461\SIL.LCModel.Utils.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lexicon, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <HintPath>..\packages\SIL.Lexicon.8.0.0\lib\net461\SIL.Lexicon.dll</HintPath>
@@ -708,9 +693,6 @@
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets'))" />
     <Error Condition="!Exists('..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.LCModel.Build.Tasks.10.1.0-beta0409\build\SIL.LCModel.Build.Tasks.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.LCModel.Build.Tasks.10.1.0-beta0409\build\SIL.LCModel.Build.Tasks.props'))" />
-    <Error Condition="!Exists('..\packages\SIL.LCModel.Core.10.1.0-beta0409\build\SIL.LCModel.Core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.LCModel.Core.10.1.0-beta0409\build\SIL.LCModel.Core.props'))" />
-    <Error Condition="!Exists('..\packages\SIL.LCModel.10.1.0-beta0409\build\SIL.LCModel.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.LCModel.10.1.0-beta0409\build\SIL.LCModel.props'))" />
   </Target>
   <Import Project="..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets" Condition="Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" />
   <Import Project="..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets" Condition="Exists('..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets')" />
