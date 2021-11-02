@@ -79,7 +79,7 @@
     <Reference Include="Chorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\packages\SIL.Chorus.App.4.0.1-beta0001\lib\net461\Chorus.exe</HintPath>
+      <HintPath>..\packages\SIL.Chorus.App.5.0.0-beta0013\lib\net461\Chorus.exe</HintPath>
     </Reference>
     <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>

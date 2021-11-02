@@ -150,7 +150,7 @@
       <HintPath>..\packages\SIL.Windows.Forms.GeckoBrowserAdapter.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.GeckoBrowserAdapter.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms.Keyboarding">
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
     </Reference>
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

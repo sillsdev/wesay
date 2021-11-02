@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-	<!-- Don't install shortcuts, but put them under a feature to keep the ICE validator happy. -->
+	<!-- Install our custom shortcuts -->
 	<Feature Id='Shortcuts' Title='Start Menu Shortcut' Description='Creates a shortcut in the Start menu.' Level='1' ConfigurableDirectory='APPFOLDER' AllowAdvertise="no" InstallDefault="source" Absent='allow' TypicalDefault="install" >
-		<ComponentRef Id='ApplicationShortcutDesktop'/>
-		<ComponentRef Id='ApplicationShortcutMenu' />
+		<ComponentRef Id='WeSayApplicationShortcutDesktop'/>
+		<ComponentRef Id='WeSayApplicationShortcutMenu' />
 	</Feature>
 	<!-- Install Chorus and Mercurial -->
 	<Feature Id='Chorus' Title='Chorus' Description='Necessary to Send and Receive.' Level='1' ConfigurableDirectory='APPFOLDER' AllowAdvertise="no" InstallDefault="source" Absent='disallow' TypicalDefault="install">
 		<MergeRef Id="ChorusMergeModule"/>
+	</Feature>
+	<!-- Do not install the generic installer default shortcuts but include the component ref to avoid wix warnings -->
+	<Feature Id='GenericShortcut_NotInstalled' Title='Generic Start Menu Shortcut' Description='Creates a shortcut in the Start menu.' Level='0' ConfigurableDirectory='APPFOLDER' AllowAdvertise="no" InstallDefault="source" Absent='allow' TypicalDefault="install" >
+		<ComponentRef Id='ApplicationShortcutMenu' />
+		<ComponentRef Id='ApplicationShortcutDesktop' />
 	</Feature>
 </Include>
