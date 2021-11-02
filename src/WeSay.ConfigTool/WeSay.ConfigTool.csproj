@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -99,6 +99,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SIL.Chorus.App.4.0.1-beta0001\lib\net461\Chorus.exe</HintPath>
     </Reference>
+    <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
+    </Reference>
     <Reference Include="DialogAdapters, Version=0.1.9.0, Culture=neutral, PublicKeyToken=7dc842182b0626dc, processorArchitecture=MSIL">
       <HintPath>..\packages\DialogAdapters.Gtk2.0.1.9\lib\net461\DialogAdapters.dll</HintPath>
     </Reference>
@@ -124,6 +127,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\icu.net.2.7.1\lib\net451\icu.net.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=2021.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2021.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -138,9 +144,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\KeymanLink.dll</HintPath>
     </Reference>
-    <Reference Include="L10NSharp, Version=4.1.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
-      <HintPath>..\packages\L10NSharp.4.1.0\lib\net461\L10NSharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="L10NSharp, Version=4.2.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
+      <HintPath>..\packages\L10NSharp.4.2.0-beta0006\lib\net461\L10NSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibChorus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -183,40 +188,32 @@
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.8.0.0\lib\net461\SIL.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.Core.9.0.0-beta0078\lib\net461\SIL.Core.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Core.Desktop, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.Desktop.8.0.0\lib\net461\SIL.Core.Desktop.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0078\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.DictionaryServices, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.DictionaryServices.8.0.0\lib\net461\SIL.DictionaryServices.dll</HintPath>
+    <Reference Include="SIL.DictionaryServices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.DictionaryServices.9.0.0-beta0078\lib\net461\SIL.DictionaryServices.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Lexicon, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lexicon.8.0.0\lib\net461\SIL.Lexicon.dll</HintPath>
+    <Reference Include="SIL.Lexicon, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.Lexicon.9.0.0-beta0078\lib\net461\SIL.Lexicon.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Lift.8.0.0\lib\net461\SIL.Lift.dll</HintPath>
+    <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.Lift.9.0.0-beta0078\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Windows.Forms, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.8.0.0\lib\net461\SIL.Windows.Forms.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SIL.Windows.Forms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Windows.Forms.Keyboarding, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SIL.Windows.Forms.Keyboarding, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Windows.Forms.WritingSystems, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.WritingSystems.8.0.0\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SIL.Windows.Forms.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.Windows.Forms.WritingSystems.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.WritingSystems, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.8.0.0\lib\net461\SIL.WritingSystems.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
       <HintPath>..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
@@ -686,22 +683,22 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
     <Error Condition="!Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets'))" />
     <Error Condition="!Exists('..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets'))" />
   </Target>
   <Import Project="..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets" Condition="Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" />
-  <Import Project="..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets" Condition="Exists('..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\SIL.Windows.Forms.Keyboarding.targets')" />
-  <Import Project="..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.8.0.0\build\SIL.Windows.Forms.targets')" />
   <Import Project="..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
-  <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.1-beta5\build\SIL.Chorus.Mercurial.targets')" />
   <Import Project="..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets" Condition="Exists('..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" />
   <Import Project="..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets" Condition="Exists('..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" />
   <Import Project="..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets" Condition="Exists('..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets')" />
+  <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" />
+  <Import Project="..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets" Condition="Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets')" />
+  <Import Project="..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
