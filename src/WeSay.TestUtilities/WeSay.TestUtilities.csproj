@@ -82,8 +82,9 @@
     <Reference Include="L10NSharp, Version=4.2.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
       <HintPath>..\packages\L10NSharp.4.2.0-beta0006\lib\net461\L10NSharp.dll</HintPath>
     </Reference>
-    <Reference Include="LibChorus">
-      <HintPath>..\packages\SIL.Chorus.LibChorus.4.0.1-beta0001\lib\net461\LibChorus.dll</HintPath>
+    <Reference Include="LibChorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0013\lib\net461\LibChorus.dll</HintPath>
     </Reference>
     <Reference Include="Markdig.Signed, Version=0.22.0.0, Culture=neutral, PublicKeyToken=870da25a133885f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Markdig.Signed.0.22.0\lib\net452\Markdig.Signed.dll</HintPath>
@@ -106,11 +107,13 @@
     <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0078\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Lexicon, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lexicon.8.0.0\lib\net461\SIL.Lexicon.dll</HintPath>
+    <Reference Include="SIL.Lexicon, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SIL.Lexicon.9.0.0-beta0078\lib\net461\SIL.Lexicon.dll</HintPath>
     </Reference>
-    <Reference Include="SIL.Lift, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lift.8.0.0\lib\net461\SIL.Lift.dll</HintPath>
+    <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SIL.Lift.9.0.0-beta0078\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.dll</HintPath>
