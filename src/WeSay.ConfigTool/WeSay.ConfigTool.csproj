@@ -97,7 +97,7 @@
     </Reference>
     <Reference Include="Chorus, Version=3.1.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Chorus.App.4.0.1-beta0001\lib\net461\Chorus.exe</HintPath>
+      <HintPath>..\packages\SIL.Chorus.App.5.0.0-beta0013\lib\net461\Chorus.exe</HintPath>
     </Reference>
     <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
@@ -133,12 +133,12 @@
     <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\Keyman10Interop.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\Keyman10Interop.dll</HintPath>
     </Reference>
     <Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.8.0.0\build\Keyman7Interop.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\Keyman7Interop.dll</HintPath>
     </Reference>
     <Reference Condition="'$(OS)'=='Windows_NT'" Include="KeymanLink, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
