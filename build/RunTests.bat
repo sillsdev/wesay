@@ -57,11 +57,11 @@ set OAPERUSERTLIBREG=1
 echo "Feedback" %MsBuild%
 REM Run the next target only if the previous target succeeded
 ( 
+	%MsBuild% build/WeSay.proj /t:RestoreBuildTasks
+) && (
 	"build/nuget.exe" restore src/WeSay.sln
 ) && (
 	%MsBuild% src/WeSay.sln  /p:Configuration=Debug /p:Platform=x86 /v:diag
-) && (
-	%MsBuild% build/WeSay.proj /t:Restore
 ) && (
 	%MsBuild% build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform=x86 /v:diag
 )
