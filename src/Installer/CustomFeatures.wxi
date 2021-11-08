@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
 	<!-- Install our custom shortcuts -->
-	<Feature Id='Shortcuts' Title='Start Menu Shortcut' Description='Creates a shortcut in the Start menu.' Level='1' ConfigurableDirectory='APPFOLDER' AllowAdvertise="no" InstallDefault="source" Absent='allow' TypicalDefault="install" >
+	<Feature Id='Shortcuts' Title='WeSay Shortcuts' Description='Creates shortcuts in start menu and on the desktop.' Level='1' ConfigurableDirectory='APPFOLDER' AllowAdvertise="no" InstallDefault="source" Absent='allow' TypicalDefault="install" >
 		<ComponentRef Id='WeSayApplicationShortcutDesktop'/>
 		<ComponentRef Id='WeSayApplicationShortcutMenu' />
 	</Feature>

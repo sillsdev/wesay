@@ -182,7 +182,7 @@
     <Reference Include="System.Xml" />
     <Reference Condition="'$(OS)' == 'Windows_NT'" Include="irrKlang.NET4, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a854741bd80517c7">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\irrKlang.NET4.dll</HintPath>
+      <HintPath>..\packages\SIL.Media.9.0.0-beta0078\build\lib\win-x86\irrKlang.NET4.dll</HintPath>
     </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
