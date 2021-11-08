@@ -155,7 +155,7 @@
     </Reference>
     <Reference Condition="'$(OS)'=='Windows_NT'" Include="IrrKlang.NET4.dll, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\irrKlang.NET4.dll</HintPath>
+      <HintPath>..\packages\SIL.Media.9.0.0-beta0078\build\lib\win-x86\irrKlang.NET4.dll</HintPath>
     </Reference>
     <None Include="packages.config" />
     <None Include="..\..\lib\common\Enchant.Net.dll.config">

@@ -15,9 +15,9 @@
 			<Shortcut Id="AppStartMenuShortcut" Name="$(var.ApplicationName) $(var.MajorVersion)"
 				Description="$(var.ApplicationName) $(var.MajorVersion)" Target="[APPFOLDER]WeSay.App.exe"
 				WorkingDirectory="APPFOLDER" Icon="Application_Icon.ico"/>
-			<Shortcut Id="ConfigToolStartMenuShortcut" Name="$(var.ApplicationName) $(var.MajorVersion)"
-				Description="$(var.ApplicationName) $(var.MajorVersion)" Target="[APPFOLDER]WeSay.ConfigTool.exe"
-				WorkingDirectory="APPFOLDER" Icon="Application_Icon.ico"/>
+			<Shortcut Id="ConfigToolStartMenuShortcut" Name="WeSay Configuration Tool"
+				Description="WeSay Configuration Tool $(var.MajorVersion)" Target="[APPFOLDER]WeSay.ConfigTool.exe"
+				WorkingDirectory="APPFOLDER"/>
 			<Shortcut Id="UninstallWeSay" Name="Uninstall $(var.ApplicationName)" Target="[SystemFolder]msiexec.exe"
 				Arguments="/x [ProductCode]" Description="Uninstalls $(var.ApplicationName)"/>
 			<RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.SafeApplicationName)$(var.MajorVersion)"
