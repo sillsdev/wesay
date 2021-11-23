@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- REVIEW (Hasso) 2018.07: if this file gets too long, it can be split into separate files for MergeModules, L10n, and possibly others. -->
 <Include>
 	<DirectoryRef Id="DesktopFolder">
 		<Component Id="WeSayApplicationShortcutDesktop" Guid="3A281E18-E8F9-40F5-A275-59576DA3C4E6">
@@ -11,17 +10,20 @@
 		</Component>
 	</DirectoryRef>
 	<DirectoryRef Id="ProgramMenuFolder">
-		<Component Id="WeSayApplicationShortcutMenu" Guid="7EC6EF85-1562-4B78-B7A7-F0DFA08D772E">
-			<Shortcut Id="AppStartMenuShortcut" Name="$(var.ApplicationName) $(var.MajorVersion)"
-				Description="$(var.ApplicationName) $(var.MajorVersion)" Target="[APPFOLDER]WeSay.App.exe"
-				WorkingDirectory="APPFOLDER" Icon="Application_Icon.ico"/>
-			<Shortcut Id="ConfigToolStartMenuShortcut" Name="WeSay Configuration Tool"
-				Description="WeSay Configuration Tool $(var.MajorVersion)" Target="[APPFOLDER]WeSay.ConfigTool.exe"
-				WorkingDirectory="APPFOLDER"/>
-			<Shortcut Id="UninstallWeSay" Name="Uninstall $(var.ApplicationName)" Target="[SystemFolder]msiexec.exe"
-				Arguments="/x [ProductCode]" Description="Uninstalls $(var.ApplicationName)"/>
-			<RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.SafeApplicationName)$(var.MajorVersion)"
-				Name="installed" Type="integer" Value="1" KeyPath="yes"/>
-		</Component>
+		<Directory Id="WeSayProgramMenuFolder" Name="$(var.ApplicationName) $(var.MajorVersion)">
+			<Component Id="WeSayApplicationShortcutMenu" Guid="7EC6EF85-1562-4B78-B7A7-F0DFA08D772E">
+				<Shortcut Id="AppStartMenuShortcut" Name="$(var.ApplicationName) $(var.MajorVersion)"
+					Description="$(var.ApplicationName) $(var.MajorVersion)" Target="[APPFOLDER]WeSay.App.exe"
+					WorkingDirectory="APPFOLDER" Icon="Application_Icon.ico"/>
+				<Shortcut Id="ConfigToolStartMenuShortcut" Name="WeSay Configuration Tool"
+					Description="WeSay Configuration Tool $(var.MajorVersion)" Target="[APPFOLDER]WeSay.ConfigTool.exe"
+					WorkingDirectory="APPFOLDER"/>
+				<Shortcut Id="UninstallWeSay" Name="Uninstall $(var.ApplicationName)" Target="[SystemFolder]msiexec.exe"
+					Arguments="/x [ProductCode]" Description="Uninstalls $(var.ApplicationName)"/>
+				<RegistryValue Root="HKCU" Key="Software\Microsoft\$(var.SafeApplicationName)$(var.MajorVersion)"
+					Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+				<RemoveFolder Id="RemoveWeSayStartMenuFolder" Directory="WeSayProgramMenuFolder" On="uninstall"/>
+			</Component>
+		</Directory>
 	</DirectoryRef>
 </Include>
