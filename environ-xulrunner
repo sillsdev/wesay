@@ -27,7 +27,11 @@ LD_LIBRARY_PATH="${XULRUNNER}:${LD_LIBRARY_PATH}"
 
 if [ "$RUNMODE" != "BUILDINGPACKAGE" ]
 then
-	LD_PRELOAD=${GECKOFX}/libgeckofix.so
+	if [[ -f "${GECKOFX}/libgeckofix.so" ]]; then
+		LD_PRELOAD="${GECKOFX}/libgeckofix.so"
+	else
+		echo "Warning: Not setting libgeckofix.so to preload since not found."
+	fi
 fi
 
 export MOZ_PATH
