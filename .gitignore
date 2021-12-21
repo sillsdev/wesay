@@ -39,3 +39,4 @@ icu4c.readme.txt
 .vscode/
 **/.vs
 **/Firefox/*
+/build/nuget.exe
