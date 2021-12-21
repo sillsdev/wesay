@@ -17,38 +17,22 @@ You will need a few system packages installed.
 
 	sudo apt-get install libicu-dev curl
 
+Install mono v6, such as by installing package `mono-complete` from the repo
+specified at https://www.mono-project.com/download/stable/ .
+
 ### OBTAINING WESAY SOURCES
 
 The basic WeSay repository is at github, and can be cloned as follows:
 
 	git clone git://github.com/sillsdev/wesay.git
 
-### SIL LINUX PACKAGES NEEDED
-
-SIL has Linux (Ubuntu/Debian) package repositories that are used to distribute
-software that are either original with us or specialized for our use.  There
-are two basic repositories, often referred to as PSO or PSO-experimental.  Two
-packages need to be installed from these repositories: geckofx29 and
-xulrunner-geckofx29 (which is a dependency of geckofx29).
-
-The following commands will add the repositories to your apt setup and then
-download and install the packages.  (You need to add the second repository only
-if the first repository doesn't work.)
-
-	sudo add-apt-repository 'deb http://packages.sil.org/ubuntu precise main'
-	sudo add-apt-repository 'deb http://packages.sil.org/ubuntu precise-experimental main'
-	wget -O - http://packages.sil.org/sil.gpg | sudo apt-key add -
-	sudo apt-get update
-	sudo apt-get install geckofx29
-
-If you are not running precise on your machine, change precise and
-precise-experimental to match your actual distribution.  If you are running
-debian instead of ubuntu, then substitute accordingly.  (In that case, I don't
-think there's a distinction of -experimental.)
-
 ### NEED A PATCHED LINUX MONO
 
-Unfortunately the stock Mono has a number of bugs that we have found and fixed
+Linux WeSay 1.6 used mono4-sil. WeSay on branch develop can build with an
+unmodified mono 6.12.0.122 and msbuild 16.6.0, but it may be that a custom mono
+(such as mono5-sil) may provide benefit.
+
+Historically, the stock Mono had a number of bugs that we have found and fixed
 over the years.  Many of these fixes appear in newer versions of Mono. (Indeed,
 some of the fixes are cherry-picks from later versions of the standard Mono.)
 But enough fixes are specific to our work that we've been using a custom
@@ -57,7 +41,7 @@ this work, the same version of Mono will be used for WeSay as well in the
 future.
 
 There are two ways to obtain this patched version of Mono: build it or install
-the packages for it.  (Real programmers use the first method, since that allows
+the packages for it.  (Using the first method allows
 for the possibility of adding your very own bugfixes to the mix!)
 
 Five separate repositories contain the necessary code for building the custom
@@ -71,11 +55,11 @@ version of Mono.  These should all be installed side-by-side.
 
 The first four repositories contain the actual source code cloned from the Mono
 project.  The fifth repository contains the build scripts and packaging
-information developed by SIL, largely by the Linux team based in Calgary.  After
+information developed by SIL. After
 cloning these repositories, then the patched mono can be built and installed to
-`/opt/mono-sil` by the following command (assuming these five repositories are all
-cloned with their default names and the current directory is still the common
-parent):
+`/opt/mono5-sil` by the following command (assuming these five repositories are
+all cloned with their default names and the current directory is still the
+common parent):
 
 	mono-calgary/BuildOptMono.sh
 
@@ -84,55 +68,40 @@ script.  Depending on how fast your computer is, it may take 15 minutes to an
 hour to finish compiling and installing everything, and it may prompt you more
 than once for your password.
 
-If you don't want to build Mono for yourself (coward!!), then you can install
-the following packages from PSO (or PSO-experimental as the case may be):
+If you don't want to build Mono for yourself, then you can install
+the following packages from PSO (see https://packages.sil.org/ ):
 
-	mono-sil
-	mono-basic-sil
-	gtk-sharp2-sil
-	libgdiplus-sil
+	mono5-sil
+	gtk-sharp5-sil
+	libgdiplus5-sil
 
-These packages install everything into the same place, `/opt/mono-sil`.  I
-haven't actually tested whether installing works as well as building.
+These packages install everything into the same place, `/opt/mono5-sil`.
 
 ### BUILDING WESAY
 
-Before you can build wesay, a number of dependencies must be downloaded from
-the internet.
+#### Install dependencies
 
-For Windows, execute (in a git bash window) the script:
+Linux:
 
-	build/buildupdate.win.sh
+```bash
+wget --output-document=build/nuget.exe https://dist.nuget.org/win-x86-commandline/v6.0.0/nuget.exe
+mono build/nuget.exe restore src/WeSay.sln
+```
 
-For Linux, execute the script:
+Windows: `nuget restore src/WeSay.sln`
 
-	build/buildupdate.mono.sh
+#### Build
 
-After all the dependencies have been downloaded, the simplest way to compile
-wesay is to use a batch file that calls `msbuild.exe` (on Windows) or a shell
-script that calls `xbuild` (on Linux).  For example, in a Windows "DOS box"
-window,
+```bash
+msbuild src/WeSay.sln
+```
 
-	cd $wesay\build
-	TestBuild.bat
+#### Test
 
-On linux, the operation is similar:
-
-	cd $wesay/build
-	./TestBuild.sh
-
-Without any arguments, these scripts perform a Debug build, placing the
-result in `$wesay/output/Debug`.  If you prefer a Release build, then add `Release`
-as a command line argument to `TestBuild.bat` or `TestBuild.sh`.  The result would
-then appear in `$wesay/output/Release`.
-
-On Windows, if you are using Visual Studio instead of running the first build
-on the command line, you need to unzip `lib/Release/Mercurial.zip` in each of the
-output folders.
-
-On Linux, if you are using Monodevelop instead of running the first build
-on the command line, you need to unzip `lib/common/Mercurial-i686.zip` or
-`lib/common/Mercurial-x86_64.zip` in each of the output folders.
+```bash
+msbuild build/WeSay.proj -t:RestoreBuildTasks
+msbuild build/WeSay.proj -t:TestOnly -p:Configuration=Debug -p:Platform="x86"
+```
 
 ### USING MONODEVELOP ON LINUX
 
@@ -150,22 +119,22 @@ In either version of MonoDevelop, you can choose which Mono runtime to use for
 a project, and you can add new Mono runtimes to the known list.  The Edit menu
 has a Preferences command near the bottom.  Click on that and choose the ".NET
 Runtimes" panel under Projects.  Click on the Add button and use the file
-chooser to find `/opt/mono-sil`.  Once you choose that, you should see "Mono
-3.4.0.1 (/opt/mono-sil)" as a possible choice.  Click on that
+chooser to find `/opt/mono5-sil`.  Once you choose that, you should see
+"Mono (/opt/mono5-sil)" as a possible choice.  Click on that
 item to select it, then click on "Set as Default".  (of course, only if you do
 want it as the default...)  After loading the WeSay solution (or creating your
 own solution to run WeSay if you like to be tricky), double check the runtime
 with the "Active Runtime" command in the Project menu.
 
 One more step is essential to actually get WeSay to run properly with the Mono
-runtime in `/opt/mono-sil`.  Under the Project menu, select the "_ProjectName_
+runtime in `/opt/mono5-sil`.  Under the Project menu, select the "_ProjectName_
 Options" command.  This brings up the Project Options dialog. Choose the
 General pane under Run and add the environment variable MONO_ENVIRON with the
 proper value for your installation.  This would be the full path to your wesay
 repository with "/environ" appended to it.  For example, the setting might be
 something like this:
 
-	MONO_ENVIRON	   /home/steve/sillsdev/wesay/environ
+	MONO_ENVIRON	   /home/user/sillsdev/wesay/environ
 
 Be sure to click elsewhere in the dialog before clicking on the OK button.  One
 of MonoDevelop's aggravating "features" is that clicking OK does not by itself
