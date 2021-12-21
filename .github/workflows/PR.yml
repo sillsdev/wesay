@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest]
+        os: ["windows-latest", "ubuntu-latest"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -28,14 +28,21 @@ jobs:
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe (Windows OS)
+      if: ${{ matrix.os == 'windows-latest' }}
       uses: microsoft/setup-msbuild@v1.0.2
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
-      if: ${{ matrix.os == 'windows-latest' }}
 
-    # Run the unit tests
-    - name: Restore
+    - name: Restore (Windows)
+      if: ${{ matrix.os == 'windows-latest' }}
       run: nuget restore src/WeSay.sln
+
+    - name: Restore (Linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        set -ueo pipefail
+        wget --output-document=build/nuget.exe https://dist.nuget.org/win-x86-commandline/v6.0.0/nuget.exe
+        mono build/nuget.exe restore src/WeSay.sln
 
     - name: Build
       env:
@@ -44,12 +51,12 @@ jobs:
 
     - name: Prepare to Test
       run: msbuild build/WeSay.proj /t:RestoreBuildTasks
-      
+
     - name: Test
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So testing files and folders can be created
       run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /p:CI=true /v:diag
-        
+
     - name: Test Report
       uses: jasonleenaylor/nunit-reporter@63ab85dd5da111c3f4ef95f2fb73bbe667f58db9
       if: always()
@@ -57,4 +64,4 @@ jobs:
         path: output/**/TestResults.xml
         access-token: ${{ secrets.GITHUB_TOKEN }}
         reportTitle: "Test Results (${{ matrix.os }})"
-        numFailures: 
+        numFailures:
