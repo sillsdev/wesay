@@ -10,22 +10,22 @@ fi
 # also define LD_PRELOAD to get geckofix.so to work properly
 # (the search order must be the same as in Geckfx-Core/XULRunnerLocator.cs)
 
-if [ "$RUNMODE" = "INSTALLED" ]
+if [ "${RUNMODE-}" = "INSTALLED" ]
 then
-	XULRUNNER=/usr/lib/wesay-beta/Firefox
-	GECKOFX=/usr/lib/wesay-beta/Firefox
-	MOZ_PATH=/usr/lib/wesay-beta/Firefox
+	XULRUNNER="${WESAY_PREFIX}/lib/wesay/Firefox"
+	GECKOFX="${WESAY_PREFIX}/lib/wesay/Firefox"
+	MOZ_PATH="${WESAY_PREFIX}/lib/wesay/Firefox"
 else
 	XULRUNNER=${BASE}/output/${BUILD}/Firefox
 	GECKOFX=${BASE}/output/${BUILD}/Firefox
 	MOZ_PATH=${BASE}/output/${BUILD}/Firefox
 fi
 
-if [ ! -d ${XULRUNNER} ]; then XULRUNNER=/usr/lib/xulrunner-29; fi
-LD_LIBRARY_PATH="${XULRUNNER}:${LD_LIBRARY_PATH}"
+if [ ! -d ${XULRUNNER-} ]; then XULRUNNER=/usr/lib/xulrunner-29; fi
+LD_LIBRARY_PATH="${XULRUNNER-}:${LD_LIBRARY_PATH-}"
 #GECKOFX="$(pkg-config --variable assemblies_dir Geckofx-Core)"
 
-if [ "$RUNMODE" != "BUILDINGPACKAGE" ]
+if [ "${RUNMODE-}" != "BUILDINGPACKAGE" ]
 then
 	if [[ -f "${GECKOFX}/libgeckofix.so" ]]; then
 		LD_PRELOAD="${GECKOFX}/libgeckofix.so"

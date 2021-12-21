@@ -1,2 +1,3 @@
 #!/bin/sh
-exec mono /usr/lib/wesay/Chorus.exe "$@"
+script_dir="$(dirname "$0")"
+exec mono "${script_dir}/../lib/wesay/Chorus.exe" "$@"
