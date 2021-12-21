@@ -26,11 +26,19 @@ install:
 	# install the wrapper scripts
 	install -d $(DESTDIR)$(INSTALLATION_PREFIX)/bin/
 	install -d $(DESTDIR)$(INSTALLATION_PREFIX)/lib/wesay
-	install -m 755 build/mono/wesay $(DESTDIR)$(INSTALLATION_PREFIX)/bin/wesay
-	install -m 755 build/mono/wesay-config $(DESTDIR)$(INSTALLATION_PREFIX)/bin/wesay-config
-	install -m 755 build/mono/chorus $(DESTDIR)$(INSTALLATION_PREFIX)/bin/chorus
-	install -m 755 build/mono/chorusmerge $(DESTDIR)$(INSTALLATION_PREFIX)/lib/wesay
-	# adjust the paths inside the wrapper scripts
+	install -d $(DESTDIR)$(INSTALLATION_PREFIX)/share/doc/wesay
+	install -m 755 \
+		build/mono/wesay \
+		build/mono/wesay-config \
+		build/mono/chorus \
+		$(DESTDIR)$(INSTALLATION_PREFIX)/bin/
+	install -m 755 \
+		build/mono/chorusmerge \
+		$(DESTDIR)$(INSTALLATION_PREFIX)/lib/wesay
+	install --mode 644 \
+		build/mono/setup-wesay.bash \
+		$(DESTDIR)$(INSTALLATION_PREFIX)/lib/wesay
+	install --mode 644 doc/Welcome.htm $(DESTDIR)$(INSTALLATION_PREFIX)/share/doc/wesay
 	# Install menu items
 	install -d $(DESTDIR)$(INSTALLATION_PREFIX)/share/applications
 	install -m 644 src/Installer_Linux/sil-wesay.desktop $(DESTDIR)$(INSTALLATION_PREFIX)/share/applications/sil-wesay.desktop
@@ -38,9 +46,8 @@ install:
 	install -d $(DESTDIR)$(INSTALLATION_PREFIX)/share/appdata
 	install -m 644 src/Installer_Linux/sil-wesay.appdata.xml $(DESTDIR)$(INSTALLATION_PREFIX)/share/appdata/sil-wesay.appdata.xml
 	# install the binaries
-	RUNMODE=BUILDINGPACKAGE . ./environ && \
-	cd build && \
-	xbuild /target:Install /p:Configuration=$(CONFIGURATION) /p:InstallDir=../$(DESTDIR)$(INSTALLATION_PREFIX) /p:ApplicationNameLC=wesay build.mono.proj
-	# Apparently the downloaded mercurial.ini doesn't have the right fixutf8 config, and it also has
-	# wrong line endings, so we re-create the entire file
-	echo "$$MERCURIAL_INI" > $(DESTDIR)$(INSTALLATION_PREFIX)/lib/wesay/Mercurial/mercurial.ini
+	RUNMODE=BUILDINGPACKAGE BUILD=$(BUILD_CONFIG) . ./environ && \
+	  msbuild /target:Install /p:Configuration=$(BUILD_CONFIG) /p:InstallDir=$(DESTDIR)$(INSTALLATION_PREFIX) /p:ApplicationNameLC=wesay build/build.mono.proj
+	# Install mercurial.ini with correct fixutf8 config and line endings.
+	install --mode 644 src/Installer_Linux/mercurial.ini $(DESTDIR)$(INSTALLATION_PREFIX)/lib/wesay/Mercurial
+	perl -pi -e "s#/usr#$(INSTALLATION_PREFIX)#" $(DESTDIR)$(INSTALLATION_PREFIX)/lib/wesay/Mercurial/mercurial.ini
