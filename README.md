@@ -103,6 +103,18 @@ msbuild build/WeSay.proj -t:RestoreBuildTasks
 msbuild build/WeSay.proj -t:TestOnly -p:Configuration=Debug -p:Platform="x86"
 ```
 
+#### Test installation
+
+```bash
+rm -rf test_install &&
+  mkdir test_install &&
+  BUILD_CONFIG=Release \
+    INSTALLATION_PREFIX="$(pwd)/test_install" \
+    MONO_PREFIX=/usr \
+    make build-deps build-app install &&
+  MONO_PREFIX=/usr WESAY_PREFIX="$(pwd)/test_install" test_install/bin/wesay
+```
+
 ### USING MONODEVELOP ON LINUX
 
 In Windows, WeSay can be debugged using Visual Studio Community 2015.

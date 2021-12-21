@@ -40,3 +40,4 @@ icu4c.readme.txt
 **/.vs
 **/Firefox/*
 /build/nuget.exe
+/test_install/
