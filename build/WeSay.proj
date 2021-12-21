@@ -46,7 +46,7 @@
 		]]></Code>
 		</Task>
 	</UsingTask>
-  
+
 	<Import Project="NuGet.targets"/>
 
 	<Target Name="RestoreBuildTasks" DependsOnTargets="CheckPrerequisites">
@@ -69,7 +69,7 @@
 		<MSBuild Projects="$(RootDir)/src/WeSay.sln"
 			Properties="Configuration=$(Configuration);RootDir=$(RootDir);Platform=$(Platform)" />
 	</Target>
-	
+
 	<Target Name="Test" DependsOnTargets="Build">
 		<CallTarget Targets="TestOnly" Condition="!$(RestartBuild)" />
 		<MSBuild Projects="$(MSBuildProjectFullPath)" Targets="TestOnly"
@@ -86,7 +86,7 @@
 			<Output PropertyName="ExcludeArgument" TaskParameter="ExcludeArg" />
 		</BuildExcludeString>
 		<Message Text="Exclude Arg = $(ExcludeArgument)" />
-		<Exec Command="$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console @(TestAssemblies->'%(Filename)%(Extension)', ' ')  &quot;--result:$(RootDir)/output/$(Configuration)/TestResults.xml;format=nunit3&quot; --labels=Before --x86 --agents=1 $(ExcludeArgument)" 
+		<Exec Command="$(RootDir)/packages/NUnit.ConsoleRunner/tools/nunit3-console.exe @(TestAssemblies->'%(Filename)%(Extension)', ' ')  &quot;--result:$(RootDir)/output/$(Configuration)/TestResults.xml;format=nunit3&quot; --labels=Before --x86 --agents=1 $(ExcludeArgument)"
 			WorkingDirectory="$(RootDir)/output/$(Configuration)" />
 	</Target>
 </Project>
