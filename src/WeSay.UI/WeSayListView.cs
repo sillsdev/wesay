@@ -305,19 +305,19 @@ namespace WeSay.UI
 				return;
 			}
 			base.WndProc(ref m);
-#if __MonoCS__
-			if (m.Msg == WM_HSCROLL)
+			if (WeSay.UI.Platform.IsLinux && m.Msg == WM_HSCROLL)
 			{
 				this.OnScroll();
 			}
-#endif
 		}
-#if __MonoCS__
+
+		/// <summary>
+		/// Linux helper method.
+		/// </summary>
 		protected void OnScroll()
 		{
 			Invalidate();
 		}
-#endif
 
 		private void SelectFromClickLocation()
 		{

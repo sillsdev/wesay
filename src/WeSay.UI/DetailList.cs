@@ -66,10 +66,10 @@ namespace WeSay.UI
 			set
 			{
 				SuspendLayout();
-#if __MonoCS__
-				if (value > LabelColumnWidth)
+				if (WeSay.UI.Platform.IsLinux && value > LabelColumnWidth)
+				{
 					ShrinkEditControlWidths((int)(value - LabelColumnWidth));
-#endif
+				}
 				if (value != LabelColumnWidth)
 				{
 					ColumnStyles[0].Width = value;
@@ -79,14 +79,14 @@ namespace WeSay.UI
 
 		}
 
-#if __MonoCS__
 		/// <summary>
-		/// Shrink the edit control widths to make up for the increased width of the labels.
+		/// Linux method to shrink the edit control widths to make up for
+		/// the increased width of the labels.
 		/// </summary>
 		/// <remarks>
 		/// Microsoft .Net TableLayoutPanel code handles nested tables better than Mono -- this
 		/// adjustment isn't needed there.  This is needed primarily when converting ghost
-		/// entries to real entries in the Dictionary Browse & Edit tool.
+		/// entries to real entries in the Dictionary Browse &amp; Edit tool.
 		/// </remarks>
 		void ShrinkEditControlWidths(int shrinkage)
 		{
@@ -114,7 +114,6 @@ namespace WeSay.UI
 				}
 			}
 		}
-#endif
 
 		public int WidestLabelWidthWithMargin
 		{

@@ -28,11 +28,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			InitializeComponent();
 			this._listViewWords.UserClick += new System.EventHandler(this.OnListViewWords_Click);
 
-#if __MonoCS__
-			// The label "(Enter Key)" does not display properly on Linux/Mono.  Part of the string is cut off.
-			// This simple setting fixes that problem.  (Don't ask me why!)
-			tableLayoutPanel8.AutoSize = false;
-#endif
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				// The label "(Enter Key)" does not display properly on Linux/Mono.  Part of the string is cut off.
+				// This simple setting fixes that problem.  (Don't ask me why!)
+				tableLayoutPanel8.AutoSize = false;
+			}
 			InitializeDisplaySettings();
 			_listViewWords.FormWritingSystem = _presentationModel.FormWritingSystem;
 			_listViewWords.MeaningWritingSystem = _presentationModel.ShowMeaningField ? _presentationModel.MeaningWritingSystem : null;
@@ -51,12 +52,12 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 			var majorRomanWritingSystems = new List<string>(new[] { "en", "id", "fr" });
 			if (majorRomanWritingSystems.Contains(presentationModel.SemanticDomainWritingSystemLanguageTag))
 			{
-#if __MonoCS__
-				_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);
-#else
-				_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
-#endif
-
+				if (WeSay.UI.Platform.IsLinux)
+				{
+					_domainListComboBox.Font = new Font("monospace", _domainListComboBox.Font.Size, FontStyle.Bold);
+				} else {
+					_domainListComboBox.Font = new Font("Lucida Console", _domainListComboBox.Font.Size, FontStyle.Bold);
+				}
 			}
 
 			if (WeSayWordsProject.GeckoOption)

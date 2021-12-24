@@ -953,12 +953,13 @@ namespace WeSay.Project
 
 		public ProjectInfo GetProjectInfoForAddin()
 		{
+			string pathToApplicationRootDirectory = ApplicationRootDirectory;
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				pathToApplicationRootDirectory = ApplicationSharedDirectory;
+			}
 			return new ProjectInfo(Name,
-#if __MonoCS__
-								   ApplicationSharedDirectory,
-#else
-								   ApplicationRootDirectory,
-#endif
+								   pathToApplicationRootDirectory,
 								   ProjectDirectoryPath,
 								   PathToLiftFile,
 								   PathToExportDirectory,

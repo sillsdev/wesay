@@ -32,11 +32,14 @@ namespace WeSay.ConfigTool
 			var projectFolderPath = '"' + _projectFolderConfiguration.FolderPath + '"';
 			try
 			{
-#if __MonoCS__
-				Process.Start("mono", path + " " + projectFolderPath);
-#else
-				Process.Start(path, projectFolderPath);
-#endif
+				if (WeSay.UI.Platform.IsLinux)
+				{
+					Process.Start("mono", path + " " + projectFolderPath);
+				}
+				else
+				{
+					Process.Start(path, projectFolderPath);
+				}
 			}
 			catch (Exception error)
 			{

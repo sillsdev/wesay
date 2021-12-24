@@ -155,26 +155,29 @@ namespace WeSay.UI.Tests
 			{
 				try
 				{
-#if __MonoCS__
-					// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
-					string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
-					if (String.IsNullOrEmpty(xulRunnerLocation))
-						throw new ApplicationException("The XULRunner library is missing or has the wrong version");
-					Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", xulRunnerLocation);
-					string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
-					if (!librarySearchPath.Contains(xulRunnerLocation))
-						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
-#else
-					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
-					if (!Directory.Exists(xulRunnerLocation))
+					if (WeSay.UI.Platform.IsLinux)
 					{
-						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
+						// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+						string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+						if (String.IsNullOrEmpty(xulRunnerLocation))
+							throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+						Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", xulRunnerLocation);
+						string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+						if (!librarySearchPath.Contains(xulRunnerLocation))
+							throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
 					}
-					if (!SetDllDirectory(xulRunnerLocation))
+					else
 					{
-						throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
+						string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
+						if (!Directory.Exists(xulRunnerLocation))
+						{
+							throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
+						}
+						if (!SetDllDirectory(xulRunnerLocation))
+						{
+							throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
+						}
 					}
-#endif
 					Xpcom.EnableProfileMonitoring = true;
 					Xpcom.Initialize(xulRunnerLocation);
 					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;

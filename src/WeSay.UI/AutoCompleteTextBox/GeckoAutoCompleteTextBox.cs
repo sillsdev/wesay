@@ -426,12 +426,10 @@ namespace WeSay.UI.AutoCompleteTextBox
 						break;
 				}
 			}
-#if __MonoCS__
-			if (keyData == Keys.Enter)
+			if (WeSay.UI.Platform.IsLinux && keyData == Keys.Enter)
 			{
 				OnKeyDown(new KeyEventArgs(keyData));
 			}
-#endif
 			return val;
 		}
 

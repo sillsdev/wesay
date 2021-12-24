@@ -955,10 +955,11 @@ namespace WeSay.LexicalTools.Dashboard
 			Font localizedFont = (Font)StringCatalog.LabelFont.Clone();
 			Font boldFont = new Font(localizedFont, FontStyle.Bold);
 			string textUsedOnlyForMeasurement = GetToolTipDescription(button.ThingToShowOnDashboard);
-#if __MonoCS__
-			// "\n ." is added on because Mono frequently miscalculates the height by one line.
-			textUsedOnlyForMeasurement += (System.Environment.NewLine + " .");
-#endif
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				// "\n ." is added on because Mono frequently miscalculates the height by one line.
+				textUsedOnlyForMeasurement += (System.Environment.NewLine + " .");
+			}
 			List<Size> possibleSizes = DisplaySettings.GetPossibleTextSizes(g,
 																			textUsedOnlyForMeasurement,
 																			localizedFont,

@@ -5,7 +5,10 @@ using System.Windows.Forms;
 
 namespace WeSay.UI
 {
-	class Platform
+	/// <summary>
+	/// Helper methods to determine the current platform.
+	/// </summary>
+	public class Platform
 	{
 		static bool? m_isMono;
 

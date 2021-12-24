@@ -92,61 +92,61 @@ namespace Addin.Transform.PdfDictionary
 				{
 					bool retval = false;
 					ProductMajor = 0;
-#if __MonoCS__
-					// find which libreoffice
-					// check versionrc file exists ../lib/libreoffice/program/versionrc
-					// open versionrc file for reading
-					// look at each line and split at '='
+					if (WeSay.UI.Platform.IsLinux) {
+						// find which libreoffice
+						// check versionrc file exists ../lib/libreoffice/program/versionrc
+						// open versionrc file for reading
+						// look at each line and split at '='
 
-					// DG - Apr2012 libreoffice 3.5 changed the format so now checking ProductMajor
-					// look for words[0] = ProductMajor
-					// version number is words[1], check is >= 340
+						// DG - Apr2012 libreoffice 3.5 changed the format so now checking ProductMajor
+						// look for words[0] = ProductMajor
+						// version number is words[1], check is >= 340
 
-					// DG - Mar2017 at some point libreoffice removed ProductMajor
-					// so default ProductMajor to 400 unless find it in versionrc
+						// DG - Mar2017 at some point libreoffice removed ProductMajor
+						// so default ProductMajor to 400 unless find it in versionrc
 
-					Process loffice = new Process();
-					loffice.StartInfo.Arguments = "libreoffice";
-					loffice.StartInfo.RedirectStandardOutput = true;
-					loffice.StartInfo.UseShellExecute = false;
-					loffice.StartInfo.FileName = "which";
-					loffice.Start();
-					string output = loffice.StandardOutput.ReadLine();
-					loffice.WaitForExit();
-					int ecode = loffice.ExitCode;
-					if (ecode==0 && !String.IsNullOrEmpty(output))
-					{
-						string binpath = Path.GetDirectoryName(output);
-						string installedpath = Path.GetDirectoryName(binpath);
-						string rcpath = Path.Combine (installedpath, "lib");
-						rcpath = Path.Combine (rcpath, "libreoffice");
-						rcpath = Path.Combine (rcpath, "program");
-						rcpath = Path.Combine (rcpath, "versionrc");
-						if (File.Exists(rcpath))
+						Process loffice = new Process();
+						loffice.StartInfo.Arguments = "libreoffice";
+						loffice.StartInfo.RedirectStandardOutput = true;
+						loffice.StartInfo.UseShellExecute = false;
+						loffice.StartInfo.FileName = "which";
+						loffice.Start();
+						string output = loffice.StandardOutput.ReadLine();
+						loffice.WaitForExit();
+						int ecode = loffice.ExitCode;
+						if (ecode==0 && !String.IsNullOrEmpty(output))
 						{
-							ProductMajor = 400; // default unless find otherwise
-							StreamReader rcfile = File.OpenText(rcpath);
-							string rcline;
-							rcline = rcfile.ReadLine();
-							while (!String.IsNullOrEmpty(rcline))
+							string binpath = Path.GetDirectoryName(output);
+							string installedpath = Path.GetDirectoryName(binpath);
+							string rcpath = Path.Combine (installedpath, "lib");
+							rcpath = Path.Combine (rcpath, "libreoffice");
+							rcpath = Path.Combine (rcpath, "program");
+							rcpath = Path.Combine (rcpath, "versionrc");
+							if (File.Exists(rcpath))
 							{
-								string[] words = rcline.Split('=');
-								if (words[0] == "ProductMajor")
-								{
-									ProductMajor = Convert.ToInt32(words[1]);
-									break;
-								}
+								ProductMajor = 400; // default unless find otherwise
+								StreamReader rcfile = File.OpenText(rcpath);
+								string rcline;
 								rcline = rcfile.ReadLine();
-							}
-							int minver = 340;
-							if (ProductMajor >= minver)
-							{
-								_isAvailable = availStatus.Available;
-								retval = true;
+								while (!String.IsNullOrEmpty(rcline))
+								{
+									string[] words = rcline.Split('=');
+									if (words[0] == "ProductMajor")
+									{
+										ProductMajor = Convert.ToInt32(words[1]);
+										break;
+									}
+									rcline = rcfile.ReadLine();
+								}
+								int minver = 340;
+								if (ProductMajor >= minver)
+								{
+									_isAvailable = availStatus.Available;
+									retval = true;
+								}
 							}
 						}
 					}
-#endif
 					if (!retval)
 					{
 						_isAvailable = availStatus.NotInstalled;
