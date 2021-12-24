@@ -22,6 +22,25 @@ INSTALLATION_PREFIX ?= /usr
 BUILD_CONFIG ?= Release
 DESTDIR ?=
 
+all: build-app
+
+build-deps:
+	[ -f build/nuget.exe ] || \
+	  wget --output-document=build/nuget.exe \
+	    https://dist.nuget.org/win-x86-commandline/v6.0.0/nuget.exe
+	mono build/nuget.exe restore src/WeSay.sln
+
+build-app:
+	msbuild src/WeSay.sln -p:Configuration=$(BUILD_CONFIG)
+
+test-deps:
+	msbuild build/WeSay.proj -p:Configuration=$(BUILD_CONFIG) \
+	  -t:RestoreBuildTasks
+
+test-run:
+	msbuild build/WeSay.proj -t:TestOnly -p:Configuration=$(BUILD_CONFIG) \
+	  -p:Platform="x86"
+
 install:
 	# install the wrapper scripts
 	install -d $(DESTDIR)$(INSTALLATION_PREFIX)/bin/
