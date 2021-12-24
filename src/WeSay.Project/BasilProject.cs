@@ -300,8 +300,7 @@ There are problems in:
 				}
 				else
 				{
-					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-					shareddir = Path.Combine(commonpath, WeSaySharedDirectory);
+					shareddir = AppInstalledDataDir;
 				}
 				return shareddir;
 			}
