@@ -112,6 +112,7 @@
 	<!-- The Install Target must be called from an MSBuild task so as to include the output from the previous MSBuild in the ItemGroup below -->
 	<ItemGroup>
 		<ExecutableFiles Include="$(OutputDir)/*;$(RootDir)/environ*" Exclude="$(OutputDir)/*Tests.dll;$(OutputDir)/*Test.dll;$(OutputDir)/*Test.dll.*;$(OutputDir)/*Tests.dll.*;$(OutputDir)/Addin.LiftReports.dll;$(OutputDir)/NVelocity.dll;$(OutputDir)/SIL.Archiving*;$(OutputDir)/LibChorus.TestUtilities.*" />
+		<RuntimeLibraryFiles Include="$(OutputDir)/runtimes/linux-x64/*" />
 		<Mercurial Include="$(RootDir)/src/Mercurial/**/*"
 			Exclude="$(RootDir)/src/Mercurial/**/*.pyc;$(RootDir)/src/Mercurial/doc/**/*" />
 		<MercurialExtensions Include="$(RootDir)/src/MercurialExtensions/**/*" Exclude="$(RootDir)/src/MercurialExtensions/**/*.pyc;$(RootDir)/src/MercurialExtensions/Dummy.txt;$(MercurialExtensions)/MercurialExtensions/**/.guidsForInstaller.xml" />
@@ -136,6 +137,10 @@
 		<Copy
 			DestinationFolder="$(InstallApp)"
 			SourceFiles="@(ExecutableFiles)"
+		/>
+		<Copy
+			DestinationFolder="$(InstallApp)/runtimes/linux-x64"
+			SourceFiles="@(RuntimeLibraryFiles)"
 		/>
 		<Copy
 			DestinationFolder="$(InstallApp)"
