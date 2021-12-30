@@ -96,7 +96,12 @@ Windows: `nuget restore src/WeSay.sln`
 msbuild src/WeSay.sln
 ```
 
-#### Test
+#### Run
+```bash
+(MONO_PREFIX=/usr source environ && mono output/Debug/WeSay.App.exe)
+```
+
+#### Run unit tests
 
 ```bash
 msbuild build/WeSay.proj -t:RestoreBuildTasks
