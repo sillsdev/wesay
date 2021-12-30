@@ -296,26 +296,26 @@ msgstr ""
 msgid "Export to XHTML"
 msgstr ""
 
-#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\Image Picker Test App\ImagePicker\Form1.Designer.cs
+#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\ImagePickerTestApp\ImagePicker\Form1.Designer.cs
 #: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\RelationControlTestApp\Form1.Designer.cs
 msgid "Form1"
 msgstr ""
 
-#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.cs
+#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\ImagePickerTestApp\ImagePicker\ImageDisplayWidget.cs
 #: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\WeSay.UI\PictureControl.cs
 msgid "Cannot find {0}"
 msgstr ""
 
-#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.Designer.cs
+#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\ImagePickerTestApp\ImagePicker\ImageDisplayWidget.Designer.cs
 msgid "Choose Image..."
 msgstr ""
 
-#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.Designer.cs
+#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\ImagePickerTestApp\ImagePicker\ImageDisplayWidget.Designer.cs
 #: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\WeSay.UI\PictureControl.Designer.cs
 msgid "What is the problem?"
 msgstr ""
 
-#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\Image Picker Test App\ImagePicker\ImageDisplayWidget.Designer.cs
+#: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\ImagePickerTestApp\ImagePicker\ImageDisplayWidget.Designer.cs
 #: C:\BuildAgent\work\5e96b58b190c147d\bld\..\src\WeSay.UI\PictureControl.Designer.cs
 msgid "Remove Image..."
 msgstr ""
