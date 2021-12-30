@@ -21,6 +21,9 @@
 INSTALLATION_PREFIX ?= /usr
 # BUILD_CONFIG can be Debug or Release.
 BUILD_CONFIG ?= Debug
+# PLATFORM can be "Any CPU" or x86. Note that the included gecko .so files will
+# be 64- or 32-bit, not architecture independent.
+PLATFORM ?= Any CPU
 DESTDIR ?=
 
 all: build-app
@@ -32,7 +35,7 @@ build-deps:
 	mono build/nuget.exe restore src/WeSay.sln
 
 build-app:
-	msbuild src/WeSay.sln -p:Configuration=$(BUILD_CONFIG)
+	msbuild src/WeSay.sln -p:Configuration=$(BUILD_CONFIG) -p:Platform="$(PLATFORM)"
 
 test-deps:
 	msbuild build/WeSay.proj -p:Configuration=$(BUILD_CONFIG) \
@@ -40,7 +43,7 @@ test-deps:
 
 test-run:
 	msbuild build/WeSay.proj -t:TestOnly -p:Configuration=$(BUILD_CONFIG) \
-	  -p:Platform="x86"
+	  -p:Platform="$(PLATFORM)"
 
 install:
 	# install the wrapper scripts

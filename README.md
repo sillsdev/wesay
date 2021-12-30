@@ -105,7 +105,7 @@ msbuild src/WeSay.sln
 
 ```bash
 msbuild build/WeSay.proj -t:RestoreBuildTasks
-msbuild build/WeSay.proj -t:TestOnly -p:Configuration=Debug -p:Platform="x86"
+msbuild build/WeSay.proj -t:TestOnly -p:Configuration=Debug -p:Platform="Any CPU"
 ```
 
 #### Test installation
