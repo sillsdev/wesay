@@ -267,6 +267,10 @@
       <Project>{FEC3014D-0067-4D59-A838-3B046EC3C352}</Project>
       <Name>WeSay.TestUtilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
+      <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
+      <Name>WeSay.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="icu4c.readme.txt" />

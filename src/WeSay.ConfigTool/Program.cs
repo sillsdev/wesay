@@ -1,6 +1,7 @@
 using SIL.IO;
 using SIL.Reporting;
 using SIL.Windows.Forms.Reporting;
+using Gecko;
 using System;
 using System.Diagnostics;
 using System.IO;
