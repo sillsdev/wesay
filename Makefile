@@ -19,7 +19,8 @@
 # THE SOFTWARE.
 
 INSTALLATION_PREFIX ?= /usr
-BUILD_CONFIG ?= Release
+# BUILD_CONFIG can be Debug or Release.
+BUILD_CONFIG ?= Debug
 DESTDIR ?=
 
 all: build-app
