@@ -68,6 +68,18 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.Linux.60.0.51</GeckofxDirName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
@@ -125,10 +137,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Reference Include="Geckofx-Core">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Core.dll</HintPath>
     </Reference>
     <Reference Include="Geckofx-Winforms">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>

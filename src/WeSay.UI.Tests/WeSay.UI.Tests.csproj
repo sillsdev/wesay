@@ -74,6 +74,18 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.Linux.60.0.51</GeckofxDirName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.13.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
@@ -107,10 +119,10 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Geckofx-Core">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Core.dll</HintPath>
     </Reference>
     <Reference Include="Geckofx-Winforms">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <None Include="app.config" />
     <None Include="packages.config" />

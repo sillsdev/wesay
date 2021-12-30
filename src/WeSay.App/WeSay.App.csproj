@@ -92,7 +92,19 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <ItemGroup>
+    <PropertyGroup>
+      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.54</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.60.0.54</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.Linux.60.0.51</GeckofxDirName>
+    </PropertyGroup>
+    <PropertyGroup>
+      <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+      <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+      <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+      <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+    </PropertyGroup>
+    <ItemGroup>
     <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
@@ -104,13 +116,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Enchant.Net.1.4.2\lib\net461\Enchant.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Geckofx-Core, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
+    <Reference Include="Geckofx-Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Core.dll</HintPath>
     </Reference>
-    <Reference Include="Geckofx-Winforms, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
+    <Reference Include="Geckofx-Winforms">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <Reference Include="icu.net, Version=2.7.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -329,13 +341,13 @@
   -->
   <Target Name="AfterBuild">
     <PropertyGroup>
-      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.54\content\Firefox</GeckofxDirName>
-      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.60.0.54\content\Firefox</GeckofxDirName>
-      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49\content\Firefox-Linux32</GeckofxDirName>
-      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.Linux.60.0.51\content\Firefox-Linux64</GeckofxDirName>
+      <FirefoxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Firefox</FirefoxDirName>
+      <FirefoxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Firefox</FirefoxDirName>
+      <FirefoxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Firefox-Linux32</FirefoxDirName>
+      <FirefoxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Firefox-Linux64</FirefoxDirName>
     </PropertyGroup>
     <ItemGroup>
-      <FirefoxFiles Include="..\packages\$(GeckofxDirName)\**\*.*" />
+      <FirefoxFiles Include="..\packages\$(GeckofxDirName)\content\$(FirefoxDirName)\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(FirefoxFiles)" DestinationFiles="@(FirefoxFiles->'$(OutputPath)\Firefox\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
