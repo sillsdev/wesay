@@ -28,6 +28,9 @@ DESTDIR ?=
 
 all: build-app
 
+clean:
+	rm -rf output/$(BUILD_CONFIG)
+
 build-deps:
 	[ -f build/nuget.exe ] || \
 	  wget --output-document=build/nuget.exe \
