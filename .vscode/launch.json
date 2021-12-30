@@ -6,8 +6,14 @@
   "configurations": [
     {
 		"name": "Launch",
+		// Note that running without `source environ` will result in a somewhat different environment.
 		"env": {
-			"LD_LIBRARY_PATH": "${workspaceRoot}/output/Debug/Firefox:${env:LD_LIBRARY_PATH}"
+			"LD_LIBRARY_PATH": "${workspaceRoot}/output/Debug:${workspaceRoot}/output/Debug/Firefox:${env:LD_LIBRARY_PATH}",
+			"LD_PRELOAD": "${workspaceRoot}/output/Debug/Firefox/libgeckofix.so",
+			"MOZ_PATH": "${workspaceRoot}/output/Debug/Firefox",
+			"MONO_DEBUG": "explicit-null-checks",
+			"MONO_MWF_SCALING": "disable",
+			"MONO_TRACE_LISTENER": "Console.Out",
 		},
 		"type": "mono",
 		"request": "launch",
@@ -16,7 +22,14 @@
 	},
 	{
 		"name": "Launch from test_install",
-		"env": {},
+		"env": {
+			"LD_LIBRARY_PATH": "${workspaceRoot}/test_install/lib/wesay:${workspaceRoot}/test_install/lib/wesay/Firefox:${env:LD_LIBRARY_PATH}",
+			"LD_PRELOAD": "${workspaceRoot}/test_install/lib/wesay/Firefox/libgeckofix.so",
+			"MOZ_PATH": "${workspaceRoot}/test_install/lib/wesay/Firefox",
+			"MONO_DEBUG": "explicit-null-checks",
+			"MONO_MWF_SCALING": "disable",
+			"MONO_TRACE_LISTENER": "Console.Out",
+		},
 		"type": "mono",
 		"request": "launch",
 		"program": "${workspaceRoot}/test_install/lib/wesay/WeSay.App.exe",
