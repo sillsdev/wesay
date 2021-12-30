@@ -116,7 +116,7 @@ rm -rf test_install &&
   BUILD_CONFIG=Release \
     INSTALLATION_PREFIX="$(pwd)/test_install" \
     make build-deps build-app install &&
-  WESAY_PREFIX="$(pwd)/test_install" test_install/bin/wesay
+  test_install/bin/wesay
 ```
 
 ### USING MONODEVELOP ON LINUX

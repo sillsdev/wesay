@@ -20,7 +20,8 @@
 #
 # Prepare to run WeSay. This should be sourced, not executed.
 
-cd "${script_dir}/../lib/wesay"
+WESAY_PREFIX="$(cd "${script_dir}/.." && pwd)"
+cd "${WESAY_PREFIX}/lib/wesay"
 RUNMODE=INSTALLED
 . ./environ
 cd "$OLDPWD"
@@ -36,7 +37,6 @@ fi
 PACKAGE_VERSION="1.9.0"
 echo "Package version: [$PACKAGE_VERSION]"
 
-WESAY_PREFIX="${WESAY_PREFIX:-/usr}"
 STANDARD_XDG_DATA_HOME="${HOME}/.local/share"
 STANDARD_XDG_CONFIG_HOME="${HOME}/.config"
 XDG_DATA_HOME="${XDG_DATA_HOME:-${STANDARD_XDG_DATA_HOME}}"
