@@ -103,6 +103,10 @@
       <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
       <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
       <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+      <GeckofxTargetsPath Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\build\Geckofx60.32.targets</GeckofxTargetsPath>
+      <GeckofxTargetsPath Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\build\Geckofx60.64.targets</GeckofxTargetsPath>
+      <GeckofxTargetsPath Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\build\Geckofx60.32.Linux.targets</GeckofxTargetsPath>
+      <GeckofxTargetsPath Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\build\Geckofx60.64.Linux.targets</GeckofxTargetsPath>
     </PropertyGroup>
     <ItemGroup>
     <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -339,6 +343,7 @@
   <Target Name="BeforeBuild">
   </Target>
   -->
+  <Import Project="$(GeckofxTargetsPath)" />
   <Target Name="AfterBuild">
     <PropertyGroup>
       <FirefoxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Firefox</FirefoxDirName>
@@ -349,6 +354,8 @@
     <ItemGroup>
       <FirefoxFiles Include="..\packages\$(GeckofxDirName)\content\$(FirefoxDirName)\**\*.*" />
     </ItemGroup>
+    <!-- Note that due to a bug in the geckofx nuget .targets file, it doesn't successfully copy its .dll/.so
+        files, so manually do it here until the .targets file is fixed. At that time, this Copy task can be removed. -->
     <Copy SourceFiles="@(FirefoxFiles)" DestinationFiles="@(FirefoxFiles->'$(OutputPath)\Firefox\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>
