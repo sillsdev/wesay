@@ -328,9 +328,14 @@
   </Target>
   -->
   <Target Name="AfterBuild">
+    <PropertyGroup>
+      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.54\content\Firefox</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.60.0.54\content\Firefox</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49\content\Firefox-Linux32</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.Linux.60.0.51\content\Firefox-Linux64</GeckofxDirName>
+    </PropertyGroup>
     <ItemGroup>
-      <FirefoxFiles Include="..\packages\Geckofx60.32.60.0.54\content\Firefox\**\*.*" Condition="'$(Platform)' == 'x86'" />
-      <FirefoxFiles Include="..\packages\Geckofx60.64.60.0.54\content\Firefox\**\*.*" Condition="'$(Platform)' != 'x86'" />
+      <FirefoxFiles Include="..\packages\$(GeckofxDirName)\**\*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(FirefoxFiles)" DestinationFiles="@(FirefoxFiles->'$(OutputPath)\Firefox\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
