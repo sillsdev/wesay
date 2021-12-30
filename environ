@@ -1,14 +1,11 @@
-# Environment settings for running programs with the SIL version of mono
-# Set MONO_ENVIRON to this file's pathname, then run, for example,
-#    /opt/mono-sil/bin/mono --debug WeSay.App.exe
-# These setting assume that the packaged SIL Mono is installed in /opt/mono-sil, and that
-# locally built versions are installed to that location as well.
-# Note that this file is intended to be "sourced", not "executed".
+# WeSay environment settings
+# Usage: source environ && mono Foo.exe
 
 # the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
-[ -z "${BUILD-}" ] && BUILD=Debug
-[ -z "${MONO_PREFIX-}" ] && MONO_PREFIX=/opt/mono4-sil
+[[ -n "${BUILD-}" ]] || BUILD=Debug
+# MONO_PREFIX could be something like /usr or /opt/mono5-sil
+[[ -n "${MONO_PREFIX-}" ]] || MONO_PREFIX=/usr
 
 # Dependency locations
 # Search for xulrunner and geckofx, select the best, and add its location to LD_LIBRARY_PATH.

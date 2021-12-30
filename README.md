@@ -98,7 +98,7 @@ msbuild src/WeSay.sln
 
 #### Run
 ```bash
-(MONO_PREFIX=/usr source environ && mono output/Debug/WeSay.App.exe)
+(source environ && mono output/Debug/WeSay.App.exe)
 ```
 
 #### Run unit tests
@@ -115,9 +115,8 @@ rm -rf test_install &&
   mkdir test_install &&
   BUILD_CONFIG=Release \
     INSTALLATION_PREFIX="$(pwd)/test_install" \
-    MONO_PREFIX=/usr \
     make build-deps build-app install &&
-  MONO_PREFIX=/usr WESAY_PREFIX="$(pwd)/test_install" test_install/bin/wesay
+  WESAY_PREFIX="$(pwd)/test_install" test_install/bin/wesay
 ```
 
 ### USING MONODEVELOP ON LINUX
