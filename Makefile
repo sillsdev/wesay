@@ -25,6 +25,7 @@ BUILD_CONFIG ?= Debug
 # be 64- or 32-bit, not architecture independent.
 PLATFORM ?= Any CPU
 DESTDIR ?=
+SHELL := /bin/bash -ueo pipefail
 
 all: build-app
 
