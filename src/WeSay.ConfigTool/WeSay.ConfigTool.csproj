@@ -694,7 +694,6 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
-    <Error Condition="!Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets'))" />
@@ -703,7 +702,6 @@
     <Error Condition="!Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets'))" />
     <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets'))" />
   </Target>
-  <Import Project="..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets" Condition="Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" />
   <Import Project="..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
   <Import Project="..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets" Condition="Exists('..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" />
   <Import Project="..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets" Condition="Exists('..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" />
