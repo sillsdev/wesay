@@ -26,12 +26,21 @@ RUNMODE=INSTALLED
 . ./environ
 cd "$OLDPWD"
 
-DEFAULT_WEB=`xdg-settings get default-web-browser`
-DEFAULT_FILEWEB=`xdg-settings get default-url-scheme-handler file`
+if which xdg-settings; then
+	# Querying for the default web browser in flatpak gives error
+	# "xdg-settings: unknown desktop environment" (when xdg-settings is provided
+	# by installing xdg-utils). Workarounds look like they may need to hard-code
+	# the browser to use which would defeat the purpose here. It appears that
+	# part of the problem may be that xdg-utils is detecting flatpak and setting
+	# DE="flatpak" rather than leaving it as "gnome3". For now just don't
+	# require that we set the handler, and let the user choose from the handler
+	# options.
+	DEFAULT_WEB="$(xdg-settings get default-web-browser)"
+	DEFAULT_FILEWEB="$(xdg-settings get default-url-scheme-handler file)"
 
-if [ "$DEFAULT_WEB" != "$DEFAULT_WEB" ]
-then
-	xdg-settings set default-url-scheme-handler file "$DEFAULT_WEB"
+	if [[ "${DEFAULT_WEB}" != "${DEFAULT_FILEWEB}" ]]; then
+		xdg-settings set default-url-scheme-handler file "${DEFAULT_WEB}"
+	fi
 fi
 
 PACKAGE_VERSION="1.9.0"
