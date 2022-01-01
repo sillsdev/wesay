@@ -7,6 +7,13 @@ BASE="$(pwd)"
 # MONO_PREFIX could be something like /usr or /opt/mono5-sil
 [[ -n "${MONO_PREFIX-}" ]] || MONO_PREFIX=/usr
 
+if [[ -n "${FLATPAK_SANDBOX_DIR-}" && -z "${FLATPAK_ID-}" ]]; then
+  # Ubuntu 18.04 flatpak has FLATPAK_SANDBOX_DIR but not FLATPAK_ID.
+  # Set FLATPAK_ID so we can rely on it being set.
+  export FLATPAK_ID="org.sil.WeSay"
+fi
+
+
 # Dependency locations
 # Search for xulrunner and geckofx, select the best, and add its location to LD_LIBRARY_PATH.
 # Also determine the location of the geckofx assemblies and shared object libraries.
@@ -19,9 +26,10 @@ MONO_PATH="${GDK_SHARP}:${GECKOFX}"
 
 # Ensure that we will search the standard pkgconfig directories after
 # updating the environment variable below.
-if [ "${PKG_CONFIG_PATH-}" = "" ]
-then
-	PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/share/pkgconfig
+if [ "${PKG_CONFIG_PATH-}" = "" ]; then
+  PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
+  [[ -z "${FLATPAK_ID-}" ]] ||
+    PKG_CONFIG_PATH="/app/lib/pkgconfig:/app/share/pkgconfig:${PKG_CONFIG_PATH}"
 fi
 
 ################################################################################################
