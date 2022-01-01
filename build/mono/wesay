@@ -5,4 +5,6 @@ script_dir="$(dirname "$0")"
 source "${script_dir}/../lib/wesay/setup-wesay.bash"
 
 export MONO_ENABLE_SHM=1
-exec mono --debug "${WESAY_PREFIX}/lib/wesay/WeSay.App.exe" "$@"
+
+exec ${WESAY_COMMAND_PREFIX-} ${WESAY_MONO_COMMAND-mono} ${WESAY_MONO_OPTS-} \
+  --debug "${WESAY_PREFIX}/lib/wesay/WeSay.App.exe" "$@"
