@@ -5,35 +5,48 @@
   "version": "0.2.0",
   "configurations": [
     {
-		"name": "Launch",
-		// Note that running without `source environ` will result in a somewhat different environment.
-		"env": {
-			"LD_LIBRARY_PATH": "${workspaceRoot}/output/Debug:${workspaceRoot}/output/Debug/Firefox:${env:LD_LIBRARY_PATH}",
-			"LD_PRELOAD": "${workspaceRoot}/output/Debug/Firefox/libgeckofix.so",
-			"MOZ_PATH": "${workspaceRoot}/output/Debug/Firefox",
-			"MONO_DEBUG": "explicit-null-checks",
-			"MONO_MWF_SCALING": "disable",
-			"MONO_TRACE_LISTENER": "Console.Out",
-		},
-		"type": "mono",
-		"request": "launch",
-		"program": "${workspaceRoot}/output/Debug/WeSay.App.exe",
-		"cwd": "${workspaceRoot}"
-	},
-	{
-		"name": "Launch from test_install",
-		"env": {
-			"LD_LIBRARY_PATH": "${workspaceRoot}/test_install/lib/wesay:${workspaceRoot}/test_install/lib/wesay/Firefox:${env:LD_LIBRARY_PATH}",
-			"LD_PRELOAD": "${workspaceRoot}/test_install/lib/wesay/Firefox/libgeckofix.so",
-			"MOZ_PATH": "${workspaceRoot}/test_install/lib/wesay/Firefox",
-			"MONO_DEBUG": "explicit-null-checks",
-			"MONO_MWF_SCALING": "disable",
-			"MONO_TRACE_LISTENER": "Console.Out",
-		},
-		"type": "mono",
-		"request": "launch",
-		"program": "${workspaceRoot}/test_install/lib/wesay/WeSay.App.exe",
-		"cwd": "${workspaceRoot}"
-	},
+      "name": "Launch",
+      // Note that running without `source environ` will result in a somewhat different environment.
+      "env": {
+        "LD_LIBRARY_PATH": "${workspaceRoot}/output/Debug:${workspaceRoot}/output/Debug/Firefox:${env:LD_LIBRARY_PATH}",
+        "LD_PRELOAD": "${workspaceRoot}/output/Debug/Firefox/libgeckofix.so",
+        "MOZ_PATH": "${workspaceRoot}/output/Debug/Firefox",
+        "MONO_DEBUG": "explicit-null-checks",
+        "MONO_MWF_SCALING": "disable",
+        "MONO_TRACE_LISTENER": "Console.Out"
+      },
+      "type": "mono",
+      "request": "launch",
+      "program": "${workspaceRoot}/output/Debug/WeSay.App.exe",
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "Launch from test_install",
+      "env": {
+        "LD_LIBRARY_PATH": "${workspaceRoot}/test_install/lib/wesay:${workspaceRoot}/test_install/lib/wesay/Firefox:${env:LD_LIBRARY_PATH}",
+        "LD_PRELOAD": "${workspaceRoot}/test_install/lib/wesay/Firefox/libgeckofix.so",
+        "MOZ_PATH": "${workspaceRoot}/test_install/lib/wesay/Firefox",
+        "MONO_DEBUG": "explicit-null-checks",
+        "MONO_MWF_SCALING": "disable",
+        "MONO_TRACE_LISTENER": "Console.Out"
+      },
+      "type": "mono",
+      "request": "launch",
+      "program": "${workspaceRoot}/test_install/lib/wesay/WeSay.App.exe",
+      "cwd": "${workspaceRoot}"
+    },
+    {
+      // To debug managed code in flatpak, run using the following, and then start the debugger:
+      //   flatpak run --devel --env=WESAY_MONO_OPTS=--debugger-agent=address=127.0.0.1:55004,transport=dt_socket,server=y,suspend=n org.sil.WeSay
+      // Or open the flatpak with:
+      //   flatpak-builder --run build-dir org.sil.WeSay.yml bash
+      //   and then in the flatpak environment, run the following, and then start the debugger:
+      //   WESAY_MONO_OPTS=--debugger-agent=address=127.0.0.1:55004,transport=dt_socket,server=y,suspend=y wesay
+      "name": "Attach to local (such as flatpak)",
+      "type": "mono",
+      "request": "attach",
+      "address": "localhost",
+      "port": 55004
+    }
   ]
 }
