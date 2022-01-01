@@ -111,11 +111,13 @@ msbuild build/WeSay.proj -t:TestOnly -p:Configuration=Debug -p:Platform="Any CPU
 #### Test installation
 
 ```bash
-rm -rf test_install &&
+chmod -R +w test_install &&
+  rm -rf test_install &&
   mkdir test_install &&
   BUILD_CONFIG=Release \
     INSTALLATION_PREFIX="$(pwd)/test_install" \
     make build-deps build-app install &&
+  chmod -R -w test_install &&
   test_install/bin/wesay
 ```
 
