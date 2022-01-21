@@ -52,9 +52,17 @@ jobs:
     - name: Prepare to Test
       run: msbuild build/WeSay.proj /t:RestoreBuildTasks
 
+    - name: Prepare headless display server for tests (Linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        set -xueo pipefail
+        sudo apt-get install xvfb
+        Xvfb &
+
     - name: Test
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So testing files and folders can be created
+        DISPLAY: ":0"
       run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /p:CI=true /v:diag
 
     - name: Test Report
