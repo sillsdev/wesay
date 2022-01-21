@@ -86,7 +86,10 @@ Linux:
 ```bash
 wget --output-document=build/nuget.exe https://dist.nuget.org/win-x86-commandline/v6.0.0/nuget.exe
 mono build/nuget.exe restore src/WeSay.sln
+sudo apt install libxklavier-dev
 ```
+
+Optionally install [PrinceXML](https://www.princexml.com).
 
 Windows:
 

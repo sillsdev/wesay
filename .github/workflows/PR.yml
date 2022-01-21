@@ -15,6 +15,18 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+
+    - name: Install dependencies (Linux)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        set -xueo pipefail
+        sudo apt-get install libxklavier-dev
+        wget https://www.princexml.com/download/prince_14.2-1_ubuntu20.04_amd64.deb
+        sha512sum --check <<END
+        f481f00334b08b74828e827b23aac790e4f69982eed5a371679cfe7ffbd0244228f85d519e004dfc0d32834b085a6a61f5604a854bbc3481296fce204f690e52  prince_14.2-1_ubuntu20.04_amd64.deb
+        END
+        sudo dpkg --install prince_14.2-1_ubuntu20.04_amd64.deb
+
     - name: Checkout
       uses: actions/checkout@v2.3.4
       with:
@@ -27,7 +39,7 @@ jobs:
         dotnet-version: 5.0.x
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe (Windows OS)
+    - name: Setup MSBuild.exe (Windows)
       if: ${{ matrix.os == 'windows-latest' }}
       uses: microsoft/setup-msbuild@v1.0.2
       env:
