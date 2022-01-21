@@ -88,13 +88,30 @@ wget --output-document=build/nuget.exe https://dist.nuget.org/win-x86-commandlin
 mono build/nuget.exe restore src/WeSay.sln
 ```
 
-Windows: `nuget restore src/WeSay.sln`
+Windows:
+
+Right-click the WeSay solution in Solution Explorer, and Restore nuget dependencies. Or run `nuget restore src/WeSay.sln`
 
 #### Build
+
+Linux:
 
 ```bash
 msbuild src/WeSay.sln
 ```
+
+Windows:
+
+In a "DOS box" window, run
+
+```
+cd build
+TestBuild.bat
+```
+
+If you are using Visual Studio instead of running the first build
+on the command line, you need to copy `src/Mercurial` into `output/Debug`.
+You should now have a file, `output/Debug/Mercurial/hg.exe`.
 
 #### Run
 ```bash
