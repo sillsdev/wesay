@@ -77,7 +77,7 @@
       <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Chorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Chorus.App.5.0.0-beta0013\lib\net461\Chorus.exe</HintPath>
+      <HintPath>..\packages\SIL.Chorus.App.5.0.0-beta0015\lib\net461\Chorus.exe</HintPath>
     </Reference>
     <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
@@ -102,7 +102,7 @@
       <HintPath>..\packages\L10NSharp.4.2.0-beta0006\lib\net461\L10NSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibChorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0013\lib\net461\LibChorus.dll</HintPath>
+      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0015\lib\net461\LibChorus.dll</HintPath>
     </Reference>
     <Reference Include="Markdig.Signed, Version=0.22.0.0, Culture=neutral, PublicKeyToken=870da25a133885f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Markdig.Signed.0.22.0\lib\net452\Markdig.Signed.dll</HintPath>
@@ -112,6 +112,12 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Posix, Version=7.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Posix.7.1.0-final.1.21458.1\lib\net45\Mono.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Unix, Version=7.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Unix.7.1.0-final.1.21458.1\lib\net45\Mono.Unix.dll</HintPath>
     </Reference>
     <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
       <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
@@ -130,31 +136,31 @@
       <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0078\lib\net461\SIL.Core.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.9.0.0-beta0103\lib\net461\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0078\lib\net461\SIL.Core.Desktop.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0103\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="SIL.DictionaryServices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.DictionaryServices.9.0.0-beta0078\lib\net461\SIL.DictionaryServices.dll</HintPath>
+      <HintPath>..\packages\SIL.DictionaryServices.9.0.0-beta0103\lib\net461\SIL.DictionaryServices.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lexicon, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lexicon.9.0.0-beta0078\lib\net461\SIL.Lexicon.dll</HintPath>
+      <HintPath>..\packages\SIL.Lexicon.9.0.0-beta0103\lib\net461\SIL.Lexicon.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0078\lib\net461\SIL.Lift.dll</HintPath>
+      <HintPath>..\packages\SIL.Lift.9.0.0-beta0103\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
     <Reference Include="SIL.TestUtilities, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.TestUtilities.9.0.0-beta0078\lib\net461\SIL.TestUtilities.dll</HintPath>
+      <HintPath>..\packages\SIL.TestUtilities.9.0.0-beta0103\lib\net461\SIL.TestUtilities.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0103\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>
+      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0103\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="SIL.WritingSystems.Tests, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.Tests.9.0.0-beta0078\lib\net461\SIL.WritingSystems.Tests.dll</HintPath>
+      <HintPath>..\packages\SIL.WritingSystems.Tests.9.0.0-beta0103\lib\net461\SIL.WritingSystems.Tests.dll</HintPath>
     </Reference>
     <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
       <HintPath>..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
@@ -297,11 +303,13 @@
     <Error Condition="!Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.13.1\build\NUnit.props'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
     <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets'))" />
+    <Error Condition="!Exists('..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets'))" />
   </Target>
   <Import Project="..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
   <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" />
-  <Import Project="..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" />
+  <Import Project="..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets" Condition="Exists('..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets')" />
+  <Import Project="..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -34,7 +34,8 @@ namespace WeSay.ConfigTool
 			{
 				if (WeSay.UI.Platform.IsLinux)
 				{
-					Process.Start("mono", path + " " + projectFolderPath);
+//					Process.Start("mono", path + " " + projectFolderPath);
+					Process.Start("mono", path + "/" + projectFolderPath);
 				}
 				else
 				{

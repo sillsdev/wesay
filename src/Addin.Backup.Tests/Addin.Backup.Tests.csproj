@@ -93,21 +93,29 @@
     <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Posix, Version=7.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Posix.7.1.0-final.1.21458.1\lib\net45\Mono.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Unix, Version=7.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Unix.7.1.0-final.1.21458.1\lib\net45\Mono.Unix.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
+      <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.13.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0078\lib\net461\SIL.Core.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.9.0.0-beta0103\lib\net461\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0078\lib\net461\SIL.Core.Desktop.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0103\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="SIL.TestUtilities, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.TestUtilities.9.0.0-beta0078\lib\net461\SIL.TestUtilities.dll</HintPath>
+      <HintPath>..\packages\SIL.TestUtilities.9.0.0-beta0102\lib\net461\SIL.TestUtilities.dll</HintPath>
     </Reference>
     <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>
+      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0102\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
       <HintPath>..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
@@ -117,6 +125,7 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -126,6 +135,7 @@
     <Reference Include="System.IO.FileSystem.AccessControl, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.AccessControl.4.7.0\lib\net461\System.IO.FileSystem.AccessControl.dll</HintPath>
     </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -136,6 +146,7 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
@@ -209,7 +220,11 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.13.1\build\NUnit.props'))" />
+    <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
+    <Error Condition="!Exists('..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets'))" />
   </Target>
+  <Import Project="..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets" Condition="Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" />
+  <Import Project="..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets" Condition="Exists('..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

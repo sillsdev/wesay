@@ -958,6 +958,7 @@ namespace WeSay.Project
 			{
 				pathToApplicationRootDirectory = ApplicationSharedDirectory;
 			}
+			
 			return new ProjectInfo(Name,
 								   pathToApplicationRootDirectory,
 								   ProjectDirectoryPath,
