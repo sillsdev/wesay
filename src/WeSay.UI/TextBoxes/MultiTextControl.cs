@@ -159,15 +159,20 @@ namespace WeSay.UI.TextBoxes
 			int width = widths[1];
 			foreach (Control box in _inputBoxes)
 			{
-#if __MonoCS__
-				// The Mono runtime adds the margin to the box width to get the column width.
-				// This results in a long-running loop (that somehow terminates) that keeps adding
-				// 6 to the column width, resizing and laying out the table repeatedly.
-				if (width > Margin.Horizontal)
-					box.Width = width - Margin.Horizontal;
+				if (WeSay.UI.Platform.IsLinux)
+				{
+					// The Mono runtime adds the margin to the box width to get the column width.
+					// This results in a long-running loop (that somehow terminates) that keeps adding
+					// 6 to the column width, resizing and laying out the table repeatedly.
+					if (width > Margin.Horizontal)
+						box.Width = width - Margin.Horizontal;
+					else
+						box.Width = width;
+				}
 				else
-#endif
-				box.Width = width;
+				{
+					box.Width = width;
+				}
 			}
 		}
 

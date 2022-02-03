@@ -11,11 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-//#if __MonoCS__
-//#else
-
-//#endif
-
 namespace WeSay.LexicalModel
 {
 	public class LexEntryRepository : IDataMapper<LexEntry>, ICountGiver

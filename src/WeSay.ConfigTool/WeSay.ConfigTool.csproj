@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.props" Condition="Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
@@ -38,7 +39,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -54,7 +55,7 @@
     <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
@@ -91,6 +92,18 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.Linux.60.0.51</GeckofxDirName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
@@ -109,13 +122,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Enchant.Net.1.4.2\lib\net461\Enchant.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Geckofx-Core, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
+    <Reference Include="Geckofx-Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Core.dll</HintPath>
     </Reference>
-    <Reference Include="Geckofx-Winforms, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
+    <Reference Include="Geckofx-Winforms">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <Reference Include="ibusdotnet, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c9ab93f7b23223fb, processorArchitecture=MSIL">
       <HintPath>..\packages\ibusdotnet.2.0.3\lib\net461\ibusdotnet.dll</HintPath>
@@ -175,6 +188,12 @@
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Posix, Version=7.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Posix.7.1.0-final.1.21458.1\lib\net45\Mono.Posix.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Unix, Version=7.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Unix.7.1.0-final.1.21458.1\lib\net45\Mono.Unix.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
@@ -189,31 +208,31 @@
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0078\lib\net461\SIL.Core.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.9.0.0-beta0103\lib\net461\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0078\lib\net461\SIL.Core.Desktop.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0103\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="SIL.DictionaryServices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.DictionaryServices.9.0.0-beta0078\lib\net461\SIL.DictionaryServices.dll</HintPath>
+      <HintPath>..\packages\SIL.DictionaryServices.9.0.0-beta0103\lib\net461\SIL.DictionaryServices.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lexicon, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lexicon.9.0.0-beta0078\lib\net461\SIL.Lexicon.dll</HintPath>
+      <HintPath>..\packages\SIL.Lexicon.9.0.0-beta0103\lib\net461\SIL.Lexicon.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0078\lib\net461\SIL.Lift.dll</HintPath>
+      <HintPath>..\packages\SIL.Lift.9.0.0-beta0103\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0103\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms.Keyboarding, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.WritingSystems.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.WritingSystems.9.0.0-beta0103\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>
+      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0103\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
       <HintPath>..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
@@ -682,23 +701,24 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
-    <Error Condition="!Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets'))" />
     <Error Condition="!Exists('..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets'))" />
     <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets'))" />
+    <Error Condition="!Exists('..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.props'))" />
+    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.targets'))" />
   </Target>
-  <Import Project="..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets" Condition="Exists('..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" />
   <Import Project="..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
   <Import Project="..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets" Condition="Exists('..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" />
   <Import Project="..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets" Condition="Exists('..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" />
   <Import Project="..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets" Condition="Exists('..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets')" />
   <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" />
-  <Import Project="..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets" Condition="Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\build\SIL.Windows.Forms.Keyboarding.targets')" />
-  <Import Project="..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" />
+  <Import Project="..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets" Condition="Exists('..\packages\Mono.Unix.7.1.0-final.1.21458.1\build\Mono.Unix.targets')" />
+  <Import Project="..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0103\build\SIL.Windows.Forms.targets')" />
+  <Import Project="..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.targets" Condition="Exists('..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\build\SIL.Windows.Forms.Keyboarding.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

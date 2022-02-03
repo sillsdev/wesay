@@ -105,34 +105,35 @@ namespace WeSay.App
 			{
 				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
 				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
-#if __MonoCS__
-				// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
-				string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
-				if (String.IsNullOrEmpty(xulRunnerLocation))
-					throw new ApplicationException("The XULRunner library is missing or has the wrong version");
-				string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
-				if (!librarySearchPath.Contains(xulRunnerLocation))
-					throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
-
-				Xpcom.Initialize(xulRunnerLocation);
-				GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
-#else
-				// For windows, only initialize xulrunner if we are using the gecko browser control option
-				if (WeSayWordsProject.GeckoOption)
+				if (WeSay.UI.Platform.IsLinux)
 				{
-					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
-					if (!Directory.Exists(xulRunnerLocation))
-					{
-						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
-					}
-					if (!SetDllDirectory(xulRunnerLocation))
-					{
-						throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
-					}
+					// Initialize XULRunner - required to use the geckofx WebBrowser Control (GeckoWebBrowser).
+					string xulRunnerLocation = XULRunnerLocator.GetXULRunnerLocation();
+					if (String.IsNullOrEmpty(xulRunnerLocation))
+						throw new ApplicationException("The XULRunner library is missing or has the wrong version");
+					string librarySearchPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH") ?? String.Empty;
+					if (!librarySearchPath.Contains(xulRunnerLocation))
+						throw new ApplicationException("LD_LIBRARY_PATH must contain " + xulRunnerLocation);
+
 					Xpcom.Initialize(xulRunnerLocation);
 					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+				} else {
+					// For windows, only initialize xulrunner if we are using the gecko browser control option
+					if (WeSayWordsProject.GeckoOption)
+					{
+						string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
+						if (!Directory.Exists(xulRunnerLocation))
+						{
+							throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
+						}
+						if (!SetDllDirectory(xulRunnerLocation))
+						{
+							throw new ApplicationException("SetDllDirectory failed for " + xulRunnerLocation);
+						}
+						Xpcom.Initialize(xulRunnerLocation);
+						GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
+					}
 				}
-#endif
 			}
 			catch (ApplicationException e)
 			{
@@ -315,23 +316,22 @@ namespace WeSay.App
 				_tabbedForm.ContinueLaunchingAfterInitialDisplay();
 				_tabbedForm.Activate();
 				_tabbedForm.BringToFront(); //needed if we were previously in server mode
-#if (!__MonoCS__)
-				if (WeSayWordsProject.GeckoOption)
+				if (WeSay.UI.Platform.IsWindows && WeSayWordsProject.GeckoOption)
 				{
 					// Currently with Gecko 29 on Windows systems, the browser objects do
 					// not size properly without this process at startup
 					_tabbedForm.WindowState = FormWindowState.Minimized;
 					_tabbedForm.WindowState = FormWindowState.Maximized;
 				}
-#endif
 
 				RtfRenderer.HeadWordWritingSystemId =
 					_project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
 				HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
 
-#if __MonoCS__
-				UglyHackForXkbIndicator();
-#endif
+				if (WeSay.UI.Platform.IsLinux)
+				{
+					UglyHackForXkbIndicator();
+				}
 
 				//run the ui
 				Application.Run(_tabbedForm);
@@ -600,7 +600,6 @@ namespace WeSay.App
 			UsageReporter.SendNavigationNotice("Help: " + topicLink);
 		}
 
-#if __MonoCS__
 		/// <summary>
 		/// For some reason, setting an Xkb keyboard for the first time doesn't work well inside
 		/// FieldWorks (or WeSay as it turns out).  Setting several Xkb keyboards at this point
@@ -623,7 +622,6 @@ namespace WeSay.App
 			}
 			Keyboard.Controller.ActivateDefaultKeyboard();
 		}
-#endif
 	}
 
 	internal class ThreadExceptionHandler

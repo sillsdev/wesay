@@ -86,10 +86,11 @@ namespace WeSay.UI.TextBoxes
 			this.BackColorChanged += _backColorChangedHandler;
 			_foreColorChangedHandler = new EventHandler(OnForeColorChanged);
 			this.ForeColorChanged += _foreColorChangedHandler;
-#if __MonoCS__
-			_domClickHandler = new EventHandler<DomMouseEventArgs>(OnDomClick);
-			_browser.DomClick += _domClickHandler;
-#endif
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				_domClickHandler = new EventHandler<DomMouseEventArgs>(OnDomClick);
+				_browser.DomClick += _domClickHandler;
+			}
 		}
 		public void Init(WritingSystemDefinition writingSystem, String name)
 		{
@@ -115,26 +116,30 @@ namespace WeSay.UI.TextBoxes
 				_browser.DomFocus -= _domFocusHandler;
 				_browser.DomBlur -= _domBlurHandler;
 				_browser.DocumentCompleted -= _domDocumentCompletedHandler;
-#if __MonoCS__
-				_browser.DomClick -= _domClickHandler;
-				_browser.Dispose();
-				_browser = null;
-#else
-				if (Xpcom.IsInitialized)
+				if (WeSay.UI.Platform.IsLinux)
 				{
+					_browser.DomClick -= _domClickHandler;
 					_browser.Dispose();
 					_browser = null;
 				}
-#endif
+				else
+				{
+					if (Xpcom.IsInitialized)
+					{
+						_browser.Dispose();
+						_browser = null;
+					}
+				}
 			}
 			_loadHandler = null;
 			_domKeyDownHandler = null;
 			_domKeyUpHandler = null;
 			_domFocusHandler = null;
 			_domDocumentCompletedHandler = null;
-#if __MonoCS__
-			_domClickHandler = null;
-#endif
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				_domClickHandler = null;
+			}
 		}
 		protected virtual void AdjustHeight()
 		{
@@ -217,35 +222,37 @@ namespace WeSay.UI.TextBoxes
 				{
 					e.Handled = true;
 				}
-#if __MonoCS__
-				SendKey(e);
-#else
-				if ((e.KeyCode == (uint)Keys.Tab) && !e.CtrlKey && !e.AltKey)
+				if (WeSay.UI.Platform.IsLinux)
 				{
-					e.Handled = true;
-					if (e.ShiftKey)
-					{
-						if (!ParentForm.SelectNextControl(this, false, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-					else
-					{
-						if (!ParentForm.SelectNextControl(this, true, true, true, true))
-						{
-#if DEBUG
-							Debug.WriteLine("Failed to advance");
-#endif
-						}
-					}
-					e.Handled = true;
-					return;
+					SendKey(e);
 				}
-
-#endif
+				else
+				{
+					if ((e.KeyCode == (uint)Keys.Tab) && !e.CtrlKey && !e.AltKey)
+					{
+						e.Handled = true;
+						if (e.ShiftKey)
+						{
+							if (!ParentForm.SelectNextControl(this, false, true, true, true))
+							{
+	#if DEBUG
+								Debug.WriteLine("Failed to advance");
+	#endif
+							}
+						}
+						else
+						{
+							if (!ParentForm.SelectNextControl(this, true, true, true, true))
+							{
+	#if DEBUG
+								Debug.WriteLine("Failed to advance");
+	#endif
+							}
+						}
+						e.Handled = true;
+						return;
+					}
+				}
 				OnKeyDown(new KeyEventArgs((Keys)e.KeyCode));
 			}
 		}
@@ -405,33 +412,34 @@ namespace WeSay.UI.TextBoxes
 			_entered = false;
 
 			base.OnLeave(e);
-#if __MonoCS__
-			Action EnsureXInputFocusIsRemovedFromReceivedWinFormsControl = () =>
+			if (WeSay.UI.Platform.IsLinux)
 			{
-				var control = Control.FromHandle(NativeReplacements.MonoGetFocus());
-				if (control is GeckoWebBrowser)
-					return;
-
-				MoveInputFocusBacktoAWinFormsControl();
-
-				// Setting the ActiveControl ensure a Focus event occurs on the control focus is moving to.
-				// And this allows us to call RemoveinputFocus at the neccessary time.
-				// This prevents keypress still going to the gecko controls when a winform TextBox has focus
-				// and the mouse is over a gecko control.
-				Form.ActiveForm.ActiveControl = control;
-				EventHandler focusEvent = null;
-				// Attach a execute once only focus handler to the Non GeckoWebBrowser control focus is moving too...
-				focusEvent = (object sender, EventArgs eventArg) =>
+				Action EnsureXInputFocusIsRemovedFromReceivedWinFormsControl = () =>
 				{
-					control.GotFocus -= focusEvent;
+					var control = Control.FromHandle(NativeReplacements.MonoGetFocus());
+					if (control is GeckoWebBrowser)
+						return;
+
 					MoveInputFocusBacktoAWinFormsControl();
+
+					// Setting the ActiveControl ensure a Focus event occurs on the control focus is moving to.
+					// And this allows us to call RemoveinputFocus at the neccessary time.
+					// This prevents keypress still going to the gecko controls when a winform TextBox has focus
+					// and the mouse is over a gecko control.
+					Form.ActiveForm.ActiveControl = control;
+					EventHandler focusEvent = null;
+					// Attach a execute once only focus handler to the Non GeckoWebBrowser control focus is moving too...
+					focusEvent = (object sender, EventArgs eventArg) =>
+					{
+						control.GotFocus -= focusEvent;
+						MoveInputFocusBacktoAWinFormsControl();
+					};
+
+					control.GotFocus += focusEvent;
 				};
 
-				control.GotFocus += focusEvent;
-			};
-
-			ProgressUtils.InvokeLaterOnUIThread(() => EnsureXInputFocusIsRemovedFromReceivedWinFormsControl());
-#endif
+				ProgressUtils.InvokeLaterOnUIThread(() => EnsureXInputFocusIsRemovedFromReceivedWinFormsControl());
+			}
 		}
 
 		protected void ChangeFocus()
@@ -523,13 +531,14 @@ namespace WeSay.UI.TextBoxes
 		/// </summary>
 		protected static void MoveInputFocusBacktoAWinFormsControl()
 		{
-#if __MonoCS__
-			IntPtr newTargetHandle = NativeReplacements.MonoGetFocus();
-			IntPtr displayHandle = NativeReplacements.MonoGetDisplayHandle();
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				IntPtr newTargetHandle = NativeReplacements.MonoGetFocus();
+				IntPtr displayHandle = NativeReplacements.MonoGetDisplayHandle();
 
-			// Remove the Focus from a Gtk window back to a mono winform X11 window.
-			NativeX11Methods.XSetInputFocus(displayHandle, NativeReplacements.MonoGetX11Window(newTargetHandle), NativeX11Methods.RevertTo.None, IntPtr.Zero);
-#endif
+				// Remove the Focus from a Gtk window back to a mono winform X11 window.
+				NativeX11Methods.XSetInputFocus(displayHandle, NativeReplacements.MonoGetX11Window(newTargetHandle), NativeX11Methods.RevertTo.None, IntPtr.Zero);
+			}
 		}
 		// Making these empty handlers rather than abstract so the class only
 		// needs to implement the ones they need.

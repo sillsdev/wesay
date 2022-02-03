@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<Platform Condition=" '$(Platform)' == '' ">x86</Platform>
 	<ProductVersion>9.0.30729</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
 	<ProjectGuid>{64726381-FEA8-47D5-A884-18AED42E93B6}</ProjectGuid>
@@ -15,7 +15,7 @@
 	</UpgradeBackupLocation>
 	<OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
 	<DebugSymbols>true</DebugSymbols>
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
@@ -24,7 +24,7 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
 	<DebugType>pdbonly</DebugType>
 	<Optimize>true</Optimize>
 	<OutputPath>..\..\output\Release\</OutputPath>
@@ -32,20 +32,20 @@
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugMono|x86' ">
 	<DebugSymbols>true</DebugSymbols>
 	<OutputPath>..\..\output\DebugMono\</OutputPath>
 	<DefineConstants>TRACE;DEBUG;MONO</DefineConstants>
 	<DebugType>full</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
+	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ReleaseMono|x86' ">
 	<OutputPath>..\..\output\ReleaseMono\</OutputPath>
 	<DefineConstants>TRACE;MONO</DefineConstants>
 	<Optimize>true</Optimize>
 	<DebugType>pdbonly</DebugType>
-	<PlatformTarget>AnyCPU</PlatformTarget>
+	<PlatformTarget>x86</PlatformTarget>
 	<ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>

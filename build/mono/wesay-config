@@ -1,46 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
-cd /usr/lib/wesay
-RUNMODE=INSTALLED
-. ./environ
-cd "$OLDPWD"
+set -ueo pipefail
+script_dir="$(dirname "$0")"
+source "${script_dir}/../lib/wesay/setup-wesay.bash"
 
-DEFAULT_WEB=`xdg-settings get default-web-browser`
-DEFAULT_FILEWEB=`xdg-settings get default-url-scheme-handler file`
-
-if [ "$DEFAULT_WEB" != "$DEFAULT_WEB" ]
-then
-	xdg-settings set default-url-scheme-handler file "$DEFAULT_WEB"
-fi
-
-
-PACKAGE_VERSION=`dpkg -s wesay | grep '^Version:'|cut -d '+' -f1 -`
-echo "Package version: [$PACKAGE_VERSION]"
-
-mkdir -p ~/.config/WeSay/
-
-if [ -f ~/.config/WeSay/wesay-version ]
-then # check if version in there is same as current
-	echo "wesay-config: Checking last version"
-	LAST_VERSION=`cat ~/.config/WeSay/wesay-version`
-	echo "wesay-config: Last version: [$LAST_VERSION]"
-	if [ "$PACKAGE_VERSION" != "$LAST_VERSION" ]
-	then
-		echo "wesay-config: Last version different from current"
-		# open the welcome file
-		xdg-open "/usr/share/doc/wesay/Welcome.htm"
-		#write out the current version
-		echo "$PACKAGE_VERSION" > ~/.config/WeSay/wesay-version
-	else
-		echo "wesay-config: Last version same as current"
-	fi
-else
-	echo "wesay-config: No existing version file"
-	#open the welcome file
-	xdg-open "/usr/share/doc/wesay/Welcome.htm"
-	#write out the current version
-	echo "$PACKAGE_VERSION" > ~/.config/WeSay/wesay-version
-fi
-
-
-MONO_DEBUG=explicit-null-checks MONO_ENABLE_SHM=1 exec mono --debug /usr/lib/wesay/WeSay.ConfigTool.exe "$@"
+export MONO_DEBUG=explicit-null-checks
+export MONO_ENABLE_SHM=1
+exec mono --debug "${WESAY_PREFIX}/lib/wesay/WeSay.ConfigTool.exe" "$@"

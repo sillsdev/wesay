@@ -63,9 +63,10 @@ namespace Addin.Transform.PdfDictionary
 
 		private static string GetPrincePath()
 		{
-#if __MonoCS__
-			return "/usr/bin/prince";
-#else
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				return "/usr/bin/prince";
+			}
 			string programFilesPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
 			string princePath = AppendPrincePath(programFilesPath);
@@ -79,7 +80,6 @@ namespace Addin.Transform.PdfDictionary
 				programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 				return AppendPrincePath(programFilesPath);
 			}
-#endif
 		}
 
 		private static string AppendPrincePath(string princePath)

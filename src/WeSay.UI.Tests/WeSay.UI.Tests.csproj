@@ -3,7 +3,7 @@
   <Import Project="..\packages\NUnit.3.13.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}</ProjectGuid>
@@ -23,7 +23,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -38,7 +38,7 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
@@ -74,6 +74,18 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.60.0.54</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49</GeckofxDirName>
+    <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Geckofx60.64.Linux.60.0.51</GeckofxDirName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+    <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.13.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
@@ -107,10 +119,10 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Geckofx-Core">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Core.dll</HintPath>
     </Reference>
     <Reference Include="Geckofx-Winforms">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <None Include="app.config" />
     <None Include="packages.config" />

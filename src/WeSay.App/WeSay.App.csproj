@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</ProjectGuid>
@@ -38,7 +38,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -53,9 +53,9 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <ApplicationIcon>..\..\artwork\WeSay.ico</ApplicationIcon>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
@@ -92,7 +92,23 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <ItemGroup>
+    <PropertyGroup>
+      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.60.0.55</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x64'">Geckofx60.64.60.0.55</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Geckofx60.32.Linux.60.0.49</GeckofxDirName>
+      <GeckofxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x64'">Geckofx60.64.Linux.60.0.51</GeckofxDirName>
+    </PropertyGroup>
+    <PropertyGroup>
+      <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+      <GeckofxAssemblyDir Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x64'">..\packages\$(GeckofxDirName)\lib\net45</GeckofxAssemblyDir>
+      <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+      <GeckofxAssemblyDir Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x64'">..\packages\$(GeckofxDirName)\lib\net40</GeckofxAssemblyDir>
+      <GeckofxTargetsPath Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\build\Geckofx60.32.targets</GeckofxTargetsPath>
+      <GeckofxTargetsPath Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x64'">..\packages\$(GeckofxDirName)\build\Geckofx60.64.targets</GeckofxTargetsPath>
+      <GeckofxTargetsPath Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">..\packages\$(GeckofxDirName)\build\Geckofx60.32.Linux.targets</GeckofxTargetsPath>
+      <GeckofxTargetsPath Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x64'">..\packages\$(GeckofxDirName)\build\Geckofx60.64.Linux.targets</GeckofxTargetsPath>
+    </PropertyGroup>
+    <ItemGroup>
     <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
@@ -104,13 +120,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Enchant.Net.1.4.2\lib\net461\Enchant.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Geckofx-Core, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
+    <Reference Include="Geckofx-Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Core.dll</HintPath>
     </Reference>
-    <Reference Include="Geckofx-Winforms, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
+    <Reference Include="Geckofx-Winforms">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
+      <HintPath>$(GeckofxAssemblyDir)\Geckofx-Winforms.dll</HintPath>
     </Reference>
     <Reference Include="icu.net, Version=2.7.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -143,19 +159,19 @@
     </Reference>
     <Reference Include="SIL.Lift">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0078\lib\net461\SIL.Lift.dll</HintPath>
+      <HintPath>..\packages\SIL.Lift.9.0.0-beta0103\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0103\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms.Keyboarding">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0103\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
     </Reference>
     <Reference Condition="'$(OS)'=='Windows_NT'" Include="IrrKlang.NET4.dll, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Media.9.0.0-beta0078\build\lib\win-x86\irrKlang.NET4.dll</HintPath>
+      <HintPath>..\packages\SIL.Media.9.0.0-beta0103\build\lib\win-x86\irrKlang.NET4.dll</HintPath>
     </Reference>
     <None Include="packages.config" />
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
@@ -163,7 +179,7 @@
     </None>
     <Reference Include="SIL.WritingSystems">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>
+      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0103\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -327,11 +343,19 @@
   <Target Name="BeforeBuild">
   </Target>
   -->
+  <Import Project="$(GeckofxTargetsPath)" />
   <Target Name="AfterBuild">
+    <PropertyGroup>
+      <FirefoxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' == 'x86'">Firefox</FirefoxDirName>
+      <FirefoxDirName Condition="'$(OS)'=='Windows_NT' and '$(Platform)' != 'x86'">Firefox</FirefoxDirName>
+      <FirefoxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' == 'x86'">Firefox-Linux32</FirefoxDirName>
+      <FirefoxDirName Condition="'$(OS)'!='Windows_NT' and '$(Platform)' != 'x86'">Firefox-Linux64</FirefoxDirName>
+    </PropertyGroup>
     <ItemGroup>
-      <FirefoxFiles Include="..\packages\Geckofx60.32.60.0.54\content\Firefox\**\*.*" Condition="'$(Platform)' == 'x86'" />
-      <FirefoxFiles Include="..\packages\Geckofx60.64.60.0.54\content\Firefox\**\*.*" Condition="'$(Platform)' != 'x86'" />
+      <FirefoxFiles Include="..\packages\$(GeckofxDirName)\content\$(FirefoxDirName)\**\*.*" />
     </ItemGroup>
+    <!-- Note that due to a bug in the geckofx nuget .targets file, it doesn't successfully copy its .dll/.so
+        files, so manually do it here until the .targets file is fixed. At that time, this Copy task can be removed. -->
     <Copy SourceFiles="@(FirefoxFiles)" DestinationFiles="@(FirefoxFiles->'$(OutputPath)\Firefox\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>

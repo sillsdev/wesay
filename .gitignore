@@ -36,6 +36,7 @@ External/
 WeSay_Helps.chm
 .idea/
 icu4c.readme.txt
-.vscode/
 **/.vs
 **/Firefox/*
+/build/nuget.exe
+/test_install/

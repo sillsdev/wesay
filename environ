@@ -1,14 +1,18 @@
-# Environment settings for running programs with the SIL version of mono
-# Set MONO_ENVIRON to this file's pathname, then run, for example,
-#    /opt/mono-sil/bin/mono --debug WeSay.App.exe
-# These setting assume that the packaged SIL Mono is installed in /opt/mono-sil, and that
-# locally built versions are installed to that location as well.
-# Note that this file is intended to be "sourced", not "executed".
+# WeSay environment settings
+# Usage: source environ && mono Foo.exe
 
 # the sourcing script should cd/pushd to the directory containing this script
 BASE="$(pwd)"
-[ -z "$BUILD" ] && BUILD=Debug
-[ -z "$MONO_PREFIX" ] && MONO_PREFIX=/opt/mono4-sil
+[[ -n "${BUILD-}" ]] || BUILD=Debug
+# MONO_PREFIX could be something like /usr or /opt/mono5-sil
+[[ -n "${MONO_PREFIX-}" ]] || MONO_PREFIX=/usr
+
+if [[ -n "${FLATPAK_SANDBOX_DIR-}" && -z "${FLATPAK_ID-}" ]]; then
+  # Ubuntu 18.04 flatpak has FLATPAK_SANDBOX_DIR but not FLATPAK_ID.
+  # Set FLATPAK_ID so we can rely on it being set.
+  export FLATPAK_ID="org.sil.WeSay"
+fi
+
 
 # Dependency locations
 # Search for xulrunner and geckofx, select the best, and add its location to LD_LIBRARY_PATH.
@@ -22,22 +26,23 @@ MONO_PATH="${GDK_SHARP}:${GECKOFX}"
 
 # Ensure that we will search the standard pkgconfig directories after
 # updating the environment variable below.
-if [ "$PKG_CONFIG_PATH" = "" ]
-then
-	PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/share/pkgconfig
+if [ "${PKG_CONFIG_PATH-}" = "" ]; then
+  PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
+  [[ -z "${FLATPAK_ID-}" ]] ||
+    PKG_CONFIG_PATH="/app/lib/pkgconfig:/app/share/pkgconfig:${PKG_CONFIG_PATH}"
 fi
 
 ################################################################################################
 
-if [ "$RUNMODE" = "INSTALLED" ]
+if [ "${RUNMODE-}" = "INSTALLED" ]
 then
 	# Add the installation directory to the library paths
-	LD_LIBRARY_PATH="${BASE}:${LD_LIBRARY_PATH}"
+	LD_LIBRARY_PATH="${BASE}:${LD_LIBRARY_PATH-}"
 	MONO_PATH="${BASE}:${MONO_PATH}"
 else
 	# Add the build output to paths
 	PATH="${BASE}/output/${BUILD}:${PATH}"
-	LD_LIBRARY_PATH="${BASE}/output/${BUILD}:${LD_LIBRARY_PATH}"
+	LD_LIBRARY_PATH="${BASE}/output/${BUILD}:${LD_LIBRARY_PATH-}"
 	MONO_PATH="${BASE}/output/${BUILD}:${MONO_PATH}"
 fi
 
@@ -45,8 +50,8 @@ fi
 
 # Add locally-built (or packaged!) mono items to paths
 PATH="${MONO_PREFIX}/bin:${PATH}"
-LD_LIBRARY_PATH="${MONO_PREFIX}/lib:${LD_LIBRARY_PATH}"
-PKG_CONFIG_PATH="${MONO_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+LD_LIBRARY_PATH="${MONO_PREFIX}/lib:${LD_LIBRARY_PATH-}"
+PKG_CONFIG_PATH="${MONO_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH-}"
 MONO_GAC_PREFIX="${MONO_PREFIX}:/usr"
 
 ################################################################################################

@@ -30,26 +30,38 @@ namespace WeSay.UI
 			InitializeComponent();
 		}
 
-#if __MonoCS__
 		public override Size GetPreferredSize (Size proposedSize) {
-			Size retsize = GetPreferredSizeCore (proposedSize);
-			Size maximum_size = MaximumSize;
-			Size minimum_size = MinimumSize;
-			// If we're bigger than the MaximumSize, fix that
-			if (maximum_size.Width != 0 && retsize.Width > maximum_size.Width)
-				retsize.Width = maximum_size.Width;
-			if (maximum_size.Height != 0 && retsize.Height > maximum_size.Height)
-				retsize.Height = maximum_size.Height;
+			if (WeSay.UI.Platform.IsLinux)
+			{
+				Size retsize = GetPreferredSizeCore (proposedSize);
+				Size maximum_size = MaximumSize;
+				Size minimum_size = MinimumSize;
+				// If we're bigger than the MaximumSize, fix that
+				if (maximum_size.Width != 0 && retsize.Width > maximum_size.Width)
+					retsize.Width = maximum_size.Width;
+				if (maximum_size.Height != 0 && retsize.Height > maximum_size.Height)
+					retsize.Height = maximum_size.Height;
 
-			// If we're smaller than the MinimumSize, fix that
-			if (minimum_size.Width != 0 && retsize.Width < minimum_size.Width)
-				retsize.Width = minimum_size.Width;
-			if (minimum_size.Height != 0 && retsize.Height < minimum_size.Height)
-				retsize.Height = minimum_size.Height;
+				// If we're smaller than the MinimumSize, fix that
+				if (minimum_size.Width != 0 && retsize.Width < minimum_size.Width)
+					retsize.Width = minimum_size.Width;
+				if (minimum_size.Height != 0 && retsize.Height < minimum_size.Height)
+					retsize.Height = minimum_size.Height;
 
-			retsize.Height = Math.Max(20, retsize.Height); // get around Mono problem of collapsing
-			return retsize;
+				retsize.Height = Math.Max(20, retsize.Height); // get around Mono problem of collapsing
+				return retsize;
+			}
+			else
+			{
+				Size size = base.GetPreferredSize(proposedSize);
+				size.Height = Math.Max(20, size.Height); // get around Mono problem of collapsing
+				return size;
+			}
 		}
+
+		/// <summary>
+		/// Linux helper method.
+		/// </summary>
 		private Size GetPreferredSizeCore(Size proposedSize) {
 			int width = 0;
 			int height = 0;
@@ -107,14 +119,7 @@ namespace WeSay.UI
 			height += row_height;
 			return new Size (width, height);
 		}
-#else
-		public override Size GetPreferredSize(Size proposedSize)
-		{
-			Size size = base.GetPreferredSize(proposedSize);
-			size.Height = Math.Max(20, size.Height); // get around Mono problem of collapsing
-			return size;
-		}
-#endif
+
 		/// <summary>
 		/// ctor
 		/// </summary>

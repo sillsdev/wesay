@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using WeSay.UI;
 
 namespace WeSay.Project
 {
@@ -212,6 +213,9 @@ There are problems in:
 			return null;
 		}
 
+		/// <summary>
+		/// Name and release stage of app, for usage as a directory name.
+		/// </summary>
 		public static string WeSaySharedDirectory
 		{
 			get
@@ -228,6 +232,40 @@ There are problems in:
 			}
 		}
 
+		/// <summary>
+		/// Path to directory where the app's data is installed, such as
+		/// `/usr/share/wesay` or `/app/share/wesay` or CommonApplicationData/wesay.
+		/// </summary>
+		private static string AppInstalledDataDir
+		{
+			get
+			{
+				if (Platform.IsLinux)
+				{
+					return Path.Combine(InstallationPrefixDir, "share", WeSaySharedDirectory);
+				} else {
+					string dir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+					return Path.Combine(dir, WeSaySharedDirectory);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Linux installation prefix directory, such as `/usr` or `/app`.
+		/// </summary>
+		private static string InstallationPrefixDir
+		{
+			get
+			{
+				// If WeSay.App.exe is installed to /app/lib/wesay/WeSay.App.exe,
+				// The prefix (/app) is two levels up.
+				return Directory.GetParent(DirectoryOfTheApplicationExecutable).Parent.ToString();
+			}
+		}
+
+		/// <summary>
+		/// Path to the directory containing files from git repo directory named "common".
+		/// </summary>
 		public static string ApplicationCommonDirectory
 		{
 			get
@@ -235,8 +273,7 @@ There are problems in:
 				var appCommonDir = Path.Combine(DirectoryOfTheApplicationExecutable, "common");
 				if (!Directory.Exists(appCommonDir))
 				{
-					var commonPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-					appCommonDir = Path.Combine(commonPath, WeSaySharedDirectory);
+					appCommonDir = AppInstalledDataDir;
 				}
 				if (!Directory.Exists(appCommonDir))
 				{
@@ -263,8 +300,7 @@ There are problems in:
 				}
 				else
 				{
-					string commonpath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-					shareddir = Path.Combine(commonpath, WeSaySharedDirectory);
+					shareddir = AppInstalledDataDir;
 				}
 				return shareddir;
 			}
