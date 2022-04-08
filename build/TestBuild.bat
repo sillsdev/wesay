@@ -1,11 +1,5 @@
 echo off
 
-echo.
-echo.
-echo NOTE: If you are building from a clean repository, you will need to answer a few questions after restoring NuGet packages before the build can continue.
-echo.
-echo.
-
 REM cause Environment variable changes to be lost after this process dies:
 if not "%OS%"=="" setlocal
 
@@ -52,7 +46,7 @@ FOR /F "tokens=2* delims= " %%1 IN (
 REM allow typelib registration in redirected registry key even with limited permissions
 set OAPERUSERTLIBREG=1
 
-echo "Feedback" %MsBuild%
+echo Building with %MsBuild%
 REM Run the next target only if the previous target succeeded
 (
 	%MsBuild% WeSay.proj /t:RestoreBuildTasks
