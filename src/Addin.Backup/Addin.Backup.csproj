@@ -197,6 +197,7 @@
     <None Include="Resources\greenUsbKey.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- REVIEW (Hasso) 2022.04: who uses these targets? Are they called by magic? By default, Mercurial is copied into $(SolutionDir)/Mercurial, but Chorus isn't finding it there -->
   <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -110,16 +110,18 @@ On linux, the operation is similar:
 	cd $wesay/build
 	./TestBuild.sh
 
-Without any arguments, these scripts perform a Debug build, placing the
-result in `$wesay/output/Debug`.  If you prefer a Release build, then add `Release`
+These scripts perform a Debug build, placing the result in `$wesay/output/Debug`.
+#### TODO (Hasso) 2022.04: update scripts and instructions so this works:
+>  If you prefer a Release build, then add `Release`
 as a command line argument to `TestBuild.bat` or `TestBuild.sh`.  The result would
 then appear in `$wesay/output/Release`.
 
-On Windows, if you are using Visual Studio instead of running the first build
+#### TODO (Hasso) 2022.04: update scripts so this is automatic:
+> On Windows, if you are using Visual Studio instead of running the first build
 on the command line, you need to unzip `lib/Release/Mercurial.zip` in each of the
 output folders.
 
-On Linux, if you are using Monodevelop instead of running the first build
+> On Linux, if you are using Monodevelop instead of running the first build
 on the command line, you need to unzip `lib/common/Mercurial-i686.zip` or
 `lib/common/Mercurial-x86_64.zip` in each of the output folders.
 
