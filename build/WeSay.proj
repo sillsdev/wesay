@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<RootDir Condition="'$(teamcity_build_checkoutDir)' == '' And '$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
 		<RootDir Condition="'$(teamcity_build_checkoutDir)' != ''">$(teamcity_build_checkoutDir)</RootDir>
-		<Solution>Palaso.sln</Solution>
+		<Solution>Palaso.sln</Solution><!-- REVIEW (Hasso) 2022.04: if this is incorrect, what else is? -->
 		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
 		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
 		<LinuxExcludeCategories Condition="'$(OS)'!='Windows_NT'">KnownMonoIssue,</LinuxExcludeCategories>
