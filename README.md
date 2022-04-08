@@ -97,18 +97,7 @@ haven't actually tested whether installing works as well as building.
 
 ### BUILDING WESAY
 
-Before you can build wesay, a number of dependencies must be downloaded from
-the internet.
-
-For Windows, execute (in a git bash window) the script:
-
-	build/buildupdate.win.sh
-
-For Linux, execute the script:
-
-	build/buildupdate.mono.sh
-
-After all the dependencies have been downloaded, the simplest way to compile
+The simplest way to compile
 wesay is to use a batch file that calls `msbuild.exe` (on Windows) or a shell
 script that calls `xbuild` (on Linux).  For example, in a Windows "DOS box"
 window,
