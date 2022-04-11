@@ -230,8 +230,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
     <Error Condition="!Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets'))" />
   </Target>
   <Import Project="..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
-  <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.2\build\SIL.Chorus.Mercurial.targets')" />
+  <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets')" />
 </Project>

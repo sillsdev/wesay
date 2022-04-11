@@ -1,0 +1,5 @@
+<Project>
+ <PropertyGroup>
+   <Mercurial4ChorusExctractionDirs>$(MSBuildThisFileDirectory)</Mercurial4ChorusExctractionDirs>
+ </PropertyGroup>
+</Project>
