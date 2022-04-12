@@ -9,7 +9,7 @@ WeSay development.  Much of this information is Linux specific, but some of it
 applies to both Linux and Windows development.
 
 In this document, `$wesay` refers to the directory of the wesay repository
-(e.g. `~/src/wesay`).
+(e.g. `~/src/wesay` or `C:\dev\wesay`).
 
 ### UBUNTU DISTRIBUTION PACKAGES NEEDED
 
@@ -116,18 +116,15 @@ These scripts perform a Debug build, placing the result in `$wesay/output/Debug`
 as a command line argument to `TestBuild.bat` or `TestBuild.sh`.  The result would
 then appear in `$wesay/output/Release`.
 
-#### TODO (Hasso) 2022.04: update scripts so this is automatic:
-> On Windows, if you are using Visual Studio instead of running the first build
-on the command line, you need to unzip `lib/Release/Mercurial.zip` in each of the
-output folders.
+### DEBUGGING
 
-> On Linux, if you are using Monodevelop instead of running the first build
-on the command line, you need to unzip `lib/common/Mercurial-i686.zip` or
-`lib/common/Mercurial-x86_64.zip` in each of the output folders.
-
-### USING MONODEVELOP ON LINUX
+#### USING VISUAL STUDIO ON WINDOWS
 
 In Windows, WeSay can be debugged using Visual Studio Community 2015.
+
+#### USING MONODEVELOP ON LINUX
+
+
 For Linux, debugging requires using MonoDevelop, the standard Mono IDE.
 You have a choice of using the standard MonoDevelop that comes with the
 system, which for Ubuntu/Precise was version 2.8, or using a newer version
