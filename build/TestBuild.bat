@@ -46,7 +46,7 @@ FOR /F "tokens=2* delims= " %%1 IN (
 REM allow typelib registration in redirected registry key even with limited permissions
 set OAPERUSERTLIBREG=1
 
-echo Building with %MsBuild%
+echo Building with `%MsBuild%`
 REM Run the next target only if the previous target succeeded
 (
 	%MsBuild% WeSay.proj /t:RestoreBuildTasks
