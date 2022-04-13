@@ -126,14 +126,6 @@ result in `$wesay/output/Debug`.  If you prefer a Release build, then add `Relea
 as a command line argument to `TestBuild.bat` or `TestBuild.sh`.  The result would
 then appear in `$wesay/output/Release`.
 
-On Windows, if you are using Visual Studio instead of running the first build
-on the command line, you need to unzip `lib/Release/Mercurial.zip` in each of the
-output folders.
-
-On Linux, if you are using Monodevelop instead of running the first build
-on the command line, you need to unzip `lib/common/Mercurial-i686.zip` or
-`lib/common/Mercurial-x86_64.zip` in each of the output folders.
-
 ### USING MONODEVELOP ON LINUX
 
 In Windows, WeSay can be debugged using Visual Studio Community 2015.
