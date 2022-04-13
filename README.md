@@ -182,7 +182,11 @@ For Linux, it would be similar (adjust the setting for MONO_ENVIRON):
 	cd build
 	/opt/mono-sil/bin/xbuild /t:TestOnly /p:RootDir=.. /p:Configuration=Release build.mono.proj
 
-### OTHER LINUX PACKAGES NEEDED
+### OTHER SOFTWARE NEEDED
+
+* princexml.com/download (for PDF exports and related unit tests)
+
+#### OTHER LINUX PACKAGES NEEDED
 
 For developers, there are a few dependencies that may need to be installed
 manually.  (These should be installed automatically for users by the Linux
