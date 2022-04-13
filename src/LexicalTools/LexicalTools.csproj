@@ -162,9 +162,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\system.xml.linq\3.5.21022.801\lib\net20\System.Xml.Linq.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddMissingInfo\MissingInfoConfiguration.cs" />
