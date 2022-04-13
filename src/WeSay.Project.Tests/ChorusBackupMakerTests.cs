@@ -1,4 +1,3 @@
-using Chorus;
 using Chorus.VcsDrivers.Mercurial;
 using NUnit.Framework;
 using SIL.Progress;
@@ -23,8 +22,6 @@ namespace WeSay.Project.Tests
 
 			public BackupScenario(string testName)
 			{
-				var locationOfHg = Path.Combine(BasilProject.ApplicationRootDirectory, "..", "..", "src", "Mercurial");
-				MercurialLocation.PathToMercurialFolder = locationOfHg;
 				SIL.Reporting.ErrorReport.IsOkToInteractWithUser = false;
 				_projDir = new ProjectDirectorySetupForTesting("");
 
