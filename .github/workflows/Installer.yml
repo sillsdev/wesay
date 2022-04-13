@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [windows-latest]
+        os: [windows-2019]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -32,7 +32,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
-      if: ${{ matrix.os == 'windows-latest' }}
+      if: ${{ matrix.os == 'windows-2019' }}
 
     # Run the unit tests
     - name: Restore
