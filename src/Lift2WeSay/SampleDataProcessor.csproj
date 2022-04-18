@@ -10,6 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SampleDataProcessor</RootNamespace>
     <AssemblyName>SampleDataProcessor</AssemblyName>
+    <AppConfig>..\AppCommon.config</AppConfig>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
