@@ -11,6 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WeSay.LexicalTools.Tests</RootNamespace>
     <AssemblyName>LexicalTools.Tests</AssemblyName>
+    <AppConfig>..\AppForTestsSTA.config</AppConfig>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

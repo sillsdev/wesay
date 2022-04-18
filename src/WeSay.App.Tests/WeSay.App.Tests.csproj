@@ -11,6 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WeSay.App.Tests</RootNamespace>
     <AssemblyName>WeSay.App.Tests</AssemblyName>
+    <AppConfig>..\AppForTests.config</AppConfig>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

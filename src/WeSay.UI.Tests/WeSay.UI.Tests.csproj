@@ -11,6 +11,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WeSay.UI.Tests</RootNamespace>
     <AssemblyName>WeSay.UI.Tests</AssemblyName>
+    <AppConfig>..\AppForTests.config</AppConfig>
     <StartupObject>
     </StartupObject>
     <FileUpgradeFlags>

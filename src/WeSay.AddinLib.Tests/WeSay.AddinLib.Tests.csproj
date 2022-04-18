@@ -10,6 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WeSay.AddinLib.Tests</RootNamespace>
     <AssemblyName>WeSay.AddinLib.Tests</AssemblyName>
+    <AppConfig>..\AppForTests.config</AppConfig>
     <StartupObject>
     </StartupObject>
     <FileUpgradeFlags>

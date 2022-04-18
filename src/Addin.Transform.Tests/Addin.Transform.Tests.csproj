@@ -10,6 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Addin.Transform.Tests</RootNamespace>
     <AssemblyName>Addin.Transform.Tests</AssemblyName>
+    <AppConfig>..\AppForTests.config</AppConfig>
     <StartupObject>
     </StartupObject>
     <FileUpgradeFlags>

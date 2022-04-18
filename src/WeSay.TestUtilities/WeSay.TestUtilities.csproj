@@ -12,6 +12,7 @@
     <AssemblyName>WeSay.TestUtilities</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <AppConfig>..\AppForTests.config</AppConfig>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
