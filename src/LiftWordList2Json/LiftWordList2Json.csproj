@@ -64,7 +64,7 @@
       <HintPath>..\packages\JetBrains.Annotations.2021.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="L10NSharp, Version=4.2.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
-      <HintPath>..\packages\L10NSharp.4.2.0-beta0006\lib\net461\L10NSharp.dll</HintPath>
+      <HintPath>..\packages\L10NSharp.5.0.0-beta0086\lib\net461\L10NSharp.dll</HintPath>
     </Reference>
     <Reference Include="Markdig.Signed, Version=0.22.0.0, Culture=neutral, PublicKeyToken=870da25a133885f8, processorArchitecture=MSIL">
       <HintPath>..\packages\Markdig.Signed.0.22.0\lib\net452\Markdig.Signed.dll</HintPath>

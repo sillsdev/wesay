@@ -145,7 +145,7 @@
       <HintPath>..\..\lib\$(Configuration)\KeymanLink.dll</HintPath>
     </Reference>
     <Reference Include="L10NSharp, Version=4.2.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
-      <HintPath>..\packages\L10NSharp.4.2.0-beta0006\lib\net461\L10NSharp.dll</HintPath>
+      <HintPath>..\packages\L10NSharp.5.0.0-beta0086\lib\net461\L10NSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibChorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
