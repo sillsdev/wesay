@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.TestUtilities;
-using System.IO;
 using WeSay.LexicalModel;
 
 namespace WeSay.LexicalTools.Tests
@@ -11,23 +10,21 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
-		private string _filePath;
 
 		#region Setup/Teardown
 
 		[SetUp]
 		public void Setup()
 		{
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_tempFolder = new TemporaryFolder(GetType().Name);
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false));
 
 			_target = _lexEntryRepository.CreateItem();
 			_source = _lexEntryRepository.CreateItem();
 
 			Field relationField = new Field("synonyms",
 											"LexEntry",
-											new string[] { "vernacular" },
+											new[] { "vernacular" },
 											Field.MultiplicityType.ZeroOr1,
 											"RelationToOneEntry");
 			_missingRelationFieldFilter = new MissingFieldQuery(relationField, null, null);
@@ -37,7 +34,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Teardown()
 		{
 			_lexEntryRepository.Dispose();
-			File.Delete(_filePath);
+			_tempFolder.Dispose();
 		}
 
 		#endregion

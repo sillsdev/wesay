@@ -35,16 +35,15 @@ namespace WeSay.LexicalModel.Tests
 			{
 				DefaultCollation = new IcuRulesCollationDefinition("standard")
 			};
-			_temporaryFolder = new TemporaryFolder();
-			string filePath = _temporaryFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(filePath);
+			_temporaryFolder = new TemporaryFolder(GetType().Name);
+			_lexEntryRepository = new LexEntryRepository(_temporaryFolder.GetPathForNewTempFile(false));
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
 			_lexEntryRepository.Dispose();
-			_temporaryFolder.Delete();
+			_temporaryFolder.Dispose();
 		}
 
 		private void CreateLexentryWithOnlyCitationForm(string citationForm, string writingSystemId)
@@ -247,9 +246,8 @@ namespace WeSay.LexicalModel.Tests
 
 			public TestEnvironment()
 			{
-				_temporaryFolder = new TemporaryFolder();
-				string filePath = _temporaryFolder.GetTemporaryFile();
-				_repository = new LexEntryRepository(filePath);
+				_temporaryFolder = new TemporaryFolder(GetType().FullName);
+				_repository = new LexEntryRepository(_temporaryFolder.GetPathForNewTempFile(false));
 			}
 
 			public void TestFilter(int result, IEnumerable<string> emptyWsInField, IEnumerable<string> populatedWsInField,
@@ -286,7 +284,7 @@ namespace WeSay.LexicalModel.Tests
 			public void Dispose()
 			{
 				_repository.Dispose();
-				_temporaryFolder.Delete();
+				_temporaryFolder.Dispose();
 			}
 		}
 

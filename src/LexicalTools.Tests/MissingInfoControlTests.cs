@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using SIL.Data;
 using SIL.DictionaryServices.Model;
-using SIL.IO;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
 using System;
@@ -17,7 +16,6 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
-		private TempFile _tempFile;
 		private ResultSet<LexEntry> _missingTranslationRecordList;
 		private ViewTemplate _viewTemplate;
 		private WritingSystemDefinition _writingSystem;
@@ -65,8 +63,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 
 			_tempFolder = new TemporaryFolder("MissingInfoControlTests");
-			_tempFile = _tempFolder.GetNewTempFile(true);
-			_lexEntryRepository = new LexEntryRepository(_tempFile.Path);
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false));
 
 			_writingSystem = new WritingSystemDefinition(WritingSystemsIdsForTests.OtherIdForTest) { DefaultCollation = new IcuRulesCollationDefinition("standard") };
 
@@ -106,18 +103,17 @@ namespace WeSay.LexicalTools.Tests
 							exampleTranslationField, null, _writingSystem);
 		}
 
-		private void CreateTestEntry(string lexicalForm, string Definition, string exampleSentence)
+		private void CreateTestEntry(string lexicalForm, string definition, string exampleSentence)
 		{
 			var entry = _lexEntryRepository.CreateItem();
 			entry.LexicalForm[_writingSystem.LanguageTag] = lexicalForm;
 			var sense = new LexSense();
 			entry.Senses.Add(sense);
-			sense.Definition[WritingSystemsIdsForTests.AnalysisIdForTest] = Definition;
+			sense.Definition[WritingSystemsIdsForTests.AnalysisIdForTest] = definition;
 			var example = new LexExampleSentence();
 			sense.ExampleSentences.Add(example);
 			example.Sentence[_writingSystem.LanguageTag] = exampleSentence;
 			_lexEntryRepository.SaveItem(entry);
-			return;
 		}
 
 		private static void AddTranslationToEntry(LexEntry entry, string translation)
@@ -131,8 +127,8 @@ namespace WeSay.LexicalTools.Tests
 		public void TearDown()
 		{
 			_lexEntryRepository?.Dispose();
-			_tempFolder?.Delete();
-			_tempFile?.Dispose();
+			_tempFolder?.Dispose();
+
 			WeSayProjectTestHelper.CleanupForTests();
 		}
 

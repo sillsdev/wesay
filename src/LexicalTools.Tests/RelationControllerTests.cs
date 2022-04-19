@@ -21,7 +21,6 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntry _source;
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
-		private TempFile _tempFile;
 		private LexRelationType _synonymsRelationType;
 		private LexRelationType _singleSynonymRelationType;
 		private Field _singleSynonymRelationField;
@@ -45,8 +44,7 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 
 			_tempFolder = new TemporaryFolder("RelationControllerTests");
-			_tempFile = _tempFolder.GetNewTempFile(true);
-			_lexEntryRepository = new LexEntryRepository(_tempFile.Path);
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false));
 
 			_target = CreateEntry("one", "single item");
 			_source = CreateEntry("single", "one item");
@@ -78,8 +76,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Teardown()
 		{
 			_lexEntryRepository?.Dispose();
-			_tempFolder?.Delete();
-			_tempFile?.Dispose();
+			_tempFolder?.Dispose();
 			WeSayProjectTestHelper.CleanupForTests();
 		}
 

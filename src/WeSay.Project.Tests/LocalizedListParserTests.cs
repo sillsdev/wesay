@@ -1,4 +1,3 @@
-using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using SIL.Reporting;
 using SIL.TestUtilities;
@@ -11,7 +10,6 @@ namespace WeSay.Project.Tests
 	[TestFixture]
 	public class LocalizedListParserTests
 	{
-		private IServiceLocator Context { get; set; }
 		[SetUp]
 		public void Setup()
 		{
@@ -27,7 +25,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ParseSemDomXMLFile()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder($"{GetType().Name}.SemDom"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -46,7 +44,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ParseLocalizedListXMLFile()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder($"{GetType().Name}.LocList"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -63,13 +61,14 @@ namespace WeSay.Project.Tests
 			}
 		}
 		[Test]
-		public void ReadListFile_NonExistantSemanticDomainFile_Throws()
+		public void ReadListFile_NonExistentSemanticDomainFile_Throws()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder(GetType().Name))
 			{
-				if (File.Exists(Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml")))
+				var semDomPath = Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml");
+				if (File.Exists(semDomPath))
 				{
-					File.Delete(Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml"));
+					File.Delete(semDomPath);
 				}
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();

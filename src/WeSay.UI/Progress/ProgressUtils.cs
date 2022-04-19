@@ -48,7 +48,6 @@ namespace WeSay.UI.Progress
 		// FB25127
 		public static event Action<Exception> UnhandledThreadException;
 
-		static bool inExecuteOnSameThread;
 		private static volatile ManualResetEvent executeOnSameThreadComplete = new ManualResetEvent(true);
 
 		// Do not access directly
@@ -198,23 +197,23 @@ namespace WeSay.UI.Progress
 				// Wait for the UI Thread
 				UISynchronizationContext.Send(delegate
 					{
-						// If the action is to be run exclusively and if ExecuteOnSameThread is already running, then wait
-						if (exclusively && inExecuteOnSameThread)
-							return;
+						//// If the action is to be run exclusively and if ExecuteOnSameThread is already running, then wait
+						//if (exclusively && inExecuteOnSameThread)
+						//	return;
 
-						try
-						{
-							action();
-						}
-						catch (Exception exception)
-						{
-							SaveStackTrace(exception);
-							caughtException = exception;
-						}
-						finally
-						{
-							finished = true;
-						}
+						//try
+						//{
+						//	action();
+						//}
+						//catch (Exception exception)
+						//{
+						//	SaveStackTrace(exception);
+						//	caughtException = exception;
+						//}
+						//finally
+						//{
+						//	finished = true;
+						//}
 					}, null);
 
 				// We can only get here if we are running exclusively and if ExecuteOnSameThread was running.
