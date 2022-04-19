@@ -1,4 +1,4 @@
-﻿using Chorus.FileTypeHandlers.lift;
+using Chorus.FileTypeHandlers.lift;
 using Chorus.sync;
 using Chorus.UI.Sync;
 using Chorus.VcsDrivers.Mercurial;
@@ -148,7 +148,12 @@ namespace WeSay.Project
 			}
 			catch (Exception error)
 			{
-				SIL.Reporting.Logger.WriteEvent("Error during Backup: {0}", error.Message);
+				Logger.WriteEvent("Error during Backup: {0}", error.Message);
+#if DEBUG
+				// ReSharper disable LocalizableElement
+				Console.WriteLine($"Error during Backup: {error}");
+				// ReSharper restore LocalizableElement
+#endif
 				//TODO we need some passive way indicating the health of the backup system
 			}
 		}
