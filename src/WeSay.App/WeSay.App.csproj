@@ -98,7 +98,7 @@
     </Reference>
     <Reference Include="Chorus, Version=3.1.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Chorus.App.5.0.0-beta0013\lib\net461\Chorus.exe</HintPath>
+      <HintPath>..\packages\SIL.Chorus.App.5.0.0-beta0017\lib\net461\Chorus.exe</HintPath>
     </Reference>
     <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -118,7 +118,7 @@
     </Reference>
     <Reference Include="LibChorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0013\lib\net461\LibChorus.dll</HintPath>
+      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0017\lib\net461\LibChorus.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -135,27 +135,27 @@
     </Reference>
     <Reference Include="SIL.Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0078\lib\net461\SIL.Core.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core.Desktop">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0078\lib\net461\SIL.Core.Desktop.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0154\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lift">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0078\lib\net461\SIL.Lift.dll</HintPath>
+      <HintPath>..\packages\SIL.Lift.9.0.0-beta0154\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms.Keyboarding">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
     </Reference>
     <Reference Condition="'$(OS)'=='Windows_NT'" Include="IrrKlang.NET4.dll, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Media.9.0.0-beta0078\build\lib\win-x86\irrKlang.NET4.dll</HintPath>
+      <HintPath>..\packages\SIL.Media.9.0.0-beta0154\build\lib\win-x86\irrKlang.NET4.dll</HintPath>
     </Reference>
     <None Include="packages.config" />
     <None Include="..\..\lib\common\Enchant.Net.dll.config">
@@ -163,7 +163,7 @@
     </None>
     <Reference Include="SIL.WritingSystems">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>
+      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0154\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

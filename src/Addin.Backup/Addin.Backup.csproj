@@ -81,11 +81,11 @@
     <Reference Include="JetBrains.Annotations, Version=2021.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2021.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="L10NSharp, Version=4.2.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
-      <HintPath>..\packages\L10NSharp.4.2.0-beta0006\lib\net461\L10NSharp.dll</HintPath>
+    <Reference Include="L10NSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
+      <HintPath>..\packages\L10NSharp.5.0.0-beta0086\lib\net461\L10NSharp.dll</HintPath>
     </Reference>
     <Reference Include="LibChorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0013\lib\net461\LibChorus.dll</HintPath>
+      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0017\lib\net461\LibChorus.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
@@ -94,19 +94,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0078\lib\net461\SIL.Core.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0078\lib\net461\SIL.Core.Desktop.dll</HintPath>
+      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0154\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0078\lib\net461\SIL.Lift.dll</HintPath>
+      <HintPath>..\packages\SIL.Lift.9.0.0-beta0154\lib\net461\SIL.Lift.dll</HintPath>
     </Reference>
     <Reference Include="SIL.Windows.Forms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0078\lib\net461\SIL.Windows.Forms.dll</HintPath>
+      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0078\lib\net461\SIL.WritingSystems.dll</HintPath>
+      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0154\lib\net461\SIL.WritingSystems.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -188,7 +188,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\buttonImage.png" />
     <None Include="Resources\emailAction.png" />
@@ -203,9 +202,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets'))" />
+    <Error Condition="!Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets'))" />
   </Target>
-  <Import Project="..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0078\build\SIL.Windows.Forms.targets')" />
+  <Import Project="..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets" Condition="Exists('..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 	   Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
