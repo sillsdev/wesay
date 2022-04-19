@@ -15,7 +15,6 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
-		private string _filePath;
 
 		private string _fieldsToShow;
 		private string _label;
@@ -45,9 +44,8 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_tempFolder = new TemporaryFolder(GetType().Name);
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false));
 
 			WeSayProjectTestHelper.InitializeForTests();
 			RtfRenderer.HeadWordWritingSystemId = _vernacularWritingSystemId;
@@ -102,7 +100,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 			if (_tempFolder != null)
 			{
-				_tempFolder.Delete();
+				_tempFolder.Dispose();
 			}
 			WeSayProjectTestHelper.CleanupForTests();
 		}

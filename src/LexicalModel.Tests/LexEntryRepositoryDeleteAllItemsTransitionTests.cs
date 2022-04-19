@@ -16,7 +16,7 @@ namespace WeSay.LexicalModel.Tests
 		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder("LexEntryRepositoryDeleteAllItemsTransitionTests");
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
+			_persistedFilePath = _tempFolder.GetPathForNewTempFile(false);
 			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -24,7 +24,7 @@ namespace WeSay.LexicalModel.Tests
 		public override void TearDown()
 		{
 			DataMapperUnderTest.Dispose();
-			_tempFolder.Delete();
+			_tempFolder.Dispose();
 		}
 
 		protected override void RepopulateRepositoryFromPersistedData()
