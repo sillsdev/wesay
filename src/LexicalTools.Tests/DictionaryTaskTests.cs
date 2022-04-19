@@ -2,7 +2,6 @@ using NUnit.Framework;
 using SIL.Reporting;
 using SIL.TestUtilities;
 using SIL.WritingSystems;
-using System.IO;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools.DictionaryBrowseAndEdit;
 using WeSay.Project;
@@ -15,7 +14,6 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private LexEntryRepository _lexEntryRepository;
 		private ViewTemplate _viewTemplate;
-		private string _filePath;
 		private TemporaryFolder _tempFolder;
 		private DictionaryControl.Factory _dictControlFactory;
 		private TaskMemoryRepository _taskMemoryRepository;
@@ -37,27 +35,23 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder(GetType().Name);
 
 			WeSayProjectTestHelper.InitializeForTests();
-			string[] vernacularWritingSystemIds = new string[]
-													  {
-															  WritingSystemsIdsForTests.VernacularIdForTest
-													  };
+			string[] vernacularWritingSystemIds = {WritingSystemsIdsForTests.VernacularIdForTest};
 			_viewTemplate = new ViewTemplate();
 			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
 										"LexEntry",
 										vernacularWritingSystemIds));
 			_viewTemplate.Add(new Field("Note",
 										"LexEntry",
-										new string[] { "en" },
+										new[] { "en" },
 										Field.MultiplicityType.ZeroOr1,
 										"MultiText"));
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false));
 
-			EntryViewControl.Factory entryViewFactory = (() => new EntryViewControl());
-			_dictControlFactory = (memory => new DictionaryControl(entryViewFactory, _lexEntryRepository, _viewTemplate, memory, new StringLogger()));
+			EntryViewControl EntryViewFactory() => new EntryViewControl();
+			_dictControlFactory = memory => new DictionaryControl(EntryViewFactory, _lexEntryRepository, _viewTemplate, memory, new StringLogger());
 
 			_taskMemoryRepository = new TaskMemoryRepository();
 			_task = new DictionaryTask(_dictControlFactory, DictionaryBrowseAndEditConfiguration.CreateForTests("definition"), _lexEntryRepository,
@@ -74,7 +68,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				_lexEntryRepository.Dispose();
 			}
-			File.Delete(_filePath);
+			_tempFolder?.Dispose();
 			WeSayProjectTestHelper.CleanupForTests();
 		}
 

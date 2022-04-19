@@ -1,4 +1,3 @@
-using Autofac;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
@@ -23,7 +22,6 @@ namespace WeSay.LexicalTools.Tests
 		private LexEntryRepository _lexEntryRepository;
 		private TemporaryFolder _tempFolder;
 		private string _semanticDomainFilePath;
-		private string _filePath;
 		private ViewTemplate _viewTemplate;
 		private static string _vernacularWritingSystemId = WritingSystemsIdsForTests.VernacularIdForTest;
 		private GatherBySemanticDomainConfig _config;
@@ -48,11 +46,9 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 
 			WeSayWordsProject.Project.RemoveCache();
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
-			_semanticDomainFilePath = _tempFolder.GetTemporaryFile();
-
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_tempFolder = new TemporaryFolder(GetType().Name);
+			_semanticDomainFilePath = _tempFolder.GetPathForNewTempFile(false);
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false));
 			_viewTemplate = MakeViewTemplate("en");
 			_config = GatherBySemanticDomainConfig.CreateForTests(_semanticDomainFilePath);
 			_task = new GatherBySemanticDomainTask(_config,
@@ -81,25 +77,22 @@ namespace WeSay.LexicalTools.Tests
 
 		private static ViewTemplate MakeViewTemplate(string nameAndQuestionWritingSystem)
 		{
-			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4,
-												  "LexSense",
-												  new string[] { nameAndQuestionWritingSystem });
-			semanticDomainField.OptionsListFile = "SemDom.xml";
-			semanticDomainField.DataTypeName = "OptionRefCollection";
+			Field semanticDomainField = new Field(LexSense.WellKnownProperties.SemanticDomainDdp4, "LexSense", new[] { nameAndQuestionWritingSystem })
+			{
+				OptionsListFile = "SemDom.xml",
+				DataTypeName = "OptionRefCollection"
+			};
 
 			ViewTemplate v = new ViewTemplate();
-			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(),
-											   "LexEntry",
-											   new string[] { _vernacularWritingSystemId });
-			lexicalFormField.DataTypeName = "MultiText";
+			Field lexicalFormField = new Field(Field.FieldNames.EntryLexicalForm.ToString(), "LexEntry", new[] { _vernacularWritingSystemId })
+			{
+				DataTypeName = "MultiText"
+			};
 
 			v.Add(lexicalFormField);
 			v.Add(semanticDomainField);
 
-			Field defnField = new Field(LexSense.WellKnownProperties.Definition, "LexSense", new string[] { "en" });
-			defnField.IsMeaningField = true;
-
-			v.Add(defnField);
+			v.Add(new Field(LexSense.WellKnownProperties.Definition, "LexSense", new[] { "en" }) {IsMeaningField = true});
 
 			if (!v.WritingSystems.Contains("en"))
 			{
@@ -115,14 +108,9 @@ namespace WeSay.LexicalTools.Tests
 			{
 				_task.Deactivate(); //needed for disposal of controls
 			}
-			if (_lexEntryRepository != null)
-			{
-				_lexEntryRepository.Dispose();
-			}
-			if (_tempFolder != null)
-			{
-				_tempFolder.Delete();
-			}
+
+			_lexEntryRepository?.Dispose();
+			_tempFolder?.Dispose();
 			WeSayProjectTestHelper.CleanupForTests();
 		}
 
@@ -518,6 +506,7 @@ namespace WeSay.LexicalTools.Tests
 			Task.Deactivate();
 		}
 
+#pragma warning disable CS0618 // Type or member is obsolete (Task.PrepareToMoveWordToEditArea is permissible in tests)
 		[Test]
 		public void RemainingCount_RemoveWordCausingEmptyDomain_RemainingCountIncreases()
 		{
@@ -1481,6 +1470,7 @@ namespace WeSay.LexicalTools.Tests
 		}
 
 		#endregion
+#pragma warning restore CS0618 // Type or member is obsolete (Task.PrepareToMoveWordToEditArea is permissible in tests)
 
 		#region GotoPreviousDomainQuestion
 
