@@ -303,7 +303,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\wesay.helpmap" />
-    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\sendReceive32x32.png" />
   </ItemGroup>
