@@ -1,4 +1,4 @@
-﻿using SIL.Lift;
+using SIL.Lift;
 using SIL.Lift.Options;
 using SIL.Reporting;
 using System;
@@ -15,7 +15,6 @@ namespace WeSay.Project.LocalizedList
 		private Dictionary<string, List<string>> _questionDictionary;
 		private MultiText _searchKeys;
 		private OptionsList _optionsList;
-		private bool _alreadyReportedWSLookupFailure;
 		public string SemanticDomainWs { get; set; }
 		public string ApplicationCommonDirectory { get; set; }
 		public string PathToWeSaySpecificFilesDirectoryInProject { get; set; }

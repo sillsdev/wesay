@@ -1,4 +1,4 @@
-﻿using Gecko;
+using Gecko;
 using Gecko.DOM;
 using Gecko.Events;
 using SIL.WritingSystems;
@@ -18,7 +18,6 @@ namespace WeSay.UI.TextBoxes
 		private bool _initialSelectLoad;
 		private int _pendingInitialIndex;
 		private string _pendingHtmlLoad;
-		private bool _keyPressed;
 
 		private List<Object> _items;
 		private readonly StringBuilder _itemHtml;
@@ -30,7 +29,6 @@ namespace WeSay.UI.TextBoxes
 		{
 			InitializeComponent();
 
-			_keyPressed = false;
 			_initialSelectLoad = false;
 			_pendingInitialIndex = -1;
 			_items = new List<object>();

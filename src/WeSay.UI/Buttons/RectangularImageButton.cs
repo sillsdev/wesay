@@ -8,8 +8,6 @@ namespace WeSay.UI.Buttons
 	[Description("Rectangular Button Control")]
 	public class RectangularImageButton : RegionButton
 	{
-		private Size _keepThisSize;
-
 		public RectangularImageButton()
 		{
 			Size = new Size(50, 50); // Default size
