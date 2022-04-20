@@ -1,13 +1,9 @@
 using Chorus.UI.Review;
-//using SIL.Code;
 using SIL.i18n;
 using SIL.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-//using System.IO;
-//using System.Linq;
-//using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using WeSay.App.Properties;
@@ -21,7 +17,6 @@ namespace WeSay.App
 	{
 		private ITask _activeTask;
 		private TabPage _currentWorkTab;
-		private string _currentUrl;
 		public SynchronizationContext synchronizationContext;
 		//        private ProgressDialogHandler _progressHandler;
 

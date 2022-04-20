@@ -27,7 +27,6 @@ namespace WeSay.LexicalTools.GatherBySemanticDomains
 		public ViewTemplate ViewTemplate { get; set; }
 		internal const string DomainIndexTaskMemoryKey = "DomainIndex";
 		internal const string QuestionIndexTaskMemoryKey = "QuestionIndex";
-		private readonly string _semanticDomainQuestionsFileName;
 		private GatherBySemanticDomainsControl _gatherControl;
 		private Dictionary<string, List<string>> _domainQuestions;
 		private List<string> _domainKeys;

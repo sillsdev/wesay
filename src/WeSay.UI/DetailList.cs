@@ -24,8 +24,8 @@ namespace WeSay.UI
 		/// </summary>
 		public event EventHandler<CurrentItemEventArgs> ChangeOfWhichItemIsInFocus = delegate { };
 
-		private readonly int _indexOfLabel; // todo to const?
-		private readonly int _indexOfWidget = 1; // todo to const?
+		private const int IndexOfLabel = 0;
+		private const int IndexOfWidget = 1;
 
 		private bool _disposed;
 		private readonly StackTrace _stackAtConstruction;
@@ -135,7 +135,6 @@ namespace WeSay.UI
 		private void OnMouseClick(object sender, MouseEventArgs e)
 		{
 			Select();
-			_clicked = true;
 		}
 		public void AddDetailList(DetailList detailList, int insertAtRow)
 		{
@@ -148,7 +147,7 @@ namespace WeSay.UI
 			RowStyles.Add(new RowStyle(SizeType.AutoSize));
 			detailList.MouseWheel += OnChildWidget_MouseWheel;
 			detailList.Margin = new Padding(0, detailList.Margin.Top, 0, detailList.Margin.Bottom);
-			Controls.Add(detailList, _indexOfLabel, insertAtRow);
+			Controls.Add(detailList, IndexOfLabel, insertAtRow);
 			OnLabelsChanged(this, new EventArgs());
 			detailList.LabelsChanged += OnLabelsChanged;
 			ResumeLayout(false);
@@ -308,7 +307,7 @@ namespace WeSay.UI
 				label.ForeColor = Color.Gray;
 			}
 
-			Controls.Add(label, _indexOfLabel, insertAtRow);
+			Controls.Add(label, IndexOfLabel, insertAtRow);
 			label.SizeChanged += OnLabelSizeChanged;
 
 			if (fieldLabels.Length > 1)
@@ -336,7 +335,7 @@ namespace WeSay.UI
 					minorLabel.ForeColor = Color.Gray;
 				}
 
-				Controls.Add(minorLabel, _indexOfLabel, insertAtRow);
+				Controls.Add(minorLabel, IndexOfLabel, insertAtRow);
 				minorLabel.SizeChanged += OnLabelSizeChanged;
 			}
 
@@ -349,7 +348,7 @@ namespace WeSay.UI
 			editWidget.KeyDown += OnEditWidget_KeyDown;
 			editWidget.MouseWheel += OnChildWidget_MouseWheel;
 
-			Debug.Assert(GetControlFromPosition(_indexOfWidget, insertAtRow) == null);
+			Debug.Assert(GetControlFromPosition(IndexOfWidget, insertAtRow) == null);
 
 			//test
 			editWidget.TabIndex = insertAtRow;
@@ -371,7 +370,7 @@ namespace WeSay.UI
 			//
 			// we eventually get around this by making control invisible while it lays out
 			// and then making it visible again. (See EntryViewControl.cs:RefreshEntryDetail)
-			Controls.Add(editWidget, _indexOfWidget, insertAtRow);
+			Controls.Add(editWidget, IndexOfWidget, insertAtRow);
 			int tabIndex = 0;
 			foreach (Control control in Controls)
 			{
@@ -513,7 +512,6 @@ namespace WeSay.UI
 			}
 		}
 
-		bool _clicked = false;
 		private int _mouseOverRow = -1;
 
 		//This message filter is used to determine wether the mouse in hovering over the DetailList or one

@@ -17,10 +17,7 @@ namespace WeSay.LexicalTools
 
 			IsVisible = XmlUtils.GetOptionalBooleanAttributeValue(_xmlDoc.FirstChild, "visible", false);
 		}
-		public string TaskName
-		{
-			get { return XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
-		}
+		public string TaskName => XmlUtils.GetMandatoryAttributeValue(_xmlDoc.FirstChild, "taskName");
 
 		public virtual bool IsOptional
 		{
@@ -28,7 +25,7 @@ namespace WeSay.LexicalTools
 		}
 
 		/// <summary>
-		/// used to head-off failed task loads due to contstructors which can't even be satified by the container
+		/// used to head-off failed task loads due to constructors which can't even be satisfied by the container
 		/// </summary>
 		public virtual bool IsAvailable
 		{

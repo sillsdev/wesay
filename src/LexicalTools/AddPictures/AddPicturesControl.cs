@@ -24,8 +24,6 @@ namespace WeSay.LexicalTools.AddPictures
 			var collection = _presentationModel.ImageCollection;
 			if (!string.IsNullOrEmpty(_searchWords.Text))
 			{
-				//				IEnumerable<object> results = collection.GetMatchingPictures(_searchWords.Text, out var foundExactMatches);
-				//				_thumbnailViewer.LoadItems(collection.GetPathsFromResults(results, true));
 				var results = collection.GetMatchingImages(_searchWords.Text);
 				_thumbnailViewer.LoadItems(results);
 			}
