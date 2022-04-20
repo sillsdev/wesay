@@ -323,9 +323,8 @@ namespace WeSay.App
 				}
 #endif
 
-				RtfRenderer.HeadWordWritingSystemId =
-					_project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
-				HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
+				HtmlRenderer.HeadWordWritingSystemId = RtfRenderer.HeadWordWritingSystemId =
+					_project.DefaultViewTemplate.HeadwordWritingSystems[0].LanguageTag;
 
 #if __MonoCS__
 				UglyHackForXkbIndicator();

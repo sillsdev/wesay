@@ -1,4 +1,4 @@
-﻿using Chorus.UI.Notes.Bar;
+using Chorus.UI.Notes.Bar;
 using SIL.DictionaryServices.Model;
 using System;
 using System.Drawing;
@@ -61,7 +61,7 @@ namespace WeSay.LexicalTools
 
 			if (_geckoOption)
 			{
-				_entryPreview = new GeckoBox(WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSystem, null);
+				_entryPreview = new GeckoBox(WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSystems[0], null);
 				((GeckoBox)_entryPreview).ReadOnly = true;
 				((GeckoBox)_entryPreview).BorderStyle = System.Windows.Forms.BorderStyle.None;
 
