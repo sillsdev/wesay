@@ -94,10 +94,10 @@ namespace WeSay.LexicalTools.Tests
 			_viewTemplate = (ViewTemplate)
 						WeSayWordsProject.Project.ServiceLocator.GetService(typeof(ViewTemplate));
 
-			List<String> headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
+			var headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
 			string wsA = headwordWritingSystemIds[0];
 			string wsB = _viewTemplate.GetDefaultWritingSystemForField(definition).LanguageTag;
-			HtmlRenderer.HeadWordWritingSystemId = _viewTemplate.HeadwordWritingSystem.LanguageTag;
+			HtmlRenderer.HeadWordWritingSystemId = _viewTemplate.HeadwordWritingSystems[0].LanguageTag;
 
 			_entry = _lexEntryRepository.CreateItem();
 			_entry.LexicalForm[wsA] = lexicalForm;
