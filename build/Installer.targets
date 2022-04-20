@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="BuildRelease" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
 	<PropertyGroup>
-		<RootDir>$(MSBuildThisFileDirectory)</RootDir>
+		<!-- TODO (Hasso) 2022.04: should be RootDir/<something>/packages? -->
 		<MSBuildExtensionTargets>$(RootDir)/packages/MSBuild.Extension.Pack.1.9.0/build/net40/MSBuild.Extension.Pack.targets</MSBuildExtensionTargets>
 	</PropertyGroup>
 	<Import Project="$(MSBuildExtensionTargets)" Condition="Exists('$(MSBuildExtensionTargets)')"/>
