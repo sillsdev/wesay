@@ -582,21 +582,6 @@ namespace WeSay.App
 			MessageBox.Show(e, "WeSay Command Line Problem");
 		}
 
-		public static void ShowHelpTopic(string topicLink)
-		{
-			string helpFilePath = FileLocationUtilities.GetFileDistributedWithApplication("WeSay_Helps.chm");
-			if (File.Exists(helpFilePath))
-			{
-				//var uri = new Uri(helpFilePath);
-				Help.ShowHelp(new Label(), helpFilePath, topicLink);
-			}
-			else
-			{
-				Process.Start("http://wesay.palaso.org/help/");
-			}
-			UsageReporter.SendNavigationNotice("Help: " + topicLink);
-		}
-
 #if __MonoCS__
 		/// <summary>
 		/// For some reason, setting an Xkb keyboard for the first time doesn't work well inside
@@ -623,16 +608,14 @@ namespace WeSay.App
 #endif
 	}
 
-/*
+	// ReSharper disable UnusedMember.Global - this class could be useful in some debugging situations
 	internal class ThreadExceptionHandler
 	{
-		///
-		/// Handles the thread exception.
-		///
 		public void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
 		{
-			MessageBox.Show("caught");
+			// ReSharper disable once LocalizableElement
+			MessageBox.Show(e.Exception.Message, "caught");
 		}
 	}
-*/
+	// ReSharper restore UnusedMember.Global
 }
