@@ -15,6 +15,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using SIL.Windows.Forms.Reporting;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -38,25 +39,22 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			using (new SIL.CoreSetup())
+			try
 			{
-				try
-				{
-					// initialize Palaso keyboarding and ICU
-					Sldr.Initialize();
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
-					Icu.Wrapper.Init();
-					var app = new WeSayApp(args);
-					app.Run();
-				}
-				finally
-				{
-					Keyboard.Controller.ActivateDefaultKeyboard();
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
-					Sldr.Cleanup();
-					Icu.Wrapper.Cleanup();
-					ReleaseMutexForThisProject();
-				}
+				// initialize Palaso keyboarding and ICU
+				Sldr.Initialize();
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+				Icu.Wrapper.Init();
+				var app = new WeSayApp(args);
+				app.Run();
+			}
+			finally
+			{
+				Keyboard.Controller.ActivateDefaultKeyboard();
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+				Sldr.Cleanup();
+				Icu.Wrapper.Cleanup();
+				ReleaseMutexForThisProject();
 			}
 		}
 
@@ -325,9 +323,8 @@ namespace WeSay.App
 				}
 #endif
 
-				RtfRenderer.HeadWordWritingSystemId =
-					_project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
-				HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
+				HtmlRenderer.HeadWordWritingSystemId = RtfRenderer.HeadWordWritingSystemId =
+					_project.DefaultViewTemplate.HeadwordWritingSystems[0].LanguageTag;
 
 #if __MonoCS__
 				UglyHackForXkbIndicator();
@@ -540,7 +537,7 @@ namespace WeSay.App
 				ErrorReport.AddProperty("ProjectPath", BasilProject.Project.ProjectDirectoryPath);
 			}
 			ErrorReport.AddStandardProperties();
-			ExceptionHandler.Init();
+			ExceptionHandler.Init(new WinFormsExceptionHandler());
 		}
 
 		private class CommandLineArguments
@@ -585,21 +582,6 @@ namespace WeSay.App
 			MessageBox.Show(e, "WeSay Command Line Problem");
 		}
 
-		public static void ShowHelpTopic(string topicLink)
-		{
-			string helpFilePath = FileLocator.GetFileDistributedWithApplication("WeSay_Helps.chm");
-			if (File.Exists(helpFilePath))
-			{
-				//var uri = new Uri(helpFilePath);
-				Help.ShowHelp(new Label(), helpFilePath, topicLink);
-			}
-			else
-			{
-				Process.Start("http://wesay.palaso.org/help/");
-			}
-			UsageReporter.SendNavigationNotice("Help: " + topicLink);
-		}
-
 #if __MonoCS__
 		/// <summary>
 		/// For some reason, setting an Xkb keyboard for the first time doesn't work well inside
@@ -626,14 +608,14 @@ namespace WeSay.App
 #endif
 	}
 
+	// ReSharper disable UnusedMember.Global - this class could be useful in some debugging situations
 	internal class ThreadExceptionHandler
 	{
-		///
-		/// Handles the thread exception.
-		///
 		public void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
 		{
-			MessageBox.Show("caught");
+			// ReSharper disable once LocalizableElement
+			MessageBox.Show(e.Exception.Message, "caught");
 		}
 	}
+	// ReSharper restore UnusedMember.Global
 }

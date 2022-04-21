@@ -19,7 +19,6 @@ namespace WeSay.LexicalTools.Tests
 	{
 		private TemporaryFolder _tempFolder;
 		private LexEntryRepository _lexEntryRepository;
-		private string _filePath;
 
 		private LexEntry empty;
 		private LexEntry apple;
@@ -48,9 +47,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayProjectTestHelper.InitializeForTests();
 
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
-			_lexEntryRepository = new LexEntryRepository(_filePath);
+			_tempFolder = new TemporaryFolder(GetType().Name);
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false));
 
 #if GlossMeaning
 		   _primaryMeaningFieldName = Field.FieldNames.SenseGloss.ToString();
@@ -94,14 +92,8 @@ namespace WeSay.LexicalTools.Tests
 		[TearDown]
 		public void TearDown()
 		{
-			if (_lexEntryRepository != null)
-			{
-				_lexEntryRepository.Dispose();
-			}
-			if (_tempFolder != null)
-			{
-				_tempFolder.Delete();
-			}
+			_lexEntryRepository?.Dispose();
+			_tempFolder?.Dispose();
 			WeSayProjectTestHelper.CleanupForTests();
 		}
 

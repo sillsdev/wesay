@@ -29,8 +29,8 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_tempfolder = new TemporaryFolder();
-			string persistedFilePath = _tempfolder.GetTemporaryFile();
+			_tempfolder = new TemporaryFolder(GetType().Name);
+			string persistedFilePath = _tempfolder.GetPathForNewTempFile(false);
 			_repository = new LexEntryRepository(persistedFilePath);
 		}
 

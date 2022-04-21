@@ -1,10 +1,7 @@
-
 using Autofac;
-using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using SIL.DictionaryServices.Model;
 using SIL.Reporting;
-using SIL.TestUtilities;
 using SIL.WritingSystems;
 using System;
 using System.Collections.Generic;
@@ -22,20 +19,11 @@ namespace WeSay.LexicalTools.Tests
 	[TestFixture]
 	public class HtmlRendererTests
 	{
-		private IServiceLocator Context { get; set; }
 		private LexEntryRepository _lexEntryRepository;
 		private ViewTemplate _viewTemplate;
 		private CurrentItemEventArgs _currentItem;
 
-		private TemporaryFolder _tempFolder;
-		private string _filePath;
-
-		private LexEntry empty;
-		private LexEntry apple;
-		private LexEntry anotherApple;
-		private LexEntry banana;
-		private LexEntry car;
-		private LexEntry bike;
+		private LexEntry _anotherApple;
 		private LexEntry _entry;
 
 		[SetUp]
@@ -43,9 +31,10 @@ namespace WeSay.LexicalTools.Tests
 		{
 			InitializeForTests();
 			var b = new ContainerBuilder();
-			b.Register(c => new MediaNamingHelper(new string[] { "en" }));
+			b.Register(c => new MediaNamingHelper(new[] { "en" }));
 
-			Context = new WeSay.Project.ServiceLocatorAdapter(b.Build());
+			// ReSharper disable once ObjectCreationAsStatement
+			new ServiceLocatorAdapter(b.Build());
 			SetupTestData();
 		}
 		[TearDown]
@@ -55,7 +44,6 @@ namespace WeSay.LexicalTools.Tests
 			{
 				_lexEntryRepository.Dispose();
 			}
-			_tempFolder.Delete();
 			Sldr.Cleanup();
 		}
 
@@ -88,15 +76,13 @@ namespace WeSay.LexicalTools.Tests
 		// Mar2017 see WeSay.ConfigTool.Tests.BackupPlanControlTests.SetValues_Reopen_HasSameValues
 		public void HomographEntryTest()
 		{
-			String html = HtmlRenderer.ToHtml(anotherApple, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen);
+			String html = HtmlRenderer.ToHtml(_anotherApple, _currentItem, _lexEntryRepository, System.Drawing.Color.LightSeaGreen);
 			Assert.IsTrue(html.Contains("<sub>2</sub>"));
 		}
 
 		private void SetupTestData()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
 
 			_currentItem = null;
 			string lexicalForm = "test";
@@ -108,10 +94,10 @@ namespace WeSay.LexicalTools.Tests
 			_viewTemplate = (ViewTemplate)
 						WeSayWordsProject.Project.ServiceLocator.GetService(typeof(ViewTemplate));
 
-			List<String> headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
+			var headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());
 			string wsA = headwordWritingSystemIds[0];
 			string wsB = _viewTemplate.GetDefaultWritingSystemForField(definition).LanguageTag;
-			HtmlRenderer.HeadWordWritingSystemId = _viewTemplate.HeadwordWritingSystem.LanguageTag;
+			HtmlRenderer.HeadWordWritingSystemId = _viewTemplate.HeadwordWritingSystems[0].LanguageTag;
 
 			_entry = _lexEntryRepository.CreateItem();
 			_entry.LexicalForm[wsA] = lexicalForm;
@@ -122,16 +108,15 @@ namespace WeSay.LexicalTools.Tests
 			example.Translation[wsB] = exampleTranslation;
 			sense.ExampleSentences.Add(example);
 			_entry.Senses.Add(sense);
-			empty = CreateTestEntry("", "", "");
-			apple = CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
-			anotherApple = CreateTestEntry("apple", "fruit", "An apple a day keeps the doctor away.");
-			banana = CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
-			car = CreateTestEntry("car",
-								  "small motorized vehicle",
-								  "Watch out for cars when you cross the street.");
-			bike = CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school.");
+			CreateTestEntry("", "", "");
+			CreateTestEntry("apple", "red thing", "An apple a day keeps the doctor away.");
+			_anotherApple = CreateTestEntry("apple", "fruit", "An apple a day keeps the doctor away.");
+			CreateTestEntry("banana", "yellow food", "Monkeys like to eat bananas.");
+			CreateTestEntry("car", "small motorized vehicle", "Watch out for cars when you cross the street.");
+			CreateTestEntry("bike", "vehicle with two wheels", "He rides his bike to school.");
 
 		}
+
 		private LexEntry CreateTestEntry(string lexicalForm, string meaning, string exampleSentence)
 		{
 			List<String> headwordWritingSystemIds = new List<string>(_viewTemplate.GetHeadwordWritingSystemIds());

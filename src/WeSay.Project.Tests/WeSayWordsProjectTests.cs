@@ -844,7 +844,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_LdmlIsCreated()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder($"{GetType().Name}.OpenProject_LDML"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -870,7 +870,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_ProjectHasWritingSystem()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder($"{GetType().Name}.OpenProject_WS"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -889,20 +889,20 @@ namespace WeSay.Project.Tests
 
 				project.LoadFromProjectDirectoryPath(projectDirectory.Path);
 
-				Assert.That(File.Exists(Path.Combine(WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.Path), "de.ldml")), Is.True);
+				Assert.That(File.Exists(Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.Path), "de.ldml")), Is.True);
 			}
 		}
 
 		[Test]
 		public void LoadFromLiftLexiconPath_WritingsystemsAreInOldWsPrefsFormat_WritingSystemsAreMigrated()
 		{
-			var language = "english";
-			using (var projectDirectory = new TemporaryFolder())
+			const string language = "english";
+			using (var projectDirectory = new TemporaryFolder($"{GetType().Name}.LoadFromLiftLexPath"))
+			using (var wsPrefsFile = projectDirectory.GetNewTempFile(true))
 			{
 				//setting up a minimal WeSay project with an old writingsystemprefs.xml file
 				var project = new WeSayWordsProject();
 
-				var wsPrefsFile = projectDirectory.GetNewTempFile(true);
 				string liftFilePath = Path.Combine(projectDirectory.Path, "test.lift");
 				wsPrefsFile.MoveTo(Path.Combine(projectDirectory.Path, "WritingSystemPrefs.xml"));
 				File.Copy(Path.Combine(BasilProject.ApplicationTestDirectory, "PRETEND.WeSayConfig"), Path.Combine(projectDirectory.Path, "test.WeSayConfig"));
@@ -915,7 +915,7 @@ namespace WeSay.Project.Tests
 				project.LoadFromLiftLexiconPath(liftFilePath);
 
 				string newLdmlWritingSystemFilePath =
-					Path.Combine(WeSayWordsProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.Path), "qaa-Zxxx-x-english-audio.ldml");
+					Path.Combine(BasilProject.GetPathToLdmlWritingSystemsFolder(projectDirectory.Path), "qaa-Zxxx-x-english-audio.ldml");
 				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/language[@type='qaa']");
 				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasAtLeastOneMatchForXpath("/ldml/identity/script[@type='Zxxx']");
 				AssertThatXmlIn.File(newLdmlWritingSystemFilePath).HasNoMatchForXpath("/ldml/identity/territory");

@@ -21,8 +21,7 @@ namespace WeSay.LexicalTools.Tests
 		private TemporaryFolder _tempFolder;
 		private LexEntryRepository _lexEntryRepository;
 		private string _simpleWordListFilePath;
-		private string _filePath;
-		private readonly string[] _words = new string[] { "one", "two", "three" };
+		private readonly string[] _words = { "one", "two", "three" };
 		private ViewTemplate _viewTemplate;
 		private string _glossingLanguageWSId;
 		private string _vernacularLanguageWSId;
@@ -48,12 +47,11 @@ namespace WeSay.LexicalTools.Tests
 			_vernacularLanguageWSId = WritingSystemsIdsForTests.VernacularIdForTest;
 			BasilProject.Project.WritingSystems.Set(new WritingSystemDefinition("fr"));
 
-			_tempFolder = new TemporaryFolder();
-			_simpleWordListFilePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder(GetType().Name);
+			_simpleWordListFilePath = _tempFolder.GetPathForNewTempFile(false);
 			//            _liftWordListFile = new TempLiftFile("wordlist.lift",_tempFolder, LiftXml, LiftIO.Validation.Validator.LiftVersion);
-			_filePath = _tempFolder.GetTemporaryFile();
 
-			_lexEntryRepository = new LexEntryRepository(_filePath); // InMemoryRecordListManager();
+			_lexEntryRepository = new LexEntryRepository(_tempFolder.GetPathForNewTempFile(false)); // InMemoryRecordListManager();
 			File.WriteAllLines(_simpleWordListFilePath, _words);
 			_viewTemplate = new ViewTemplate();
 			_viewTemplate.Add(new Field(Field.FieldNames.EntryLexicalForm.ToString(),
@@ -148,7 +146,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 			if (_tempFolder != null)
 			{
-				_tempFolder.Delete();
+				_tempFolder.Dispose();
 			}
 			WeSayProjectTestHelper.CleanupForTests();
 		}

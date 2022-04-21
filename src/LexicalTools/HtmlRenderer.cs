@@ -179,7 +179,7 @@ namespace WeSay.LexicalTools
 
 					int homographNumber = lexEntryRepository.GetHomographNumber(
 						entry,
-						WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSystem
+						WeSayWordsProject.Project.DefaultViewTemplate.HeadwordWritingSystems[0]
 						);
 					if (homographNumber > 0)
 					{

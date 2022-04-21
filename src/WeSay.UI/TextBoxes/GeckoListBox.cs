@@ -325,14 +325,12 @@ namespace WeSay.UI.TextBoxes
 			{
 				SelectedIndex = int.Parse(s);
 			}
-			catch (Exception e)
+			catch
 			{
 				SelectedIndex = 0;  // Shouldn't happen, but set to first item if it does
 			}
-			if (UserClick != null)
-			{
-				UserClick.Invoke(this, null);
-			}
+
+			UserClick?.Invoke(this, null);
 		}
 		protected override void OnDomDocumentCompleted(object sender, GeckoDocumentCompletedEventArgs e)
 		{

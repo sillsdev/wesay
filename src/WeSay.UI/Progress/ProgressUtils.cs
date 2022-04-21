@@ -48,7 +48,6 @@ namespace WeSay.UI.Progress
 		// FB25127
 		public static event Action<Exception> UnhandledThreadException;
 
-		static bool inExecuteOnSameThread;
 		private static volatile ManualResetEvent executeOnSameThreadComplete = new ManualResetEvent(true);
 
 		// Do not access directly
@@ -158,27 +157,6 @@ namespace WeSay.UI.Progress
 		/// <param name="action">the action to run on UI thread</param>
 		public static void InvokeOnUIThread(ThreadStart action)
 		{
-			InvokeOnUIThread(action, false);
-		}
-
-		/// <summary>
-		/// Invokes the specified action on the UI thread.  Blocking.
-		/// Does not interrupt calls to ExecuteOnSameThread.  Active message pump required.
-		/// </summary>
-		/// <param name="action">the action to run on UI thread</param>
-		public static void InvokeExclusivelyOnUIThread(ThreadStart action)
-		{
-			InvokeOnUIThread(action, true);
-		}
-
-		/// <summary>
-		/// Invokes the specified action on the UI thread.  Blocking.
-		/// Active message pump required.
-		/// </summary>
-		/// <param name="action">the action to run on UI thread</param>
-		/// <param name="exclusively">avoid overlap with ExecuteOnSameThread</param>
-		private static void InvokeOnUIThread(ThreadStart action, bool exclusively)
-		{
 			if (action == null)
 				return;
 
@@ -197,25 +175,21 @@ namespace WeSay.UI.Progress
 			{
 				// Wait for the UI Thread
 				UISynchronizationContext.Send(delegate
+				{
+					try
 					{
-						// If the action is to be run exclusively and if ExecuteOnSameThread is already running, then wait
-						if (exclusively && inExecuteOnSameThread)
-							return;
-
-						try
-						{
-							action();
-						}
-						catch (Exception exception)
-						{
-							SaveStackTrace(exception);
-							caughtException = exception;
-						}
-						finally
-						{
-							finished = true;
-						}
-					}, null);
+						action();
+					}
+					catch (Exception exception)
+					{
+						SaveStackTrace(exception);
+						caughtException = exception;
+					}
+					finally
+					{
+						finished = true;
+					}
+				}, null);
 
 				// We can only get here if we are running exclusively and if ExecuteOnSameThread was running.
 				// Wait for ExecuteOnSameThread to finish
