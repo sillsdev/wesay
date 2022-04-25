@@ -25,7 +25,6 @@
 		<Platform>x86</Platform>
 		<CopyrightYear>2021</CopyrightYear>
 		<Manufacturer>SIL International</Manufacturer>
-		<CertPath>$(RootDir)/../ia.p12</CertPath> <!-- yes, this is outside the repository. BYOCertificate. -->
 	</PropertyGroup>
 
 	<!-- ########################################################################################################## -->
@@ -62,11 +61,11 @@
 
 	<!-- Build Directories -->
 	<PropertyGroup>
-		<InstallersBaseDir>$(RootDir)..\BuildDir</InstallersBaseDir>
+		<InstallersBaseDir>$(RootDir)\BuildDir</InstallersBaseDir>
 		<AppBuildMasterDir>$(InstallersBaseDir)\$(SafeApplicationName)_Build_Master_$(Platform)</AppBuildMasterDir>
 		<BinDirSuffix>objects\$(SafeApplicationName)</BinDirSuffix>
 		<DataDirSuffix>$(BinDirSuffix)_Data</DataDirSuffix>
-		<InstallerDir>$(RootDir)..\genericinstaller</InstallerDir>
+		<InstallerDir>$(RootDir)\genericinstaller</InstallerDir>
 		<AppBuildDir>$(InstallersBaseDir)\$(SafeApplicationName)_$(MinorVersion)_Build_$(Platform)</AppBuildDir>
 		<OverridesDestDir>$(InstallerDir)\Common</OverridesDestDir>
 		<OverridesDir>$(RootDir)\src\Installer</OverridesDir>
