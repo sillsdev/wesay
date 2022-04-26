@@ -124,7 +124,7 @@ namespace WeSay.UI
 				// read / characters as well, so keep the code simple and always do this.)
 				// This block fixes https://jira.sil.org/browse/WS-87.
 				if (!String.IsNullOrEmpty(value))
-					value = FileUtils.NormalizePath(value);
+					value = PathHelper.NormalizePath(value);
 				_relativePathToImage = value;
 			}
 		}

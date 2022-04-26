@@ -200,8 +200,7 @@ namespace Addin.Transform
 				transform = new XslCompiledTransform();
 
 				//all this just to allow a DTD statement in the source xslt
-				XmlReaderSettings readerSettings = new XmlReaderSettings();
-				readerSettings.ProhibitDtd = false;
+				var readerSettings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Parse};
 
 				progressState.StatusLabel = "Preparing...";
 				using (Stream stream = workerArguments.xsltStream)

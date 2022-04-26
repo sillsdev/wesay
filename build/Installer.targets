@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="BuildRelease" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
 	<PropertyGroup>
-		<RootDir>$(MSBuildThisFileDirectory)</RootDir>
+		<!-- TODO (Hasso) 2022.04: should be RootDir/<something>/packages? -->
+		<!-- REVIEW (Hasso) 2022.04: this doesn't seem to be downloaded anywhere -->
 		<MSBuildExtensionTargets>$(RootDir)/packages/MSBuild.Extension.Pack.1.9.0/build/net40/MSBuild.Extension.Pack.targets</MSBuildExtensionTargets>
 	</PropertyGroup>
 	<Import Project="$(MSBuildExtensionTargets)" Condition="Exists('$(MSBuildExtensionTargets)')"/>
@@ -25,7 +26,6 @@
 		<Platform>x86</Platform>
 		<CopyrightYear>2021</CopyrightYear>
 		<Manufacturer>SIL International</Manufacturer>
-		<CertPath>$(RootDir)/../ia.p12</CertPath> <!-- yes, this is outside the repository. BYOCertificate. -->
 	</PropertyGroup>
 
 	<!-- ########################################################################################################## -->
@@ -62,11 +62,11 @@
 
 	<!-- Build Directories -->
 	<PropertyGroup>
-		<InstallersBaseDir>$(RootDir)..\BuildDir</InstallersBaseDir>
+		<InstallersBaseDir>$(RootDir)\BuildDir</InstallersBaseDir>
 		<AppBuildMasterDir>$(InstallersBaseDir)\$(SafeApplicationName)_Build_Master_$(Platform)</AppBuildMasterDir>
 		<BinDirSuffix>objects\$(SafeApplicationName)</BinDirSuffix>
 		<DataDirSuffix>$(BinDirSuffix)_Data</DataDirSuffix>
-		<InstallerDir>$(RootDir)..\genericinstaller</InstallerDir>
+		<InstallerDir>$(RootDir)\genericinstaller</InstallerDir>
 		<AppBuildDir>$(InstallersBaseDir)\$(SafeApplicationName)_$(MinorVersion)_Build_$(Platform)</AppBuildDir>
 		<OverridesDestDir>$(InstallerDir)\Common</OverridesDestDir>
 		<OverridesDir>$(RootDir)\src\Installer</OverridesDir>
@@ -295,16 +295,10 @@
 	<!-- ### Build Wix Product Targets                                                                          ### -->
 	<!-- ########################################################################################################## -->
 
-	<Target Name="ReadCertPassFile">
-		<ReadLinesFromFile File="$(RootDir)/certpass.txt">
-			<Output TaskParameter="Lines" ItemName="CertPass" />
-		</ReadLinesFromFile>
-	</Target>
-
-	<Target Name="BuildProductBaseMsi" DependsOnTargets="ReadCertPassFile">
+	<Target Name="BuildProductBaseMsi">
 		<PropertyGroup>
 			<MsiFile>$(SafeApplicationName)_$(BuildVersion).msi</MsiFile>
-			<BaseBuildDir>$(RootDir)/../genericinstaller/BaseInstallerBuild</BaseBuildDir>
+			<BaseBuildDir>$(InstallerDir)/BaseInstallerBuild</BaseBuildDir>
 			<BaseBuildArgs>"$(ProductName)" $(SafeApplicationName) $(BuildVersion) $(ProductIdGuid) $(UpgradeCodeGuid) "$(AppBuildDir)/$(BinDirSuffix)" "$(AppBuildDir)/$(DataDirSuffix)" $(CopyrightYear) "$(Manufacturer)" "x86" "$(CertPath)" "@(CertPass)"</BaseBuildArgs>
 		</PropertyGroup>
 		<!-- Suppress ICE30 because we install the specific version of AutoFac that we need and not the Chorus Merge Module version -->
@@ -320,13 +314,13 @@
 		<CallTarget Targets="WriteVersionFile" />
 	</Target>
 
-	<Target Name="BuildProductPatchMsp" DependsOnTargets="ReadCertPassFile">
+	<Target Name="BuildProductPatchMsp">
 		<ReadLinesFromFile File="$(AppBuildMasterDir)/$(BinDirSuffix)/CurrentVersion.number">
 			<Output TaskParameter="Lines" ItemName="BaseVersion" />
 		</ReadLinesFromFile>
 		<PropertyGroup>
 			<MspFile>$(SafeApplicationName)_$(BuildVersion).msp</MspFile>
-			<PatchDir>$(RootDir)/$(SafeApplicationName)/WixInstaller/CreateUpdatePatch</PatchDir>
+			<PatchDir>$(InstallerDir)/CreateUpdatePatch</PatchDir>
 			<PatchArgs>"$(ProductName)$(SafeApplicationName)" $(SafeApplicationName) $(BaseVersion) $(BuildVersion) "$(AppBuildMasterDir)/$(BinDirSuffix)" "$(AppBuildDir)/$(BinDirSuffix)" "$(AppBuildMasterDir)/$(DataDirSuffix)" "$(AppBuildDir)/$(DataDirSuffix)" $(ProductIdGuid) $(UpgradeCodeGuid) $(CompGGS) "$(Manufacturer)" "$(CertPath)" "@(CertPass)"</PatchArgs>
 		</PropertyGroup>
 

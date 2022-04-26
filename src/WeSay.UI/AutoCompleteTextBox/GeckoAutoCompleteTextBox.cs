@@ -158,7 +158,6 @@ namespace WeSay.UI.AutoCompleteTextBox
 		private ItemFilterDelegate _itemFilterDelegate;
 		private object _selectedItem;
 		private readonly ToolTip _toolTip;
-		private object _previousToolTipTarget;
 		private bool _windowJustGotFocus = true;
 
 		[Browsable(false)]

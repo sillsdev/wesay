@@ -15,7 +15,7 @@ namespace WeSay.UI
 	public partial class SingleOptionControl : UserControl, IBindableControl<string>
 	{
 		private readonly OptionsList _list;
-		private readonly IWeSayComboBox _control = null;
+		private readonly IWeSayComboBox _control;
 		private readonly string _nameForLogging;
 		private readonly WritingSystemDefinition _preferredWritingSystem;
 
@@ -52,7 +52,7 @@ namespace WeSay.UI
 			_list = list;
 			_nameForLogging = nameForLogging;
 			_preferredWritingSystem = preferredWritingSystem;
-			_control = serviceProvider.GetService(typeof(IWeSayComboBox)) as IWeSayComboBox;
+			_control = (IWeSayComboBox) serviceProvider.GetService(typeof(IWeSayComboBox));
 			InitializeComponent();
 			_control.AutoCompleteMode = AutoCompleteMode.Append;
 			_control.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -150,7 +150,6 @@ namespace WeSay.UI
 			SuspendLayout();
 
 			Height = 0;
-			const int initialPanelWidth = 200;
 			SetupComboControl(optionRef);
 
 			components.Add((Control)_control); //so it will get disposed of when we are

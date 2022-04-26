@@ -53,7 +53,7 @@ namespace WeSay.LexicalModel.Tests
 		public override void SetUp()
 		{
 			_tempFolder = new TemporaryFolder("LexEntryRepositoryCreatedFromPersistedData");
-			_persistedFilePath = LiftFileInitializer.MakeFile(_tempFolder.GetTemporaryFile());
+			_persistedFilePath = LiftFileInitializer.MakeFile(_tempFolder.GetPathForNewTempFile(false));
 			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -61,7 +61,7 @@ namespace WeSay.LexicalModel.Tests
 		public override void TearDown()
 		{
 			DataMapperUnderTest.Dispose();
-			_tempFolder.Delete();
+			_tempFolder.Dispose();
 		}
 
 		[Test]
@@ -105,9 +105,9 @@ namespace WeSay.LexicalModel.Tests
 			Assert.Greater(DataMapperUnderTest.LastModified, modifiedTimePreSave);
 		}
 
-		private static void MakeItemDirty(LexEntry Item)
+		private static void MakeItemDirty(LexEntry item)
 		{
-			Item.LexicalForm["de"] = "Sonne";
+			item.LexicalForm["de"] = "Sonne";
 		}
 
 		protected override void LastModified_IsSetToMostRecentItemInPersistedDatasLastModifiedTime_v()

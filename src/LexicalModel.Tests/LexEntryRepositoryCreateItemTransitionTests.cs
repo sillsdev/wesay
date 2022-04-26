@@ -21,8 +21,8 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder(GetType().Name);
+			_persistedFilePath = _tempFolder.GetPathForNewTempFile(false);
 			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel.Tests
 		public override void TearDown()
 		{
 			DataMapperUnderTest.Dispose();
-			_tempFolder.Delete();
+			_tempFolder.Dispose();
 		}
 
 		[Test]
@@ -45,8 +45,7 @@ namespace WeSay.LexicalModel.Tests
 		public void SaveItems_LexEntryIsDirtyIsFalse()
 		{
 			SetState();
-			var itemsToBeSaved = new List<LexEntry>();
-			itemsToBeSaved.Add(Item);
+			var itemsToBeSaved = new List<LexEntry> {Item};
 			DataMapperUnderTest.SaveItems(itemsToBeSaved);
 			Assert.IsFalse(Item.IsDirty);
 		}

@@ -15,6 +15,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using SIL.Windows.Forms.Reporting;
 using WeSay.App.Properties;
 using WeSay.LexicalModel;
 using WeSay.LexicalTools;
@@ -38,25 +39,22 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			using (new SIL.CoreSetup())
+			try
 			{
-				try
-				{
-					// initialize Palaso keyboarding and ICU
-					Sldr.Initialize();
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
-					Icu.Wrapper.Init();
-					var app = new WeSayApp(args);
-					app.Run();
-				}
-				finally
-				{
-					Keyboard.Controller.ActivateDefaultKeyboard();
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
-					Sldr.Cleanup();
-					Icu.Wrapper.Cleanup();
-					ReleaseMutexForThisProject();
-				}
+				// initialize Palaso keyboarding and ICU
+				Sldr.Initialize();
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+				Icu.Wrapper.Init();
+				var app = new WeSayApp(args);
+				app.Run();
+			}
+			finally
+			{
+				Keyboard.Controller.ActivateDefaultKeyboard();
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+				Sldr.Cleanup();
+				Icu.Wrapper.Cleanup();
+				ReleaseMutexForThisProject();
 			}
 		}
 
@@ -325,9 +323,8 @@ namespace WeSay.App
 				}
 #endif
 
-				RtfRenderer.HeadWordWritingSystemId =
-					_project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
-				HtmlRenderer.HeadWordWritingSystemId = _project.DefaultViewTemplate.HeadwordWritingSystem.LanguageTag;
+				HtmlRenderer.HeadWordWritingSystemId = RtfRenderer.HeadWordWritingSystemId =
+					_project.DefaultViewTemplate.HeadwordWritingSystems[0].LanguageTag;
 
 #if __MonoCS__
 				UglyHackForXkbIndicator();
@@ -540,7 +537,7 @@ namespace WeSay.App
 				ErrorReport.AddProperty("ProjectPath", BasilProject.Project.ProjectDirectoryPath);
 			}
 			ErrorReport.AddStandardProperties();
-			ExceptionHandler.Init();
+			ExceptionHandler.Init(new WinFormsExceptionHandler());
 		}
 
 		private class CommandLineArguments
@@ -587,7 +584,7 @@ namespace WeSay.App
 
 		public static void ShowHelpTopic(string topicLink)
 		{
-			string helpFilePath = FileLocator.GetFileDistributedWithApplication("WeSay_Helps.chm");
+			string helpFilePath = FileLocationUtilities.GetFileDistributedWithApplication("WeSay_Helps.chm");
 			if (File.Exists(helpFilePath))
 			{
 				//var uri = new Uri(helpFilePath);
@@ -626,6 +623,7 @@ namespace WeSay.App
 #endif
 	}
 
+/*
 	internal class ThreadExceptionHandler
 	{
 		///
@@ -636,4 +634,5 @@ namespace WeSay.App
 			MessageBox.Show("caught");
 		}
 	}
+*/
 }

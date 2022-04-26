@@ -48,13 +48,6 @@ namespace WeSay.Project
 			set { _id = value; }
 		}
 
-		//todo: this is simplistic. Switch to the plural form
-		[Obsolete]
-		public WritingSystemDefinition HeadwordWritingSystem
-		{
-			get { return GetDefaultWritingSystemForField(LexEntry.WellKnownProperties.LexicalUnit); }
-		}
-
 		public IList<WritingSystemDefinition> HeadwordWritingSystems
 		{
 			get

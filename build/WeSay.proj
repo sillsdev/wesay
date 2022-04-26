@@ -2,8 +2,8 @@
 	<PropertyGroup>
 		<RootDir Condition="'$(teamcity_build_checkoutDir)' == '' And '$(RootDir)'==''">$(MSBuildProjectDirectory)/..</RootDir>
 		<RootDir Condition="'$(teamcity_build_checkoutDir)' != ''">$(teamcity_build_checkoutDir)</RootDir>
-		<Solution>Palaso.sln</Solution><!-- REVIEW (Hasso) 2022.04: if this is incorrect, what else is? -->
-		<SolutionPath>$(RootDir)/$(Solution)</SolutionPath>
+		<Solution>WeSay.sln</Solution>
+		<SolutionPath>$(RootDir)/src/$(Solution)</SolutionPath>
 		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
 		<LinuxExcludeCategories Condition="'$(OS)'!='Windows_NT'">KnownMonoIssue,</LinuxExcludeCategories>
 		<ExtraExcludeCategories Condition="'$(teamcity_version)' != '' Or '$(JENKINS_URL)' != '' Or '$(CI)' != ''">SkipOnTeamCity,$(LinuxExcludeCategories)</ExtraExcludeCategories>
@@ -48,6 +48,7 @@
 	</UsingTask>
   
 	<Import Project="NuGet.targets"/>
+	<Import Project="Installer.targets"/>
 
 	<Target Name="RestoreBuildTasks" DependsOnTargets="CheckPrerequisites">
 		<Message Text="RestartBuild=$(RestartBuild)" />
@@ -65,7 +66,7 @@
 		/>
 	</ItemGroup>
 
-	<Target Name="Build">
+	<Target Name="Build" DependsOnTargets="RestorePackages">
 		<MSBuild Projects="$(RootDir)/src/WeSay.sln"
 			Properties="Configuration=$(Configuration);RootDir=$(RootDir);Platform=$(Platform)" />
 	</Target>
