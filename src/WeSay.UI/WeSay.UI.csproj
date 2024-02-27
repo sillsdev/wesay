@@ -1,437 +1,168 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WeSay.UI</RootNamespace>
-    <AssemblyName>WeSay.UI</AssemblyName>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>WeSay.UI</AssemblyName>
-    <RootNamespace>WeSay.UI</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>WeSay.UI</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
-    <RootNamespace>WeSay.UI</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
-    </Reference>
-    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Enchant.Net.1.4.2\lib\net461\Enchant.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="icu.net, Version=2.7.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\icu.net.2.7.1\lib\net451\icu.net.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
-    </Reference>
-    <Reference Include="NetReflector, Version=1.1.2009.1214, Culture=neutral, PublicKeyToken=2f4dd8b32acbcd8e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NetReflector.1.1.2009\lib\net20\NetReflector.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Core.Desktop.9.0.0-beta0154\lib\net461\SIL.Core.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.DictionaryServices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.DictionaryServices.9.0.0-beta0154\lib\net461\SIL.DictionaryServices.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Lift.9.0.0-beta0154\lib\net461\SIL.Lift.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Media, Version=9.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Media.9.0.0-beta0154\lib\net461\SIL.Media.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms.Keyboarding, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
-    </Reference>
-    <None Include="..\..\lib\common\Enchant.Net.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Reference Include="Geckofx-Core">
-      <HintPath>..\..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Geckofx-Winforms">
-      <HintPath>..\..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.WritingSystems.9.0.0-beta0154\lib\net461\SIL.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.FileSystem.AccessControl, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IO.FileSystem.AccessControl.4.7.0\lib\net461\System.IO.FileSystem.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.Principal.Windows.4.7.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AnnotationWidget.cs">
-    </Compile>
-    <Compile Include="audio\AudioPathProvider.cs" />
-    <Compile Include="AutoCompleteTextBox\AutoCompleteTextBox.cs">
+    <Compile Update="AutoCompleteTextBox\AutoCompleteTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="AutoCompleteTextBox\AutoCompleteTrigger.cs" />
-    <Compile Include="AutoCompleteTextBox\AutoCompleteTriggerCollection.cs" />
-    <Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.cs">
+    <Compile Update="AutoCompleteTextBox\AutoCompleteWithCreationBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.Designer.cs">
-      <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AutoCompleteTextBox\GeckoAutoCompleteTextBox.cs">
+    <Compile Update="AutoCompleteTextBox\GeckoAutoCompleteTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AutoCompleteTextBox\ShortCutTrigger.cs" />
-    <Compile Include="AutoCompleteTextBox\TextLengthTrigger.cs" />
-    <Compile Include="AutoCompleteTextBox\TriggerState.cs" />
-    <Compile Include="BetterLabel.cs">
+    <Compile Update="BetterLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="BetterLabel.Designer.cs">
-      <DependentUpon>BetterLabel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\RectangularImageButton.cs">
+    <Compile Update="Buttons\RectangularImageButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Buttons\RegionButton.cs">
+    <Compile Update="Buttons\RegionButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Buttons\TagButton.cs">
+    <Compile Update="Buttons\TagButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CheckBoxControl.cs">
+    <Compile Update="CheckBoxControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CheckBoxControl.Designer.cs">
-      <DependentUpon>CheckBoxControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CollapsibleSplitter.cs">
+    <Compile Update="CollapsibleSplitter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.cs">
+    <Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Update="audio\WeSayAudioFieldBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.Designer.cs">
-      <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\DeleteButton.cs">
+    <Compile Update="Buttons\DeleteButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Buttons\DeleteButton.Designer.cs">
-      <DependentUpon>DeleteButton.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Event.cs" />
-    <Compile Include="NativeReplacements.cs" />
-    <Compile Include="NativeX11Methods.cs" />
-    <Compile Include="Progress\ProgressUtils.cs" />
-    <Compile Include="ScrollableContainer.cs">
+    <Compile Update="ScrollableContainer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ScrollableContainer.Designer.cs">
-      <DependentUpon>ScrollableContainer.cs</DependentUpon>
+    <Compile Update="TextBoxes\GeckoBox.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TextBoxes\GeckoBase.cs">
+    <Compile Update="TextBoxes\GeckoComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="TextBoxes\GeckoListBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="TextBoxes\GeckoListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="TextBoxes\WeSayComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TextBoxes\GeckoBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TextBoxes\GeckoBox.Designer.cs">
-      <DependentUpon>GeckoBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextBoxes\GeckoComboBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TextBoxes\GeckoComboBox.Designer.cs">
-      <DependentUpon>GeckoComboBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextBoxes\GeckoListBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TextBoxes\GeckoListBox.Designer.cs">
-      <DependentUpon>GeckoListBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextBoxes\GeckoListView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TextBoxes\GeckoListView.Designer.cs">
-      <DependentUpon>GeckoListView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextBoxes\IControlThatKnowsWritingSystem.cs" />
-    <Compile Include="TextBoxes\WeSayComboBox.cs">
+    <Compile Update="WeSayListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="WeSayListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="WeSayListView.Designer.cs">
-      <DependentUpon>WeSayListView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PictureControl.cs">
+    <Compile Update="PictureControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PictureControl.Designer.cs">
-      <DependentUpon>PictureControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ReferenceCollectionEditor.cs">
+    <Compile Update="ReferenceCollectionEditor.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ReferenceCollectionEditor.Designer.cs">
-      <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="OptionCollectionControl.cs">
+    <Compile Update="OptionCollectionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="OptionCollectionControl.Designer.cs">
-      <DependentUpon>OptionCollectionControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CirclesProgressIndicator.cs">
+    <Compile Update="CirclesProgressIndicator.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CirclesProgressIndicator.Designer.cs">
-      <DependentUpon>CirclesProgressIndicator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SimpleBinding.cs" />
-    <Compile Include="TextBoxes\TextBinding.cs" />
-    <Compile Include="CurrentItemEventArgs.cs" />
-    <Compile Include="DetailList.cs">
+    <Compile Update="DetailList.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DetailList.Designer.cs">
-      <DependentUpon>DetailList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="DisplaySettings.cs" />
-    <Compile Include="GhostBinding.cs" />
-    <Compile Include="ISkin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SingleOptionControl.cs">
+    <Compile Update="SingleOptionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SingleOptionControl.Designer.cs">
-      <DependentUpon>SingleOptionControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextBoxes\MultiTextControl.cs">
+    <Compile Update="TextBoxes\MultiTextControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TextBoxes\MultiTextControl.designer.cs">
-      <DependentUpon>MultiTextControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WeSayListBox.cs">
+    <Compile Update="WeSayListBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="WeSayListBox.Designer.cs">
-      <DependentUpon>WeSayListBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TextBoxes\WeSayTextBox.cs">
+    <Compile Update="TextBoxes\WeSayTextBox.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="TextBoxes\WeSayTextBox.Designer.cs">
-      <DependentUpon>WeSayTextBox.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-      <Name>LexicalModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-      <Name>WeSay.Foundation</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="AutoCompleteTextBox\AutoCompleteWithCreationBox.resx">
-      <DependentUpon>AutoCompleteWithCreationBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BetterLabel.resx">
-      <DependentUpon>BetterLabel.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CheckBoxControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>CheckBoxControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Buttons\DeleteButton.resx">
-      <DependentUpon>DeleteButton.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PictureControl.resx">
-      <DependentUpon>PictureControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ReferenceCollectionEditor.resx">
-      <DependentUpon>ReferenceCollectionEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DetailList.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>DetailList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TextBoxes\GeckoComboBox.resx">
-      <DependentUpon>GeckoComboBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TextBoxes\GeckoListBox.resx">
-      <DependentUpon>GeckoListBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TextBoxes\GeckoListView.resx">
-      <DependentUpon>GeckoListView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TextBoxes\MultiTextControl.resx">
-      <DependentUpon>MultiTextControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OptionCollectionControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>OptionCollectionControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release' " Include="audio\WeSayAudioFieldBox.resx">
-      <DependentUpon>WeSayAudioFieldBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TextBoxes\WeSayTextBox.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>WeSayTextBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TextBoxes\GeckoBox.resx">
-      <DependentUpon>GeckoBox.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Resources\delete-word.png" />
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj" />
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\delete-word-bw.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\delete-word-grey.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\right-arrow.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets" Condition="Exists('..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
-    <Error Condition="!Exists('..\..\packages\SIL.Media.9.0.0-beta0154\build\SIL.Media.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SIL.Media.9.0.0-beta0154\build\SIL.Media.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\SIL.Media.9.0.0-beta0154\build\SIL.Media.targets" Condition="Exists('..\..\packages\SIL.Media.9.0.0-beta0154\build\SIL.Media.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-	   Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Geckofx60.32" Version="60.0.55" GeneratePathProperty="true"/>
+    <Reference Include="Geckofx-Core">
+      <HintPath>$(PkgGeckofx60_32)\lib\net45\Geckofx-Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Geckofx-Winforms">
+      <HintPath>$(PkgGeckofx60_32)\lib\net45\Geckofx-Winforms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SIL.Windows.Forms" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Windows.Forms">
+      <HintPath>$(PkgSIL_Windows_Forms)\lib\net461\SIL.Windows.Forms.dll</HintPath>
+    </Reference>
+    <PackageReference Include="SIL.Windows.Forms.Keyboarding" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Windows.Forms.Keyboarding">
+      <HintPath>$(PkgSIL_Windows_Forms_Keyboarding)\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+    </Reference>
+    <PackageReference Include="SIL.Media" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Media">
+      <HintPath>$(PkgSIL_Media)\lib\net461\SIL.Media.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="icu.net" Version="2.8.1" />
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="NAudio" Version="1.10.0" />
+    <PackageReference Include="NDesk.DBus" Version="0.15.0" />
+    <PackageReference Include="NetReflector" Version="1.1.2009" />
+    <PackageReference Include="RelaxNG" Version="3.2.3" />
+    <PackageReference Include="SIL.Core" Version="13.0.1" />
+    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
+    <PackageReference Include="SIL.Lift" Version="13.0.1" />
+    <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
+    <PackageReference Include="Spart" Version="1.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="ActionItemControl.Designer.cs" />
+  </ItemGroup>
 </Project>

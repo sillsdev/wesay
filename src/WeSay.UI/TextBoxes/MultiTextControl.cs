@@ -361,7 +361,7 @@ namespace WeSay.UI.TextBoxes
 				box.IsSpellCheckingEnabled = IsSpellCheckingEnabled;
 				//box.Enabled = !box.ReadOnly;
 				if (!box.ReadOnly && box is WeSayTextBox)
-					KeyboardController.RegisterControl((Control)box);
+					SIL.Windows.Forms.Keyboarding.KeyboardController.RegisterControl((Control)box);
 			}
 
 			_inputBoxes.Add(control);

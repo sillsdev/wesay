@@ -265,18 +265,6 @@ namespace Addin.Transform
 				progressState.WriteToLog(err.Message);
 				progressState.State = ProgressState.StateValue.StoppedWithError;
 			}
-			finally
-			{
-				if (transform != null)
-				{
-					progressState.StatusLabel = "Cleaning up...";
-					TempFileCollection tempfiles = transform.TemporaryFiles;
-					if (tempfiles != null) // tempfiles will be null when debugging is not enabled
-					{
-						tempfiles.Delete();
-					}
-				}
-			}
 		}
 
 		private static void OnXsltMessageEncountered(object sender,

@@ -1,24 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WeSay.ConfigTool</RootNamespace>
-    <AssemblyName>WeSay.ConfigTool</AssemblyName>
     <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
     <TargetZone>LocalIntranet</TargetZone>
     <GenerateManifests>false</GenerateManifests>
     <PublishUrl>publish\</PublishUrl>
@@ -35,101 +20,33 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>WinExe</OutputType>
-    <AssemblyName>WeSay.ConfigTool</AssemblyName>
-    <RootNamespace>WeSay.ConfigTool</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>WinExe</OutputType>
-    <AssemblyName>WeSay.ConfigTool</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
-    <RootNamespace>WeSay.ConfigTool</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <ApplicationIcon>..\..\artwork\WeSay.Setup.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Chorus, Version=3.1.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\SIL.Chorus.App.5.0.0-beta0017\lib\net461\Chorus.exe</HintPath>
-    </Reference>
-    <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
-    </Reference>
-    <Reference Include="DialogAdapters, Version=0.1.9.0, Culture=neutral, PublicKeyToken=7dc842182b0626dc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DialogAdapters.Gtk2.0.1.9\lib\net461\DialogAdapters.dll</HintPath>
-    </Reference>
-    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Enchant.Net.1.4.2\lib\net461\Enchant.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="Geckofx-Core, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Geckofx-Winforms, Version=45.0.34.0, Culture=neutral, PublicKeyToken=3209ac31600d1857, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
-    </Reference>
-    <Reference Include="ibusdotnet, Version=2.0.0.0, Culture=neutral, PublicKeyToken=c9ab93f7b23223fb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ibusdotnet.2.0.3\lib\net461\ibusdotnet.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="icu.net, Version=2.7.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\icu.net.2.7.1\lib\net451\icu.net.dll</HintPath>
-    </Reference>
-    <Reference Include="JetBrains.Annotations, Version=2021.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\JetBrains.Annotations.2021.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-    </Reference>
     <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -144,530 +61,81 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\$(Configuration)\KeymanLink.dll</HintPath>
     </Reference>
-    <Reference Include="L10NSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\L10NSharp.5.0.0-beta0086\lib\net461\L10NSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="LibChorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\SIL.Chorus.LibChorus.5.0.0-beta0017\lib\net461\LibChorus.dll</HintPath>
-    </Reference>
-    <Reference Include="Markdig.Signed, Version=0.22.0.0, Culture=neutral, PublicKeyToken=870da25a133885f8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Markdig.Signed.0.22.0\lib\net452\Markdig.Signed.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
-    <None Include="packages.config" />
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NHunspell.Patched.1.2.5554\lib\net\NHunspell.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Core.Desktop.9.0.0-beta0154\lib\net461\SIL.Core.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.DictionaryServices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.DictionaryServices.9.0.0-beta0154\lib\net461\SIL.DictionaryServices.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Lexicon, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Lexicon.9.0.0-beta0154\lib\net461\SIL.Lexicon.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Lift.9.0.0-beta0154\lib\net461\SIL.Lift.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms.Keyboarding, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.Windows.Forms.WritingSystems.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SIL.WritingSystems.9.0.0-beta0154\lib\net461\SIL.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StructureMap, Version=2.5.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\structuremap.patched.2.5.4\lib\net461\StructureMap.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.FileSystem.AccessControl, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IO.FileSystem.AccessControl.4.7.0\lib\net461\System.IO.FileSystem.AccessControl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Security.Principal.Windows.4.7.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="TagLibSharp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\TagLibSharp.2.2.0\lib\net45\TagLibSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Vulcan.Uczniowie.HelpProvider, Version=0.9.999.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Vulcan.Uczniowie.HelpProvider.1.0.16\lib\net461\Vulcan.Uczniowie.HelpProvider.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionsControl.cs">
+    <Compile Update="ActionsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ActionsControl.Designer.cs">
-      <DependentUpon>ActionsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ChorusControl.cs">
+    <Compile Update="ChorusControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ChorusControl.Designer.cs">
-      <DependentUpon>ChorusControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NewProjectCreation\NewProjectDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NewProjectCreation\NewProjectDialog.Designer.cs">
-      <DependentUpon>NewProjectDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MruProjects.cs" />
-    <Compile Include="ConfigurationWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConfigurationWindow.Designer.cs">
-      <DependentUpon>ConfigurationWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ConfigurationControlBase.cs">
+    <Compile Update="ConfigurationControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="BackupPlanControl.cs">
+    <Compile Update="BackupPlanControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="BackupPlanControl.Designer.cs">
-      <DependentUpon>BackupPlanControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FieldsControl.cs">
+    <Compile Update="FieldsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FieldsControl.Designer.cs">
-      <DependentUpon>FieldsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FieldDetailControl.cs">
+    <Compile Update="FieldDetailControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FieldDetailControl.Designer.cs">
-      <DependentUpon>FieldDetailControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NewProjectCreation\NewProjectFromRawLiftDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NewProjectCreation\NewProjectFromRawLiftDialog.Designer.cs">
-      <DependentUpon>NewProjectFromRawLiftDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NewProjectCreation\NewProjectInformationDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NewProjectCreation\NewProjectInformationDialog.Designer.cs">
-      <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NewProjectCreation\ProjectFromRawFLExLiftFilesCreator.cs" />
-    <Compile Include="OptionListControl.cs">
+    <Compile Update="OptionListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="OptionListControl.Designer.cs">
-      <DependentUpon>OptionListControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="InterfaceLanguageControl.cs">
+    <Compile Update="InterfaceLanguageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="InterfaceLanguageControl.Designer.cs">
-      <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ActionsControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ActionsControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ConfigurationWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ConfigurationWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BackupPlanControl.resx">
-      <DependentUpon>BackupPlanControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ChorusControl.resx">
-      <DependentUpon>ChorusControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NewProjectCreation\NewProjectDialog.resx">
-      <DependentUpon>NewProjectDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FieldsControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FieldsControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FieldDetailControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FieldDetailControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NewProjectCreation\NewProjectFromRawLiftDialog.resx">
-      <DependentUpon>NewProjectFromRawLiftDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NewProjectCreation\NewProjectInformationDialog.resx">
-      <DependentUpon>NewProjectInformationDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="OptionListControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>OptionListControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="InterfaceLanguageControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>InterfaceLanguageControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tasks\DictionaryBrowseEditTaskConfigControl.resx">
-      <DependentUpon>DictionaryBrowseEditTaskConfigControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tasks\GatherBySemDomTaskConfigControl.resx">
-      <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tasks\DefaultTaskConfigurationControl.resx">
-      <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tasks\MissingInfoTaskConfigControl.resx">
-      <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tasks\TaskListView.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>TaskListView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tasks\WritingSystemFilterControl.resx">
-      <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserSpecificSettingIndicator.resx">
-      <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WelcomeControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>WelcomeControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SettingsControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>SettingsControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WritingSystemForFieldControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WritingSystemSetup.resx">
-      <DependentUpon>WritingSystemSetup.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="App.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Properties\Settings.cs" />
-    <Compile Include="Tasks\DictionaryBrowseEditTaskConfigControl.cs">
+    <Compile Update="Tasks\DictionaryBrowseEditTaskConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tasks\DictionaryBrowseEditTaskConfigControl.Designer.cs">
-      <DependentUpon>DictionaryBrowseEditTaskConfigControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tasks\GatherBySemDomTaskConfigControl.cs">
+    <Compile Update="Tasks\GatherBySemDomTaskConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tasks\GatherBySemDomTaskConfigControl.Designer.cs">
-      <DependentUpon>GatherBySemDomTaskConfigControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tasks\DefaultTaskConfigurationControl.cs">
+    <Compile Update="Tasks\DefaultTaskConfigurationControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tasks\DefaultTaskConfigurationControl.Designer.cs">
-      <DependentUpon>DefaultTaskConfigurationControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tasks\ConfigTaskControlFactory.cs" />
-    <Compile Include="Tasks\MissingInfoTaskConfigControl.cs">
+    <Compile Update="Tasks\MissingInfoTaskConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tasks\MissingInfoTaskConfigControl.Designer.cs">
-      <DependentUpon>MissingInfoTaskConfigControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tasks\TaskListView.cs">
+    <Compile Update="Tasks\TaskListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tasks\TaskListView.Designer.cs">
-      <DependentUpon>TaskListView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tasks\TaskListPresentationModel.cs" />
-    <Compile Include="Tasks\WritingSystemFilterControl.cs">
+    <Compile Update="Tasks\WritingSystemFilterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tasks\WritingSystemFilterControl.Designer.cs">
-      <DependentUpon>WritingSystemFilterControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserSpecificSettingIndicator.cs">
+    <Compile Update="UserSpecificSettingIndicator.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserSpecificSettingIndicator.Designer.cs">
-      <DependentUpon>UserSpecificSettingIndicator.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WelcomeControl.cs">
+    <Compile Update="WelcomeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WelcomeControl.Designer.cs">
-      <DependentUpon>WelcomeControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsControl.cs">
+    <Compile Update="SettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsControl.Designer.cs">
-      <DependentUpon>SettingsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WritingSystemForFieldControl.cs">
+    <Compile Update="WritingSystemForFieldControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WritingSystemForFieldControl.Designer.cs">
-      <DependentUpon>WritingSystemForFieldControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WritingSystemSetup.cs">
+    <Compile Update="WritingSystemSetup.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Addin.Backup\Addin.Backup.csproj">
-      <Project>{42FB4CC3-F2D1-4509-87DD-6BBD430CD4AB}</Project>
-      <Name>Addin.Backup</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-      <Name>LexicalModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LexicalTools\LexicalTools.csproj">
-      <Project>{87AF0B02-2983-486D-857F-D1859535C234}</Project>
-      <Name>LexicalTools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj">
-      <Project>{E651E83C-94DD-4D6D-ABA2-C9FDA34FBA55}</Project>
-      <Name>WeSay.AddinLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.App\WeSay.App.csproj">
-      <Project>{EFB9D66D-AF0F-4E45-A1AC-DB32981711D2}</Project>
-      <Name>WeSay.App</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
-      <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-      <Name>WeSay.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-      <Name>WeSay.Foundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
-      <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
-      <Name>WeSay.Project</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
-      <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
-      <Name>WeSay.UI</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\RoundedBorder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\construction.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\WelcomeImage.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\WeSayMenuSized.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\WeSayConfigMenuSized.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GenericLittleDeletionButton.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\genericLittleNewButton.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\NewOptionListItem.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\deleteOptionListItem.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\NewOptionsList.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\OpenOptionsList.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ConfigTasks.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ConfigWritingSystems.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\buttonImage.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ConfigBackup.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\genericAction.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ConfigFields.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ConfigInterfaceLanguage.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ConfigActions.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\about.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\openProject.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\NewProject.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ConfigOptionLists.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Warning.bmp" />
+    <ProjectReference Include="..\Addin.Backup\Addin.Backup.csproj" />
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj" />
+    <ProjectReference Include="..\LexicalTools\LexicalTools.csproj" />
+    <ProjectReference Include="..\WeSay.AddinLib\WeSay.AddinLib.csproj" />
+    <ProjectReference Include="..\WeSay.App\WeSay.App.csproj" />
+    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj" />
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj" />
+    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj" />
+    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\app.manifest" />
-    <None Include="Resources\userSpecific32x31.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
@@ -675,35 +143,66 @@
   <ItemGroup>
     <None Include="icu4c.readme.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets" Condition="Exists('..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets'))" />
-    <Error Condition="!Exists('..\..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets'))" />
-    <Error Condition="!Exists('..\..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets'))" />
-    <Error Condition="!Exists('..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\build\SIL.Windows.Forms.Keyboarding.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\build\SIL.Windows.Forms.Keyboarding.targets'))" />
-    <Error Condition="!Exists('..\..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets" Condition="Exists('..\..\packages\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" />
-  <Import Project="..\..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
-  <Import Project="..\..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets" Condition="Exists('..\..\packages\Icu4c.Win.Fw.Lib.54.1.22-beta\build\Icu4c.Win.Fw.Lib.targets')" />
-  <Import Project="..\..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets" Condition="Exists('..\..\packages\Icu4c.Win.Fw.Bin.54.1.22-beta\build\Icu4c.Win.Fw.Bin.targets')" />
-  <Import Project="..\..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets" Condition="Exists('..\..\packages\NHunspell.Patched.1.2.5554\build\NHunspell.Patched.targets')" />
-  <Import Project="..\..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets')" />
-  <Import Project="..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\build\SIL.Windows.Forms.Keyboarding.targets" Condition="Exists('..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\build\SIL.Windows.Forms.Keyboarding.targets')" />
-  <Import Project="..\..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets" Condition="Exists('..\..\packages\SIL.Windows.Forms.9.0.0-beta0154\build\SIL.Windows.Forms.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-	   Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="SIL.Windows.Forms" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Windows.Forms">
+      <HintPath>$(PkgSIL_Windows_Forms)\lib\net461\SIL.Windows.Forms.dll</HintPath>
+    </Reference>
+    <PackageReference Include="SIL.Windows.Forms.Keyboarding" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Windows.Forms.Keyboarding">
+      <HintPath>$(PkgSIL_Windows_Forms_Keyboarding)\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
+    </Reference>
+    <PackageReference Include="SIL.Windows.Forms.WritingSystems" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Windows.Forms.WritingSystems">
+      <HintPath>$(PkgSIL_Windows_Forms_WritingSystems)\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="CommonServiceLocator" Version="2.0.7" />
+    <PackageReference Include="ibusdotnet" Version="2.0.3" />
+    <PackageReference Include="icu.net" Version="2.8.1" />
+    <PackageReference Include="Icu4c.Win.Fw.Bin" Version="54.1.22-beta" />
+    <PackageReference Include="Icu4c.Win.Fw.Lib" Version="54.1.22-beta" />
+    <PackageReference Include="Icu4c.Win.Min" Version="59.1.7" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <PackageReference Include="Mono.Addins" Version="1.4.1" />
+    <PackageReference Include="Mono.Posix" Version="5.4.0.201" />
+    <PackageReference Include="NAudio" Version="1.10.0" />
+    <PackageReference Include="NDesk.DBus" Version="0.15.0" />
+    <PackageReference Include="NHunspell.Patched" Version="1.2.5554" />
+    <PackageReference Include="protobuf-net" Version="3.2.30" />
+    <PackageReference Include="RelaxNG" Version="3.2.3" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.3.6" />
+    <PackageReference Include="SIL.Core" Version="13.0.1" />
+    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
+    <PackageReference Include="SIL.Lexicon" Version="13.0.1" />
+    <PackageReference Include="SIL.Lift" Version="13.0.1" />
+    <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
+    <PackageReference Include="Spart" Version="1.0.0" />
+    <PackageReference Include="structuremap.patched" Version="4.7.3" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="TaskList.cs" />
+    <Compile Remove="TaskList.Designer.cs" />
+    <EmbeddedResource Remove="TaskList.resx" />
+  </ItemGroup>
 </Project>

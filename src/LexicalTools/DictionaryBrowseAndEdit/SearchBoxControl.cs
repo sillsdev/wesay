@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using WeSay.LexicalTools.Properties;
 using WeSay.UI;
@@ -11,13 +12,13 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 {
 	public partial class SearchBoxControl : UserControl
 	{
-		private readonly ContextMenu _searchModeMenu;
+		private readonly ContextMenuStrip _searchModeMenu;
 
 		public SearchBoxControl()
 		{
 			InitializeComponent();
 			BackColor = Color.White;
-			_searchModeMenu = new ContextMenu();
+			_searchModeMenu = new ContextMenuStrip();
 			_selectedWritingSystemLabel.ForeColor = DisplaySettings.Default.WritingSystemLabelColor;
 			_writingSystemChooser.Image = Resources.Expand.GetThumbnailImage(6,
 																			 6,
@@ -41,7 +42,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		[Browsable(false)]
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-		public ContextMenu SearchModeMenu
+		public ContextMenuStrip SearchModeMenu
 		{
 			get { return _searchModeMenu; }
 		}
@@ -112,7 +113,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnWritingSystemChooser_Click(object sender, EventArgs e)
 		{
-			foreach (MenuItem menuItem in _searchModeMenu.MenuItems)
+			foreach (var menuItem in _searchModeMenu.Items.OfType<ToolStripMenuItem>())
 			{
 				menuItem.Checked = (ListWritingSystem == menuItem.Tag);
 			}

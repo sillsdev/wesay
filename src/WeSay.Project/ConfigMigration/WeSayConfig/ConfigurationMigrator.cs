@@ -159,12 +159,6 @@ namespace WeSay.Project.ConfigMigration.WeSayConfig
 					using (var writer = XmlWriter.Create(tempPath, CanonicalXmlSettings.CreateXmlWriterSettings()))
 					{
 						transform.Transform(configurationDoc, writer);
-						var tempfiles = transform.TemporaryFiles;
-						if (tempfiles != null)
-						// tempfiles will be null when debugging is not enabled
-						{
-							tempfiles.Delete();
-						}
 						writer.Close();
 					}
 					SafelyMoveTempFileTofinalDestination(tempPath, targetPath);
