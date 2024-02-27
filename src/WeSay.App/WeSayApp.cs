@@ -12,6 +12,7 @@ using SIL.WritingSystems;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -42,8 +43,8 @@ namespace WeSay.App
 			{
 				// initialize Palaso keyboarding and ICU
 				Sldr.Initialize();
-				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 				Icu.Wrapper.Init();
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 				var app = new WeSayApp(args);
 				app.Run();
 			}
@@ -98,8 +99,6 @@ namespace WeSay.App
 
 		public static void SetUpXulRunner()
 		{
-			try
-			{
 				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
 				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
 #if __MonoCS__
@@ -130,15 +129,7 @@ namespace WeSay.App
 					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
 				}
 #endif
-			}
-			catch (ApplicationException e)
-			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
-			}
-			catch (Exception e)
-			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
-			}
+
 		}
 
 		private static void SetUpReporting()

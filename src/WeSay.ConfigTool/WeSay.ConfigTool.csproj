@@ -47,20 +47,6 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\build\Keyman10Interop.dll</HintPath>
-    </Reference>
-    <Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\build\Keyman7Interop.dll</HintPath>
-    </Reference>
-    <Reference Condition="'$(OS)'=='Windows_NT'" Include="KeymanLink, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\$(Configuration)\KeymanLink.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
   </ItemGroup>
@@ -152,9 +138,29 @@
     <Reference Include="SIL.Windows.Forms.Keyboarding">
       <HintPath>$(PkgSIL_Windows_Forms_Keyboarding)\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
     </Reference>
+    <Reference Include="Keyman10Interop, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>$(PkgSIL_Windows_Forms_Keyboarding)\build\Keyman10Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Keyman7Interop, Version=1.4.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>$(PkgSIL_Windows_Forms_Keyboarding)\build\Keyman7Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="KeymanLinkl">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(PkgSIL_Windows_Forms_Keyboarding)\KeymanLink.dll</HintPath>
+    </Reference>
+
     <PackageReference Include="SIL.Windows.Forms.WritingSystems" Version="13.0.1" GeneratePathProperty="true"/>
     <Reference Include="SIL.Windows.Forms.WritingSystems">
       <HintPath>$(PkgSIL_Windows_Forms_WritingSystems)\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
+    </Reference>
+
+    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Core.Desktop">
+      <HintPath>$(PkgSIL_Core_Desktop)\lib\net461\SIL.Core.Desktop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -178,7 +184,6 @@
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.3.6" />
     <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
     <PackageReference Include="SIL.Lexicon" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />

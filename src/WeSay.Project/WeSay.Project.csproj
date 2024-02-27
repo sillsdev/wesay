@@ -79,6 +79,10 @@
       <Private>False</Private>
       <HintPath>$(PkgSIL_Windows_Forms)\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
+    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Core.Desktop">
+      <HintPath>$(PkgSIL_Core_Desktop)\lib\net461\SIL.Core.Desktop.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
@@ -93,7 +97,6 @@
     <PackageReference Include="SIL.Chorus.LibChorus" Version="5.1.0" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.3.6" />
     <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
     <PackageReference Include="SIL.Lexicon" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />

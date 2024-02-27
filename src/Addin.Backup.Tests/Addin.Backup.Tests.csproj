@@ -13,7 +13,6 @@
     <OutputPath>..\..\output\Debug\</OutputPath>
     <OutputType>Library</OutputType>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\output\Release\</OutputPath>

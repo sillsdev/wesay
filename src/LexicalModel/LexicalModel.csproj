@@ -40,7 +40,6 @@
     <PackageReference Include="SIL.Chorus.LibChorus" Version="5.1.0" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.3.6" />
     <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
     <PackageReference Include="SIL.DictionaryServices" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />

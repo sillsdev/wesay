@@ -12,7 +12,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>WeSay.LexicalTools</RootNamespace>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\output\Release\</OutputPath>
@@ -115,7 +114,6 @@
     <PackageReference Include="NDesk.DBus" Version="0.15.0" />
     <PackageReference Include="RelaxNG" Version="3.2.3" />
     <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
     <PackageReference Include="Spart" Version="1.0.0" />
