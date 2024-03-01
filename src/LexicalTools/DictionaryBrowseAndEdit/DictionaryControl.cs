@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using WeSay.LexicalModel;
@@ -202,18 +203,18 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void AddWritingSystemToPicker(WritingSystemDefinition writingSystem, Field field)
 		{
-			var item = new MenuItem(
-				writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName),
-				OnWritingSystemMenuItemClicked
+			var item = new ToolStripMenuItem(
+				writingSystem.Abbreviation + "\t" + StringCatalog.Get(field.DisplayName)
 			);
-			item.RadioCheck = true;
+			item.Click += OnWritingSystemMenuItemClicked;
 			item.Tag = writingSystem;
-			SearchModeMenu.MenuItems.Add(item);
+			//todo radio button check removed
+			SearchModeMenu.Items.Add(item);
 		}
 
 		private bool WritingSystemExistsInPicker(WritingSystemDefinition writingSystem)
 		{
-			foreach (MenuItem item in SearchModeMenu.MenuItems)
+			foreach (var item in SearchModeMenu.Items.OfType<ToolStripItem>())
 			{
 				if (writingSystem.LanguageTag == ((WritingSystemDefinition)item.Tag).LanguageTag)
 				{
@@ -223,7 +224,7 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 			return false;
 		}
 
-		protected ContextMenu SearchModeMenu
+		protected ContextMenuStrip SearchModeMenu
 		{
 			get { return _searchTextBoxControl.SearchModeMenu; }
 		}
@@ -365,7 +366,8 @@ namespace WeSay.LexicalTools.DictionaryBrowseAndEdit
 
 		private void OnWritingSystemMenuItemClicked(object sender, EventArgs e)
 		{
-			var item = (MenuItem)sender;
+			// TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+			var item = (ToolStripItem)sender;
 			if (_listWritingSystem != item.Tag)
 			{
 				SetListWritingSystem((WritingSystemDefinition)item.Tag);

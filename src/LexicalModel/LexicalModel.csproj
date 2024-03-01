@@ -1,236 +1,72 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WeSay.LexicalModel</RootNamespace>
-    <AssemblyName>LexicalModel</AssemblyName>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
     <RootNamespace>WeSay.LexicalModel</RootNamespace>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
     <DebugSymbols>true</DebugSymbols>
     <RootNamespace>WeSay.LexicalModel</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.1.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.1.1\lib\net45\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Chorus, Version=3.1.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Chorus.App.LibChorus.5.0.0-beta0017\lib\net461\Chorus.exe</HintPath>
-    </Reference>
-    <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
-    </Reference>
-    <None Include="packages.config" />
-    <Reference Include="Enchant.Net, Version=1.4.3.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Enchant.Net.1.4.2\lib\net461\Enchant.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="icu.net, Version=2.7.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66, processorArchitecture=MSIL">
-      <HintPath>..\packages\icu.net.2.7.1\lib\net451\icu.net.dll</HintPath>
-    </Reference>
-    <Reference Include="L10NSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
-      <HintPath>..\packages\L10NSharp.5.0.0-beta0086\lib\net461\L10NSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="LibChorus, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f1447bae1e63f485, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Chorus.LibChorus.5.0.0-beta0017\lib\net461\LibChorus.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
-    </Reference>
-    <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
-    </Reference>
-    <Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>../packages/NetReflector.1.1.2009/lib/net20/NetReflector.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0154\lib\net461\SIL.Core.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.DictionaryServices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.DictionaryServices.9.0.0-beta0154\lib\net461\SIL.DictionaryServices.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0154\lib\net461\SIL.Lift.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms.Keyboarding">
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms.WritingSystems">
-      <HintPath>..\packages\SIL.Windows.Forms.WritingSystems.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0154\lib\net461\SIL.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
-      <HintPath>..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.7.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.FileSystem.AccessControl, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.AccessControl.4.7.0\lib\net461\System.IO.FileSystem.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.4.7.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Condition="'$(OS)' == 'Windows_NT'" Include="irrKlang.NET4, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a854741bd80517c7">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Media.9.0.0-beta0154\build\lib\win-x86\irrKlang.NET4.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Field.cs" />
-    <Compile Include="Foundation\Options\DdpListReader.cs" />
-    <Compile Include="Foundation\Options\DdpOptionDisplayAdaptor.cs" />
-    <Compile Include="Foundation\Options\GenericOptionListReader.cs" />
-    <Compile Include="Foundation\Options\OptionDisplayAdaptor.cs" />
-    <Compile Include="Foundation\SpellCheckerIdToDisplayStringConverter.cs" />
-    <Compile Include="Foundation\ChorusWritingSystemAdaptor.cs" />
-    <Compile Include="Foundation\WritingSystemInfo.cs" />
-    <Compile Include="IFieldQuery.cs" />
-    <Compile Include="LexEntryRepository.cs" />
-    <Compile Include="MissingFieldQuery.cs" />
-    <Compile Include="PairStringLexEntryIdDisplayProvider.cs" />
-    <Compile Include="Phonetic.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResultSetToListOfStringsAdapter.cs" />
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Enchant.Net" Version="1.4.2" />
+    <PackageReference Include="icu.net" Version="2.8.1" />
+    <PackageReference Include="Icu4c.Win.Min" Version="59.1.7" />
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="NDesk.DBus" Version="0.15.0" />
+    <PackageReference Include="NetReflector" Version="1.1.2009" />
+    <PackageReference Include="RelaxNG" Version="3.2.3" />
+    <PackageReference Include="SIL.Chorus.LibChorus" Version="5.1.0" />
+    <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.3.6" />
+    <PackageReference Include="SIL.Core" Version="13.0.1" />
+    <PackageReference Include="SIL.DictionaryServices" Version="13.0.1" />
+    <PackageReference Include="SIL.Lift" Version="13.0.1" />
+    <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
+    <PackageReference Include="Spart" Version="1.0.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
-      <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-      <Name>WeSay.Data</Name>
-    </ProjectReference>
+    <Compile Remove="KeyToEntryIdInitializer.cs" />
+    <Compile Remove="LexEntryFinder.cs" />
+    <Compile Remove="SemanticDomainQuery.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-	   Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
   <PropertyGroup>
-    <ProjectGuid>{5F61C809-B6C0-4567-9603-B2198E1AD038}</ProjectGuid>
     <RootNamespace>WeSay.LexicalModel</RootNamespace>
   </PropertyGroup>
-  <Import Project="..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets" Condition="Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
-    <Error Condition="!Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets'))" />
-    <Error Condition="!Exists('..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets'))" />
-  </Target>
-  <Import Project="..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets" Condition="Exists('..\packages\Icu4c.Win.Min.59.1.7\build\Icu4c.Win.Min.targets')" />
-  <Import Project="..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets" Condition="Exists('..\packages\SIL.Chorus.Mercurial.3.0.3\build\SIL.Chorus.Mercurial.targets')" />
 </Project>

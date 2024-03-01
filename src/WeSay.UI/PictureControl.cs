@@ -123,8 +123,10 @@ namespace WeSay.UI
 				// from Windows to / characters for the benefit of Linux and Mac.  (Windows can
 				// read / characters as well, so keep the code simple and always do this.)
 				// This block fixes https://jira.sil.org/browse/WS-87.
-				if (!String.IsNullOrEmpty(value))
-					value = FileUtils.NormalizePath(value);
+
+				//todo restore this code path
+				// if (!String.IsNullOrEmpty(value))
+					// value = FileUtils.NormalizePath(value);
 				_relativePathToImage = value;
 			}
 		}

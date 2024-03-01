@@ -1,5 +1,5 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
-  <Import Project="..\packages\NUnit.3.13.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" />
+  <Import Project="..\..\packages\NUnit.3.13.1\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.13.1\build\NUnit.props')" />
   <PropertyGroup>
 	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -51,26 +51,26 @@
   </PropertyGroup>
   <ItemGroup>
 	<Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-	  <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+	  <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
 	</Reference>
 	<Reference Include="NetReflector, Version=1.0.0.0, Culture=neutral">
 	  <SpecificVersion>False</SpecificVersion>
-	  <HintPath>>../packages/NetReflector.1.1.2009/lib/net20/NetReflector.dll</HintPath>
+	  <HintPath>>../../packages/NetReflector.1.1.2009/lib/net20/NetReflector.dll</HintPath>
 	</Reference>
     <Reference Include="nunit.framework, Version=3.13.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
 	<Reference Include="SIL.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
+      <HintPath>..\..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
 	</Reference>
 	<Reference Include="SIL.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.TestUtilities.9.0.0-beta0154\lib\net461\SIL.TestUtilities.dll</HintPath>
+      <HintPath>..\..\packages\SIL.TestUtilities.9.0.0-beta0154\lib\net461\SIL.TestUtilities.dll</HintPath>
 	</Reference>
 	<Reference Include="SIL.Windows.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
 	  <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
+      <HintPath>..\..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
 	</Reference>
 	<Reference Include="System" />
 	<Reference Include="System.Data" />

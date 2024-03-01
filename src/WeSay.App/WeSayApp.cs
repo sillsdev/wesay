@@ -12,6 +12,7 @@ using SIL.WritingSystems;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -38,25 +39,22 @@ namespace WeSay.App
 		[STAThread]
 		private static void Main(string[] args)
 		{
-			using (new SIL.CoreSetup())
+			try
 			{
-				try
-				{
-					// initialize Palaso keyboarding and ICU
-					Sldr.Initialize();
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
-					Icu.Wrapper.Init();
-					var app = new WeSayApp(args);
-					app.Run();
-				}
-				finally
-				{
-					Keyboard.Controller.ActivateDefaultKeyboard();
-					SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
-					Sldr.Cleanup();
-					Icu.Wrapper.Cleanup();
-					ReleaseMutexForThisProject();
-				}
+				// initialize Palaso keyboarding and ICU
+				Sldr.Initialize();
+				Icu.Wrapper.Init();
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
+				var app = new WeSayApp(args);
+				app.Run();
+			}
+			finally
+			{
+				Keyboard.Controller.ActivateDefaultKeyboard();
+				SIL.Windows.Forms.Keyboarding.KeyboardController.Shutdown();
+				Sldr.Cleanup();
+				Icu.Wrapper.Cleanup();
+				ReleaseMutexForThisProject();
 			}
 		}
 
@@ -101,8 +99,6 @@ namespace WeSay.App
 
 		public static void SetUpXulRunner()
 		{
-			try
-			{
 				string geckoBrowserOption = Environment.GetEnvironmentVariable("WESAY_USE_GECKO") ?? String.Empty;
 				WeSayWordsProject.GeckoOption = !(geckoBrowserOption == String.Empty || geckoBrowserOption.Equals("0", StringComparison.OrdinalIgnoreCase));
 #if __MonoCS__
@@ -120,7 +116,7 @@ namespace WeSay.App
 				// For windows, only initialize xulrunner if we are using the gecko browser control option
 				if (WeSayWordsProject.GeckoOption)
 				{
-					string xulRunnerLocation = Path.Combine(FileLocator.DirectoryOfTheApplicationExecutable, "Firefox");
+					string xulRunnerLocation = Path.Combine(FileLocationUtilities.DirectoryOfTheApplicationExecutable, "Firefox");
 					if (!Directory.Exists(xulRunnerLocation))
 					{
 						throw new ApplicationException("XULRunner needs to be installed to " + xulRunnerLocation);
@@ -133,15 +129,7 @@ namespace WeSay.App
 					GeckoPreferences.User["gfx.font_rendering.graphite.enabled"] = true;
 				}
 #endif
-			}
-			catch (ApplicationException e)
-			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
-			}
-			catch (Exception e)
-			{
-				ErrorReport.NotifyUserOfProblem(e.Message);
-			}
+
 		}
 
 		private static void SetUpReporting()
@@ -540,7 +528,7 @@ namespace WeSay.App
 				ErrorReport.AddProperty("ProjectPath", BasilProject.Project.ProjectDirectoryPath);
 			}
 			ErrorReport.AddStandardProperties();
-			ExceptionHandler.Init();
+			// ExceptionHandler.Init();
 		}
 
 		private class CommandLineArguments
@@ -587,7 +575,7 @@ namespace WeSay.App
 
 		public static void ShowHelpTopic(string topicLink)
 		{
-			string helpFilePath = FileLocator.GetFileDistributedWithApplication("WeSay_Helps.chm");
+			string helpFilePath = FileLocationUtilities.GetFileDistributedWithApplication("WeSay_Helps.chm");
 			if (File.Exists(helpFilePath))
 			{
 				//var uri = new Uri(helpFilePath);

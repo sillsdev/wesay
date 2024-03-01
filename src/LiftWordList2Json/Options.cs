@@ -8,20 +8,24 @@ namespace Lift2Json
 {
 	class Options
 	{
-		[Option('i', "input", DefaultValue = "Wordlist.lift", HelpText = "Wordlist in lift format with id and glosses in different source languages.")]
-		public string InputFile { get; set; }
+		[Option('i',
+			"input",
+			HelpText =
+				"Wordlist in lift format with id and glosses in different source languages.")]
+		public string InputFile { get; set; } = "Wordlist.lift";
 
-		[Option('o', "output", DefaultValue = "Wordlist.json", HelpText = "Output file to write.")]
-		public string OutputFile { get; set; }
+		[Option('o',
+			"output",
+			HelpText = "Output file to write.")]
+		public string OutputFile { get; set; } = "Wordlist.json";
 
-		[Option('v', "verbose", DefaultValue = false, HelpText = "Verbose output.")]
-		public bool Verbose { get; set; }
+		[Option('v', "verbose", HelpText = "Verbose output.")]
+		public bool Verbose { get; set; } = false;
 
 		[Option('h', null, HelpText = "Display this help screen.")]
 		public bool ShowHelp { get; set; }
 
 
-		[HelpOption]
 		public string GetUsage()
 		{
 			var help = new HelpText
@@ -34,7 +38,7 @@ namespace Lift2Json
 			//help.AddPreOptionsLine("<<license details here.>>");
 			//help.AddPreOptionsLine("Usage: app -p Someone");
 			help.AddPreOptionsLine("Lift2Json will convert a lift format wordlist to json.");
-			help.AddOptions(this);
+			// help.AddOptions(this);
 			//var usage = new StringBuilder();
 			//usage.AppendLine("LanguageData (c) 2016 SIL International");
 			//usage.AppendLine("LanguageData will process Ethnologue, IANA subtag and ISO693-3 data to a single language data index file.");

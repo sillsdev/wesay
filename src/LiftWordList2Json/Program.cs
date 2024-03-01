@@ -16,10 +16,9 @@ namespace Lift2Json
 	{
 		static int Main(string[] args)
 		{
-			var options = new Options();
-			var isValid = CommandLine.Parser.Default.ParseArgumentsStrict(args, options);
-			if (isValid)
-			{
+			var result = CommandLine.Parser.Default.ParseArguments<Options>(args);
+			var options = result.Value;
+
 				if (options.ShowHelp)
 				{
 					Console.WriteLine(options.GetUsage());
@@ -42,14 +41,6 @@ namespace Lift2Json
 					Console.WriteLine("Output file: {0}", options.OutputFile);
 				}
 
-			}
-			else
-			{
-				// Display the default usage information
-				Console.WriteLine("command line parsing failed");
-				Console.WriteLine(options.GetUsage());
-				return 1;
-			}
 
 			List<LexEntry> _words;
 			_words = new List<LexEntry>();

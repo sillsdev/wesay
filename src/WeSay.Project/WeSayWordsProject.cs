@@ -191,8 +191,12 @@ namespace WeSay.Project
 #endif
 		}
 
-		public bool LoadFromLiftLexiconPath(string liftPath,
-			IProgressNotificationProvider progressProvider = null)
+		public bool LoadFromLiftLexiconPath(string liftPath)
+		{
+			return LoadFromLiftLexiconPath(liftPath, null);
+		}
+
+		public bool LoadFromLiftLexiconPath(string liftPath, IProgressNotificationProvider progressProvider)
 		{
 			try
 			{
@@ -1917,7 +1921,9 @@ namespace WeSay.Project
 				return false;
 			}
 			string regex = string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(id));
-			return FileUtils.GrepFile(PathToLiftFile, regex);
+			throw new NotImplementedException();
+			//todo find grep here
+			// return FileUtils.GrepFile(PathToLiftFile, regex);
 		}
 
 		/// <summary>

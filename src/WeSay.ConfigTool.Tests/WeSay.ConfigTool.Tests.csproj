@@ -1,230 +1,65 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="..\packages\NUnit.3.13.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FB7CFBB8-D7D0-4E9D-96CF-7D3D0D947EB5}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WeSay.ConfigTool.Tests</RootNamespace>
-    <AssemblyName>WeSay.ConfigTool.Tests</AssemblyName>
     <AppConfig>..\AppForTestsSTA.config</AppConfig>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>WeSay.ConfigTool.Tests</AssemblyName>
-    <RootNamespace>WeSay.ConfigTool.Tests</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>WeSay.ConfigTool.Tests</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
-    <RootNamespace>WeSay.ConfigTool.Tests</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Commons.Xml.Relaxng, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\RelaxNG.3.2.3\lib\net40\Commons.Xml.Relaxng.dll</HintPath>
-    </Reference>
-    <Reference Include="icu.net, Version=2.7.0.0, Culture=neutral, PublicKeyToken=416fdd914afa6b66, processorArchitecture=MSIL">
-      <HintPath>..\packages\icu.net.2.7.1\lib\net451\icu.net.dll</HintPath>
-    </Reference>
-    <Reference Include="L10NSharp, Version=5.0.0.0, Culture=neutral, PublicKeyToken=fd0b3e309a5b7c28, processorArchitecture=MSIL">
-      <HintPath>..\packages\L10NSharp.4.1.0\lib\net461\L10NSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.4\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.0.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyModel.2.0.4\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
-    </Reference>
-    <Reference Include="NDesk.DBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f6716e4f9b2ed099, processorArchitecture=MSIL">
-      <HintPath>..\packages\NDesk.DBus.0.15.0\lib\NDesk.DBus.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.13.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core.Desktop, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0154\lib\net461\SIL.Core.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.DictionaryServices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.DictionaryServices.9.0.0-beta0154\lib\net461\SIL.DictionaryServices.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Lift, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0154\lib\net461\SIL.Lift.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.TestUtilities, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.TestUtilities.9.0.0-beta0154\lib\net461\SIL.TestUtilities.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms.Keyboarding">
-      <HintPath>..\packages\SIL.Windows.Forms.Keyboarding.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.Keyboarding.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.WritingSystems, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cab3c8c5232dfcf2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0154\lib\net461\SIL.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="Spart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=14d24e064e474331, processorArchitecture=MSIL">
-      <HintPath>..\packages\Spart.1.0.0\lib\net461\Spart.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.IO.FileSystem.AccessControl, Version=4.0.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.AccessControl.4.7.0\lib\net461\System.IO.FileSystem.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Principal.Windows, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Principal.Windows.4.7.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj" />
+    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj" />
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj" />
+    <ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj" />
+    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj" />
+    <ProjectReference Include="..\WeSay.ConfigTool\WeSay.ConfigTool.csproj" />
+    <ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminWindowTests.cs" />
-    <Compile Include="CauseProblemWithAutoCompleteTestsWithCreationTests.cs" />
-    <Compile Include="MigrationTests.cs" />
-    <Compile Include="MruProjectsTest.cs" />
-    <Compile Include="FieldDetailControlTests.cs" />
-    <Compile Include="InterfaceLanguageControl.Tests.cs" />
-    <Compile Include="NewProjectCreation\ProjectFromRawFLExLiftFilesCreatorTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TestResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-      <Name>LexicalModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
-      <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-      <Name>WeSay.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-      <Name>WeSay.Foundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Project.Tests\WeSay.Project.Tests.csproj">
-      <Project>{F644C902-A952-4797-9E2D-19D6051DD032}</Project>
-      <Name>WeSay.Project.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
-      <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
-      <Name>WeSay.Project</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.ConfigTool\WeSay.ConfigTool.csproj">
-      <Project>{54C943DB-7725-4F52-BCE4-86C3D3D5A66E}</Project>
-      <Name>WeSay.ConfigTool</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj">
-      <Project>{FEC3014D-0067-4D59-A838-3B046EC3C352}</Project>
-      <Name>WeSay.TestUtilities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestResources.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.13.1\build\NUnit.props'))" />
-    <Error Condition="!Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets'))" />
-  </Target>
-  <Import Project="..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets" Condition="Exists('..\packages\NDesk.DBus.0.15.0\build\NDesk.DBus.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-	   Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="icu.net" Version="2.8.1" />
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="NDesk.DBus" Version="0.15.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="RelaxNG" Version="3.2.3" />
+    <PackageReference Include="SIL.Core" Version="13.0.1" />
+    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
+    <PackageReference Include="SIL.Lift" Version="13.0.1" />
+    <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
+    <PackageReference Include="Spart" Version="1.0.0" />
+  </ItemGroup>
 </Project>

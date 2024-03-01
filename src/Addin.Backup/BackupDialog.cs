@@ -1,10 +1,9 @@
 using SIL.i18n;
 using SIL.Reporting;
-using SIL.UsbDrive;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using WeSay.AddinLib;
 
@@ -24,7 +23,7 @@ namespace Addin.Backup
 			_cancelButton.Font = (Font)StringCatalog.LabelFont.Clone();
 		}
 
-		private void DoBackup(IUsbDriveInfo info)
+		private void DoBackup(DriveInfo info)
 		{
 			_checkForUsbKeyTimer.Enabled = false;
 			_noteLabel.Visible = false;
@@ -57,9 +56,9 @@ namespace Addin.Backup
 			_checkForUsbKeyTimer.Enabled = false;
 		}
 
-		public List<IUsbDriveInfo> GetLogicalUsbDisks()
+		public DriveInfo[] GetLogicalUsbDisks()
 		{
-			return UsbDriveInfo.GetDrives();
+			return DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.Removable).ToArray();
 		}
 
 		private void Dialog_Load(object sender, EventArgs e)
@@ -77,7 +76,7 @@ namespace Addin.Backup
 			try
 			{
 				var usbDrives = GetLogicalUsbDisks();
-				if ((usbDrives.Count > 0) && (usbDrives[0].IsReady))
+				if ((usbDrives.Length > 0) && (usbDrives[0].IsReady))
 				{
 					DoBackup(usbDrives[0]);
 				}

@@ -4,6 +4,7 @@ using SIL.Windows.Forms.Reporting;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using WeSay.ConfigTool.Properties;
 
@@ -39,6 +40,8 @@ namespace WeSay.ConfigTool
 
 			try
 			{
+				Assembly.LoadFrom("Keyman10Interop.dll");
+				Assembly.LoadFrom("Keyman7Interop.dll");
 				// initialize Palaso keyboarding
 				SIL.Windows.Forms.Keyboarding.KeyboardController.Initialize();
 				SIL.WritingSystems.Sldr.Initialize();

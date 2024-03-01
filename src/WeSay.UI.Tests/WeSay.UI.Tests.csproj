@@ -1,169 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="..\packages\NUnit.3.13.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6AED6785-CC6F-4A6A-BDB1-1895C6DA1090}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WeSay.UI.Tests</RootNamespace>
-    <AssemblyName>WeSay.UI.Tests</AssemblyName>
     <AppConfig>..\AppForTests.config</AppConfig>
     <StartupObject>
     </StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>WeSay.UI.Tests</AssemblyName>
-    <RootNamespace>WeSay.UI.Tests</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
-    <AssemblyName>WeSay.UI.Tests</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
-    <RootNamespace>WeSay.UI.Tests</RootNamespace>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\output\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.13.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.13.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Core.9.0.0-beta0154\lib\net461\SIL.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Core.Desktop">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Core.Desktop.9.0.0-beta0154\lib\net461\SIL.Core.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Lift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Lift.9.0.0-beta0154\lib\net461\SIL.Lift.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.Windows.Forms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.Windows.Forms.9.0.0-beta0154\lib\net461\SIL.Windows.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="SIL.WritingSystems, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SIL.WritingSystems.9.0.0-beta0154\lib\net461\SIL.WritingSystems.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Geckofx-Core">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Geckofx-Winforms">
-      <HintPath>..\packages\Geckofx60.32.60.0.54\lib\net45\Geckofx-Winforms.dll</HintPath>
-    </Reference>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AutoCompleteWithCreationBoxTests.cs" />
-    <Compile Include="BindingTests.cs" />
-    <Compile Include="DetailListTests.cs" />
-    <Compile Include="GeckoBoxTests.cs" />
-    <Compile Include="GeckoComboBoxTests.cs" />
-    <Compile Include="GeckoListBoxTests.cs" />
-    <Compile Include="GhostBindingTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferenceCollectionEditorTests.cs">
-    </Compile>
-    <Compile Include="TestResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TestResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj">
-      <Project>{5F61C809-B6C0-4567-9603-B2198E1AD038}</Project>
-      <Name>LexicalModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj">
-      <Project>{600D0FD4-D189-41A0-9BC5-FC79AD2CF1CD}</Project>
-      <Name>WeSay.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj">
-      <Project>{F12EB680-0990-4900-B77E-0FBF2E28A815}</Project>
-      <Name>WeSay.Foundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj">
-      <Project>{5CFD0BB3-5B2A-4911-B220-9C2286151BF0}</Project>
-      <Name>WeSay.Project</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj">
-      <Project>{FEC3014D-0067-4D59-A838-3B046EC3C352}</Project>
-      <Name>WeSay.TestUtilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj">
-      <Project>{AC8F284C-7B34-4AC9-A7DE-FAF765456DFF}</Project>
-      <Name>WeSay.UI</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>TestResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\LexicalModel\LexicalModel.csproj" />
+    <ProjectReference Include="..\WeSay.Data\WeSay.Data.csproj" />
+    <ProjectReference Include="..\WeSay.Foundation\WeSay.Foundation.csproj" />
+    <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj" />
+    <ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj" />
+    <ProjectReference Include="..\WeSay.UI\WeSay.UI.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -171,18 +46,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NUnit.3.13.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.13.1\build\NUnit.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-	   Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.13.3" />
+  </ItemGroup>
 </Project>

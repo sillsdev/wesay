@@ -19,7 +19,7 @@ namespace WeSay.LexicalTools
 		}
 		public string TaskName
 		{
-			get { return XmlUtils.GetManditoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
+			get { return XmlUtils.GetMandatoryAttributeValue(_xmlDoc.FirstChild, "taskName"); }
 		}
 
 		public virtual bool IsOptional
