@@ -45,6 +45,7 @@
     <PackageReference Include="Geckofx60.64" Version="60.0.55" />
     <PackageReference Include="icu.net" Version="2.8.1" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SIL.Core" Version="13.0.1" />
