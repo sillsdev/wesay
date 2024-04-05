@@ -19,10 +19,14 @@ namespace WeSay.App.Tests
 		private MockTask _dashboardTask;
 		private bool _didRaiseInitializedEvent;
 
+		[OneTimeSetUp]
+		public void FixtureSetup()
+		{
+			Sldr.Initialize(true);
+		}
 		[SetUp]
 		public void Setup()
 		{
-			Sldr.Initialize(true);
 			string entriesXml =
 					@"<entry id='foo1'><lexical-unit><form lang='qaa'><text>fooOne</text></form></lexical-unit></entry>
 								<entry id='foo2'><lexical-unit><form lang='qaa'><text>fooTwo</text></form></lexical-unit></entry>
