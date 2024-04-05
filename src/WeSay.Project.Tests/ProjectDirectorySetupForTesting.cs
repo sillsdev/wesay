@@ -125,7 +125,8 @@ namespace WeSay.Project.Tests
 
 		#endregion
 
-		public WeSayWordsProject CreateLoadedProject(IProgressNotificationProvider progressProvider = null)
+		public WeSayWordsProject CreateLoadedProject() => CreateLoadedProject(null);
+		public WeSayWordsProject CreateLoadedProject(IProgressNotificationProvider progressProvider)
 		{
 
 			var p = new WeSayWordsProject();
