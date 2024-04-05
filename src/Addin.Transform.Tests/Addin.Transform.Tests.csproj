@@ -33,6 +33,12 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="SIL.Windows.Forms" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Windows.Forms">
+      <HintPath>$(PkgSIL_Windows_Forms)\lib\net461\SIL.Windows.Forms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Addin.Transform\Addin.Transform.csproj" />
     <ProjectReference Include="..\LexicalModel.Tests\LexicalModel.Tests.csproj" />
     <ProjectReference Include="..\LexicalModel\LexicalModel.csproj" />
@@ -66,6 +72,7 @@
     <PackageReference Include="icu.net" Version="2.8.1" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
     <PackageReference Include="NDesk.DBus" Version="0.15.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="RelaxNG" Version="3.2.3" />
