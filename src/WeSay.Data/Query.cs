@@ -524,20 +524,18 @@ namespace WeSay.Data
 			{
 				return null;
 			}
-			Type type = null;
-			Type[] interfaces = returnType.GetInterfaces();
-			foreach (Type interfaceType in interfaces)
+
+			//get T from IEnumerable<T>
+			foreach (Type interfaceType in returnType.GetInterfaces())
 			{
-				if (interfaceType.IsGenericType)
+				if (interfaceType.IsGenericType &&
+					interfaceType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
 				{
-					Type[] arguments = interfaceType.GetGenericArguments();
-					if (interfaceType == typeof(IEnumerable<>).MakeGenericType(arguments))
-					{
-						type = arguments[0];
-					}
+					return interfaceType.GetGenericArguments()[0];
 				}
 			}
-			return type;
+
+			return null;
 		}
 
 	}

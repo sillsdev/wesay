@@ -37,12 +37,18 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="SIL.Core.Tests" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Core.Tests">
+      <HintPath>$(PkgSIL_Core_Tests)\lib\net461\SIL.Core.Tests.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="icu.net" Version="2.8.1" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
     <PackageReference Include="Mono.Posix" Version="5.4.0.201"/>
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Tests" Version="13.0.1" />
     <PackageReference Include="SIL.TestUtilities" Version="13.0.1" />
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
     <PackageReference Include="Spart" Version="1.0.0" />
