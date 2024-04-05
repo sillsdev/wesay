@@ -29,8 +29,8 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_tempfolder = new TemporaryFolder();
-			string persistedFilePath = _tempfolder.GetTemporaryFile();
+			_tempfolder = new TemporaryFolder("LexEntryRepositoryCachingTests");
+			string persistedFilePath = _tempfolder.GetNewTempFile(false).Path;
 			_repository = new LexEntryRepository(persistedFilePath);
 		}
 
@@ -38,6 +38,7 @@ namespace WeSay.LexicalModel.Tests
 		public void Teardown()
 		{
 			_repository.Dispose();
+			_repository.Dispose(); //added in dotnet8 conversion
 		}
 
 		[Test]

@@ -21,8 +21,8 @@ namespace WeSay.LexicalModel.Tests
 		[SetUp]
 		public override void SetUp()
 		{
-			_tempFolder = new TemporaryFolder();
-			_persistedFilePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder("LexEntryRepositoryCreateItemTransitionTests");
+			_persistedFilePath = _tempFolder.GetNewTempFile(false).Path;
 			DataMapperUnderTest = new LexEntryRepository(_persistedFilePath);
 		}
 
@@ -30,7 +30,7 @@ namespace WeSay.LexicalModel.Tests
 		public override void TearDown()
 		{
 			DataMapperUnderTest.Dispose();
-			_tempFolder.Delete();
+			_tempFolder.Dispose();
 		}
 
 		[Test]
