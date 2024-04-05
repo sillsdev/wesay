@@ -132,7 +132,7 @@ namespace WeSay.UI.Tests
 			ActuallyShowOnScreen();
 			GetTextBox().Focus();
 			Assert.IsTrue(GetTextBox().Focused);
-			Assert.IsFalse(Boxes[0].AddNewButton.Visible);
+			Assert.IsFalse(Boxes[0].AddNewButtonVisible);
 		}
 
 		[Test]
@@ -143,7 +143,7 @@ namespace WeSay.UI.Tests
 			ActuallyShowOnScreen();
 			GetTextBox().Focus();
 			Assert.IsTrue(GetTextBox().Focused);
-			Assert.IsTrue(Boxes[0].AddNewButton.Visible);
+			Assert.IsTrue(Boxes[0].AddNewButtonVisible);
 		}
 
 		private static void OnCreateNewTargetItem(object sender, CreateNewArgs e)

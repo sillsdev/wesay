@@ -30,6 +30,12 @@
     <ProjectReference Include="..\WeSay.Project\WeSay.Project.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="SIL.Windows.Forms" Version="13.0.1" GeneratePathProperty="true"/>
+    <Reference Include="SIL.Windows.Forms">
+      <HintPath>$(PkgSIL_Windows_Forms)\lib\net461\SIL.Windows.Forms.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />

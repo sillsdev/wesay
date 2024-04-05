@@ -115,7 +115,7 @@ namespace WeSay.UI.Tests
 			SetKeyAndShow("29");
 			_control.Focus();
 			Assert.IsTrue(_control.ContainsFocus);
-			Assert.IsFalse(_control.AddNewButton.Visible);
+			Assert.IsFalse(_control.AddNewButtonVisible);
 		}
 
 		[Test]
@@ -125,7 +125,7 @@ namespace WeSay.UI.Tests
 			SetKeyAndShow("29");
 			_control.Focus();
 			Assert.IsTrue(_control.ContainsFocus);
-			Assert.IsTrue(_control.AddNewButton.Visible);
+			Assert.IsTrue(_control.AddNewButtonVisible);
 		}
 
 		[Test]

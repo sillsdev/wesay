@@ -130,6 +130,11 @@ namespace WeSay.UI.AutoCompleteTextBox
 			get { return _addNewButton; }
 		}
 
+		public bool AddNewButtonVisible
+		{
+			get { return _addNewButton.Visible; }
+		}
+
 		private static ValueT CastKeyValueToValue(KV t)
 		{
 			return (ValueT)((object)t);
@@ -169,7 +174,7 @@ namespace WeSay.UI.AutoCompleteTextBox
 			}
 		}
 
-		internal bool HasProblems
+		public bool HasProblems
 		{
 			get
 			{
