@@ -60,7 +60,7 @@ namespace WeSay.ConfigTool
 			}
 		}
 
-		internal class PoProxy
+		public class PoProxy
 		{
 			public string LanguageCode { get; protected set; }
 			protected string LanguageName { private get; set; }

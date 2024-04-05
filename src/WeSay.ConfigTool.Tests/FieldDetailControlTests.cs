@@ -46,7 +46,7 @@ namespace WeSay.ConfigTool.Tests
 			_field.Description = "original description";
 			_control.DescriptionOfFieldChanged +=
 					delegate { descriptionOfFieldInEvent = _field.Description; };
-			_control._description.Text = "new description";
+			_control.TestingSetDescriptionText("new description");
 			Assert.AreEqual("new description", descriptionOfFieldInEvent);
 		}
 
@@ -54,7 +54,7 @@ namespace WeSay.ConfigTool.Tests
 		public void IsSpellingEnabled_FieldPersistedOnChange()
 		{
 			bool newIsSpellCheckingEnabled = !_field.IsSpellCheckingEnabled;
-			_control._enableSpelling.Checked = newIsSpellCheckingEnabled;
+			_control.TestingSetEnableSpelling(newIsSpellCheckingEnabled);
 			Assert.AreEqual(newIsSpellCheckingEnabled, _field.IsSpellCheckingEnabled);
 		}
 	}

@@ -55,6 +55,9 @@ namespace WeSay.ConfigTool
 			return enchantInstalled;
 		}
 
+		public void TestingSetDescriptionText(string text) => _description.Text = text;
+		public void TestingSetEnableSpelling(bool value) => _enableSpelling.Checked = value;
+
 		public Field CurrentField
 		{
 			set
