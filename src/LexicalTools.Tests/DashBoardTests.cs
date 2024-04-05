@@ -19,8 +19,8 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder("DashBoardTests");
+			_filePath = _tempFolder.GetPathForNewTempFile(false);
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			Form window = new Form();
@@ -41,7 +41,7 @@ namespace WeSay.LexicalTools.Tests
 		public void Teardown()
 		{
 			_lexEntryRepository.Dispose();
-			_tempFolder.Delete();
+			_tempFolder.Dispose();
 		}
 
 		[Test]

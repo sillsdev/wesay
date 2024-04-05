@@ -48,9 +48,9 @@ namespace WeSay.LexicalTools.Tests
 			WeSayProjectTestHelper.InitializeForTests();
 
 			WeSayWordsProject.Project.RemoveCache();
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
-			_semanticDomainFilePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder("GatherBySemanticDomainsTaskTests");
+			_filePath = _tempFolder.GetPathForNewTempFile(false);
+			_semanticDomainFilePath = _tempFolder.GetPathForNewTempFile(false);
 
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 			_viewTemplate = MakeViewTemplate("en");
@@ -121,7 +121,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 			if (_tempFolder != null)
 			{
-				_tempFolder.Delete();
+				_tempFolder.Dispose();
 			}
 			WeSayProjectTestHelper.CleanupForTests();
 		}

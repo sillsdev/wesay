@@ -45,8 +45,8 @@ namespace WeSay.LexicalTools.Tests
 		[SetUp]
 		public void Setup()
 		{
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder("MissingInfoTaskTests");
+			_filePath = _tempFolder.GetPathForNewTempFile(false);
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 			WeSayProjectTestHelper.InitializeForTests();
@@ -102,7 +102,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 			if (_tempFolder != null)
 			{
-				_tempFolder.Delete();
+				_tempFolder.Dispose();
 			}
 			WeSayProjectTestHelper.CleanupForTests();
 		}

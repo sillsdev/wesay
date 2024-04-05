@@ -48,8 +48,8 @@ namespace WeSay.LexicalTools.Tests
 		{
 			WeSayProjectTestHelper.InitializeForTests();
 
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder("EntryViewControlTests");
+			_filePath = _tempFolder.GetPathForNewTempFile(false);
 			_lexEntryRepository = new LexEntryRepository(_filePath);
 
 #if GlossMeaning
@@ -100,7 +100,7 @@ namespace WeSay.LexicalTools.Tests
 			}
 			if (_tempFolder != null)
 			{
-				_tempFolder.Delete();
+				_tempFolder.Dispose();
 			}
 			WeSayProjectTestHelper.CleanupForTests();
 		}

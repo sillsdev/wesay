@@ -21,6 +21,12 @@ namespace WeSay.LexicalTools.AddMissingInfo
 	{
 		private readonly List<RecordToken<LexEntry>> _completedRecords;
 		private readonly List<RecordToken<LexEntry>> _todoRecords;
+		public object TodoRecordsListBoxSelectedItem => _todoRecordsListBox.SelectedItem;
+
+		public bool CompletedRecordsListBoxDataSourceContains(object o) =>
+			_completedRecordsListBox.DataSource.Contains(o);
+		public bool TodoRecordsListBoxDataSourceContains(object o) =>
+			_todoRecordsListBox.DataSource.Contains(o);
 		private RecordToken<LexEntry> _currentRecord;
 		private RecordToken<LexEntry> _previousRecord;
 		private RecordToken<LexEntry> _nextRecord;

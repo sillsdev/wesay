@@ -55,7 +55,7 @@ namespace WeSay.LexicalTools.Tests
 			{
 				_lexEntryRepository.Dispose();
 			}
-			_tempFolder.Delete();
+			_tempFolder.Dispose();
 			Sldr.Cleanup();
 		}
 
@@ -95,8 +95,8 @@ namespace WeSay.LexicalTools.Tests
 		private void SetupTestData()
 		{
 			ErrorReport.IsOkToInteractWithUser = false;
-			_tempFolder = new TemporaryFolder();
-			_filePath = _tempFolder.GetTemporaryFile();
+			_tempFolder = new TemporaryFolder("HtmlRendererTests");
+			_filePath = _tempFolder.GetPathForNewTempFile(false);
 
 			_currentItem = null;
 			string lexicalForm = "test";
