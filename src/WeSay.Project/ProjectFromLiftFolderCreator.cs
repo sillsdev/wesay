@@ -56,7 +56,7 @@ namespace WeSay.Project
 			creator.SetWritingSystemsForFields();
 		}
 
-		internal void SetWritingSystemsForFields()
+		public void SetWritingSystemsForFields()
 		{
 			var liftDom = new XmlDocument();
 			liftDom.Load(_path); //will throw if the file is ill-formed

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using SIL.Reflection;
 
 namespace WeSay.Project
 {
@@ -279,22 +280,7 @@ There are problems in:
 		{
 			get
 			{
-				string path;
-				bool unitTesting = Assembly.GetEntryAssembly() == null;
-				if (unitTesting)
-				{
-					path = new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath;
-					path = Uri.UnescapeDataString(path);
-				}
-				else
-				{
-					//was suspect in WS1156, where it seemed to start looking in the,
-					//outlook express program folder after sending an email from wesay...
-					//so maybe it doesn't always mean *this* executing assembly?
-					//  path = Assembly.GetExecutingAssembly().Location;
-					path = Application.ExecutablePath;
-				}
-				return Directory.GetParent(path).FullName;
+				return ReflectionHelper.DirectoryOfTheApplicationExecutable;
 			}
 		}
 

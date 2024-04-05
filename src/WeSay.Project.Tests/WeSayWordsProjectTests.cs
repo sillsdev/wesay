@@ -844,7 +844,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_LdmlIsCreated()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder("OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_LdmlIsCreated"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -870,7 +870,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_ProjectHasWritingSystem()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder("OpenProject_ConfigFileContainsWritingSystemIdForWhichThereIsNoLdml_ProjectHasWritingSystem"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -897,7 +897,7 @@ namespace WeSay.Project.Tests
 		public void LoadFromLiftLexiconPath_WritingsystemsAreInOldWsPrefsFormat_WritingSystemsAreMigrated()
 		{
 			var language = "english";
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder("LoadFromLiftLexiconPath_WritingsystemsAreInOldWsPrefsFormat_WritingSystemsAreMigrated"))
 			{
 				//setting up a minimal WeSay project with an old writingsystemprefs.xml file
 				var project = new WeSayWordsProject();

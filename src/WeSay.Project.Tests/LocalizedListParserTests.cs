@@ -27,7 +27,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ParseSemDomXMLFile()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder("ParseSemDomXMLFile"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -46,7 +46,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ParseLocalizedListXMLFile()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder("ParseLocalizedListXMLFile"))
 			{
 				//setting up a minimal WeSay project with a config file that contains an id for a nonexistent writing system
 				var project = new WeSayWordsProject();
@@ -65,7 +65,7 @@ namespace WeSay.Project.Tests
 		[Test]
 		public void ReadListFile_NonExistantSemanticDomainFile_Throws()
 		{
-			using (var projectDirectory = new TemporaryFolder())
+			using (var projectDirectory = new TemporaryFolder("ReadListFile_NonExistantSemanticDomainFile_Throws"))
 			{
 				if (File.Exists(Path.Combine(BasilProject.GetPretendProjectDirectory(), "SemDom.xml")))
 				{
