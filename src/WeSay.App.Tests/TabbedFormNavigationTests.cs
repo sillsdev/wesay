@@ -49,6 +49,11 @@ namespace WeSay.App.Tests
 		{
 			_tabbedForm.Dispose();
 			_projectDirectory.Dispose();
+		}
+
+		[OneTimeTearDown]
+		public void FixtureTeardown()
+		{
 			Sldr.Cleanup();
 		}
 
