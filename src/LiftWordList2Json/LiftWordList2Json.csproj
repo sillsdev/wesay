@@ -61,8 +61,8 @@
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
     <PackageReference Include="NDesk.DBus" Version="0.15.0" />
     <PackageReference Include="RelaxNG" Version="3.2.3" />
-    <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
+    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001"/>
+    <PackageReference Include="SIL.Core.Desktop" Version="14.0.1-beta0001"/>
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
     <PackageReference Include="Spart" Version="1.0.0" />

@@ -58,8 +58,8 @@
     <PackageReference Include="NetReflector" Version="1.1.2009" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="RelaxNG" Version="3.2.3" />
-    <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
+    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001"/>
+    <PackageReference Include="SIL.Core.Desktop" Version="14.0.1-beta0001"/>
     <PackageReference Include="SIL.Lexicon" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.TestUtilities" Version="13.0.1" />

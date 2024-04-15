@@ -81,7 +81,7 @@
     <PackageReference Include="NDesk.DBus" Version="0.15.0" />
     <PackageReference Include="RelaxNG" Version="3.2.3" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="SIL.Core" Version="13.0.1" />
+    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001"/>
     <PackageReference Include="SIL.Lexicon" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />

@@ -34,6 +34,7 @@
     <Reference Include="SIL.Windows.Forms">
       <HintPath>$(PkgSIL_Windows_Forms)\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
+    <PackageReference Include="SIL.Core.Desktop" Version="14.0.1-beta0001"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
@@ -56,8 +57,7 @@
     <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
     <PackageReference Include="NDesk.DBus" Version="0.15.0" />
-    <PackageReference Include="SIL.Core" Version="13.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1" />
+    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001"/>
     <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
     <PackageReference Include="Spart" Version="1.0.0" />
   </ItemGroup>
