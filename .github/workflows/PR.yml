@@ -35,21 +35,21 @@ jobs:
 
     # Run the unit tests
     - name: Restore
-      run: nuget restore src/WeSay.sln
+      run: nuget restore WeSay.sln
 
     - name: Build
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
-      run: msbuild src/WeSay.sln
+      run: msbuild WeSay.sln
 
     - name: Prepare to Test
       run: msbuild build/WeSay.proj /t:RestoreBuildTasks
-      
+
     - name: Test
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So testing files and folders can be created
       run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /p:CI=true /v:diag
-        
+
     - name: Test Report
       uses: jasonleenaylor/nunit-reporter@63ab85dd5da111c3f4ef95f2fb73bbe667f58db9
       if: always()
@@ -57,4 +57,4 @@ jobs:
         path: output/**/TestResults.xml
         access-token: ${{ secrets.GITHUB_TOKEN }}
         reportTitle: "Test Results (${{ matrix.os }})"
-        numFailures: 
+        numFailures:
