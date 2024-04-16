@@ -43,6 +43,10 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Geckofx60.64" Version="60.0.55" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="icu.net" Version="2.8.1" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />

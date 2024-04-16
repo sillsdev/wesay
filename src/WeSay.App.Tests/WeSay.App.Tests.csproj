@@ -43,6 +43,10 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="SIL.Windows.Forms" Version="13.0.1" GeneratePathProperty="true" />
     <Reference Include="SIL.Windows.Forms">

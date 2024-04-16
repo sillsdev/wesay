@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -25,34 +25,11 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Setup MSBuild.exe (Windows OS)
-      uses: microsoft/setup-msbuild@v1.0.2
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
-
     # Run the unit tests
     - name: Restore
-      run: nuget restore WeSay.sln
+      run: dotnet restore
 
     - name: Build
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
-      run: msbuild WeSay.sln
-
-    - name: Prepare to Test
-      run: msbuild build/WeSay.proj /t:RestoreBuildTasks
-
+      run: dotnet build
     - name: Test
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So testing files and folders can be created
-      run: msbuild build/WeSay.proj /t:TestOnly /p:Configuration=Debug /p:Platform="x86" /p:CI=true /v:diag
-
-    - name: Test Report
-      uses: jasonleenaylor/nunit-reporter@63ab85dd5da111c3f4ef95f2fb73bbe667f58db9
-      if: always()
-      with:
-        path: output/**/TestResults.xml
-        access-token: ${{ secrets.GITHUB_TOKEN }}
-        reportTitle: "Test Results (${{ matrix.os }})"
-        numFailures:
+      run: dotnet test --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true" --RunConfiguration.CollectSourceInformation=true

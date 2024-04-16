@@ -40,6 +40,10 @@
     <ProjectReference Include="..\WeSay.TestUtilities\WeSay.TestUtilities.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
