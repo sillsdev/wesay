@@ -1921,9 +1921,7 @@ namespace WeSay.Project
 				return false;
 			}
 			string regex = string.Format("lang\\s*=\\s*[\"']{0}[\"']", Regex.Escape(id));
-			throw new NotImplementedException();
-			//todo find grep here
-			// return FileUtils.GrepFile(PathToLiftFile, regex);
+			return FileHelper.Grep(PathToLiftFile, regex);
 		}
 
 		/// <summary>

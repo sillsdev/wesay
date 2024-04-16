@@ -145,8 +145,8 @@ namespace WeSay.App
 				if (page.Tag is ITaskForExternalNavigateToEntry)
 				{
 					tabControl1.SelectedTab = page;
-#if __MonoCS__    //For some reason .net fires this event if TabPages.Clear has been used. Mono does not.
-					if(!tabControl1.IsHandleCreated)
+#if (__MonoCS__ || NET5_0_OR_GREATER)    //For some reason .net fires this event if TabPages.Clear has been used. Mono does not.
+					if (!tabControl1.IsHandleCreated)
 					{
 						OnTabSelected(tabControl1, new TabControlEventArgs (tabControl1.SelectedTab, tabControl1.SelectedIndex, TabControlAction.Selected));
 					}
