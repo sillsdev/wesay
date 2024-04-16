@@ -44,7 +44,8 @@
     <None Include="icu4c.readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SIL.Core.Tests" Version="13.0.1" GeneratePathProperty="true"/>
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="SIL.Core.Tests" Version="13.0.1" GeneratePathProperty="true" />
     <Reference Include="SIL.Core.Tests">
       <HintPath>$(PkgSIL_Core_Tests)\lib\net461\SIL.Core.Tests.dll</HintPath>
     </Reference>
@@ -58,8 +59,8 @@
     <PackageReference Include="NetReflector" Version="1.1.2009" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="RelaxNG" Version="3.2.3" />
-    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001"/>
-    <PackageReference Include="SIL.Core.Desktop" Version="14.0.1-beta0001"/>
+    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001" />
+    <PackageReference Include="SIL.Core.Desktop" Version="14.0.1-beta0001" />
     <PackageReference Include="SIL.Lexicon" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.TestUtilities" Version="13.0.1" />
@@ -68,7 +69,7 @@
     <PackageReference Include="System.Management" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Security.AccessControl" Version="6.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />

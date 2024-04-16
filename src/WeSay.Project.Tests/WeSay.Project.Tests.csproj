@@ -47,16 +47,17 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SIL.WritingSystems.Tests" Version="13.0.1" GeneratePathProperty="true"/>
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="SIL.WritingSystems.Tests" Version="13.0.1" GeneratePathProperty="true" />
     <Reference Include="SIL.WritingSystems.Tests">
       <HintPath>$(PkgSIL_WritingSystems_Tests)\lib\net461\SIL.WritingSystems.Tests.dll</HintPath>
     </Reference>
 
-    <PackageReference Include="SIL.Windows.Forms" Version="13.0.1" GeneratePathProperty="true"/>
+    <PackageReference Include="SIL.Windows.Forms" Version="13.0.1" GeneratePathProperty="true" />
     <Reference Include="SIL.Windows.Forms">
       <HintPath>$(PkgSIL_Windows_Forms)\lib\net461\SIL.Windows.Forms.dll</HintPath>
     </Reference>
-    <PackageReference Include="SIL.Core.Desktop" Version="14.0.1-beta0001"/>
+    <PackageReference Include="SIL.Core.Desktop" Version="14.0.1-beta0001" />
 
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +66,7 @@
     <PackageReference Include="Icu4c.Win.Min" Version="59.1.7" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="Mono.Posix" Version="5.4.0.201" />
     <PackageReference Include="NDesk.DBus" Version="0.15.0" />
     <PackageReference Include="NetReflector" Version="1.1.2009" />
@@ -73,7 +74,7 @@
     <PackageReference Include="RelaxNG" Version="3.2.3" />
     <PackageReference Include="SIL.Chorus.LibChorus" Version="5.1.0" />
     <PackageReference Include="SIL.Chorus.Mercurial" Version="3.0.3.6" />
-    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001"/>
+    <PackageReference Include="SIL.Core" Version="14.0.1-beta0001" />
     <PackageReference Include="SIL.Lexicon" Version="13.0.1" />
     <PackageReference Include="SIL.Lift" Version="13.0.1" />
     <PackageReference Include="SIL.TestUtilities" Version="13.0.1" />
