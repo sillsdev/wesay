@@ -82,11 +82,7 @@ namespace WeSay.Project.Tests
 
 		~ProjectDirectorySetupForTesting()
 		{
-			if (!_disposed)
-			{
-				throw new InvalidOperationException("Disposed not explicitly called on " +
-													GetType().FullName + ".");
-			}
+			Dispose(false);
 		}
 
 		public bool IsDisposed
@@ -101,9 +97,7 @@ namespace WeSay.Project.Tests
 
 		public void Dispose()
 		{
-			_testFolder.Dispose();
 			Dispose(true);
-			GC.SuppressFinalize(this);
 		}
 
 		protected virtual void Dispose(bool disposing)
@@ -111,6 +105,8 @@ namespace WeSay.Project.Tests
 			if (!IsDisposed)
 			{
 				// shared (dispose and finalizable) cleanup logic
+				_testFolder.Dispose();
+				GC.SuppressFinalize(this);
 				_disposed = true;
 			}
 		}
