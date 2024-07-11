@@ -33,4 +33,4 @@ jobs:
       run: dotnet build
     - name: Test
       # space after -- before RunConfig is required
-      run: dotnet test --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true
+      run: dotnet test --no-build -maxcpucount:1 --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true
