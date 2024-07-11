@@ -1,5 +1,6 @@
 <Project>
  <PropertyGroup>
    <Mercurial4ChorusDestDir>$(MSBuildThisFileDirectory)</Mercurial4ChorusDestDir>
+   <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
  </PropertyGroup>
 </Project>
