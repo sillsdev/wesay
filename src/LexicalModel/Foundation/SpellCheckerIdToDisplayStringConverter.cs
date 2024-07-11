@@ -77,9 +77,9 @@ namespace WeSay.LexicalModel.Foundation
 						string id = valueAsString.Replace('_', '-');
 						CultureInfo cultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag(id);
 						// Windows 10 doesn't throw an exception if id is unknown but instead makes
-						// the NativeName be of the form "Unknown Locale (id)" where id is in form xx-YY
-						// The "Unknown locale" message may be localised so look for the lower cased id
-						if (cultureInfo.NativeName.ToLower().Contains(id.ToLower()))
+						// the CultureType will have a custom culture flag, and the ThreeLetterWindowsLanguageName will be ZZZ
+						// this should work on older windows systems, but we don't have a way to confirm that.
+						if (cultureInfo.CultureTypes.HasFlag(CultureTypes.UserCustomCulture) && cultureInfo.ThreeLetterWindowsLanguageName == "ZZZ")
 						{
 							display = valueAsString;
 						}
