@@ -25,12 +25,12 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    # Run the unit tests
     - name: Restore
       run: dotnet restore
 
     - name: Build
       run: dotnet build
+
     - name: Test
       # space after -- before RunConfig is required
       run: dotnet test  --filter "TestCategory != SkipOnCI" --no-build -maxcpucount:1 --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true
