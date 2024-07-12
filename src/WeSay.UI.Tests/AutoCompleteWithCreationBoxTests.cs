@@ -11,7 +11,7 @@ using WeSay.UI.AutoCompleteTextBox;
 
 namespace WeSay.UI.Tests
 {
-	[Category("SkipOnTeamCity")]
+	[Category("SkipOnCI")]
 	[TestFixture]
 	public class AutoCompleteWithCreationBoxTests
 	{

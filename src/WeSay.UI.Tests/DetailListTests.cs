@@ -7,7 +7,7 @@ using WeSay.UI.TextBoxes;
 
 namespace WeSay.UI.Tests
 {
-	[Category("SkipOnTeamCity")]
+	[Category("SkipOnCI")]
 	[TestFixture, Apartment(ApartmentState.STA)]
 	public class DetailListTests
 	{

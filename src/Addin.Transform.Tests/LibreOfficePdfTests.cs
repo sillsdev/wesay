@@ -107,7 +107,7 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
-		[Category("SkipOnTeamCity")]
+		[Category("SkipOnCI")]
 		[Platform(Exclude = "Win", Reason = "Mono only test")]
 		public void TestOpenDocumentPdf()
 		{
@@ -132,7 +132,7 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
-		[Category("SkipOnTeamCity")]
+		[Category("SkipOnCI")]
 		[Platform(Exclude = "Win", Reason = "Mono only test")]
 		public void TestOpenDocumentPdfOpen()
 		{

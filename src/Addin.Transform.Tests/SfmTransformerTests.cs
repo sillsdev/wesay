@@ -11,7 +11,7 @@ using WeSay.TestUtilities;
 
 namespace Addin.Transform.Tests
 {
-	[Category("SkipOnTeamCity")] // Uses ProgressDialog during transforms. 
+	[Category("SkipOnCI")] // Uses ProgressDialog during transforms. 
 	[TestFixture]
 	public class SfmTransformerTests
 	{

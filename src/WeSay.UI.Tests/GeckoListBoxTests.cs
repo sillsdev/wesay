@@ -141,7 +141,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
-		[Category("SkipOnTeamCity")]
+		[Category("SkipOnCI")]
 		[Ignore("FLAKY - sometimes fails in run all in VS.")]
 		public void TestGetRectangle()
 		{

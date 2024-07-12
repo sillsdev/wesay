@@ -61,14 +61,14 @@ namespace Addin.Transform.Tests
 		}
 
 		[Test]
-		[Category("SkipOnTeamCity")]
+		[Category("SkipOnCI")]
 		public void CreatePDF()
 		{
 			LaunchAddin();
 		}
 
 		[Test]
-		[Category("SkipOnTeamCity")]
+		[Category("SkipOnCI")]
 		public void CreatePdfAndOpen()
 		{
 			LaunchAddin();
