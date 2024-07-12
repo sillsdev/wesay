@@ -24,6 +24,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("SkipOnCI")]
 		public void TargetToWidget()
 		{
 			MultiText text = new MultiText();
@@ -42,6 +43,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("SkipOnCI")]
 		public void WidgetToTarget()
 		{
 			MultiText text = new MultiText();

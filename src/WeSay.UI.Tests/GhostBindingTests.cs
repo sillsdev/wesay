@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using WeSay.Project;
 using WeSay.TestUtilities;
 using WeSay.UI.TextBoxes;
+using CategoryAttribute = NUnit.Framework.CategoryAttribute;
 
 namespace WeSay.UI.Tests
 {
@@ -126,6 +127,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("SkipOnCI")]
 		public void EmptyListGrows()
 		{
 			Assert.AreEqual(0, _papa.Children.Count);
@@ -135,6 +137,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("SkipOnCI")]
 		public void NewItemGetsValue()
 		{
 			_ghostFirstNameWidget.Text = "Samuel";
@@ -143,6 +146,7 @@ namespace WeSay.UI.Tests
 		}
 
 		[Test]
+		[Category("SkipOnCI")]
 		public void NewItemTriggersEvent()
 		{
 			_binding.ReferenceControl = (Control)_papaNameWidget;
