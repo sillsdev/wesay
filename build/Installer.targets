@@ -305,7 +305,7 @@
 		<PropertyGroup>
 			<MsiFile>$(SafeApplicationName)_$(BuildVersion).msi</MsiFile>
 			<BaseBuildDir>$(RootDir)/../genericinstaller/BaseInstallerBuild</BaseBuildDir>
-			<BaseBuildArgs>"$(ProductName)" $(SafeApplicationName) $(BuildVersion) $(ProductIdGuid) $(UpgradeCodeGuid) "$(AppBuildDir)/$(BinDirSuffix)" "$(AppBuildDir)/$(DataDirSuffix)" $(CopyrightYear) "$(Manufacturer)" "x86" "$(CertPath)" "@(CertPass)"</BaseBuildArgs>
+			<BaseBuildArgs>"$(ProductName)" $(SafeApplicationName) $(BuildVersion) $(ProductIdGuid) $(UpgradeCodeGuid) "$(AppBuildDir)/$(BinDirSuffix)" "$(AppBuildDir)/$(DataDirSuffix)" $(CopyrightYear) "$(Manufacturer)" -arch "x86" "$(CertPath)" "@(CertPass)"</BaseBuildArgs>
 		</PropertyGroup>
 		<!-- Suppress ICE30 because we install the specific version of AutoFac that we need and not the Chorus Merge Module version -->
 		<!-- Since Chorus does have one, we end up with an ICE warning for double ref counting -->
