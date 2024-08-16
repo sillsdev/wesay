@@ -67,16 +67,6 @@
 	<Compile Include="CommonDir.wxs" />
   </ItemGroup>
   <ItemGroup>
-	<WixExtension Include="WixUtilExtension">
-	  <HintPath>C:\Program Files\Windows Installer XML v3.5\bin\WixUtilExtension.dll</HintPath>
-	  <Name>WixUtilExtension</Name>
-	</WixExtension>
-	<WixExtension Include="WixNetFxExtension">
-	  <HintPath>C:\Program Files\Windows Installer XML v3.5\bin\WixNetFxExtension.dll</HintPath>
-	  <Name>WixNetFxExtension</Name>
-	</WixExtension>
-  </ItemGroup>
-  <ItemGroup>
 	<Content Include="..\..\doc\Welcome.htm" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" />
