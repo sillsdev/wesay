@@ -309,7 +309,7 @@
 		</PropertyGroup>
 		<!-- Suppress ICE30 because we install the specific version of AutoFac that we need and not the Chorus Merge Module version -->
 		<!-- Since Chorus does have one, we end up with an ICE warning for double ref counting -->
-		<Exec WorkingDirectory="$(BaseBuildDir)" Command="(set SuppressICE=-sice:ICE30) &amp; buildBaseInstaller.bat $(BaseBuildArgs)" />
+		<Exec WorkingDirectory="$(BaseBuildDir)" Command="(set SuppressICE=-sice:ICE30) &amp; (set FILESTOSIGNLATER=$(MsiFile)) &amp; buildBaseInstaller.bat $(BaseBuildArgs)" />
 
 		<ItemGroup>
 			<InstallerFiles Include="$(BaseBuildDir)/**/$(SafeApplicationName)_*.exe"/>
