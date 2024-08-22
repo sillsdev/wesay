@@ -21,11 +21,21 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
+    - name: Check WiX Version
+      run: |
+        candle.exe -? | findstr /C:"WiX Toolset"
+        light.exe -? | findstr /C:"WiX Toolset"
+
     # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+
+    - name: Check WiX Version
+      run: |
+        candle.exe -? | findstr /C:"WiX Toolset"
+        light.exe -? | findstr /C:"WiX Toolset"
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe (Windows OS)
@@ -34,14 +44,29 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
       if: ${{ matrix.os == 'windows-2019' }}
 
+    - name: Check WiX Version
+      run: |
+        candle.exe -? | findstr /C:"WiX Toolset"
+        light.exe -? | findstr /C:"WiX Toolset"
+
     # Run the unit tests
     - name: Restore
       run: nuget restore src/WeSay.sln
+
+    - name: Check WiX Version
+      run: |
+        candle.exe -? | findstr /C:"WiX Toolset"
+        light.exe -? | findstr /C:"WiX Toolset"
 
     - name: Build
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
       run: msbuild src/WeSay.sln /p:Configuration=Release
+
+    - name: Check WiX Version
+      run: |
+        candle.exe -? | findstr /C:"WiX Toolset"
+        light.exe -? | findstr /C:"WiX Toolset"
         
     - name: Build Installer
       run: msbuild build/Installer.targets /p:Configuration=Release /p:Platform=x86 /t:BuildRelease
