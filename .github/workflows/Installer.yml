@@ -21,33 +21,11 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Check WiX Installation
-      run: |
-        $wixPath = "$env:ProgramFiles(x86)\WiX Toolset v3.x\Bin"
-        if (Test-Path "$wixPath\candle.exe") {
-          Write-Output "WiX Toolset is installed."
-          & "$wixPath\candle.exe" -? | Select-String "WiX Toolset"
-          & "$wixPath\light.exe" -? | Select-String "WiX Toolset"
-        } else {
-          Write-Output "WiX Toolset is not installed. Skipping version check."
-        }
-
     # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-
-    - name: Check WiX Installation
-      run: |
-        $wixPath = "$env:ProgramFiles(x86)\WiX Toolset v3.x\Bin"
-        if (Test-Path "$wixPath\candle.exe") {
-          Write-Output "WiX Toolset is installed."
-          & "$wixPath\candle.exe" -? | Select-String "WiX Toolset"
-          & "$wixPath\light.exe" -? | Select-String "WiX Toolset"
-        } else {
-          Write-Output "WiX Toolset is not installed. Skipping version check."
-        }
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe (Windows OS)
@@ -56,47 +34,14 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
       if: ${{ matrix.os == 'windows-2019' }}
 
-    - name: Check WiX Installation
-      run: |
-        $wixPath = "$env:ProgramFiles(x86)\WiX Toolset v3.x\Bin"
-        if (Test-Path "$wixPath\candle.exe") {
-          Write-Output "WiX Toolset is installed."
-          & "$wixPath\candle.exe" -? | Select-String "WiX Toolset"
-          & "$wixPath\light.exe" -? | Select-String "WiX Toolset"
-        } else {
-          Write-Output "WiX Toolset is not installed. Skipping version check."
-        }
-
     # Run the unit tests
     - name: Restore
       run: nuget restore src/WeSay.sln
-
-    - name: Check WiX Installation
-      run: |
-        $wixPath = "$env:ProgramFiles(x86)\WiX Toolset v3.x\Bin"
-        if (Test-Path "$wixPath\candle.exe") {
-          Write-Output "WiX Toolset is installed."
-          & "$wixPath\candle.exe" -? | Select-String "WiX Toolset"
-          & "$wixPath\light.exe" -? | Select-String "WiX Toolset"
-        } else {
-          Write-Output "WiX Toolset is not installed. Skipping version check."
-        }
 
     - name: Build
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
       run: msbuild src/WeSay.sln /p:Configuration=Release
-
-    - name: Check WiX Installation
-      run: |
-        $wixPath = "$env:ProgramFiles(x86)\WiX Toolset v3.x\Bin"
-        if (Test-Path "$wixPath\candle.exe") {
-          Write-Output "WiX Toolset is installed."
-          & "$wixPath\candle.exe" -? | Select-String "WiX Toolset"
-          & "$wixPath\light.exe" -? | Select-String "WiX Toolset"
-        } else {
-          Write-Output "WiX Toolset is not installed. Skipping version check."
-        }
         
     - name: Build Installer
       run: msbuild build/Installer.targets /p:Configuration=Release /p:Platform=x86 /t:BuildRelease
