@@ -33,10 +33,6 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
       if: ${{ matrix.os == 'windows-2019' }}
-      
-    - name: Downgrade Wix Toolset
-      shell: cmd
-      run: choco install wixtoolset --version 3.11.2 --allow-downgrade --force
 
     # Run the unit tests
     - name: Restore
