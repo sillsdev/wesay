@@ -41,7 +41,7 @@ jobs:
     - name: Build
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So gitversion can set environment vars during the build
-      run: msbuild src/WeSay.sln /p:Configuration=Release
+      run: msbuild src/WeSay.sln /p:Configuration=Release /p:Platform=x86
         
     - name: Build Installer
       run: msbuild build/Installer.targets /p:Configuration=Release /p:Platform=x86 /t:BuildRelease
