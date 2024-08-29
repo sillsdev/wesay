@@ -203,7 +203,7 @@
 			LocalFilename="$(WixLibsDir)/vcredist_2012_x86.exe" />	<!-- VisualC++ 11 runtime -->
 		<DownloadFileOnce Address="https://download.microsoft.com/download/0/5/6/056dcda9-d667-4e27-8001-8a0c6971d6b1/vcredist_x86.exe"
 			LocalFilename="$(WixLibsDir)/vcredist_2013_x86.exe" />	<!-- VisualC++ 12 runtime -->
-		<DownloadFileOnce Address="https://build.palaso.org/guestAuth/repository/download/Chorus_Win32masterContinuous/latest.lastSuccessful/ChorusMergeModule.msm?branch=%3Cdefault%3E"
+		<DownloadFileOnce Address="https://build.palaso.org/guestAuth/repository/download/Chorus_Win32masterContinuous/5.0.0-beta.20/ChorusMergeModule.msm?branch=%3Cdefault%3E"
 			LocalFileName="$(WixLibsDir)/ChorusMergeModule.msm" />
 		<Copy SourceFiles="@(OverrideFiles)" OverwriteReadonlyFiles="true" DestinationFolder="$(OverridesDestDir)"/>
 	</Target>
