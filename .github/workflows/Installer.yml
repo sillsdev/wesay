@@ -16,20 +16,20 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-depth: 0
 
     # Install the .NET Core workload
     - name: Install .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 5.0.x
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe (Windows OS)
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v2
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true # So the PATH can be set by this step
       if: ${{ matrix.os == 'windows-2019' }}
@@ -47,7 +47,7 @@ jobs:
       run: msbuild build/Installer.targets /p:Configuration=Release /p:Platform=x86 /t:BuildRelease
       
     - name: Publish Installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: WeSayInstallers
         path: BuildDir/WeSay*.exe
