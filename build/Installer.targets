@@ -189,6 +189,8 @@
 	<Target Name="PrepareRedistributables" >
 		<PropertyGroup>
 			<WixLibsDir>$(RootDir)/../genericinstaller/libs</WixLibsDir>
+			<!-- When changing this, be sure to delete the previous ChorusMergeModule manually, as normal cleanup doesn't affect generated files within sub-repo's. -->
+			<ChorusMergeModuleVersion>5.0.0-beta.20</ChorusMergeModuleVersion>
 		</PropertyGroup>
 		<ItemGroup>
 			<OverrideFiles Include="$(RootDir)/../src/Installer/*.wxi" />
@@ -203,7 +205,8 @@
 			LocalFilename="$(WixLibsDir)/vcredist_2012_x86.exe" />	<!-- VisualC++ 11 runtime -->
 		<DownloadFileOnce Address="https://download.microsoft.com/download/0/5/6/056dcda9-d667-4e27-8001-8a0c6971d6b1/vcredist_x86.exe"
 			LocalFilename="$(WixLibsDir)/vcredist_2013_x86.exe" />	<!-- VisualC++ 12 runtime -->
-		<DownloadFileOnce Address="https://build.palaso.org/guestAuth/repository/download/Chorus_Win32masterContinuous/5.0.0-beta.20/ChorusMergeModule.msm?branch=%3Cdefault%3E"
+		<!-- This needs to work in tandem with Installer.wxs to install the full set of dependencies. -->
+		<DownloadFileOnce Address="https://build.palaso.org/guestAuth/repository/download/Chorus_Win32masterContinuous/$(ChorusMergeModuleVersion)/ChorusMergeModule.msm?branch=%3Cdefault%3E"
 			LocalFileName="$(WixLibsDir)/ChorusMergeModule.msm" />
 		<Copy SourceFiles="@(OverrideFiles)" OverwriteReadonlyFiles="true" DestinationFolder="$(OverridesDestDir)"/>
 	</Target>
