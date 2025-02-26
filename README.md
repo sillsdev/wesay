@@ -120,7 +120,7 @@ then appear in `$wesay/output/Release`.
 
 #### USING VISUAL STUDIO ON WINDOWS
 
-In Windows, WeSay can be debugged using Visual Studio Community 2015.
+In Windows, WeSay can be debugged using Visual Studio.
 
 #### USING MONODEVELOP ON LINUX
 
