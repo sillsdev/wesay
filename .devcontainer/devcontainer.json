@@ -20,8 +20,8 @@
     // }
   
     // Use 'postCreateCommand' to run commands after the container is created.
-    "postCreateCommand": "",
-    //"postStartCommand": ""
+    //"postCreateCommand": "",
+    "postStartCommand": "dotnet build /p:EnableWindowsTargeting=true"
   
     // Configure tool-specific properties.
     // "customizations": {},
