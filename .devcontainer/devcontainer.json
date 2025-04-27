@@ -21,6 +21,10 @@
   
     // Use 'postCreateCommand' to run commands after the container is created.
     //"postCreateCommand": "",
+
+    //This will build the Solution initially so that all dependencies are restored.
+    //If it fails analyssis needs to be done
+    //This is optional, can be disabled if it makes problems
     "postStartCommand": "dotnet build /p:EnableWindowsTargeting=true"
   
     // Configure tool-specific properties.
