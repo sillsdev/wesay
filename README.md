@@ -110,6 +110,10 @@ On linux, the operation is similar:
 	cd $wesay/build
 	./TestBuild.sh
 
+On Github-Codespace you can use the following to compile:
+
+   dotnet build /p:EnableWindowsTargeting=true
+
 These scripts perform a Debug build, placing the result in `$wesay/output/Debug`.
 #### TODO (Hasso) 2022.04: update scripts and instructions so this works:
 >  If you prefer a Release build, then add `Release`
